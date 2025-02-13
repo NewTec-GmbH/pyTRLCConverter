@@ -22,121 +22,110 @@
 # Imports **********************************************************************
 import os
 import sys
-import importlib
-from pyTRLCConverter.iconverter import IConverter
+from typing import List
+from pyTRLCConverter.base_converter import BaseConverter
 from pyTRLCConverter.ret import Ret
-from pyTRLCConverter.trlc_helper import get_file_dict_from_symbols, is_item_section, is_item_record
-from pyTRLCConverter.log_verbose import log_verbose
+from pyTRLCConverter.trlc_helper import Record_Object
 
 # Variables ********************************************************************
 
 # Classes **********************************************************************
 
-class MarkdownConverter(IConverter):
-    """Converts a section tree to Markdown format.
+class MarkdownConverter(BaseConverter):
+    """MarkdownConverter provides functionality for converting to a markdown format.
     """
-    def __init__(self) -> None:
-        # lobster-trace: SwRequirements.sw_req_markdown
-        self._source_items = []
-        self._out_path = ""
-        self._project_module = None
 
-    def register(self, args_parser):
+    def __init__(self, args: any) -> None:
         # lobster-trace: SwRequirements.sw_req_markdown
-        """Register converter specific argument parser.
-
-        Args:
-            args_parser (object): Argument parser
+        """Initializes the converter.
         """
-        parser = args_parser.add_parser(
-            'markdown',
-            help="Convert to Markdown format."
-        )
+        super().__init__(args)
 
-        parser.set_defaults(func=self.convert)
+        self._out_path = args.out
+        self._fd = None
 
-    def convert(self, args, symbols):
-        # lobster-trace: SwRequirements.sw_req_prj_spec
-        # lobster-trace: SwRequirements.sw_req_markdown_file
-        """Convert the section tree to the destination format.
+    @staticmethod
+    def get_subcommand() -> str:
+        """ Return subcommand token for this converter.
+
+        Returns:
+            str: Parser subcommand token
+        """
+        return "markdown"
+
+    @staticmethod
+    def get_description() -> str:
+        """ Return converter description.
+
+        Returns:
+            str: Converter description
+        """
+        return "Convert into markdown format."
+
+    def enter_file(self, file_name: str) -> Ret:
+        """Enter a file.
 
         Args:
-            args (object): Program arguments.
-            symbols (Symbol_Table): The symbol table.
+            file_name (str): File name
         
         Returns:
             Ret: Status
         """
-        result = Ret.OK
 
-        # Take over some program arguments.
-        self._source_items = args.source
-        self._out_path = args.out
+        return self._generate_out_file(file_name)
 
-        # Load the project module if specified.
-        if args.project is not None:
-            result = self._load_project_module(args.project)
-
-        if result == Ret.OK:
-            # Prepare output folder.
-            self._create_out_folder()
-
-            # Generate one Markdown file for every file.
-            files_dict = get_file_dict_from_symbols(symbols)
-
-            for file_name, item_list in files_dict.items():
-                self._project_module_init()
-
-                # Skip files from excluded paths.
-                skip_it = False
-                if args.exclude is not None:
-                    for excluded_path in args.exclude:
-                        if os.path.commonpath([excluded_path, file_name]) == excluded_path:
-                            skip_it = True
-                            break
-
-                if skip_it is True:
-                    log_verbose(f"Skip file {file_name}.")
-                else:
-                    log_verbose(f"Generate for {file_name}.")
-                    result = self._generate_out_file(file_name, item_list)
-
-                    if result != Ret.OK:
-                        break
-
-        return result
-
-    def _load_project_module(self, project_module):
-        # lobster-trace: SwRequirements.sw_req_prj_spec
-        # lobster-trace: SwRequirements.sw_req_prj_spec_func
-        """Load the project module.
+    def leave_file(self, file_name: str) -> Ret:
+        """Leave a file.
 
         Args:
-            project_module (str): Python module name.
+            file_name (str): File name
 
         Returns:
             Ret: Status
         """
-        result = Ret.OK
-        try:
-            sys.path.append(os.path.dirname(project_module))
-            module_name = os.path.basename(project_module).replace('.py', '')
-            self._project_module = importlib.import_module(module_name)
-        except ImportError as exc:
-            print(exc)
-            result = Ret.ERROR
+        if self._fd is not None:
+            self._fd.close()
+            self._fd = None
 
-        return result
+        return Ret.OK
 
-    def _create_out_folder(self):
-        # lobster-trace: SwRequirements.sw_req_markdown_out_folder
-        """Create output folder if it doesn't exist.
+    def convert_section(self, section: str, level: int) -> Ret:
+        """Process the given section item.
+
+        Args:
+            section (str): The section name
+            level (int): The section indentation level
+        
+        Returns:
+            Ret: Status
         """
-        if 0 < len(self._out_path):
-            if not os.path.exists(self._out_path):
-                os.makedirs(self._out_path)
+        self._fd.write(f"{'#' * (level + 1)} {section}\n\n")
 
-    def _generate_out_file(self, file_name, item_list):
+        return Ret.OK
+
+    def convert_record_object(self, record: Record_Object, level: int) -> Ret:
+        """Process the given record object.
+
+        Args:
+            record (Record_Object): The record object
+            level (int): The record level
+        
+        Returns:
+            Ret: Status
+        """
+        self._fd.write(f"{record.name}\n")
+        self._fd.write(f"{record.to_python_dict()}\n\n")
+        return Ret.OK
+
+    def finish(self) -> Ret:
+        """Finish the conversion process.
+
+        Returns:
+            Ret: Status
+        """
+        return Ret.OK
+
+    def _generate_out_file(self, file_name: str) -> Ret:
         # lobster-trace: SwRequirements.sw_req_markdown_out_folder
         """Generate the output file.
 
@@ -155,282 +144,163 @@ class MarkdownConverter(IConverter):
         if 0 < len(self._out_path):
             output_file_name = os.path.join(self._out_path, output_file_name)
 
-        with open(output_file_name, "w", encoding="utf-8") as fd:
-            result = self._convert(fd, item_list)
+        try:
+            self._fd = open(output_file_name, "w", encoding="utf-8") #pylint: disable=consider-using-with
+        except IOError as e:
+            print(f"Failed to open file {output_file_name}: {e}", file=sys.stderr)
+            result = Ret.ERROR
 
         return result
 
-    def _convert(self, fd, item_list):
-        # lobster-trace: SwRequirements.sw_req_markdown_section
-        # lobster-trace: SwRequirements.sw_req_markdown_record
-        """Convert the list of items to the destination format.
-            The item list contains a list of tuples with sections and
-            record objects.
+    @staticmethod
+    def markdown_escape(text: str) -> str:
+        # lobster-trace: SwRequirements.sw_req_markdown_escape
+        """Escapes the text to be used in a Markdown document.
 
         Args:
-            fd (File): File descriptor of the output file.
-            item_list (list[tuple]): The item list.
-        
+            text (str): Text to escape
+
         Returns:
-            Ret: Status
+            str: Escaped text
         """
-        result = Ret.OK
+        characters = ["\\", "`", "*", "_", "{", "}", "[", "]", "<", ">", "(", ")", "#", "+", "-", ".", "!", "|"]
 
-        for item in item_list:
-            if is_item_section(item):
-                result = self._convert_section(fd, item[0], item[1])
-            elif is_item_record(item):
-                result = self._convert_record_object(fd, item[0], item[1])
-            else:
-                result = Ret.ERROR
+        for character in characters:
+            text = text.replace(character, "\\" + character)
 
-            if result != Ret.OK:
-                break
+        return text
 
-        return Ret.OK
-
-    def _project_module_init(self):
-        # lobster-trace: SwRequirements.sw_req_prj_exec
-        """Initialize the project module.
-        """
-        if self._project_module is not None:
-            if hasattr(self._project_module, "init"):
-                self._project_module.init(self._source_items, self._out_path)
-
-    def _project_module_convert_section(self, fd, section, level):
-        # lobster-trace: SwRequirements.sw_req_prj_exec
-        """Convert a section to the destination format in a user project specific way.
+    @staticmethod
+    def markdown_create_heading(text: str, level: int, escape: bool = True) -> str:
+        # lobster-trace: SwRequirements.sw_req_markdown_heading
+        """Create a Markdown heading.
+            The text will be automatically escaped for Markdown if necessary.
 
         Args:
-            fd (File): File descriptor of the output file.
-            section (str): The section name.
-            level (int): The section level.
+            text (str): Heading text
+            level (int): Heading level
+            escape (bool): Escape the text (default: True).
 
         Returns:
-            Ret: Status
+            str: Markdown heading
         """
-        result = Ret.ERROR
-
-        if self._project_module is not None:
-            if hasattr(self._project_module, "convert_section"):
-                result = self._project_module.convert_section(fd, section, level)
-
-        return result
-
-    def _project_module_convert_record_object(self, fd, record_object, level):
-        # lobster-trace: SwRequirements.sw_req_prj_exec
-        """Convert a record object to the destination format in a use project specific way.
-
-        Args:
-            fd (File): File descriptor of the output file.
-            record_object (Record_Object): The record object to convert.
-            level (int): The record level.
-
-        Returns:
-            Ret: Status
-        """
-        result = Ret.ERROR
-
-        if self._project_module is not None:
-            if hasattr(self._project_module, "convert_record_object"):
-                result = self._project_module.convert_record_object(fd, record_object, level)
-
-        return result
-
-    def _convert_section(self, fd, section, level):
-        # lobster-trace: SwRequirements.sw_req_markdown_section
-        # lobster-trace: SwRequirements.sw_req_markdown_prj_spec
-        # lobster-trace: SwRequirements.sw_req_no_prj_spec
-        """Convert a section to the destination format.
-
-        Args:
-            fd (File): File descriptor of the output file.
-            section (str): The section name.
-            level (int): The section level.
-
-        Returns:
-            Ret: Status
-        """
-        result = Ret.OK
-
-        if self._project_module is None:
-            fd.write(f"{'#' * (level + 1)} {section}\n\n")
-
-        else:
-            result = self._project_module_convert_section(fd, section, level)
-
-        return result
-
-    def _convert_record_object(self, fd, record_object, level):
-        # lobster-trace: SwRequirements.sw_req_markdown_record
-        # lobster-trace: SwRequirements.sw_req_markdown_prj_spec
-        # lobster-trace: SwRequirements.sw_req_no_prj_spec
-        """Convert a record object to the destination format.
-
-        Args:
-            fd (File): File descriptor of the output file.
-            record_object (Record_Object): The record object to convert.
-            level (int): The record level.
-
-        Returns:
-            Ret: Status
-        """
-        result = Ret.OK
-
-        if self._project_module is None:
-            fd.write(f"{record_object.name}\n")
-            fd.write(f"{record_object.to_python_dict()}\n\n")
-
-        else:
-            result = self._project_module_convert_record_object(fd, record_object, level)
-
-        return result
-
-# Functions ********************************************************************
-
-def markdown_escape(text):
-    # lobster-trace: SwRequirements.sw_req_markdown_escape
-    """Escapes the text to be used in a Markdown document.
-
-    Args:
-        text (str): Text to escape
-
-    Returns:
-        str: Escaped text
-    """
-    characters = ["\\", "`", "*", "_", "{", "}", "[", "]", "<", ">", "(", ")", "#", "+", "-", ".", "!", "|"]
-
-    for character in characters:
-        text = text.replace(character, "\\" + character)
-
-    return text
-
-def markdown_create_heading(text, level, escape = True):
-    # lobster-trace: SwRequirements.sw_req_markdown_heading
-    """Create a Markdown heading.
-        The text will be automatically escaped for Markdown if necessary.
-
-    Args:
-        text (str): Heading text
-        level (int): Heading level
-        escape (boolean): Escape the text (default: True).
-
-    Returns:
-        str: Markdown heading
-    """
-    text_raw = text
-
-    if escape is True:
-        text_raw = markdown_escape(text)
-
-    return f"{'#' * level} {text_raw}\n\n"
-
-def markdown_create_table_head(column_titles, escape = True):
-    # lobster-trace: SwRequirements.sw_req_markdown_table
-    """Create the table head for a Markdown table.
-        The titles will be automatically escaped for Markdown if necessary.
-
-    Args:
-        column_titles ([str]): List of column titles.
-        escape (boolean): Escape the titles (default: True).
-
-    Returns:
-        str: Table head
-    """
-    table_head = "|"
-
-    for column_title in column_titles:
-        column_title_raw = column_title
+        text_raw = text
 
         if escape is True:
-            column_title_raw = markdown_escape(column_title)
+            text_raw = MarkdownConverter.markdown_escape(text)
 
-        table_head += f" {column_title_raw} |"
+        return f"{'#' * level} {text_raw}\n\n"
 
-    table_head += "\n"
+    @staticmethod
+    def markdown_create_table_head(column_titles : List[str], escape: bool = True) -> str:
+        # lobster-trace: SwRequirements.sw_req_markdown_table
+        """Create the table head for a Markdown table.
+            The titles will be automatically escaped for Markdown if necessary.
 
-    table_head += "|"
+        Args:
+            column_titles ([str]): List of column titles.
+            escape (bool): Escape the titles (default: True).
 
-    for column_title in column_titles:
-        column_title_raw = column_title
+        Returns:
+            str: Table head
+        """
+        table_head = "|"
+
+        for column_title in column_titles:
+            column_title_raw = column_title
+
+            if escape is True:
+                column_title_raw = MarkdownConverter.markdown_escape(column_title)
+
+            table_head += f" {column_title_raw} |"
+
+        table_head += "\n"
+
+        table_head += "|"
+
+        for column_title in column_titles:
+            column_title_raw = column_title
+
+            if escape is True:
+                column_title_raw = MarkdownConverter.markdown_escape(column_title)
+
+            for _ in range(len(column_title_raw)):
+                table_head += "-"
+
+            table_head += " |"
+
+        table_head += "\n"
+
+        return table_head
+
+    @staticmethod
+    def markdown_append_table_row(row_values: List[str], escape: bool = True) -> str:
+        # lobster-trace: SwRequirements.sw_req_markdown_table_row
+        """Append a row to a Markdown table.
+            The values will be automatically escaped for Markdown if necessary.
+
+        Args:
+            row_values ([str]): List of row values.
+            escape (bool): Escapes every row value (default: True).
+
+        Returns:
+            str: Table row
+        """
+        table_row = "|"
+
+        for row_value in row_values:
+            row_value_raw = row_value
+
+            if escape is True:
+                row_value_raw = MarkdownConverter.markdown_escape(row_value)
+
+            table_row += f" {row_value_raw} |"
+
+        table_row += "\n"
+
+        return table_row
+
+    @staticmethod
+    def markdown_create_link(text: str, url: str, escape: bool = True) -> str:
+        # lobster-trace: SwRequirements.sw_req_markdown_link
+        """Create a Markdown link.
+            The text will be automatically escaped for Markdown if necessary.
+            There will be no newline appended at the end.
+
+        Args:
+            text (str): Link text
+            url (str): Link URL
+            escape (bool): Escapes text (default: True).
+
+        Returns:
+            str: Markdown link
+        """
+        text_raw = text
 
         if escape is True:
-            column_title_raw = markdown_escape(column_title)
+            text_raw = MarkdownConverter.markdown_escape(text)
 
-        for _ in range(len(column_title_raw)):
-            table_head += "-"
+        return f"[{text_raw}]({url})"
 
-        table_head += " |"
+    @staticmethod
+    def markdown_create_diagram_link(diagram_file_name: str, diagram_caption: str, escape: bool = True) -> str:
+        # lobster-trace: SwRequirements.sw_req_markdown_image
+        """Create a Markdown diagram link.
+            The caption will be automatically escaped for Markdown if necessary.
 
-    table_head += "\n"
+        Args:
+            diagram_file_name (str): Diagram file name
+            diagram_caption (str): Diagram caption
+            escape (bool): Escapes caption (default: True).
 
-    return table_head
-
-def markdown_append_table_row(row_values, escape = True):
-    # lobster-trace: SwRequirements.sw_req_markdown_table_row
-    """Append a row to a Markdown table.
-        The values will be automatically escaped for Markdown if necessary.
-
-    Args:
-        row_values ([str]): List of row values.
-        escape (boolean): Escapes every row value (default: True).
-
-    Returns:
-        str: Table row
-    """
-    table_row = "|"
-
-    for row_value in row_values:
-        row_value_raw = row_value
+        Returns:
+            str: Markdown diagram link
+        """
+        diagram_caption_raw = diagram_caption
 
         if escape is True:
-            row_value_raw = markdown_escape(row_value)
+            diagram_caption_raw = MarkdownConverter.markdown_escape(diagram_caption)
 
-        table_row += f" {row_value_raw} |"
-
-    table_row += "\n"
-
-    return table_row
-
-def markdown_create_link(text, url, escape = True):
-    # lobster-trace: SwRequirements.sw_req_markdown_link
-    """Create a Markdown link.
-        The text will be automatically escaped for Markdown if necessary.
-        There will be no newline appended at the end.
-
-    Args:
-        text (str): Link text
-        url (str): Link URL
-        escape (boolean): Escapes text (default: True).
-
-    Returns:
-        str: Markdown link
-    """
-    text_raw = text
-
-    if escape is True:
-        text_raw = markdown_escape(text)
-
-    return f"[{text_raw}]({url})"
-
-def markdown_create_diagram_link(diagram_file_name, diagram_caption, escape = True):
-    # lobster-trace: SwRequirements.sw_req_markdown_image
-    """Create a Markdown diagram link.
-        The caption will be automatically escaped for Markdown if necessary.
-
-    Args:
-        diagram_file_name (str): Diagram file name
-        diagram_caption (str): Diagram caption
-        escape (boolean): Escapes caption (default: True).
-
-    Returns:
-        str: Markdown diagram link
-    """
-    diagram_caption_raw = diagram_caption
-
-    if escape is True:
-        diagram_caption_raw = markdown_escape(diagram_caption)
-
-    return f"![{diagram_caption_raw}](./{diagram_file_name})\n"
+        return f"![{diagram_caption_raw}](./{diagram_file_name})\n"
 
 # Main *************************************************************************

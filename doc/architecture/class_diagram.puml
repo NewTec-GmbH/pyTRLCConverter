@@ -1,22 +1,38 @@
 @startuml class_diagram
 
-interface IConverter {
-    + {abstract} register(args_parser) : bool
-    + {abstract} convert(args, symbols : Symbol_Table) : bool
+interface AbstractConverter <<abstract>>{
+    + {abstract} register(args_parser)
+    + {abstract} convert_section()
+    + {abstract} convert_record()
+    + {abstract} enter_file()
+    + {abstract} leave_file()
+    + {abstract} finish()
+
 }
 
-note top of IConverter
-    Interface for converting a single document to a different format.
-    Implementations should register with the main program
-    and provide a conversion function.
+note top of AbstractConverter
+    Interface for converting TRLC symbols
+    into destination format.
 end note
 
-class MarkdownConverter {
+class BaseConverter <<abstract>> {
 }
 
-note bottom of MarkdownConverter
-    Converts a single document to Markdown format.
-end note
+rectangle "Built-in Converter" {
+
+    class MarkdownConverter {
+    }
+
+    class DocxConverter {
+    }
+    class DumpConverter {
+    }
+}
+
+AbstractConverter <|.. BaseConverter: <<realize>>
+BaseConverter <|.. MarkdownConverter: <<realize>>
+BaseConverter <|.. DocxConverter: <<realize>>
+BaseConverter <|.. DumpConverter: <<realize>>
 
 class version <<module>> {
 }
@@ -31,14 +47,17 @@ rectangle Utilities {
     }
 
     note top of log_verbose
-        Module for handling verbose logging.
+        Module for handling
+         verbose logging.
     end note
 
     class plantuml <<module>> {
     }
 
     note top of plantuml
-        Module for handling PlantUML diagram generation.
+        Module for handling
+        PlantUML diagram
+        generation.
     end note
 
     enum Ret {
@@ -47,29 +66,37 @@ rectangle Utilities {
     }
 
     note top of Ret
-        Return codes for functions.
+        Return codes
+        for functions.
     end note
 }
 
-note top of Utilities
-    Utility functionality which can be used
-    by any part of the program.
-end note
 
 class main <<module>> {
     - _table: []
     + main() : int
 }
 
-note top of main
-    Main program entry point with a single instance
-    of the converter table.
+class ItemWalker
+note top of ItemWalker
+    TRLC item list traverse logic 
 end note
 
-IConverter <|.. MarkdownConverter: <<realize>>
 
-main ..> IConverter: <<use>>
-main *---> MarkdownConverter
+main ..> ItemWalker: <<use>>
+ItemWalker ..> AbstractConverter: <<use>>
+main *--- "Output Converter"
 main ..> version: <<use>>
+
+
+class "ProjectSpecific Converter" {
+}
+
+note right of "ProjectSpecific Converter"
+May also subclass one of the "Built-in Converter"
+end note
+
+BaseConverter <|.r. "ProjectSpecific Converter": <<realize>>
+main o- "ProjectSpecific Converter" : Dynamic loading "--project <file>" option
 
 @enduml

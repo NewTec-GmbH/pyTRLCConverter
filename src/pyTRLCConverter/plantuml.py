@@ -22,6 +22,7 @@
 # Imports **********************************************************************
 import os
 import subprocess
+import sys
 import zlib
 import base64
 import urllib
@@ -205,19 +206,29 @@ class PlantUML():
             if not os.path.exists(dst_path):
                 os.makedirs(dst_path)
 
-            plantuml_cmd = [
-                "java",
-                "-jar", f"{self._plantuml_jar}",
-                f"{diagram_path}",
-                f"-t{diagram_type}",
-                "-o", self._get_absolute_path(dst_path)
-            ]
+            plantuml_cmd = ["java" ]
+
+            if sys.platform.startswith("linux"):
+                plantuml_cmd.append("-Djava.awt.headless=true")
+
+            plantuml_cmd.append(
+                [
+                    "-jar", f"{self._plantuml_jar}",
+                    f"{diagram_path}",
+                    f"-t{diagram_type}",
+                    "-o", self._get_absolute_path(dst_path)
+                ]
+            )
 
             try:
                 output = subprocess.run(plantuml_cmd, capture_output=True, text=True, check=False)
+                if output.stderr:
+                    print(output.stderr)
                 print(output.stdout)
             except FileNotFoundError as exc:
                 raise FileNotFoundError(f"{self._plantuml_jar} not found.") from exc
+        else:
+            raise FileNotFoundError("plantuml.jar not found, set PLANTUML environment variable.")
 
 # Functions ********************************************************************
 

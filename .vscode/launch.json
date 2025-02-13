@@ -1,0 +1,48 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python Debugger: markdown",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/pyTRLCConverter/__main__.py",
+            "cwd": "${workspaceFolder}/tools/req2markdown",
+            "console": "integratedTerminal",
+            "env": {
+                "PLANTUML": "../plantuml/plantuml.jar",
+            },
+            "args": [
+                "--source=../../doc/sw-requirements",
+                "--source=../../doc/models",
+                "-o=./out/sw-requirements/markdown",
+                "--verbose",
+                "--project=req2markdown",
+                "--help",
+                "markdown",
+            ]
+        },
+        {
+            "name": "Python Debugger: docx",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/pyTRLCConverter/__main__.py",
+            "cwd": "${workspaceFolder}/tools/req2docx",
+            "console": "integratedTerminal",
+            "env": {
+                "PLANTUML": "../plantuml/plantuml.jar",
+            },
+            "args": [
+                "--source=../../doc/sw-requirements",
+                "--source=../../doc/models",
+                "-o=./out/sw-requirements/docx",
+                "--project=custom_docx",
+                "--verbose",
+                "docx"
+            ]
+            
+        }
+    ]
+}

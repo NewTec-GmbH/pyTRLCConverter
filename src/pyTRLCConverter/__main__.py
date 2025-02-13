@@ -22,12 +22,20 @@
 # If not, see <https://www.gnu.org/licenses/>.
 
 # Imports **********************************************************************
+import importlib
+import inspect
+import os
 import sys
 import argparse
+from typing import Optional
+from pyTRLCConverter.abstract_converter import AbstractConverter
+from pyTRLCConverter.dump_converter import DumpConverter
+from pyTRLCConverter.item_walker import ItemWalker
 from pyTRLCConverter.ret import Ret
 from pyTRLCConverter.version import __license__, __repository__, __version__
 from pyTRLCConverter.trlc_helper import get_trlc_symbols
 from pyTRLCConverter.markdown_converter import MarkdownConverter
+from pyTRLCConverter.docx_converter import DocxConverter
 from pyTRLCConverter.log_verbose import enable_verbose, log_verbose, is_verbose_enabled
 
 # Variables ********************************************************************
@@ -38,9 +46,12 @@ PROG_COPYRIGHT = "Copyright (c) 2024 - 2025 NewTec GmbH - " + __license__
 PROG_GITHUB = "Find the project on GitHub: " + __repository__
 PROG_EPILOG = PROG_COPYRIGHT + " - " + PROG_GITHUB
 
-CONVERTER_TABLE = {
-    "Markdown": MarkdownConverter()
-}
+# List of built-in converters to use or subclass by a project converter.
+BUILD_IN_CONVERTER_LIST = [
+    MarkdownConverter,
+    DocxConverter,
+    DumpConverter
+]
 
 # Classes **********************************************************************
 
@@ -126,7 +137,7 @@ def _create_args_parser() -> argparse.ArgumentParser:
 
     return parser
 
-def main():
+def main() -> int:
     # lobster-trace: SwRequirements.sw_req_cli
     """Main program entry point.
 
@@ -139,8 +150,19 @@ def main():
     args_parser = _create_args_parser()
     args_sub_parser = args_parser.add_subparsers(required='True')
 
-    for _, converter in CONVERTER_TABLE.items():
-        converter.register(args_sub_parser)
+    # Check if a project specific converter is given and load it.
+    project_converter_cmd = None
+    project_converter = _get_project_converter()
+
+    if project_converter is not None:
+        project_converter.register(args_sub_parser, project_converter)
+        project_converter_cmd = project_converter.get_subcommand()
+
+    # Load the built-in converters unless a project converter is replacing built-in.
+    for converter in BUILD_IN_CONVERTER_LIST:
+        if converter.get_subcommand() != project_converter_cmd:
+            converter.register(args_sub_parser, converter)
+
 
     args = args_parser.parse_args()
 
@@ -165,12 +187,74 @@ def main():
             ret_status = Ret.ERROR
         else:
             try:
-                ret_status = args.func(args, symbols)
-            except FileNotFoundError as exc:
+                _create_out_folder(args.out)
+
+                # Feed the items into the given converter.
+                log_verbose(
+                    f"Using converter {args.converter_class.__name__}: {args.converter_class.get_description()}.")
+                converter = args.converter_class(args)
+
+                walker = ItemWalker(args, converter)
+                ret_status = walker.walk_symbols(symbols)
+            except (FileNotFoundError, OSError) as exc:
                 print(exc)
                 ret_status = Ret.ERROR
 
     return ret_status
+
+def _get_project_converter() -> Optional[AbstractConverter]:
+    # lobster-trace: SwRequirements.sw_req_prj_spec_file
+    """Get the project specific converter class from a --project or -p argument.
+
+    Returns:
+        AbstractConverter: The project specific converter or None if not found.
+    """
+    project_module_name = None
+
+    # Check for project option (-p or --project).
+    arglist = sys.argv[1:]
+    for index, argval in enumerate(arglist):
+        if argval.startswith("-p="):
+            project_module_name = argval[3:]
+        elif argval.startswith("--project="):
+            project_module_name = argval[10:]
+        elif argval in ('-p', '--project') and (index + 1) < len(arglist):
+            project_module_name = arglist[index + 1]
+
+        if project_module_name is not None:
+            break
+
+
+    if project_module_name is not None:
+        # Dynamically load the module and search for an AbstractConverter class definition
+        sys.path.append(os.path.dirname(project_module_name))
+        project_module_name = os.path.basename(project_module_name).replace('.py', '')
+        module = importlib.import_module(project_module_name)
+
+        #Filter classes that are defined in the module directly.
+        classes = inspect.getmembers(module, inspect.isclass)
+        classes = {name: cls for name, cls in classes if cls.__module__ == project_module_name}
+
+        for class_name, class_def in classes.items():
+            if issubclass(class_def, AbstractConverter):
+                log_verbose(f"Found project specific converter type: {class_name}")
+                return class_def
+
+        raise ValueError(f"No AbstractConverter derived class found in {project_module_name}")
+
+    return None
+
+def _create_out_folder(path: str) -> None:
+    # lobster-trace: SwRequirements.sw_req_markdown_out_folder
+    """Create output folder if it doesn't exist.
+    """
+    if 0 < len(path):
+        if not os.path.exists(path):
+            try:
+                os.makedirs(path)
+            except OSError as e:
+                print(f"Failed to create folder {path}: {e}", file=sys.stderr)
+                raise
 
 # Main *************************************************************************
 

@@ -19,7 +19,9 @@
 cd ../plantuml
 chmod +x get_plantuml.sh
 . ./get_plantuml.sh
-cd ../req2markdown
+PLANTUML="$(dirname "$0")/../plantuml/plantuml.jar"
+export PLANTUML
+cd ../req2docx
 
 if [ ! -d "out" ]; then
     mkdir out
@@ -28,7 +30,7 @@ fi
 # ****************************************************************************************************
 # Software Requirements
 # ****************************************************************************************************
-SWE_REQ_OUT_FORMAT="markdown"
+SWE_REQ_OUT_FORMAT="docx"
 SWE_REQ_OUT_DIR="./out/sw-requirements/$SWE_REQ_OUT_FORMAT"
 
 if [ ! -d "$SWE_REQ_OUT_DIR" ]; then
@@ -36,7 +38,7 @@ if [ ! -d "$SWE_REQ_OUT_DIR" ]; then
 fi
 
 echo "Generate software requirements ..."
-pyTRLCConverter --source=../../doc/sw-requirements --source=../../doc/models -o="$SWE_REQ_OUT_DIR" --verbose --project=req2markdown "$SWE_REQ_OUT_FORMAT"
+pyTRLCConverter --source=../../doc/sw-requirements --source=../../doc/models --verbose -o="$SWE_REQ_OUT_DIR"  --project=custom_docx  --verbose "$SWE_REQ_OUT_FORMAT" --template ACME.docx
 
 if [ $? -ne 0 ]; then
     read -p "Press any key to continue..."

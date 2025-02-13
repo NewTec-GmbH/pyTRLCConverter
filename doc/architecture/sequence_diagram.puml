@@ -1,61 +1,54 @@
 @startuml sequence_diagram
 
 participant "main" as main
+participant "ItemWalker" as walker
 participant "Format converter" as formatConverter
-participant "Proj. specific converter" as projSpecConv
+participant "TRLC" as trlc
 
 autoactivate on
 
 -> main
 
-loop every converter in converter table
-    main -> formatConverter: register command specific\nprogram arguments
+loop every converter in built-in converter table
+    main -> formatConverter: register command specific program arguments
     main <-- formatConverter
 end
 
-main -> main: get TRLC symbols
-main <-- main: TRLC symbols
+alt "project specific converter is available"
+    main -> formatConverter: load converter module
+    main <-- formatConverter
+    main -> formatConverter: register command specific program arguments
+    main <-- formatConverter
+end
 
-main -> formatConverter: convert with program arguments, TRLC symbols
+main -> trlc: get TRLC symbols using sources argument
+main <-- trlc: TRLC symbols
 
-    loop every TRLC document
-        formatConverter -> formatConverter: create corresponding output file
+main -> formatConverter: Create converter based on command argument
+main <-- formatConverter: converter
 
-            alt Project specific converter is available
-                formatConverter -> projSpecConv: initialize
-                formatConverter <-- projSpecConv
-            end
+main -> walker: walk symbols using converter and program arguments 
 
-            loop every item in TRLC symbols
+walker -> formatConverter: init with arguments
+walker <-- formatConverter: Result
 
-                alt Item is a section
-
-                    alt Project specific converter is available
-                        formatConverter -> projSpecConv: convert section
-                        formatConverter <-- projSpecConv: Result
-                    else Project specific converter is NOT available
-                        formatConverter -> formatConverter: convert section
-                        formatConverter <-- formatConverter: Result
-                    end
-
-                else Item is a record object
-
-                    alt Project specific converter is available
-                        formatConverter -> projSpecConv: convert record object
-                        formatConverter <-- projSpecConv: Result
-                    else Project specific converter is NOT available
-                        formatConverter -> formatConverter: convert record object
-                        formatConverter <-- formatConverter: Result
-                    end
-
-                end
-
-            end
-
-        formatConverter <-- formatConverter
+loop every TRLC document
+    walker -> formatConverter: create corresponding output
+    walker <-- formatConverter
+    loop every item in TRLC document
+        alt Item is a section
+            walker -> formatConverter: convert section
+            walker <-- formatConverter: Result
+        else Item is a record object
+            walker -> formatConverter: convert record object
+            walker <-- formatConverter: Result
+        end
     end
+end
+walker -> formatConverter: finish
+walker <-- formatConverter: Result
 
-main <-- formatConverter: Status
+main <-- walker: Status
 
 <-- main: Status
 

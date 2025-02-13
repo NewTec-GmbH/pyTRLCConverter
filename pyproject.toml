@@ -23,6 +23,7 @@ classifiers = [
 dependencies = [
     "toml >= 0.10.2",
     "requests >= 2.32.0",
+    "python-docx >= 1.1.2",
     "trlc >= 2.0.1"
 ]
 
