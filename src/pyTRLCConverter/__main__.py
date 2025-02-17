@@ -27,7 +27,6 @@ import inspect
 import os
 import sys
 import argparse
-from typing import Optional
 from pyTRLCConverter.abstract_converter import AbstractConverter
 from pyTRLCConverter.dump_converter import DumpConverter
 from pyTRLCConverter.item_walker import ItemWalker
@@ -57,6 +56,19 @@ BUILD_IN_CONVERTER_LIST = [
 
 # Functions ********************************************************************
 
+def _extend_description() -> str:
+    """Manually extend the description with the positional arguments for the subcommands.
+    
+    Returns:
+        str: Formatted description that includes the built in commands."""
+    description = PROG_DESC + "\n\n"
+    description += "positional arguments:\n"
+    description += f"  {{{','.join((converter.get_subcommand() for converter in BUILD_IN_CONVERTER_LIST)) + ',...'}}}\n"
+    for converter in BUILD_IN_CONVERTER_LIST:
+        description += f"    {converter.get_subcommand():20}{converter.get_description():80}\n"
+    description += f"    {'...':20}{'Any subcommand implemented by the custom parser provided via --project.':80}\n"
+    return description
+
 def _create_args_parser() -> argparse.ArgumentParser:
     # lobster-trace: SwRequirements.sw_req_cli_help
     """ Creater parser for command line arguments.
@@ -65,8 +77,9 @@ def _create_args_parser() -> argparse.ArgumentParser:
         argparse.ArgumentParser:  The parser object for command line arguments.
     """
     parser = argparse.ArgumentParser(prog=PROG_NAME,
-                                     description=PROG_DESC,
-                                     epilog=PROG_EPILOG)
+                                     description=_extend_description(),
+                                     epilog=PROG_EPILOG,
+                                     formatter_class=argparse.RawDescriptionHelpFormatter)
 
     # lobster-trace: SwRequirements.sw_req_cli_version
     parser.add_argument(
@@ -146,25 +159,29 @@ def main() -> int:
     """
     ret_status = Ret.OK
 
-    # Handle program arguments.
-    args_parser = _create_args_parser()
-    args_sub_parser = args_parser.add_subparsers(required='True')
+    # Handle fixed program arguments.
+    initial_parser = _create_args_parser()
+    parsed_args, remaining_args = initial_parser.parse_known_args()
+
+    # Create parser for dynamic project specific arguments.
+    command_parser = argparse.ArgumentParser()
+    args_sub_parser = command_parser.add_subparsers(required=True)
 
     # Check if a project specific converter is given and load it.
+    project_converter = None
     project_converter_cmd = None
-    project_converter = _get_project_converter()
-
-    if project_converter is not None:
-        project_converter.register(args_sub_parser, project_converter)
+    if parsed_args.project:
+        project_converter = _get_project_converter(parsed_args.project)
         project_converter_cmd = project_converter.get_subcommand()
+        project_converter.register(args_sub_parser, project_converter)
 
-    # Load the built-in converters unless a project converter is replacing built-in.
+    # Load the built-in converters unless a project converter is replacing a built-in.
     for converter in BUILD_IN_CONVERTER_LIST:
         if converter.get_subcommand() != project_converter_cmd:
             converter.register(args_sub_parser, converter)
 
-
-    args = args_parser.parse_args()
+    # Parse the remaining args that are command specific.
+    args = command_parser.parse_args(remaining_args, namespace=parsed_args)
 
     if args is None:
         ret_status = Ret.ERROR
@@ -202,47 +219,29 @@ def main() -> int:
 
     return ret_status
 
-def _get_project_converter() -> Optional[AbstractConverter]:
+def _get_project_converter(project_module_name) -> AbstractConverter:
     # lobster-trace: SwRequirements.sw_req_prj_spec_file
     """Get the project specific converter class from a --project or -p argument.
 
     Returns:
         AbstractConverter: The project specific converter or None if not found.
     """
-    project_module_name = None
 
-    # Check for project option (-p or --project).
-    arglist = sys.argv[1:]
-    for index, argval in enumerate(arglist):
-        if argval.startswith("-p="):
-            project_module_name = argval[3:]
-        elif argval.startswith("--project="):
-            project_module_name = argval[10:]
-        elif argval in ('-p', '--project') and (index + 1) < len(arglist):
-            project_module_name = arglist[index + 1]
+    # Dynamically load the module and search for an AbstractConverter class definition
+    sys.path.append(os.path.dirname(project_module_name))
+    project_module_name = os.path.basename(project_module_name).replace('.py', '')
+    module = importlib.import_module(project_module_name)
 
-        if project_module_name is not None:
-            break
+    #Filter classes that are defined in the module directly.
+    classes = inspect.getmembers(module, inspect.isclass)
+    classes = {name: cls for name, cls in classes if cls.__module__ == project_module_name}
 
+    for class_name, class_def in classes.items():
+        if issubclass(class_def, AbstractConverter):
+            log_verbose(f"Found project specific converter type: {class_name}")
+            return class_def
 
-    if project_module_name is not None:
-        # Dynamically load the module and search for an AbstractConverter class definition
-        sys.path.append(os.path.dirname(project_module_name))
-        project_module_name = os.path.basename(project_module_name).replace('.py', '')
-        module = importlib.import_module(project_module_name)
-
-        #Filter classes that are defined in the module directly.
-        classes = inspect.getmembers(module, inspect.isclass)
-        classes = {name: cls for name, cls in classes if cls.__module__ == project_module_name}
-
-        for class_name, class_def in classes.items():
-            if issubclass(class_def, AbstractConverter):
-                log_verbose(f"Found project specific converter type: {class_name}")
-                return class_def
-
-        raise ValueError(f"No AbstractConverter derived class found in {project_module_name}")
-
-    return None
+    raise ValueError(f"No AbstractConverter derived class found in {project_module_name}")
 
 def _create_out_folder(path: str) -> None:
     # lobster-trace: SwRequirements.sw_req_markdown_out_folder
