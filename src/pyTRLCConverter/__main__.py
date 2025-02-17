@@ -58,7 +58,7 @@ BUILD_IN_CONVERTER_LIST = [
 
 def _extend_description() -> str:
     """Manually extend the description with the positional arguments for the subcommands.
-    
+
     Returns:
         str: Formatted description that includes the built in commands."""
     description = PROG_DESC + "\n\n"
@@ -164,7 +164,7 @@ def main() -> int:
     parsed_args, remaining_args = initial_parser.parse_known_args()
 
     # Create parser for dynamic project specific arguments.
-    command_parser = argparse.ArgumentParser()
+    command_parser = argparse.ArgumentParser(prog=PROG_NAME + " command parser:")
     args_sub_parser = command_parser.add_subparsers(required=True)
 
     # Check if a project specific converter is given and load it.
