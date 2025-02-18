@@ -22,11 +22,13 @@
 # If not, see <https://www.gnu.org/licenses/>.
 
 # Imports **********************************************************************
+
+import argparse
 import importlib
 import inspect
 import os
 import sys
-import argparse
+
 from pyTRLCConverter.abstract_converter import AbstractConverter
 from pyTRLCConverter.dump_converter import DumpConverter
 from pyTRLCConverter.item_walker import ItemWalker
@@ -59,6 +61,10 @@ BUILD_IN_CONVERTER_LIST = [
 def _extend_description() -> str:
     """Manually extend the description with the positional arguments for the subcommands.
 
+    This is needed to extend the help message of the initial parser,
+    so the build in converter subcommands are displayed.
+    Requires the RawDescriptionHepFormat formatter for the parser to look nice.
+
     Returns:
         str: Formatted description that includes the built in commands."""
     description = PROG_DESC + "\n\n"
@@ -71,7 +77,7 @@ def _extend_description() -> str:
 
 def _create_args_parser() -> argparse.ArgumentParser:
     # lobster-trace: SwRequirements.sw_req_cli_help
-    """ Creater parser for command line arguments.
+    """ Create parser for command line arguments.
 
     Returns:
         argparse.ArgumentParser:  The parser object for command line arguments.
@@ -224,21 +230,24 @@ def _get_project_converter(project_module_name) -> AbstractConverter:
     """Get the project specific converter class from a --project or -p argument.
 
     Returns:
-        AbstractConverter: The project specific converter or None if not found.
+        AbstractConverter: The project specific converter.
+
+    Raises:
+        ValueError.
     """
 
-    # Dynamically load the module and search for an AbstractConverter class definition
+    # Dynamically load the module and search for a subclass of AbstractConverter.
     sys.path.append(os.path.dirname(project_module_name))
     project_module_name = os.path.basename(project_module_name).replace('.py', '')
     module = importlib.import_module(project_module_name)
 
-    #Filter classes that are defined in the module directly.
+    # Filter classes that are defined in the module directly.
     classes = inspect.getmembers(module, inspect.isclass)
     classes = {name: cls for name, cls in classes if cls.__module__ == project_module_name}
 
     for class_name, class_def in classes.items():
         if issubclass(class_def, AbstractConverter):
-            log_verbose(f"Found project specific converter type: {class_name}")
+            log_verbose(f"Found project specific converter type: {class_name} in {project_module_name}.py")
             return class_def
 
     raise ValueError(f"No AbstractConverter derived class found in {project_module_name}")
