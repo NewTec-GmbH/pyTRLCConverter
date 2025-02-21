@@ -1,4 +1,5 @@
 License information
 -------------------
 
-.. include:: ../../../LICENSE
+.. literalinclude:: ../../../LICENSE
+    :language: none

@@ -34,7 +34,8 @@
         
   <section id="pytrlcconverter-documentation">
 <h1>pyTRLCConverter documentation<a class="headerlink" href="#pytrlcconverter-documentation" title="Link to this heading">¶</a></h1>
-<p>pyTRLCConverter is a command-line tool to convert TRLC files to different output formats, e.g. Markdown. Because the definition of TRLC types is project specific, it supports to inject project specific conversion functions for sections and record objects.</p>
+<p>pyTRLCConverter is a command-line tool to convert TRLC files to different output formats, e.g. Markdown or docx.
+Since the definition of TRLC types is project-specific, the built-in converters can be extended in an object-oriented manner.</p>
 <p class="plantuml">
 <img src="_images/plantuml-700a9a2932e3309164cb60e2f13b75ee3901479b.png" alt="&#64;startuml context_diagram
 
@@ -68,17 +69,12 @@ tool ...&gt; dstFiles: &lt;&lt;flow&gt;&gt;
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="sw_requirements.html">SW-Requirements</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="sw_requirements.html#pytrlcconverter">pyTRLCConverter</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="sw_tests.html">SW-Tests</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="sw_tests.html#sw-test">SW-Test</a></li>
-<li class="toctree-l2"><a class="reference internal" href="sw_tests.html#tc1">tc1</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="sw_requirements.html">SW-Requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sw_tests.html">SW-Test Cases</a></li>
 <li class="toctree-l1"><a class="reference internal" href="sw_req_tracing_report.html">SW-Requirements Tracing Report</a></li>
 <li class="toctree-l1"><a class="reference internal" href="sw_test_tracing_report.html">SW-Tests Tracing Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="coverage_resport.html">Coverage Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sw_test_result_report.html">SW Test Result Report</a></li>
 </ul>
 </div>
 <section id="license-information">
@@ -105,7 +101,7 @@ tool ...&gt; dstFiles: &lt;&lt;flow&gt;&gt;
 
     <div class="footer" role="contentinfo">
     &#169; Copyright 2025, NewTec GmbH.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.0.
     </div>
   </body>
 </html>
