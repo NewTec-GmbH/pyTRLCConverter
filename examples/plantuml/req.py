@@ -22,6 +22,7 @@
 # Imports **********************************************************************
 import os
 import shutil
+from pyTRLCConverter.base_converter import RecordsPolicy
 from pyTRLCConverter.ret import Ret
 from pyTRLCConverter.plantuml import PlantUML
 
@@ -33,9 +34,23 @@ from pyTRLCConverter.trlc_helper import Record_Object
 # Classes **********************************************************************
 
 
-class CustomMarkDownConverter(MarkdownConverter):
+class ExamplePlantumlMarkDownConverter(MarkdownConverter):
     """Custom Project specific Markdown Converter.
     """
+
+    def __init__(self, args: any) -> None:
+        """
+        Initialize the custom markdown converter.
+        """
+        super().__init__(args)
+
+        # Set project specific record handlers for the converter.
+        self._set_project_record_handlers(
+           [
+                ("PlantUML", self._print_diagram),
+           ]
+        )
+        self._record_policy = RecordsPolicy.RECORD_CONVERT_ALL
 
     @staticmethod
     def get_description() -> str:
@@ -46,45 +61,6 @@ class CustomMarkDownConverter(MarkdownConverter):
         """
         return "Convert into project extended markdown format."
 
-    def convert_section(self, section: str, level: int) -> Ret:
-        """Converts a section to Markdown format.
-
-        Args:
-            section (str): Section to convert
-            level (int): Current level of the section
-
-        Returns:
-            Ret: Status
-        """
-        markdown_text = self.markdown_create_heading(section, level + 1)
-        self._fd.write(markdown_text)
-
-        return Ret.OK
-
-    # pylint: disable=unused-argument
-    def convert_record_object(self, record: Record_Object, level: int) -> Ret:
-        """Converts a record object to Markdown format.
-
-        Args:
-            record (Record_Object): Record object to convert
-            level (int): Current level of the record object
-
-        Returns:
-            Ret: Status
-        """
-
-        if record.n_typ.name == "Diagram":
-            self._print_diagram(record, level)
-
-        elif record.n_typ.name == "Requirement":
-            self._print_req(record, level)
-
-        else:
-            # Skipped.
-            pass
-
-        return Ret.OK
-
     def _print_table_head(self) -> None:
         """Prints the table head for software requirements and constraints.
         """
@@ -94,7 +70,7 @@ class CustomMarkDownConverter(MarkdownConverter):
         self._fd.write(markdown_table_head)
 
     # pylint: disable=unused-argument
-    def _print_diagram(self, diagram: Record_Object, level: int) -> None:
+    def _print_diagram(self, diagram: Record_Object, level: int) -> Ret:
         """Prints the diagram.
 
         Args:
@@ -146,6 +122,8 @@ class CustomMarkDownConverter(MarkdownConverter):
             file_dst_path, caption)
         self._fd.write(markdown_image)
 
+        return Ret.OK
+
     def _print_req(self, req: Record_Object, level: int) -> None:
         """Prints the requirement.
 
@@ -153,7 +131,6 @@ class CustomMarkDownConverter(MarkdownConverter):
             req (Record_Object): Requirement to print
             level (int): Current level of the record object
         """
-        req_attributes = req.to_python_dict()
         description = self._get_attribute(req, "description")
 
         markdown_text = self.markdown_create_heading(req.name, level + 1)

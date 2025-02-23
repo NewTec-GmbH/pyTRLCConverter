@@ -23,6 +23,7 @@ Author: Norbert Schulz (norbert.schulz@newtec.de)
 # Imports **********************************************************************
 import os
 import sys
+import traceback
 from trlc.ast import Symbol_Table
 
 from pyTRLCConverter.abstract_converter import AbstractConverter
@@ -139,6 +140,7 @@ class ItemWalker:  # pylint: disable=too-few-public-methods
                     break
         except Exception as e:  # pylint: disable=broad-except
             print(f"Error processing item {item}: {e}", file=sys.stderr)
+            traceback.print_exc()
             result = Ret.ERROR
 
         return Ret.OK

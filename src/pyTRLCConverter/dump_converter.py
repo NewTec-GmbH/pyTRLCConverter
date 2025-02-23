@@ -89,7 +89,7 @@ class DumpConverter(BaseConverter):
         print(f"{' ' * level}Section: {section} at level: {level}")
         return Ret.OK
 
-    def convert_record_object(self, record: Record_Object, level: int) -> Ret:
+    def convert_record_object_generic(self, record: Record_Object, level: int) -> Ret:
         """Process the given record object.
 
         Args:

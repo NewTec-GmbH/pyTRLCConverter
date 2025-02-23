@@ -29,13 +29,14 @@ rem Software Requirements
 rem ****************************************************************************************************
 set SWE_REQ_OUT_FORMAT=docx
 set SWE_REQ_OUT_DIR=.\out\sw-requirements\%SWE_REQ_OUT_FORMAT%
+set SWE_REQ_CONVERTER=..\ProjectConverter\req2docx
 
 if not exist %SWE_REQ_OUT_DIR% (
     md %SWE_REQ_OUT_DIR%
 )
 
 echo Generate software requirements ...
-pyTRLCConverter --source=..\..\doc\sw-requirements --source=..\..\doc\models --verbose -o=%SWE_REQ_OUT_DIR% --project=custom_docx %SWE_REQ_OUT_FORMAT% --template ACME.docx
+pyTRLCConverter --source=..\..\doc\sw-requirements --source=..\..\doc\models --verbose -o=%SWE_REQ_OUT_DIR% --project=%SWE_REQ_CONVERTER% %SWE_REQ_OUT_FORMAT% --template ACME.docx
 
 if errorlevel 1 (
     pause

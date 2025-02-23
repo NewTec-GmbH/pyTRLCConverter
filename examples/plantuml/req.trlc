@@ -2,7 +2,7 @@ package Requirements
 
 section "Heading" {
 
-    Diagram context_diagram {
+    PlantUML context_diagram {
         file_path   = "diagram.puml"
         caption     = "Context diagram"
     }

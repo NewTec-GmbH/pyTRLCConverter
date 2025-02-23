@@ -30,10 +30,11 @@ fi
 # ****************************************************************************************************
 SW_TEST_OUT_FORMAT="markdown"
 SW_TEST_OUT_DIR="./out/sw-tests/$SW_TEST_OUT_FORMAT"
+SW_TEST_CONVERTER="../ProjectConverter/tc2markdown"
 
 if [ ! -d "$SW_TEST_OUT_DIR" ]; then
     mkdir -p "$SW_TEST_OUT_DIR"
 fi
 
 echo "Generate software test cases ..."
-pyTRLCConverter --source=../../doc/sw-requirements --source=../../doc/sw-test --exclude=../../doc/sw-requirements --source=../../doc/models -o="$SW_TEST_OUT_DIR" --verbose --project=tc2markdown "$SW_TEST_OUT_FORMAT"
+pyTRLCConverter --source=../../doc/sw-requirements --source=../../doc/sw-test --exclude=../../doc/sw-requirements --source=../../doc/models -o="$SW_TEST_OUT_DIR" --verbose --project="$SW_TEST_CONVERTER" "$SW_TEST_OUT_FORMAT"

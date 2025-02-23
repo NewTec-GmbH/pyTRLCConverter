@@ -116,7 +116,7 @@ class DocxConverter(BaseConverter):
         self._docx.add_heading(section, level)
         return Ret.OK
 
-    def convert_record_object(self, record: Record_Object, level: int) -> Ret:
+    def convert_record_object_generic(self, record: Record_Object, level: int) -> Ret:
         # lobster-trace: SwRequirements.sw_req_docx_record
         """Process the given record object.
 

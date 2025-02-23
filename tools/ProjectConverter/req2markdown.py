@@ -22,16 +22,17 @@
 # Imports **********************************************************************
 from pyTRLCConverter.base_converter import RecordsPolicy
 from pyTRLCConverter.ret import Ret
-
-from pyTRLCConverter.markdown_converter import MarkdownConverter
 from pyTRLCConverter.trlc_helper import Record_Object
+
+# pylint: disable=wrong-import-order
+from generic_rsl_markdown_converter import GenericRslMarkdownConverter
 
 # Variables ********************************************************************
 
 # Classes **********************************************************************
 
 
-class CustomMarkDownConverter(MarkdownConverter):
+class ProjectMarkDownConverter(GenericRslMarkdownConverter):
     """Custom Project specific Markdown Converter.
     """
 
@@ -44,9 +45,15 @@ class CustomMarkDownConverter(MarkdownConverter):
         # Set project specific record handlers for the converter.
         self._set_project_record_handlers(
            [
-                ("Requirement", self._print_req),
+                ("Image", self._print_image),
+                ("Info", self._print_info),
+                ("PlantUML", self._print_plantuml),
+                ("SwReq", self._print_sw_req),
+                ("SwReqNonFunc", self._print_sw_req),
+                ("SwConstraint", self._print_sw_constraint),
            ]
         )
+
         self._record_policy = RecordsPolicy.RECORD_SKIP_UNHANDLED
 
     @staticmethod
@@ -58,21 +65,41 @@ class CustomMarkDownConverter(MarkdownConverter):
         """
         return "Convert into project extended markdown format."
 
-    def _print_req(self, req: Record_Object, level: int) -> Ret:
-        """Prints the requirement.
+    def _print_sw_req(self, sw_req: Record_Object, level: int) -> Ret:
+        """Prints the software requirement.
 
         Args:
-            req (Record_Object): Requirement to print
+            sw_req (Record_Object): Software requirement to print
             level (int): Current level of the record object
         """
 
         self._write_empty_line_on_demand()
 
         attribute_translation = {
-            "description": "Description"
+            "description": "Description",
+            "note": "Note",
+            "verification_criteria": "Verification Criteria",
+            "derived": "Derived"
         }
 
-        return self._convert_record_object(req, level, attribute_translation)
+        return self._convert_record_object(sw_req, level, attribute_translation)
+
+    def _print_sw_constraint(self, sw_constraint: Record_Object, level: int) -> Ret:
+        """Prints the software constraint.
+
+        Args:
+            sw_constraint (Record_Object): Software constraint to print
+            level (int): Current level of the record object
+        """
+        self._write_empty_line_on_demand()
+
+        attribute_translation = {
+            "description": "Description",
+            "note": "Note",
+            "derived": "Derived"
+        }
+
+        return self._convert_record_object(sw_constraint, level, attribute_translation)
 
 # Functions ********************************************************************
 

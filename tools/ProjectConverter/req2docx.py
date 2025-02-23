@@ -20,12 +20,14 @@
 # If not, see <https://www.gnu.org/licenses/>.
 
 # Imports **********************************************************************
-import os
 import docx
+from pyTRLCConverter.base_converter import RecordsPolicy
 from pyTRLCConverter.docx_converter import DocxConverter
 from pyTRLCConverter.ret import Ret
-from pyTRLCConverter.plantuml import PlantUML
 from pyTRLCConverter.trlc_helper import Record_Object
+
+# pylint: disable=wrong-import-order
+from image_processing import convert_plantuml_to_image, locate_file
 
 # Variables ********************************************************************
 
@@ -35,8 +37,20 @@ class CustomDocxConverter(DocxConverter):
     """Custom Project specific Docx format converter. 
     """
     def __init__(self, args: any) -> None:
+        """
+        Initialize the custom docx converter.
+        """
         super().__init__(args)
 
+        # set project specific record handlers for the converter.
+        self._set_project_record_handlers(
+           [
+                ("Info", self._convert_record_object_info),
+                ("Image", self._convert_record_object_image),
+                ("PlantUML", self._convert_record_object_plantuml),
+           ]
+        )
+        self._record_policy = RecordsPolicy.RECORD_CONVERT_ALL
         self._img_counter = 1
 
     @staticmethod
@@ -49,26 +63,6 @@ class CustomDocxConverter(DocxConverter):
         return "Convert into project specific docx format."
 
     # pylint: disable=unused-argument
-    def convert_record_object(self, record: Record_Object, level: int) -> Ret:
-        """Converts a record object to docx format.
-
-        Args:
-            record (Record_Object): Record object to convert
-            level (int): Current level of the record object
-        
-        Returns:
-            Ret: Status
-        """
-        match record.n_typ.name:
-            case "Info":
-                ret = self._convert_record_object_info(record, level)
-            case "Diagram":
-                ret = self._convert_record_object_diagram(record, level)
-            case _:
-                ret = super().convert_record_object(record, level)
-
-        return ret
-
     def _convert_record_object_info(self, record: Record_Object, level: int) -> Ret:
         """Convert an information record object to the destination format.
 
@@ -79,13 +73,34 @@ class CustomDocxConverter(DocxConverter):
         Returns:
             Ret: Status
         """
-        attributes = record.to_python_dict()
-        if "description" in attributes:
-            self._docx.add_paragraph(self._get_attribute(record, "description"))
-
+        self._docx.add_paragraph(self._get_attribute(record, "description"))
         return Ret.OK
 
-    def _convert_record_object_diagram(self, record: Record_Object, level: int) -> Ret:
+    def _convert_record_object_plantuml(self, record: Record_Object, level: int) -> Ret:
+        """Convert a Plantuml diagram record object to the destination format.
+
+        Args:
+            record (Record_Object): The record object to convert.
+            level (int): Current level of the record object
+        
+        Returns:
+            Ret: Status
+        """
+        result = Ret.ERROR
+
+        image_file = convert_plantuml_to_image(
+            self._get_attribute(record, "file_path"),
+            self._args.out,
+            self._args.source
+        )
+
+        if image_file is not None:
+            self._add_image(image_file, self._get_attribute(record, "caption"), level)
+            result = Ret.OK
+
+        return result
+
+    def _convert_record_object_image(self, record: Record_Object, level: int) -> Ret:
         """Convert a software diagram record object to the destination format.
 
         Args:
@@ -95,38 +110,30 @@ class CustomDocxConverter(DocxConverter):
         Returns:
             Ret: Status
         """
-
         result = Ret.ERROR
 
-        attributes = record.to_python_dict()
-        file_path = self._locate_file(attributes.get("file_path"))
-        if file_path is not None:
-            puml = PlantUML()
-            puml.generate("png", file_path, self._args.out)
-
-            file_dst_path = os.path.basename(file_path)
-            file_dst_path = os.path.splitext(file_dst_path)[0]
-            file_dst_path += ".png"
-
-            # PlantUML uses as output filename the diagram name if available.
-            # The diagram name may differ from the filename.
-            # To aovid that a invalid reference will be in the Markdown document,
-            # ensure that the generated filename is as expected.
-            expected_dst_path = os.path.join(self._args.out, file_dst_path)
-            if os.path.isfile(expected_dst_path) is False:
-                raise FileNotFoundError(
-                    f"{file_path} diagram name ('@startuml <name>') may differ from file name,"
-                    f"expected {expected_dst_path}."
-                )
-            p = self._docx.add_paragraph()
-            p.paragraph_format.alignment = docx.enum.text.WD_ALIGN_PARAGRAPH.CENTER
-            run = p.add_run()
-            run.add_picture(expected_dst_path, width=docx.shared.Inches(6))
-            run.add_text(f"Figure {self._img_counter} {self._get_attribute(record, 'caption')}")
-
+        image_file = locate_file(self._get_attribute(record, "file_path"), self._args.source)
+        if image_file is not None:
+            self._add_image(image_file, self._get_attribute(record, "caption"), level)
             result = Ret.OK
 
         return result
+
+    def _add_image(self, image_file: str, caption: str, level:int) -> None:
+        """Add an image to the docx file.
+
+        Args:
+            image_file (str): The image file to add.
+            caption (str): The caption of the image.
+            level (int): Current level of the record object
+        """
+        p = self._docx.add_paragraph()
+        p.paragraph_format.alignment = docx.enum.text.WD_ALIGN_PARAGRAPH.CENTER
+        run = p.add_run()
+        run.add_picture(image_file, width=docx.shared.Inches(6))
+        run.add_text(f"Figure {self._img_counter} {caption}")
+
+        self._img_counter += 1
 
 # Functions ********************************************************************
 

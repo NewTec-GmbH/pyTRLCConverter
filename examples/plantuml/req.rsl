@@ -1,6 +1,6 @@
 package Requirements
 
-type Diagram {
+type PlantUML {
     file_path String
     caption String
 }

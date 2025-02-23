@@ -20,8 +20,9 @@
 # If not, see <https://www.gnu.org/licenses/>.
 
 # Imports **********************************************************************
+from enum import Enum
 import os
-from typing import Optional
+from typing import List, Optional
 from pyTRLCConverter.abstract_converter import AbstractConverter
 from pyTRLCConverter.ret import Ret
 from pyTRLCConverter.trlc_helper import Record_Object
@@ -29,6 +30,18 @@ from pyTRLCConverter.trlc_helper import Record_Object
 # Variables ********************************************************************
 
 # Classes **********************************************************************
+
+
+class RecordsPolicy(Enum):
+    """
+    Enum class to define policies for handling records during conversion.
+
+    Attributes:
+        RECORD_CONVERT_ALL (int): Convert all records, eventually in generic mode.
+        RECORD_SKIP_UNHANDLED (int): Skip unhandled records.
+    """
+    RECORD_CONVERT_ALL= 1
+    RECORD_SKIP_UNHANDLED = 2
 
 
 class BaseConverter(AbstractConverter):
@@ -53,6 +66,12 @@ class BaseConverter(AbstractConverter):
 
         # Store the command line arguments.
         self._args = args
+
+        # Record handler dictionary for project specific record handlers.
+        self._record_handler_dict = {}  # type: dict[str, callable]
+
+        # Set the default policy for handling records.
+        self._record_policy = RecordsPolicy.RECORD_CONVERT_ALL
 
         # Set the default value for empty attributes.
         self._empty_attribute_value = BaseConverter.EMPTY_ATTRIBUTE_DEFAULT
@@ -122,7 +141,17 @@ class BaseConverter(AbstractConverter):
         Returns:
             Ret: Status
         """
-        return Ret.OK
+
+        # check for a specific record handler
+        record_handler = self._record_handler_dict.get(record.n_typ.name)
+        if callable(record_handler):
+            result = record_handler(record, level)
+        elif self._record_policy == RecordsPolicy.RECORD_CONVERT_ALL:
+            result = self.convert_record_object_generic(record, level)
+        else:
+            result = Ret.OK
+
+        return result
 
     def finish(self):
         """Finish the conversion process.
@@ -130,6 +159,37 @@ class BaseConverter(AbstractConverter):
         return Ret.OK
 
     # helpers **************************************************************
+
+    def convert_record_object_generic(self, record: Record_Object, level: int) -> Ret:
+        """Convert a record object generically.
+
+        Args:
+            record (Record_Object): The record object
+            level (int): The record level
+
+        Returns:
+            Ret: Status
+        """
+
+        raise NotImplementedError
+
+    def _set_project_record_handler(self, record_type: str, handler: callable) -> None:
+        """Set a project specific record handler.
+
+        Args:
+            record_type (str): The record type
+            handler (callable): The handler function
+        """
+        self._record_handler_dict[record_type] = handler
+
+    def _set_project_record_handlers(self, handlers: List[tuple[str, callable]]) -> None:
+        """Set project specific record handlers.
+
+        Args:
+            handler (List[tuple[str, callable]]): List of record type and handler function tuples
+        """
+        for record_type, handler in handlers:
+            self._set_project_record_handler(record_type, handler)
 
     def _locate_file(self, file_path: str) -> Optional[str]:
         """

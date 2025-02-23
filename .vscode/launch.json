@@ -19,7 +19,7 @@
                 "--source=../../doc/models",
                 "-o=./out/sw-requirements/markdown",
                 "--verbose",
-                "--project=req2markdown",
+                "--project=../ProjectConverter/req2markdown",
                 "markdown",
             ]
         },
@@ -37,7 +37,7 @@
                 "--source=../../doc/sw-requirements",
                 "--source=../../doc/models",
                 "-o=./out/sw-requirements/docx",
-                "--project=custom_docx",
+                "--project=../ProjectConverter/req2docx",
                 "--verbose",
                 "docx"
             ]

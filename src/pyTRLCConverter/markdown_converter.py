@@ -248,7 +248,7 @@ class MarkdownConverter(BaseConverter):
 
         return Ret.OK
 
-    def convert_record_object(self, record: Record_Object, level: int) -> Ret:
+    def convert_record_object_generic(self, record: Record_Object, level: int) -> Ret:
         # lobster-trace: SwRequirements.sw_req_markdown_record
         """
         Process the given record object.

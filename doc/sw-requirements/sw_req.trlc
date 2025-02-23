@@ -8,6 +8,11 @@ section "pyTRLCConverter" {
         description = "This file contains the software requirements for the pyTRLCConverter tool."
     }
 
+    Generic.PlantUML sw_req_tool_context_diagram {
+        file_path = "../architecture/context_diagram.puml"
+        caption = "PyTRLCConverter Tool Flow"
+    }
+
     section "Software Requirements" {
 
         section "General" {
