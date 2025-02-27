@@ -5,8 +5,7 @@ import Generic
 section "pyTRLCConverter" {
 
     Generic.Info sw_req_info_about_sw_req {
-        description = '''This file contains the software requirements
-        - for the pyTRLCConverter tool.'''
+        description = "This file contains the software requirements for the pyTRLCConverter tool."
     }
 
     Generic.PlantUML sw_req_tool_context_diagram {
