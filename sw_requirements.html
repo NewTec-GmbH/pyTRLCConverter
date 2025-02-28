@@ -39,39 +39,8 @@
 <h1>SW-Requirements<a class="headerlink" href="#sw-requirements" title="Link to this heading">¶</a></h1>
 <section id="pytrlcconverter">
 <span id="sw-req-rst-pytrlcconverter"></span><h2>pyTRLCConverter<a class="headerlink" href="#pytrlcconverter" title="Link to this heading">¶</a></h2>
-<div class="admonition-sw-req-info-about-sw-req admonition" id="sw-req-rst-sw-req-info-about-sw-req">
-<p class="admonition-title">sw_req_info_about_sw_req</p>
-<table class="docutils align-default">
-<thead>
-<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
-<th class="head"><p>Attribute Value</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p>description</p></td>
-<td><p>This file contains the software requirements for the pyTRLCConverter tool.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="admonition-sw-req-tool-context-diagram admonition" id="sw-req-rst-sw-req-tool-context-diagram">
-<p class="admonition-title">sw_req_tool_context_diagram</p>
-<table class="docutils align-default">
-<thead>
-<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
-<th class="head"><p>Attribute Value</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p>file_path</p></td>
-<td><p>../architecture/context_diagram.puml</p></td>
-</tr>
-<tr class="row-odd"><td><p>caption</p></td>
-<td><p>PyTRLCConverter Tool Flow</p></td>
-</tr>
-</tbody>
-</table>
-</div>
+<p>This file contains the software requirements for the pyTRLCConverter tool.</p>
+<img alt="PyTRLCConverter Tool Flow" src="context_diagram.png" />
 <section id="software-requirements">
 <span id="sw-req-rst-software-requirements"></span><h3>Software Requirements<a class="headerlink" href="#software-requirements" title="Link to this heading">¶</a></h3>
 <section id="general">
@@ -85,16 +54,16 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>description</p></td>
+<tr class="row-even"><td><p>Description</p></td>
 <td><p>The software shall be a command-line interface (CLI) application.</p></td>
 </tr>
-<tr class="row-odd"><td><p>note</p></td>
+<tr class="row-odd"><td><p>Note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>derived</p></td>
+<tr class="row-even"><td><p>Derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>verification_criteria</p></td>
+<tr class="row-odd"><td><p>Verification Criteria</p></td>
 <td><p>Every feature shall be accessible via the command line. Therefore its verified by the CLI tests.</p></td>
 </tr>
 </tbody>
@@ -109,16 +78,16 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>description</p></td>
+<tr class="row-even"><td><p>Description</p></td>
 <td><p>The software shall support project specific adaptions for the conversion.</p></td>
 </tr>
-<tr class="row-odd"><td><p>note</p></td>
+<tr class="row-odd"><td><p>Note</p></td>
 <td><p>Every project might have different requirements how the converted output should look like.</p></td>
 </tr>
-<tr class="row-even"><td><p>derived</p></td>
+<tr class="row-even"><td><p>Derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>verification_criteria</p></td>
+<tr class="row-odd"><td><p>Verification Criteria</p></td>
 <td><p>Verify by converting one or more TRLC files with a project specific conversion file.</p></td>
 </tr>
 </tbody>
@@ -133,16 +102,16 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>description</p></td>
+<tr class="row-even"><td><p>Description</p></td>
 <td><p>The software shall provide a version information in the format ‘&lt;program-name&gt; &lt;major&gt;.&lt;minor&gt;.&lt;patch&gt;’.</p></td>
 </tr>
-<tr class="row-odd"><td><p>note</p></td>
+<tr class="row-odd"><td><p>Note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>derived</p></td>
+<tr class="row-even"><td><p>Derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>verification_criteria</p></td>
+<tr class="row-odd"><td><p>Verification Criteria</p></td>
 <td><p>Verify by requesting the version information and use the format ‘&lt;program-name&gt; &lt;major&gt;.&lt;minor&gt;.&lt;patch&gt;’.</p></td>
 </tr>
 </tbody>
@@ -157,16 +126,16 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>description</p></td>
+<tr class="row-even"><td><p>Description</p></td>
 <td><p>The software shall process all TRLC symbols from the TRLC files.</p></td>
 </tr>
-<tr class="row-odd"><td><p>note</p></td>
+<tr class="row-odd"><td><p>Note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>derived</p></td>
+<tr class="row-even"><td><p>Derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>verification_criteria</p></td>
+<tr class="row-odd"><td><p>Verification Criteria</p></td>
 <td><p>Verify DumpConverter output against a known good reference.</p></td>
 </tr>
 </tbody>
@@ -181,16 +150,16 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>description</p></td>
+<tr class="row-even"><td><p>Description</p></td>
 <td><p>The software shall convert the TRLC files to the required destination format.</p></td>
 </tr>
-<tr class="row-odd"><td><p>note</p></td>
+<tr class="row-odd"><td><p>Note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>derived</p></td>
+<tr class="row-even"><td><p>Derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>verification_criteria</p></td>
+<tr class="row-odd"><td><p>Verification Criteria</p></td>
 <td><p>Verify by converting to one or more destination formats. Depended on the available formats.</p></td>
 </tr>
 </tbody>
@@ -205,16 +174,16 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>description</p></td>
+<tr class="row-even"><td><p>Description</p></td>
 <td><p>The software shall show additional conversion information in verbose mode.</p></td>
 </tr>
-<tr class="row-odd"><td><p>note</p></td>
+<tr class="row-odd"><td><p>Note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>derived</p></td>
+<tr class="row-even"><td><p>Derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>verification_criteria</p></td>
+<tr class="row-odd"><td><p>Verification Criteria</p></td>
 <td><p>Verify by converting one or more TRLC files with the verbose mode enabled.</p></td>
 </tr>
 </tbody>
@@ -232,16 +201,16 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>description</p></td>
+<tr class="row-even"><td><p>Description</p></td>
 <td><p>The project specific conversion file shall be a Python file.</p></td>
 </tr>
-<tr class="row-odd"><td><p>note</p></td>
+<tr class="row-odd"><td><p>Note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>derived</p></td>
+<tr class="row-even"><td><p>Derived</p></td>
 <td><p><a class="reference internal" href="#sw-req-rst-sw-req-prj-spec"><span class="std std-ref">SwRequirements.sw_req_prj_spec</span></a></p></td>
 </tr>
-<tr class="row-odd"><td><p>verification_criteria</p></td>
+<tr class="row-odd"><td><p>Verification Criteria</p></td>
 <td><p>Verify by converting one or more TRLC files with a project specific conversion file.</p></td>
 </tr>
 </tbody>
@@ -256,16 +225,16 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>description</p></td>
+<tr class="row-even"><td><p>Description</p></td>
 <td><p>The project specific conversion interface shall be realized by an abstract interface.</p></td>
 </tr>
-<tr class="row-odd"><td><p>note</p></td>
+<tr class="row-odd"><td><p>Note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>derived</p></td>
+<tr class="row-even"><td><p>Derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>verification_criteria</p></td>
+<tr class="row-odd"><td><p>Verification Criteria</p></td>
 <td><p>Verify by converting one or more TRLC files with a project specific conversion file.</p></td>
 </tr>
 </tbody>
@@ -283,16 +252,16 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>description</p></td>
+<tr class="row-even"><td><p>Description</p></td>
 <td><p>The software shall support the command line argument ‘-h’ and --help’ to show the help information.</p></td>
 </tr>
-<tr class="row-odd"><td><p>note</p></td>
+<tr class="row-odd"><td><p>Note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>derived</p></td>
+<tr class="row-even"><td><p>Derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>verification_criteria</p></td>
+<tr class="row-odd"><td><p>Verification Criteria</p></td>
 <td><p>Verify by calling the software with the argument ‘--help’ and check if the help information is shown.</p></td>
 </tr>
 </tbody>
@@ -307,16 +276,16 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>description</p></td>
+<tr class="row-even"><td><p>Description</p></td>
 <td><p>The software shall support the command line argument ‘--version’ to show the version information.</p></td>
 </tr>
-<tr class="row-odd"><td><p>note</p></td>
+<tr class="row-odd"><td><p>Note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>derived</p></td>
+<tr class="row-even"><td><p>Derived</p></td>
 <td><p><a class="reference internal" href="#sw-req-rst-sw-req-version"><span class="std std-ref">SwRequirements.sw_req_version</span></a></p></td>
 </tr>
-<tr class="row-odd"><td><p>verification_criteria</p></td>
+<tr class="row-odd"><td><p>Verification Criteria</p></td>
 <td><p>Verify by calling the software with the argument ‘--version’ and check if the version information is shown.</p></td>
 </tr>
 </tbody>
@@ -331,16 +300,16 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>description</p></td>
+<tr class="row-even"><td><p>Description</p></td>
 <td><p>The software shall support the command line argument ‘-s’ and ‘--source’ multiple times to specify the source file(s) (*.rsl and *.trlc).</p></td>
 </tr>
-<tr class="row-odd"><td><p>note</p></td>
+<tr class="row-odd"><td><p>Note</p></td>
 <td><p>Its equal to TRLC --source program argument.</p></td>
 </tr>
-<tr class="row-even"><td><p>derived</p></td>
+<tr class="row-even"><td><p>Derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>verification_criteria</p></td>
+<tr class="row-odd"><td><p>Verification Criteria</p></td>
 <td><p>Verify by calling the software with the argument ‘--source’ and check if the source file(s) are used for conversion.</p></td>
 </tr>
 </tbody>
@@ -355,16 +324,16 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>description</p></td>
+<tr class="row-even"><td><p>Description</p></td>
 <td><p>The software shall support the command line argument ‘-i’ and ‘--include’ multiple times to specify the file(s) for automatic inclusion.</p></td>
 </tr>
-<tr class="row-odd"><td><p>note</p></td>
+<tr class="row-odd"><td><p>Note</p></td>
 <td><p>Its equal to TRLC --include program argument.</p></td>
 </tr>
-<tr class="row-even"><td><p>derived</p></td>
+<tr class="row-even"><td><p>Derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>verification_criteria</p></td>
+<tr class="row-odd"><td><p>Verification Criteria</p></td>
 <td><p>Verify by calling the software with the argument ‘--include’ and check if the file(s) are included.</p></td>
 </tr>
 </tbody>
@@ -379,16 +348,16 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>description</p></td>
+<tr class="row-even"><td><p>Description</p></td>
 <td><p>The software shall support the command line argument ‘-ex’ and ‘--exclude’ multiple times to specify the file(s) for automatic exclusion.</p></td>
 </tr>
-<tr class="row-odd"><td><p>note</p></td>
+<tr class="row-odd"><td><p>Note</p></td>
 <td><p>This is necessary in case an defined archtecture element traces to a requirement, but the requirement should not be included in the output.</p></td>
 </tr>
-<tr class="row-even"><td><p>derived</p></td>
+<tr class="row-even"><td><p>Derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>verification_criteria</p></td>
+<tr class="row-odd"><td><p>Verification Criteria</p></td>
 <td><p>Verify by calling the software with the argument ‘--exclude’ and check if the file(s) are excluded.</p></td>
 </tr>
 </tbody>
@@ -403,16 +372,16 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>description</p></td>
+<tr class="row-even"><td><p>Description</p></td>
 <td><p>If no project specific conversion file is provided, the software shall use a default conversion.</p></td>
 </tr>
-<tr class="row-odd"><td><p>note</p></td>
+<tr class="row-odd"><td><p>Note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>derived</p></td>
+<tr class="row-even"><td><p>Derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>verification_criteria</p></td>
+<tr class="row-odd"><td><p>Verification Criteria</p></td>
 <td><p>Verify by converting one or more TRLC files without a project specific conversion file.</p></td>
 </tr>
 </tbody>
@@ -427,16 +396,16 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>description</p></td>
+<tr class="row-even"><td><p>Description</p></td>
 <td><p>The software shall support the command line argument ‘-o’ and ‘--out’ to specify the output directory.</p></td>
 </tr>
-<tr class="row-odd"><td><p>note</p></td>
+<tr class="row-odd"><td><p>Note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>derived</p></td>
+<tr class="row-even"><td><p>Derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>verification_criteria</p></td>
+<tr class="row-odd"><td><p>Verification Criteria</p></td>
 <td><p>Verify by calling the software with the argument ‘--out’ and check if the output is written to the specified directory.</p></td>
 </tr>
 </tbody>
@@ -454,16 +423,16 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>description</p></td>
+<tr class="row-even"><td><p>Description</p></td>
 <td><p>The software shall support the conversion into Markdown format.</p></td>
 </tr>
-<tr class="row-odd"><td><p>note</p></td>
+<tr class="row-odd"><td><p>Note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>derived</p></td>
+<tr class="row-even"><td><p>Derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>verification_criteria</p></td>
+<tr class="row-odd"><td><p>Verification Criteria</p></td>
 <td><p>Verify by converting one or more TRLC files into Markdown format.</p></td>
 </tr>
 </tbody>
@@ -478,16 +447,16 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>description</p></td>
+<tr class="row-even"><td><p>Description</p></td>
 <td><p>The Markdown converter shall convert a TRLC section into a Markdown heading by considering the depth level.</p></td>
 </tr>
-<tr class="row-odd"><td><p>note</p></td>
+<tr class="row-odd"><td><p>Note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>derived</p></td>
+<tr class="row-even"><td><p>Derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>verification_criteria</p></td>
+<tr class="row-odd"><td><p>Verification Criteria</p></td>
 <td><p>Verify by converting a TRLC section into a Markdown heading.</p></td>
 </tr>
 </tbody>
@@ -502,16 +471,16 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>description</p></td>
+<tr class="row-even"><td><p>Description</p></td>
 <td><p>The Markdown converter shall convert the attributes of a TRLC record into a Markdown table.</p></td>
 </tr>
-<tr class="row-odd"><td><p>note</p></td>
+<tr class="row-odd"><td><p>Note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>derived</p></td>
+<tr class="row-even"><td><p>Derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>verification_criteria</p></td>
+<tr class="row-odd"><td><p>Verification Criteria</p></td>
 <td><p>Verify by converting consecutive TRLC records into a Markdown table.</p></td>
 </tr>
 </tbody>
@@ -526,16 +495,16 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>description</p></td>
+<tr class="row-even"><td><p>Description</p></td>
 <td><p>The software shall escape all strings according the Markdown format.</p></td>
 </tr>
-<tr class="row-odd"><td><p>note</p></td>
+<tr class="row-odd"><td><p>Note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>derived</p></td>
+<tr class="row-even"><td><p>Derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>verification_criteria</p></td>
+<tr class="row-odd"><td><p>Verification Criteria</p></td>
 <td><p>Verify by using strings with characters, which needs escaping.</p></td>
 </tr>
 </tbody>
@@ -550,16 +519,16 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>description</p></td>
+<tr class="row-even"><td><p>Description</p></td>
 <td><p>The Markdown converter shall provide a function to create a Markdown heading.</p></td>
 </tr>
-<tr class="row-odd"><td><p>note</p></td>
+<tr class="row-odd"><td><p>Note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>derived</p></td>
+<tr class="row-even"><td><p>Derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>verification_criteria</p></td>
+<tr class="row-odd"><td><p>Verification Criteria</p></td>
 <td><p>Verify by creating a Markdown heading.</p></td>
 </tr>
 </tbody>
@@ -574,16 +543,16 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>description</p></td>
+<tr class="row-even"><td><p>Description</p></td>
 <td><p>The Markdown converter shall provide a function to create a Markdown table.</p></td>
 </tr>
-<tr class="row-odd"><td><p>note</p></td>
+<tr class="row-odd"><td><p>Note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>derived</p></td>
+<tr class="row-even"><td><p>Derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>verification_criteria</p></td>
+<tr class="row-odd"><td><p>Verification Criteria</p></td>
 <td><p>Verify by creating a Markdown table.</p></td>
 </tr>
 </tbody>
@@ -598,16 +567,16 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>description</p></td>
+<tr class="row-even"><td><p>Description</p></td>
 <td><p>The Markdown converter shall provide a function to create a Markdown link.</p></td>
 </tr>
-<tr class="row-odd"><td><p>note</p></td>
+<tr class="row-odd"><td><p>Note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>derived</p></td>
+<tr class="row-even"><td><p>Derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>verification_criteria</p></td>
+<tr class="row-odd"><td><p>Verification Criteria</p></td>
 <td><p>Verify by creating a Markdown link.</p></td>
 </tr>
 </tbody>
@@ -622,16 +591,16 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>description</p></td>
+<tr class="row-even"><td><p>Description</p></td>
 <td><p>The Markdown converter shall provide a function to create a Markdown image to embed images.</p></td>
 </tr>
-<tr class="row-odd"><td><p>note</p></td>
+<tr class="row-odd"><td><p>Note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>derived</p></td>
+<tr class="row-even"><td><p>Derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>verification_criteria</p></td>
+<tr class="row-odd"><td><p>Verification Criteria</p></td>
 <td><p>Verify by creating a Markdown image.</p></td>
 </tr>
 </tbody>
@@ -646,16 +615,16 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>description</p></td>
+<tr class="row-even"><td><p>Description</p></td>
 <td><p>The Markdown converter shall provide a function to create colored text in Markdown format.</p></td>
 </tr>
-<tr class="row-odd"><td><p>note</p></td>
+<tr class="row-odd"><td><p>Note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>derived</p></td>
+<tr class="row-even"><td><p>Derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>verification_criteria</p></td>
+<tr class="row-odd"><td><p>Verification Criteria</p></td>
 <td><p>Verify by creating colored text in Markdown format.</p></td>
 </tr>
 </tbody>
@@ -670,16 +639,16 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>description</p></td>
+<tr class="row-even"><td><p>Description</p></td>
 <td><p>The Markdown convert shall provide a function to convert a line feed to Markdown soft return.</p></td>
 </tr>
-<tr class="row-odd"><td><p>note</p></td>
+<tr class="row-odd"><td><p>Note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>derived</p></td>
+<tr class="row-even"><td><p>Derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>verification_criteria</p></td>
+<tr class="row-odd"><td><p>Verification Criteria</p></td>
 <td><p>Verify by creating a text with one and more line feeds.</p></td>
 </tr>
 </tbody>
@@ -694,16 +663,16 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>description</p></td>
+<tr class="row-even"><td><p>Description</p></td>
 <td><p>The Markdown converter shall create the converted files in the specified output folder.</p></td>
 </tr>
-<tr class="row-odd"><td><p>note</p></td>
+<tr class="row-odd"><td><p>Note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>derived</p></td>
+<tr class="row-even"><td><p>Derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>verification_criteria</p></td>
+<tr class="row-odd"><td><p>Verification Criteria</p></td>
 <td><p>Verify by specifing an output folder, that doesn’t exist. It must exist after the conversion.</p></td>
 </tr>
 </tbody>
@@ -720,16 +689,16 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>description</p></td>
+<tr class="row-even"><td><p>Description</p></td>
 <td><p>The software shall create a Markdown file for each TRLC file by default.</p></td>
 </tr>
-<tr class="row-odd"><td><p>note</p></td>
+<tr class="row-odd"><td><p>Note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>derived</p></td>
+<tr class="row-even"><td><p>Derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>verification_criteria</p></td>
+<tr class="row-odd"><td><p>Verification Criteria</p></td>
 <td><p>Verify by converting one or more TRLC files into Markdown format and check if a Markdown file is created for each TRLC file.</p></td>
 </tr>
 </tbody>
@@ -744,16 +713,16 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>description</p></td>
+<tr class="row-even"><td><p>Description</p></td>
 <td><p>The software shall add a top level heading to the Markdown file if there is no top level section.</p></td>
 </tr>
-<tr class="row-odd"><td><p>note</p></td>
+<tr class="row-odd"><td><p>Note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>derived</p></td>
+<tr class="row-even"><td><p>Derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>verification_criteria</p></td>
+<tr class="row-odd"><td><p>Verification Criteria</p></td>
 <td><p>Verify the top level heading in the Markdown file in multiple doc mode.</p></td>
 </tr>
 </tbody>
@@ -771,16 +740,16 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>description</p></td>
+<tr class="row-even"><td><p>Description</p></td>
 <td><p>The software shall create a single Markdown file which combines all TRLC files if requested by command line arguments.</p></td>
 </tr>
-<tr class="row-odd"><td><p>note</p></td>
+<tr class="row-odd"><td><p>Note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>derived</p></td>
+<tr class="row-even"><td><p>Derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>verification_criteria</p></td>
+<tr class="row-odd"><td><p>Verification Criteria</p></td>
 <td><p>Verify by converting one or more TRLC files into Markdown format and check if a single Markdown file is created.</p></td>
 </tr>
 </tbody>
@@ -795,16 +764,16 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>description</p></td>
+<tr class="row-even"><td><p>Description</p></td>
 <td><p>The output file name shall be ‘output.md’ by default.</p></td>
 </tr>
-<tr class="row-odd"><td><p>note</p></td>
+<tr class="row-odd"><td><p>Note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>derived</p></td>
+<tr class="row-even"><td><p>Derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>verification_criteria</p></td>
+<tr class="row-odd"><td><p>Verification Criteria</p></td>
 <td><p>Verify by converting one or more TRLC files into Markdown format and check if the output file name is ‘output.md’.</p></td>
 </tr>
 </tbody>
@@ -819,16 +788,16 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>description</p></td>
+<tr class="row-even"><td><p>Description</p></td>
 <td><p>The output file name shall be customizable by command line arguments.</p></td>
 </tr>
-<tr class="row-odd"><td><p>note</p></td>
+<tr class="row-odd"><td><p>Note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>derived</p></td>
+<tr class="row-even"><td><p>Derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>verification_criteria</p></td>
+<tr class="row-odd"><td><p>Verification Criteria</p></td>
 <td><p>Verify by converting one or more TRLC files into Markdown format and check if the output file name is customizable.</p></td>
 </tr>
 </tbody>
@@ -843,16 +812,16 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>description</p></td>
+<tr class="row-even"><td><p>Description</p></td>
 <td><p>The software shall add a top level heading to the Markdown file in single doc mode.</p></td>
 </tr>
-<tr class="row-odd"><td><p>note</p></td>
+<tr class="row-odd"><td><p>Note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>derived</p></td>
+<tr class="row-even"><td><p>Derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>verification_criteria</p></td>
+<tr class="row-odd"><td><p>Verification Criteria</p></td>
 <td><p>Verify the top level heading in the Markdown file in single doc mode.</p></td>
 </tr>
 </tbody>
@@ -867,16 +836,16 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>description</p></td>
+<tr class="row-even"><td><p>Description</p></td>
 <td><p>The top level heading shall be ‘Specification’ by default.</p></td>
 </tr>
-<tr class="row-odd"><td><p>note</p></td>
+<tr class="row-odd"><td><p>Note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>derived</p></td>
+<tr class="row-even"><td><p>Derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>verification_criteria</p></td>
+<tr class="row-odd"><td><p>Verification Criteria</p></td>
 <td><p>Verify the top level heading in the Markdown file in single doc mode.</p></td>
 </tr>
 </tbody>
@@ -891,16 +860,16 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>description</p></td>
+<tr class="row-even"><td><p>Description</p></td>
 <td><p>The top level heading shall be customizable by command line arguments.</p></td>
 </tr>
-<tr class="row-odd"><td><p>note</p></td>
+<tr class="row-odd"><td><p>Note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>derived</p></td>
+<tr class="row-even"><td><p>Derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>verification_criteria</p></td>
+<tr class="row-odd"><td><p>Verification Criteria</p></td>
 <td><p>Verify by specifying a custom top level heading in the Markdown file in single doc mode.</p></td>
 </tr>
 </tbody>
@@ -919,16 +888,16 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>description</p></td>
+<tr class="row-even"><td><p>Description</p></td>
 <td><p>The software shall support the conversion into reStructuredText format.</p></td>
 </tr>
-<tr class="row-odd"><td><p>note</p></td>
+<tr class="row-odd"><td><p>Note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>derived</p></td>
+<tr class="row-even"><td><p>Derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>verification_criteria</p></td>
+<tr class="row-odd"><td><p>Verification Criteria</p></td>
 <td><p>Verify by converting one or more TRLC files into reStructuredText format.</p></td>
 </tr>
 </tbody>
@@ -943,16 +912,16 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>description</p></td>
+<tr class="row-even"><td><p>Description</p></td>
 <td><p>The reStructuredText converter shall convert a TRLC section into a reStructuredText heading by considering the depth level.</p></td>
 </tr>
-<tr class="row-odd"><td><p>note</p></td>
+<tr class="row-odd"><td><p>Note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>derived</p></td>
+<tr class="row-even"><td><p>Derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>verification_criteria</p></td>
+<tr class="row-odd"><td><p>Verification Criteria</p></td>
 <td><p>Verify by converting a TRLC section into a reStructuredText heading.</p></td>
 </tr>
 </tbody>
@@ -967,16 +936,16 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>description</p></td>
+<tr class="row-even"><td><p>Description</p></td>
 <td><p>The reStructuredText converter shall convert the attributes of a TRLC record into a reStructuredText table.</p></td>
 </tr>
-<tr class="row-odd"><td><p>note</p></td>
+<tr class="row-odd"><td><p>Note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>derived</p></td>
+<tr class="row-even"><td><p>Derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>verification_criteria</p></td>
+<tr class="row-odd"><td><p>Verification Criteria</p></td>
 <td><p>Verify by converting consecutive TRLC records into a reStructuredText table.</p></td>
 </tr>
 </tbody>
@@ -991,16 +960,16 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>description</p></td>
+<tr class="row-even"><td><p>Description</p></td>
 <td><p>The software shall escape all strings according the reStructuredText format.</p></td>
 </tr>
-<tr class="row-odd"><td><p>note</p></td>
+<tr class="row-odd"><td><p>Note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>derived</p></td>
+<tr class="row-even"><td><p>Derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>verification_criteria</p></td>
+<tr class="row-odd"><td><p>Verification Criteria</p></td>
 <td><p>Verify by using strings with characters, which needs escaping.</p></td>
 </tr>
 </tbody>
@@ -1015,16 +984,16 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>description</p></td>
+<tr class="row-even"><td><p>Description</p></td>
 <td><p>The reStructuredText converter shall provide a function to create a reStructuredText heading.</p></td>
 </tr>
-<tr class="row-odd"><td><p>note</p></td>
+<tr class="row-odd"><td><p>Note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>derived</p></td>
+<tr class="row-even"><td><p>Derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>verification_criteria</p></td>
+<tr class="row-odd"><td><p>Verification Criteria</p></td>
 <td><p>Verify by creating a reStructuredText heading.</p></td>
 </tr>
 </tbody>
@@ -1039,16 +1008,16 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>description</p></td>
+<tr class="row-even"><td><p>Description</p></td>
 <td><p>The reStructuredText converter shall provide a function to create a reStructuredText table.</p></td>
 </tr>
-<tr class="row-odd"><td><p>note</p></td>
+<tr class="row-odd"><td><p>Note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>derived</p></td>
+<tr class="row-even"><td><p>Derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>verification_criteria</p></td>
+<tr class="row-odd"><td><p>Verification Criteria</p></td>
 <td><p>Verify by creating a reStructuredText table.</p></td>
 </tr>
 </tbody>
@@ -1063,16 +1032,16 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>description</p></td>
+<tr class="row-even"><td><p>Description</p></td>
 <td><p>The reStructuredText converter shall provide a function to create a reStructuredText link.</p></td>
 </tr>
-<tr class="row-odd"><td><p>note</p></td>
+<tr class="row-odd"><td><p>Note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>derived</p></td>
+<tr class="row-even"><td><p>Derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>verification_criteria</p></td>
+<tr class="row-odd"><td><p>Verification Criteria</p></td>
 <td><p>Verify by creating a reStructuredText link.</p></td>
 </tr>
 </tbody>
@@ -1087,16 +1056,16 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>description</p></td>
+<tr class="row-even"><td><p>Description</p></td>
 <td><p>The reStructuredText converter shall provide a function to create a reStructuredText image to embed images.</p></td>
 </tr>
-<tr class="row-odd"><td><p>note</p></td>
+<tr class="row-odd"><td><p>Note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>derived</p></td>
+<tr class="row-even"><td><p>Derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>verification_criteria</p></td>
+<tr class="row-odd"><td><p>Verification Criteria</p></td>
 <td><p>Verify by creating a reStructuredText image.</p></td>
 </tr>
 </tbody>
@@ -1111,16 +1080,16 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>description</p></td>
+<tr class="row-even"><td><p>Description</p></td>
 <td><p>The reStructuredText converter shall provide a function to create colored text in reStructuredText format.</p></td>
 </tr>
-<tr class="row-odd"><td><p>note</p></td>
+<tr class="row-odd"><td><p>Note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>derived</p></td>
+<tr class="row-even"><td><p>Derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>verification_criteria</p></td>
+<tr class="row-odd"><td><p>Verification Criteria</p></td>
 <td><p>Verify by creating colored text in reStructuredText format.</p></td>
 </tr>
 </tbody>
@@ -1135,16 +1104,16 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>description</p></td>
+<tr class="row-even"><td><p>Description</p></td>
 <td><p>The reStructuredText converter shall create the converted files in the specified output folder.</p></td>
 </tr>
-<tr class="row-odd"><td><p>note</p></td>
+<tr class="row-odd"><td><p>Note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>derived</p></td>
+<tr class="row-even"><td><p>Derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>verification_criteria</p></td>
+<tr class="row-odd"><td><p>Verification Criteria</p></td>
 <td><p>Verify by specifing an output folder, that doesn’t exist. It must exist after the conversion.</p></td>
 </tr>
 </tbody>
@@ -1161,16 +1130,16 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>description</p></td>
+<tr class="row-even"><td><p>Description</p></td>
 <td><p>The software shall create a reStructuredText file for each TRLC file by default.</p></td>
 </tr>
-<tr class="row-odd"><td><p>note</p></td>
+<tr class="row-odd"><td><p>Note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>derived</p></td>
+<tr class="row-even"><td><p>Derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>verification_criteria</p></td>
+<tr class="row-odd"><td><p>Verification Criteria</p></td>
 <td><p>Verify by converting one or more TRLC files into reStructuredText format and check if a reStructuredText file is created for each TRLC file.</p></td>
 </tr>
 </tbody>
@@ -1188,16 +1157,16 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>description</p></td>
+<tr class="row-even"><td><p>Description</p></td>
 <td><p>The software shall create a single reStructuredText file which combines all TRLC files if requested by command line arguments.</p></td>
 </tr>
-<tr class="row-odd"><td><p>note</p></td>
+<tr class="row-odd"><td><p>Note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>derived</p></td>
+<tr class="row-even"><td><p>Derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>verification_criteria</p></td>
+<tr class="row-odd"><td><p>Verification Criteria</p></td>
 <td><p>Verify by converting one or more TRLC files into reStructuredText format and check if a single reStructuredText file is created.</p></td>
 </tr>
 </tbody>
@@ -1212,16 +1181,16 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>description</p></td>
+<tr class="row-even"><td><p>Description</p></td>
 <td><p>The output file name shall be ‘output.rst’ by default.</p></td>
 </tr>
-<tr class="row-odd"><td><p>note</p></td>
+<tr class="row-odd"><td><p>Note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>derived</p></td>
+<tr class="row-even"><td><p>Derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>verification_criteria</p></td>
+<tr class="row-odd"><td><p>Verification Criteria</p></td>
 <td><p>Verify by converting one or more TRLC files into reStructuredText format and check if the output file name is ‘output.rst’.</p></td>
 </tr>
 </tbody>
@@ -1236,16 +1205,16 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>description</p></td>
+<tr class="row-even"><td><p>Description</p></td>
 <td><p>The output file name shall be customizable by command line arguments.</p></td>
 </tr>
-<tr class="row-odd"><td><p>note</p></td>
+<tr class="row-odd"><td><p>Note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>derived</p></td>
+<tr class="row-even"><td><p>Derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>verification_criteria</p></td>
+<tr class="row-odd"><td><p>Verification Criteria</p></td>
 <td><p>Verify by converting one or more TRLC files into reStructuredText format and check if the output file name is customizable.</p></td>
 </tr>
 </tbody>
@@ -1260,16 +1229,16 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>description</p></td>
+<tr class="row-even"><td><p>Description</p></td>
 <td><p>The software shall add a top level heading to the reStructuredText file in single doc mode.</p></td>
 </tr>
-<tr class="row-odd"><td><p>note</p></td>
+<tr class="row-odd"><td><p>Note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>derived</p></td>
+<tr class="row-even"><td><p>Derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>verification_criteria</p></td>
+<tr class="row-odd"><td><p>Verification Criteria</p></td>
 <td><p>Verify the top level heading in the reStructuredText file in single doc mode.</p></td>
 </tr>
 </tbody>
@@ -1284,16 +1253,16 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>description</p></td>
+<tr class="row-even"><td><p>Description</p></td>
 <td><p>The top level heading shall be ‘Specification’ by default.</p></td>
 </tr>
-<tr class="row-odd"><td><p>note</p></td>
+<tr class="row-odd"><td><p>Note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>derived</p></td>
+<tr class="row-even"><td><p>Derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>verification_criteria</p></td>
+<tr class="row-odd"><td><p>Verification Criteria</p></td>
 <td><p>Verify the top level heading in the reStructuredText file in single doc mode.</p></td>
 </tr>
 </tbody>
@@ -1308,16 +1277,16 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>description</p></td>
+<tr class="row-even"><td><p>Description</p></td>
 <td><p>The top level heading shall be customizable by command line arguments.</p></td>
 </tr>
-<tr class="row-odd"><td><p>note</p></td>
+<tr class="row-odd"><td><p>Note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>derived</p></td>
+<tr class="row-even"><td><p>Derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>verification_criteria</p></td>
+<tr class="row-odd"><td><p>Verification Criteria</p></td>
 <td><p>Verify by specifying a custom top level heading in the reStructuredText file in single doc mode.</p></td>
 </tr>
 </tbody>
@@ -1336,16 +1305,16 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>description</p></td>
+<tr class="row-even"><td><p>Description</p></td>
 <td><p>The software shall support the conversion into docx format.</p></td>
 </tr>
-<tr class="row-odd"><td><p>note</p></td>
+<tr class="row-odd"><td><p>Note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>derived</p></td>
+<tr class="row-even"><td><p>Derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>verification_criteria</p></td>
+<tr class="row-odd"><td><p>Verification Criteria</p></td>
 <td><p>Verify by converting one or more TRLC files into Docx format.</p></td>
 </tr>
 </tbody>
@@ -1360,16 +1329,16 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>description</p></td>
+<tr class="row-even"><td><p>Description</p></td>
 <td><p>The software shall support loading a docx template to append docx content to.</p></td>
 </tr>
-<tr class="row-odd"><td><p>note</p></td>
+<tr class="row-odd"><td><p>Note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>derived</p></td>
+<tr class="row-even"><td><p>Derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>verification_criteria</p></td>
+<tr class="row-odd"><td><p>Verification Criteria</p></td>
 <td><p>Verify that the generated docx file format starts with the content of the given template.</p></td>
 </tr>
 </tbody>
@@ -1384,16 +1353,16 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>description</p></td>
+<tr class="row-even"><td><p>Description</p></td>
 <td><p>The software shall create a combined docx file for each TRLC file in file read order as provided by TRLC.</p></td>
 </tr>
-<tr class="row-odd"><td><p>note</p></td>
+<tr class="row-odd"><td><p>Note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>derived</p></td>
+<tr class="row-even"><td><p>Derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>verification_criteria</p></td>
+<tr class="row-odd"><td><p>Verification Criteria</p></td>
 <td><p>Verify by converting one or more TRLC files into docx format and check if a merged docx file is generated as expected.</p></td>
 </tr>
 </tbody>
@@ -1408,16 +1377,16 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>description</p></td>
+<tr class="row-even"><td><p>Description</p></td>
 <td><p>If no project specific conversion file is available, a TRLC section shall be converted into a Docx heading by considering the depth level.</p></td>
 </tr>
-<tr class="row-odd"><td><p>note</p></td>
+<tr class="row-odd"><td><p>Note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>derived</p></td>
+<tr class="row-even"><td><p>Derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>verification_criteria</p></td>
+<tr class="row-odd"><td><p>Verification Criteria</p></td>
 <td><p>Verify by converting a TRLC section into a docx heading.</p></td>
 </tr>
 </tbody>
@@ -1432,16 +1401,16 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>description</p></td>
+<tr class="row-even"><td><p>Description</p></td>
 <td><p>If no project specific conversion file is available, consecutive TRLC records shall be converted into a docx heading with depth+1 and a table listing the attributes.</p></td>
 </tr>
-<tr class="row-odd"><td><p>note</p></td>
+<tr class="row-odd"><td><p>Note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>derived</p></td>
+<tr class="row-even"><td><p>Derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>verification_criteria</p></td>
+<tr class="row-odd"><td><p>Verification Criteria</p></td>
 <td><p>Verify by converting consecutive TRLC records into a docx file.</p></td>
 </tr>
 </tbody>
@@ -1459,16 +1428,16 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>description</p></td>
+<tr class="row-even"><td><p>Description</p></td>
 <td><p>The software shall support a simple conversion into text format to console out.</p></td>
 </tr>
-<tr class="row-odd"><td><p>note</p></td>
+<tr class="row-odd"><td><p>Note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>derived</p></td>
+<tr class="row-even"><td><p>Derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>verification_criteria</p></td>
+<tr class="row-odd"><td><p>Verification Criteria</p></td>
 <td><p>Verify by converting one or more TRLC files using the dump converter.</p></td>
 </tr>
 </tbody>
@@ -1486,16 +1455,16 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>description</p></td>
+<tr class="row-even"><td><p>Description</p></td>
 <td><p>The software shall support the conversion of a PlantUML diagram to a propriate image format.</p></td>
 </tr>
-<tr class="row-odd"><td><p>note</p></td>
+<tr class="row-odd"><td><p>Note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>derived</p></td>
+<tr class="row-even"><td><p>Derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>verification_criteria</p></td>
+<tr class="row-odd"><td><p>Verification Criteria</p></td>
 <td><p>Verify by converting a PlantUML diagram into a propriate image format.</p></td>
 </tr>
 </tbody>
@@ -1514,13 +1483,13 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>description</p></td>
+<tr class="row-even"><td><p>Description</p></td>
 <td><p>The software shall support the Windows operating system.</p></td>
 </tr>
-<tr class="row-odd"><td><p>note</p></td>
+<tr class="row-odd"><td><p>Note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>derived</p></td>
+<tr class="row-even"><td><p>Derived</p></td>
 <td><p>N/A</p></td>
 </tr>
 </tbody>
@@ -1535,13 +1504,13 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>description</p></td>
+<tr class="row-even"><td><p>Description</p></td>
 <td><p>The software shall support the Linux operating system.</p></td>
 </tr>
-<tr class="row-odd"><td><p>note</p></td>
+<tr class="row-odd"><td><p>Note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>derived</p></td>
+<tr class="row-even"><td><p>Derived</p></td>
 <td><p>N/A</p></td>
 </tr>
 </tbody>
@@ -1556,13 +1525,13 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>description</p></td>
+<tr class="row-even"><td><p>Description</p></td>
 <td><p>The software shall be implemented in the Python programming language v3.12.</p></td>
 </tr>
-<tr class="row-odd"><td><p>note</p></td>
+<tr class="row-odd"><td><p>Note</p></td>
 <td><p>TRLC as 3rd party library supports only up to Python v3.12.</p></td>
 </tr>
-<tr class="row-even"><td><p>derived</p></td>
+<tr class="row-even"><td><p>Derived</p></td>
 <td><p>N/A</p></td>
 </tr>
 </tbody>
@@ -1577,13 +1546,13 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>description</p></td>
+<tr class="row-even"><td><p>Description</p></td>
 <td><p>The software shall comply with the PEP8 coding standard.</p></td>
 </tr>
-<tr class="row-odd"><td><p>note</p></td>
+<tr class="row-odd"><td><p>Note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>derived</p></td>
+<tr class="row-even"><td><p>Derived</p></td>
 <td><p>N/A</p></td>
 </tr>
 </tbody>
