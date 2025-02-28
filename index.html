@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>pyTRLCConverter documentation &#8212; pyTRLCConverter  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=47202671" />
+    <link rel="stylesheet" type="text/css" href="_static/haiku.css?v=fce32b03" />
+    <script src="_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="icon" href="_static/favicon.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="SW-Requirements" href="sw_requirements.html" /> 
+  </head><body>
+      <div class="header" role="banner"><h1 class="heading"><a href="#">
+          <span>pyTRLCConverter  documentation</span></a></h1>
+        <h2 class="heading"><span>pyTRLCConverter documentation</span></h2>
+      </div>
+      <div class="topnav" role="navigation" aria-label="Top">
+      
+        <p>
+        <a class="uplink" href="#">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="sw_requirements.html">SW-Requirements</a>&#160;&#160;»
+        </p>
+
+      </div>
+      <div class="content" role="main">
+        
+        
+  <section id="pytrlcconverter-documentation">
+<h1>pyTRLCConverter documentation<a class="headerlink" href="#pytrlcconverter-documentation" title="Link to this heading">¶</a></h1>
+<p>pyTRLCConverter is a command-line tool to convert TRLC files to different output formats, e.g. Markdown or docx.
+Since the definition of TRLC types is project-specific, the built-in converters can be extended in an object-oriented manner.</p>
+<p class="plantuml">
+<img src="_images/plantuml-700a9a2932e3309164cb60e2f13b75ee3901479b.png" alt="&#64;startuml context_diagram
+
+left to right direction
+skinparam linetype ortho
+
+database &quot;Filesystem&quot; as fileSystemSrc {
+    file &quot;Requirement Specification Language file(s)\n(*.rsl)&quot; as rlsFiles
+    file &quot;Source file(s)\n(*.trlc)&quot; as srcFiles
+    file &quot;Project specific conversion file (PRJSCF)\n(*.py)&quot; as projectSpecificConversionFile
+}
+
+database &quot;Filesystem&quot; as fileSystemDst {
+    file &quot;Destination file(s)&quot; as dstFiles
+}
+
+rectangle &quot;System&quot; as system {
+
+    component &quot;pyTRLCConverter&quot; &lt;&lt;tool&gt;&gt; as tool
+}
+
+rlsFiles ...&gt; tool: &lt;&lt;flow&gt;&gt;
+srcFiles ...&gt; tool: &lt;&lt;flow&gt;&gt;
+projectSpecificConversionFile ...&gt; tool: &lt;&lt;flow&gt;&gt;\n&lt;&lt;optional&gt;&gt;
+
+tool ...&gt; dstFiles: &lt;&lt;flow&gt;&gt;
+
+&#64;enduml
+"/>
+</p>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="sw_requirements.html">SW-Requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sw_tests.html">SW-Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sw_req_tracing_report.html">SW-Requirements Tracing Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sw_test_tracing_report.html">SW-Tests Tracing Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="coverage_resport.html">Coverage Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sw_test_result_report.html">SW Test Result Report</a></li>
+</ul>
+</div>
+<section id="license-information">
+<h2>License information<a class="headerlink" href="#license-information" title="Link to this heading">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="license_include.html">License information</a></li>
+</ul>
+</div>
+</section>
+</section>
+
+
+      </div>
+      <div class="bottomnav" role="navigation" aria-label="Bottom">
+      
+        <p>
+        <a class="uplink" href="#">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="sw_requirements.html">SW-Requirements</a>&#160;&#160;»
+        </p>
+
+      </div>
+
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2025, NewTec GmbH.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.1.
+    </div>
+  </body>
+</html>

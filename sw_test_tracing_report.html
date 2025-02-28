@@ -1,0 +1,1566 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>SW-Tests Tracing Report &#8212; pyTRLCConverter  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=47202671" />
+    <link rel="stylesheet" type="text/css" href="_static/haiku.css?v=fce32b03" />
+    <script src="_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="icon" href="_static/favicon.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Coverage Report" href="coverage_resport.html" />
+    <link rel="prev" title="SW-Requirements Tracing Report" href="sw_req_tracing_report.html" /> 
+  </head><body>
+      <div class="header" role="banner"><h1 class="heading"><a href="index.html">
+          <span>pyTRLCConverter  documentation</span></a></h1>
+        <h2 class="heading"><span>SW-Tests Tracing Report</span></h2>
+      </div>
+      <div class="topnav" role="navigation" aria-label="Top">
+      
+        <p>
+        «&#160;&#160;<a href="sw_req_tracing_report.html">SW-Requirements Tracing Report</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="index.html">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="coverage_resport.html">Coverage Report</a>&#160;&#160;»
+        </p>
+
+      </div>
+      <div class="content" role="main">
+        
+        
+  <section id="sw-tests-tracing-report">
+<h1>SW-Tests Tracing Report<a class="headerlink" href="#sw-tests-tracing-report" title="Link to this heading">¶</a></h1>
+<!DOCTYPE html>
+<html>
+<head>
+<title>L.O.B.S.T.E.R.</title>
+<style>
+html {
+  scroll-padding-top: 5em;
+}
+body {
+  margin: 0;
+}
+.title {
+  background-color: #009ada;
+  color: white;
+  padding: 0.5em;
+  margin: 0;
+}
+h1 {
+  padding: 0;
+  margin: 0;
+}
+h2 {
+  padding: 0.5em;
+  margin: 0;
+  border-bottom: 0.25em solid #009ada;
+  text-align: right;
+}
+.content {
+  padding: 0.5em;
+}
+.item-ok, .item-partial, .item-missing, .item-justified {
+  border: 1px solid black;
+  border-radius: 0.5em;
+  margin-top: 0.4em;
+  padding: 0.25em;
+}
+.item-ok:target, .item-partial:target, .item-missing:target, .item-justified:target {
+  border: 3px solid black;
+}
+.subtle-ok, .subtle-partial, .subtle-missing, .subtle-justified {
+  padding-left: 0.2em;
+}
+.item-ok {
+  background-color: #efe;
+}
+.item-partial {
+  background-color: #ffe;
+}
+.item-missing {
+  background-color: #fee;
+}
+.item-justified {
+  background-color: #eee;
+}
+.subtle-ok {
+  border-left: 0.2em solid #8f8;
+}
+.subtle-partial {
+  border-left: 0.2em solid #ff8;
+}
+.subtle-missing {
+  border-left: 0.2em solid #f88;
+}
+.subtle-justified {
+  border-left: 0.2em solid #888;
+}
+.item-name {
+  font-size: 125%;
+  font-weight: bold;
+}
+.attribute {
+  margin-top: 0.5em;
+}
+.columns {
+  display: flex;
+}
+.columns .column {
+  flex: 45%;
+}
+thead tr {
+  font-weight: bold;
+}
+tbody tr.alt {
+  background-color: #eee;
+}
+blockquote {
+  font-style: italic;
+  border-left: 0.2em solid gray;
+  padding-left: 0.4em;
+  margin-left: 0.5em;
+}
+#navbar {
+  overflow: hidden;
+  background-color: #009ada;
+}
+.navbar-right {
+  float: right;
+}
+#navbar a {
+  float: left;
+  display: block;
+  color: white;
+  padding: 14px;
+  text-decoration: none;
+}
+#navbar a:hover {
+  background-color: white;
+  color: #009ada;
+}
+.sticky {
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+.sticky + .htmlbody {
+  padding-top: 60px;
+}
+#navbar .dropdown {
+  float: left;
+  overflow: hidden;
+}
+.navbar-right .dropdown {
+  float: right;
+  overflow: hidden;
+}
+.dropdown .dropbtn {
+  font-size: inherit;
+  border: none;
+  outline: none;
+  padding: 14px 16px;
+  background-color: inherit;
+  color: white;
+  font-family: inherit;
+  margin: 0;
+}
+.dropdown:hover .dropbtn {
+  background-color: white;
+  color: #009ada;
+}
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #009ada;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+.navbar-right .dropdown-content {
+  right: 0;
+}
+.dropdown-content a {
+  float: none;
+  color: white;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+}
+.dropdown-content a:hover {
+  color: #009ada;
+  background-color: white;
+}
+.dropdown:hover .dropdown-content {
+  display: flex;
+  flex-direction: column;
+}
+.sticky .dropdown-content {
+  position: fixed;
+}
+.button {
+    background-color: #818589;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    padding: 12px 25px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin: 4px 2px;
+    cursor: pointer
+}
+
+.button active:before {
+    content: ;
+    position: absolute;
+    left: 0;
+    top: 0;
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 15px 15px 0 0;
+    border-color: #333 transparent transparent transparent
+}
+
+.buttonActive.button {
+    text-decoration: none;
+    border: 5px solid #000000
+}
+
+.buttonOK {
+    background-color: #04AA6D;
+    color: white;
+    border: 2px solid #04AA6D;
+    border-radius: 5px
+}
+
+.buttonOK:hover {
+    background-color: #026641;
+    color: white;
+    border: 2px solid #026641
+}
+
+.buttonActive.buttonOK {
+    text-decoration: none;
+    border: 5px solid #026641
+}
+
+.buttonPartial {
+    background-color: #17a2b8;
+    color: white;
+    border: 2px solid #17a2b8;
+    border-radius: 5px
+}
+
+.buttonPartial:hover {
+    background-color: #0e616e;
+    color: white;
+    border: 2px solid #0e616e
+}
+
+.buttonActive.buttonPartial {
+    text-decoration: none;
+    border: 5px solid #0e616e
+}
+
+.buttonMissing {
+    background-color: #f44336;
+    color: white;
+    border: 2px solid #f44336;
+    border-radius: 5px
+}
+
+.buttonMissing:hover {
+    background-color: #a91409;
+    color: white;
+    border: 2px solid #a91409
+}
+
+.buttonActive.buttonMissing {
+    text-decoration: none;
+    border: 5px solid #a91409
+}
+
+.buttonJustified {
+    background-color: #6c757d;
+    color: white;
+    border: 2px solid #6c757d;
+    border-radius: 5px
+}
+
+.buttonJustified:hover {
+    background-color: #41464b;
+    color: white;
+    border: 2px solid #41464b
+}
+
+.buttonActive.buttonJustified {
+    text-decoration: none;
+    border: 5px solid #41464b
+}
+
+.buttonWarning {
+    background-color: #ffbf00;
+    color: white;
+    border: 2px solid #ffbf00;
+    border-radius: 5px
+}
+
+.buttonWarning:hover {
+    background-color: #997300;
+    color: white;
+    border: 2px solid #997300
+}
+
+.buttonActive.buttonWarning {
+    text-decoration: none;
+    border: 5px solid #997300
+}
+
+.buttonBlue {
+    background-color: #0000ff;
+    color: white;
+    border: 2px solid #0000ff;
+    border-radius: 5px
+}
+
+.buttonBlue:hover {
+    background-color: #000099;
+    color: white;
+    border: 2px solid #000099
+}
+
+.buttonActive.buttonBlue {
+    text-decoration: none;
+    border: 5px solid #000099
+}
+
+</style>
+</head>
+<body>
+<div class="title">
+<h1>L.O.B.S.T.E.R.</h1>
+<div class="subtitle">Lightweight Open BMW Software Traceability Evidence Report</div>
+</div>
+<div id="navbar">
+<a href="#sec-overview">Overview</a>
+<a href="#sec-issues">Issues</a>
+<div class="dropdown">
+<button class="dropbtn">Detailed report<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg></button>
+<div class="dropdown-content">
+<a href="#sec-cc968a3bfc90508a956f766883550981">SwRequirements</a>
+<a href="#sec-024c7febd35f8c410ed57f70fc1c354e">SwTests</a>
+<a href="#sec-561fb4ac032e7f3d727cc0fcbde976fc">SwTestCode</a>
+</div>
+</div>
+<div class="navbar-right">
+<div class="dropdown">
+<button class="dropbtn">LOBSTER<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg></button>
+<div class="dropdown-content">
+<a href="https://github.com/bmw-software-engineering/lobster/blob/main/README.md"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-external-link"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg> Documentation</a>
+<a href="https://github.com/bmw-software-engineering/lobster/blob/main/LICENSE.md"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-external-link"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg> License</a>
+<a href="https://github.com/bmw-software-engineering/lobster"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-external-link"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg> Source</a>
+</div>
+</div>
+</div>
+</div>
+<div class="htmlbody">
+<h2 id="sec-overview">Overview</h2>
+<div class="content">
+<div class="columns">
+<div class="column">
+<h3>Coverage</h3>
+<table>
+<thead><tr>
+<td>Category</td>
+<td>Ratio</td>
+<td>Coverage</td>
+<td>OK Items</td>
+<td>Total Items</td>
+</tr><thead>
+<tbody>
+</tbody>
+<tr>
+<td><a href="#sec-cc968a3bfc90508a956f766883550981">SwRequirements</a></td>
+<td>5.1%</td>
+<td>
+<progress value="2" max="39">
+5.13%
+</progress>
+</td>
+<td align="right">2</td>
+<td align="right">39</td>
+</tr>
+<tr>
+<td><a href="#sec-024c7febd35f8c410ed57f70fc1c354e">SwTests</a></td>
+<td>100.0%</td>
+<td>
+<progress value="2" max="2">
+100.00%
+</progress>
+</td>
+<td align="right">2</td>
+<td align="right">2</td>
+</tr>
+<tr>
+<td><a href="#sec-561fb4ac032e7f3d727cc0fcbde976fc">SwTestCode</a></td>
+<td>100.0%</td>
+<td>
+<progress value="3" max="3">
+100.00%
+</progress>
+</td>
+<td align="right">3</td>
+<td align="right">3</td>
+</tr>
+</table>
+</div>
+<div class="column">
+<h3>Tracing policy</h3>
+<svg width="164pt" height="188pt"
+ viewBox="0.00 0.00 164.10 188.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 184)">
+<title>LOBSTER Tracing Policy</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-184 160.1,-184 160.1,4 -4,4"/>
+<!-- n_cc968a3bfc90508a956f766883550981 -->
+<g id="node1" class="node">
+<title>n_cc968a3bfc90508a956f766883550981</title>
+<g id="a_node1"><a xlink:href="#sec-cc968a3bfc90508a956f766883550981" xlink:title="SwRequirements">
+<path fill="none" stroke="black" d="M135.55,-180C135.55,-180 20.55,-180 20.55,-180 14.55,-180 8.55,-174 8.55,-168 8.55,-168 8.55,-156 8.55,-156 8.55,-150 14.55,-144 20.55,-144 20.55,-144 135.55,-144 135.55,-144 141.55,-144 147.55,-150 147.55,-156 147.55,-156 147.55,-168 147.55,-168 147.55,-174 141.55,-180 135.55,-180"/>
+<text text-anchor="middle" x="78.05" y="-158.3" font-family="Times,serif" font-size="14.00">SwRequirements</text>
+</a>
+</g>
+</g>
+<!-- n_024c7febd35f8c410ed57f70fc1c354e -->
+<g id="node2" class="node">
+<title>n_024c7febd35f8c410ed57f70fc1c354e</title>
+<g id="a_node2"><a xlink:href="#sec-024c7febd35f8c410ed57f70fc1c354e" xlink:title="SwTests">
+<path fill="none" stroke="black" d="M104.05,-108C104.05,-108 52.05,-108 52.05,-108 46.05,-108 40.05,-102 40.05,-96 40.05,-96 40.05,-84 40.05,-84 40.05,-78 46.05,-72 52.05,-72 52.05,-72 104.05,-72 104.05,-72 110.05,-72 116.05,-78 116.05,-84 116.05,-84 116.05,-96 116.05,-96 116.05,-102 110.05,-108 104.05,-108"/>
+<text text-anchor="middle" x="78.05" y="-86.3" font-family="Times,serif" font-size="14.00">SwTests</text>
+</a>
+</g>
+</g>
+<!-- n_cc968a3bfc90508a956f766883550981&#45;&gt;n_024c7febd35f8c410ed57f70fc1c354e -->
+<g id="edge1" class="edge">
+<title>n_cc968a3bfc90508a956f766883550981&#45;&gt;n_024c7febd35f8c410ed57f70fc1c354e</title>
+<path fill="none" stroke="black" d="M78.05,-143.7C78.05,-135.98 78.05,-126.71 78.05,-118.11"/>
+<polygon fill="black" stroke="black" points="81.55,-118.1 78.05,-108.1 74.55,-118.1 81.55,-118.1"/>
+</g>
+<!-- n_561fb4ac032e7f3d727cc0fcbde976fc -->
+<g id="node3" class="node">
+<title>n_561fb4ac032e7f3d727cc0fcbde976fc</title>
+<g id="a_node3"><a xlink:href="#sec-561fb4ac032e7f3d727cc0fcbde976fc" xlink:title="SwTestCode">
+<polygon fill="none" stroke="black" points="156.15,-18 117.1,-36 39,-36 -0.05,-18 39,0 117.1,0 156.15,-18"/>
+<text text-anchor="middle" x="78.05" y="-14.3" font-family="Times,serif" font-size="14.00">SwTestCode</text>
+</a>
+</g>
+</g>
+<!-- n_024c7febd35f8c410ed57f70fc1c354e&#45;&gt;n_561fb4ac032e7f3d727cc0fcbde976fc -->
+<g id="edge2" class="edge">
+<title>n_024c7febd35f8c410ed57f70fc1c354e&#45;&gt;n_561fb4ac032e7f3d727cc0fcbde976fc</title>
+<path fill="none" stroke="black" d="M78.05,-71.7C78.05,-63.98 78.05,-54.71 78.05,-46.11"/>
+<polygon fill="black" stroke="black" points="81.55,-46.1 78.05,-36.1 74.55,-46.1 81.55,-46.1"/>
+</g>
+</g>
+</svg>
+</div>
+</div>
+</div>
+<h2 id="sec-filtering-options">Filtering</h2>
+<div class="content">
+<h3>Item Filters</h3>
+<div id = "btnFilterItem">
+<button class="button buttonAll buttonActive" onclick="buttonFilter('all')"> Show All </button>
+<button class ="button buttonOK" onclick="buttonFilter('ok')" > OK </button>
+<button class ="button buttonMissing" onclick="buttonFilter('missing')" > Missing </button>
+<button class ="button buttonPartial" onclick="buttonFilter('partial')" > Partial </button>
+<button class ="button buttonJustified" onclick="buttonFilter('justified')" > Justified </button>
+<button class ="button buttonWarning" onclick="buttonFilter('warning')" > Warning </button>
+</div>
+<h3>Show Issues</h3>
+<div id = "ContainerBtnToggleIssue">
+<button class ="button buttonBlue" id="BtnToggleIssue" onclick="ToggleIssues()"> Show Issues </button>
+</div>
+<h3 id="sec-search">Search</h3>
+<input type="text" id="search" placeholder="Search..." onkeyup="searchItem()">
+<div id="search-sec-id"
+</div>
+<h2 id="sec-issues">Issues</h2>
+<div class="content">
+<div id="issues-section" style="display:none">
+<ul>
+<li class="issue issue-missing">TRLC Swreq <a href='#item-a01612857e0805a8c715fc791e9dba100b624fd7'>SwRequirements.sw_req_version</a>: missing reference to SwTests</li>
+<li class="issue issue-missing">TRLC Swreq <a href='#item-bc22a9972369b3ab6d4eb3a8fdc18b3076e5a248'>SwRequirements.sw_req_process_trlc_symbols</a>: missing reference to SwTests</li>
+<li class="issue issue-missing">TRLC Swreq <a href='#item-9a095cb45528802065c1862cdf2ecded74831c6a'>SwRequirements.sw_req_destination_format</a>: missing reference to SwTests</li>
+<li class="issue issue-missing">TRLC Swreq <a href='#item-29a3610eed41c0bb7814d93858a84628fa958f37'>SwRequirements.sw_req_verbose_mode</a>: missing reference to SwTests</li>
+<li class="issue issue-missing">TRLC Swreq <a href='#item-f46f957ddb90c330f668d2981c3a96562953a071'>SwRequirements.sw_req_prj_spec_file</a>: missing reference to SwTests</li>
+<li class="issue issue-missing">TRLC Swreq <a href='#item-cffe64ad54603830915302dda1bc30e33e6ace45'>SwRequirements.sw_req_prj_spec_interface</a>: missing reference to SwTests</li>
+<li class="issue issue-missing">TRLC Swreq <a href='#item-6c84c4b8592e278385d0469113158634a7835835'>SwRequirements.sw_req_cli_help</a>: missing reference to SwTests</li>
+<li class="issue issue-missing">TRLC Swreq <a href='#item-d90a795b6756ab25289fdf656ec1176868454608'>SwRequirements.sw_req_cli_version</a>: missing reference to SwTests</li>
+<li class="issue issue-missing">TRLC Swreq <a href='#item-b8a732a7d7692e494113dcfdf8f300d041c4f206'>SwRequirements.sw_req_cli_source</a>: missing reference to SwTests</li>
+<li class="issue issue-missing">TRLC Swreq <a href='#item-1f336cf1280581304317fe779809d5b93eeac413'>SwRequirements.sw_req_cli_include</a>: missing reference to SwTests</li>
+<li class="issue issue-missing">TRLC Swreq <a href='#item-69943dfa591a042079097f884cc4ff6fc9c1db1c'>SwRequirements.sw_req_cli_exclude</a>: missing reference to SwTests</li>
+<li class="issue issue-missing">TRLC Swreq <a href='#item-808c46eb5f4e5b2d477338a8b10f54ec3cbe451d'>SwRequirements.sw_req_no_prj_spec</a>: missing reference to SwTests</li>
+<li class="issue issue-missing">TRLC Swreq <a href='#item-e7e9775dab723ec2391b79202167e6e9b1294782'>SwRequirements.sw_req_cli_out</a>: missing reference to SwTests</li>
+<li class="issue issue-missing">TRLC Swreq <a href='#item-ef8c3a04115bf56ed753d37987123acc7ed10b96'>SwRequirements.sw_req_markdown</a>: missing reference to SwTests</li>
+<li class="issue issue-missing">TRLC Swreq <a href='#item-a355e12d97f976bf5dc78b46454b1a2d4d44e6f3'>SwRequirements.sw_req_markdown_section</a>: missing reference to SwTests</li>
+<li class="issue issue-missing">TRLC Swreq <a href='#item-f77e2546700898bce71a59b2da61aa45a703259b'>SwRequirements.sw_req_markdown_record</a>: missing reference to SwTests</li>
+<li class="issue issue-missing">TRLC Swreq <a href='#item-b016fed7169bbf4b9c9d07709e26a460c0c8883e'>SwRequirements.sw_req_markdown_escape</a>: missing reference to SwTests</li>
+<li class="issue issue-missing">TRLC Swreq <a href='#item-6e16b693c23304cac2a08f8480bade04c9b50c0c'>SwRequirements.sw_req_markdown_heading</a>: missing reference to SwTests</li>
+<li class="issue issue-missing">TRLC Swreq <a href='#item-cca3b173f20319b3c0f3fa0c3f217add20c4b492'>SwRequirements.sw_req_markdown_table</a>: missing reference to SwTests</li>
+<li class="issue issue-missing">TRLC Swreq <a href='#item-7f2c53fe4767862dd678601bdef6c8cf8d30a63c'>SwRequirements.sw_req_markdown_link</a>: missing reference to SwTests</li>
+<li class="issue issue-missing">TRLC Swreq <a href='#item-207995f04f9162f2111704a13cf5c6475f7db10b'>SwRequirements.sw_req_markdown_image</a>: missing reference to SwTests</li>
+<li class="issue issue-missing">TRLC Swreq <a href='#item-5351b1e329a148b828904f4b996abcb875ea1780'>SwRequirements.sw_req_markdown_text_color</a>: missing reference to SwTests</li>
+<li class="issue issue-missing">TRLC Swreq <a href='#item-88620d965a8cfce8047303ccb1c57f869821bd6c'>SwRequirements.sw_req_markdown_out_folder</a>: missing reference to SwTests</li>
+<li class="issue issue-missing">TRLC Swreq <a href='#item-d2c9d02a916ed0b1b7ee5dfd31cd05ccfdbe2e96'>SwRequirements.sw_req_markdown_multiple_doc_mode</a>: missing reference to SwTests</li>
+<li class="issue issue-missing">TRLC Swreq <a href='#item-08f9f8e59c49ef1125120d6c4db662330df2d6e1'>SwRequirements.sw_req_markdown_single_doc_mode</a>: missing reference to SwTests</li>
+<li class="issue issue-missing">TRLC Swreq <a href='#item-33c6776ec1ad990ff2b7ce5061d245c95cebb703'>SwRequirements.sw_req_markdown_out_file_name_default</a>: missing reference to SwTests</li>
+<li class="issue issue-missing">TRLC Swreq <a href='#item-77e1ee37abdcb9a310194acc6a2049003a54d60d'>SwRequirements.sw_req_markdown_out_file_name_custom</a>: missing reference to SwTests</li>
+<li class="issue issue-missing">TRLC Swreq <a href='#item-c6704852cc415b7462becec8612186755bb50b68'>SwRequirements.sw_req_markdown_sd_top_level</a>: missing reference to SwTests</li>
+<li class="issue issue-missing">TRLC Swreq <a href='#item-cc4125e09218f241590b34cc0f7f3fcbbf171233'>SwRequirements.sw_req_markdown_sd_top_level_default</a>: missing reference to SwTests</li>
+<li class="issue issue-missing">TRLC Swreq <a href='#item-48be614b9a66182a04e0e331b8ba6458956fa042'>SwRequirements.sw_req_markdown_sd_top_level_custom</a>: missing reference to SwTests</li>
+<li class="issue issue-missing">TRLC Swreq <a href='#item-7241be3884587bc7b93f6ccf870b595f2461f0d0'>SwRequirements.sw_req_docx</a>: missing reference to SwTests</li>
+<li class="issue issue-missing">TRLC Swreq <a href='#item-250ca6061202e96989a43619f05b763b2d526608'>SwRequirements.sw_req_docx_template</a>: missing reference to SwTests</li>
+<li class="issue issue-missing">TRLC Swreq <a href='#item-0587c98506d2ef147ec34819a25afe36f6ee61cb'>SwRequirements.sw_req_docx_file</a>: missing reference to SwTests</li>
+<li class="issue issue-missing">TRLC Swreq <a href='#item-80e794d87dad076352fcdff6f08a933b3be7bc45'>SwRequirements.sw_req_docx_section</a>: missing reference to SwTests</li>
+<li class="issue issue-missing">TRLC Swreq <a href='#item-4aca790ce7059b1e07b00734ed33495cad94de3f'>SwRequirements.sw_req_docx_record</a>: missing reference to SwTests</li>
+<li class="issue issue-missing">TRLC Swreq <a href='#item-0db0de66f7b9277dee18376c43903e98a37d960a'>SwRequirements.sw_req_ascii_conversion</a>: missing reference to SwTests</li>
+<li class="issue issue-missing">TRLC Swreq <a href='#item-6ca65654e1ffeb6e6e199afd5b0df5bc5a7ec70a'>SwRequirements.sw_req_plantuml</a>: missing reference to SwTests</li>
+</ul>
+</div>
+</div>
+<h2 id="sec-detailed-report">Detailed report</h2>
+<div class="content">
+<h3>Requirements and Specification</h3>
+<h4 id="sec-cc968a3bfc90508a956f766883550981">SwRequirements</h4>
+<h5>doc/sw-requirements/sw_req.trlc</h5>
+<!-- begin item req SwRequirements.sw_req_cli -->
+<div class="item-ok" id="item-5ad2fb1b64ad3ae5c29c024d26e2c7239c0a20bf">
+<div class="item-name"><svg width="24" height="24" viewBox="0 0 456 461" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" overflow="hidden"><g transform="translate(-825 -84)"><path d="M839 310.5C839 193.139 934.811 98 1053 98 1171.19 98 1267 193.139 1267 310.5 1267 427.86 1171.19 523 1053 523 934.811 523 839 427.86 839 310.5Z" stroke="#008000" stroke-width="27.5" stroke-miterlimit="8" fill="#4EA72E" fill-rule="evenodd"/><text font-family="Segoe UI Symbol,Segoe UI Symbol_MSFontService,sans-serif" font-weight="400" font-size="202" transform="matrix(1 0 0 1 972.144 378)">✔</text></g></svg> TRLC Swreq SwRequirements.sw_req_cli</div>
+<div class="attribute">Source: 
+<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-external-link"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+<a href="https://github.com/NewTec-GmbH/pyTRLCConverter/blob/5f5298775497e2cfabbdf1a434066bb15e92f4ac/doc/sw-requirements/sw_req.trlc#L15" target="_blank">doc/sw-requirements/sw_req.trlc:15</a>
+</div>
+<div class="attribute">
+<blockquote>The software shall be a command-line interface (CLI) application.</blockquote>
+</div>
+<div class="attribute">
+<div>Traces to:
+<ul>
+<li>TRLC Swtestcase <a href='#item-8a0fa9541d8ce8941d75c6f226e3562c98e697f5'>SwTests.tc1</a></li>
+</ul>
+</div>
+</div>
+<div class="attribute">Build Reference: <strong>5f5298775497e2cfabbdf1a434066bb15e92f4ac</strong> | Timestamp: 2025-02-28 19:31:16+00:00</div>
+</div>
+<!-- end item -->
+<!-- begin item req SwRequirements.sw_req_prj_spec -->
+<div class="item-ok" id="item-08bbd1bdfab482ddb209f0a3f83c0f9b13fb4e04">
+<div class="item-name"><svg width="24" height="24" viewBox="0 0 456 461" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" overflow="hidden"><g transform="translate(-825 -84)"><path d="M839 310.5C839 193.139 934.811 98 1053 98 1171.19 98 1267 193.139 1267 310.5 1267 427.86 1171.19 523 1053 523 934.811 523 839 427.86 839 310.5Z" stroke="#008000" stroke-width="27.5" stroke-miterlimit="8" fill="#4EA72E" fill-rule="evenodd"/><text font-family="Segoe UI Symbol,Segoe UI Symbol_MSFontService,sans-serif" font-weight="400" font-size="202" transform="matrix(1 0 0 1 972.144 378)">✔</text></g></svg> TRLC Swreq SwRequirements.sw_req_prj_spec</div>
+<div class="attribute">Source: 
+<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-external-link"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+<a href="https://github.com/NewTec-GmbH/pyTRLCConverter/blob/5f5298775497e2cfabbdf1a434066bb15e92f4ac/doc/sw-requirements/sw_req.trlc#L20" target="_blank">doc/sw-requirements/sw_req.trlc:20</a>
+</div>
+<div class="attribute">
+<blockquote>The software shall support project specific adaptions for the conversion.</blockquote>
+</div>
+<div class="attribute">
+<div>Traces to:
+<ul>
+<li>TRLC Swtestcase <a href='#item-246e2a1aab893290119eb2b68cef977be99570ca'>SwTests.tc2</a></li>
+</ul>
+</div>
+</div>
+<div class="attribute">Build Reference: <strong>5f5298775497e2cfabbdf1a434066bb15e92f4ac</strong> | Timestamp: 2025-02-28 19:31:16+00:00</div>
+</div>
+<!-- end item -->
+<!-- begin item req SwRequirements.sw_req_version -->
+<div class="item-missing" id="item-a01612857e0805a8c715fc791e9dba100b624fd7">
+<div class="item-name"><svg width="24" height="24" viewBox="0 0 520 516" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" overflow="hidden"><g transform="translate(-137 -85)"><path d="M162 506 397 113 632 506Z" stroke="#000000" stroke-width="27.5" stroke-miterlimit="8" fill="#FF9900" fill-rule="evenodd"/><text font-family="Aptos,Aptos_MSFontService,sans-serif" font-weight="700" font-size="202" transform="matrix(1 0 0 1 367.145 423)">!</text></g></svg> TRLC Swreq SwRequirements.sw_req_version</div>
+<div class="attribute">Source: 
+<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-external-link"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+<a href="https://github.com/NewTec-GmbH/pyTRLCConverter/blob/5f5298775497e2cfabbdf1a434066bb15e92f4ac/doc/sw-requirements/sw_req.trlc#L26" target="_blank">doc/sw-requirements/sw_req.trlc:26</a>
+</div>
+<div class="attribute">
+<blockquote>The software shall provide a version information in the format &#x27;&lt;program-name&gt; &lt;major&gt;.&lt;minor&gt;.&lt;patch&gt;&#x27;.</blockquote>
+</div>
+<div class="attribute">
+<div>Issues:
+<ul>
+<li>missing reference to SwTests</li>
+</ul>
+</div>
+</div>
+<div class="attribute">Build Reference: <strong>5f5298775497e2cfabbdf1a434066bb15e92f4ac</strong> | Timestamp: 2025-02-28 19:31:16+00:00</div>
+</div>
+<!-- end item -->
+<!-- begin item req SwRequirements.sw_req_process_trlc_symbols -->
+<div class="item-missing" id="item-bc22a9972369b3ab6d4eb3a8fdc18b3076e5a248">
+<div class="item-name"><svg width="24" height="24" viewBox="0 0 520 516" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" overflow="hidden"><g transform="translate(-137 -85)"><path d="M162 506 397 113 632 506Z" stroke="#000000" stroke-width="27.5" stroke-miterlimit="8" fill="#FF9900" fill-rule="evenodd"/><text font-family="Aptos,Aptos_MSFontService,sans-serif" font-weight="700" font-size="202" transform="matrix(1 0 0 1 367.145 423)">!</text></g></svg> TRLC Swreq SwRequirements.sw_req_process_trlc_symbols</div>
+<div class="attribute">Source: 
+<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-external-link"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+<a href="https://github.com/NewTec-GmbH/pyTRLCConverter/blob/5f5298775497e2cfabbdf1a434066bb15e92f4ac/doc/sw-requirements/sw_req.trlc#L31" target="_blank">doc/sw-requirements/sw_req.trlc:31</a>
+</div>
+<div class="attribute">
+<blockquote>The software shall process all TRLC symbols from the TRLC files.</blockquote>
+</div>
+<div class="attribute">
+<div>Issues:
+<ul>
+<li>missing reference to SwTests</li>
+</ul>
+</div>
+</div>
+<div class="attribute">Build Reference: <strong>5f5298775497e2cfabbdf1a434066bb15e92f4ac</strong> | Timestamp: 2025-02-28 19:31:16+00:00</div>
+</div>
+<!-- end item -->
+<!-- begin item req SwRequirements.sw_req_destination_format -->
+<div class="item-missing" id="item-9a095cb45528802065c1862cdf2ecded74831c6a">
+<div class="item-name"><svg width="24" height="24" viewBox="0 0 520 516" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" overflow="hidden"><g transform="translate(-137 -85)"><path d="M162 506 397 113 632 506Z" stroke="#000000" stroke-width="27.5" stroke-miterlimit="8" fill="#FF9900" fill-rule="evenodd"/><text font-family="Aptos,Aptos_MSFontService,sans-serif" font-weight="700" font-size="202" transform="matrix(1 0 0 1 367.145 423)">!</text></g></svg> TRLC Swreq SwRequirements.sw_req_destination_format</div>
+<div class="attribute">Source: 
+<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-external-link"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+<a href="https://github.com/NewTec-GmbH/pyTRLCConverter/blob/5f5298775497e2cfabbdf1a434066bb15e92f4ac/doc/sw-requirements/sw_req.trlc#L36" target="_blank">doc/sw-requirements/sw_req.trlc:36</a>
+</div>
+<div class="attribute">
+<blockquote>The software shall convert the TRLC files to the required destination format.</blockquote>
+</div>
+<div class="attribute">
+<div>Issues:
+<ul>
+<li>missing reference to SwTests</li>
+</ul>
+</div>
+</div>
+<div class="attribute">Build Reference: <strong>5f5298775497e2cfabbdf1a434066bb15e92f4ac</strong> | Timestamp: 2025-02-28 19:31:16+00:00</div>
+</div>
+<!-- end item -->
+<!-- begin item req SwRequirements.sw_req_verbose_mode -->
+<div class="item-missing" id="item-29a3610eed41c0bb7814d93858a84628fa958f37">
+<div class="item-name"><svg width="24" height="24" viewBox="0 0 520 516" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" overflow="hidden"><g transform="translate(-137 -85)"><path d="M162 506 397 113 632 506Z" stroke="#000000" stroke-width="27.5" stroke-miterlimit="8" fill="#FF9900" fill-rule="evenodd"/><text font-family="Aptos,Aptos_MSFontService,sans-serif" font-weight="700" font-size="202" transform="matrix(1 0 0 1 367.145 423)">!</text></g></svg> TRLC Swreq SwRequirements.sw_req_verbose_mode</div>
+<div class="attribute">Source: 
+<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-external-link"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+<a href="https://github.com/NewTec-GmbH/pyTRLCConverter/blob/5f5298775497e2cfabbdf1a434066bb15e92f4ac/doc/sw-requirements/sw_req.trlc#L41" target="_blank">doc/sw-requirements/sw_req.trlc:41</a>
+</div>
+<div class="attribute">
+<blockquote>The software shall show additional conversion information in verbose mode.</blockquote>
+</div>
+<div class="attribute">
+<div>Issues:
+<ul>
+<li>missing reference to SwTests</li>
+</ul>
+</div>
+</div>
+<div class="attribute">Build Reference: <strong>5f5298775497e2cfabbdf1a434066bb15e92f4ac</strong> | Timestamp: 2025-02-28 19:31:16+00:00</div>
+</div>
+<!-- end item -->
+<!-- begin item req SwRequirements.sw_req_prj_spec_file -->
+<div class="item-missing" id="item-f46f957ddb90c330f668d2981c3a96562953a071">
+<div class="item-name"><svg width="24" height="24" viewBox="0 0 520 516" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" overflow="hidden"><g transform="translate(-137 -85)"><path d="M162 506 397 113 632 506Z" stroke="#000000" stroke-width="27.5" stroke-miterlimit="8" fill="#FF9900" fill-rule="evenodd"/><text font-family="Aptos,Aptos_MSFontService,sans-serif" font-weight="700" font-size="202" transform="matrix(1 0 0 1 367.145 423)">!</text></g></svg> TRLC Swreq SwRequirements.sw_req_prj_spec_file</div>
+<div class="attribute">Source: 
+<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-external-link"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+<a href="https://github.com/NewTec-GmbH/pyTRLCConverter/blob/5f5298775497e2cfabbdf1a434066bb15e92f4ac/doc/sw-requirements/sw_req.trlc#L48" target="_blank">doc/sw-requirements/sw_req.trlc:48</a>
+</div>
+<div class="attribute">
+<blockquote>The project specific conversion file shall be a Python file.</blockquote>
+</div>
+<div class="attribute">
+<div>Issues:
+<ul>
+<li>missing reference to SwTests</li>
+</ul>
+</div>
+</div>
+<div class="attribute">Build Reference: <strong>5f5298775497e2cfabbdf1a434066bb15e92f4ac</strong> | Timestamp: 2025-02-28 19:31:16+00:00</div>
+</div>
+<!-- end item -->
+<!-- begin item req SwRequirements.sw_req_prj_spec_interface -->
+<div class="item-missing" id="item-cffe64ad54603830915302dda1bc30e33e6ace45">
+<div class="item-name"><svg width="24" height="24" viewBox="0 0 520 516" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" overflow="hidden"><g transform="translate(-137 -85)"><path d="M162 506 397 113 632 506Z" stroke="#000000" stroke-width="27.5" stroke-miterlimit="8" fill="#FF9900" fill-rule="evenodd"/><text font-family="Aptos,Aptos_MSFontService,sans-serif" font-weight="700" font-size="202" transform="matrix(1 0 0 1 367.145 423)">!</text></g></svg> TRLC Swreq SwRequirements.sw_req_prj_spec_interface</div>
+<div class="attribute">Source: 
+<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-external-link"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+<a href="https://github.com/NewTec-GmbH/pyTRLCConverter/blob/5f5298775497e2cfabbdf1a434066bb15e92f4ac/doc/sw-requirements/sw_req.trlc#L54" target="_blank">doc/sw-requirements/sw_req.trlc:54</a>
+</div>
+<div class="attribute">
+<blockquote>The project specific conversion interface shall be realized by an abstract interface.</blockquote>
+</div>
+<div class="attribute">
+<div>Issues:
+<ul>
+<li>missing reference to SwTests</li>
+</ul>
+</div>
+</div>
+<div class="attribute">Build Reference: <strong>5f5298775497e2cfabbdf1a434066bb15e92f4ac</strong> | Timestamp: 2025-02-28 19:31:16+00:00</div>
+</div>
+<!-- end item -->
+<!-- begin item req SwRequirements.sw_req_cli_help -->
+<div class="item-missing" id="item-6c84c4b8592e278385d0469113158634a7835835">
+<div class="item-name"><svg width="24" height="24" viewBox="0 0 520 516" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" overflow="hidden"><g transform="translate(-137 -85)"><path d="M162 506 397 113 632 506Z" stroke="#000000" stroke-width="27.5" stroke-miterlimit="8" fill="#FF9900" fill-rule="evenodd"/><text font-family="Aptos,Aptos_MSFontService,sans-serif" font-weight="700" font-size="202" transform="matrix(1 0 0 1 367.145 423)">!</text></g></svg> TRLC Swreq SwRequirements.sw_req_cli_help</div>
+<div class="attribute">Source: 
+<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-external-link"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+<a href="https://github.com/NewTec-GmbH/pyTRLCConverter/blob/5f5298775497e2cfabbdf1a434066bb15e92f4ac/doc/sw-requirements/sw_req.trlc#L61" target="_blank">doc/sw-requirements/sw_req.trlc:61</a>
+</div>
+<div class="attribute">
+<blockquote>The software shall support the command line argument &#x27;-h&#x27; and --help&#x27; to show the help information.</blockquote>
+</div>
+<div class="attribute">
+<div>Issues:
+<ul>
+<li>missing reference to SwTests</li>
+</ul>
+</div>
+</div>
+<div class="attribute">Build Reference: <strong>5f5298775497e2cfabbdf1a434066bb15e92f4ac</strong> | Timestamp: 2025-02-28 19:31:16+00:00</div>
+</div>
+<!-- end item -->
+<!-- begin item req SwRequirements.sw_req_cli_version -->
+<div class="item-missing" id="item-d90a795b6756ab25289fdf656ec1176868454608">
+<div class="item-name"><svg width="24" height="24" viewBox="0 0 520 516" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" overflow="hidden"><g transform="translate(-137 -85)"><path d="M162 506 397 113 632 506Z" stroke="#000000" stroke-width="27.5" stroke-miterlimit="8" fill="#FF9900" fill-rule="evenodd"/><text font-family="Aptos,Aptos_MSFontService,sans-serif" font-weight="700" font-size="202" transform="matrix(1 0 0 1 367.145 423)">!</text></g></svg> TRLC Swreq SwRequirements.sw_req_cli_version</div>
+<div class="attribute">Source: 
+<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-external-link"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+<a href="https://github.com/NewTec-GmbH/pyTRLCConverter/blob/5f5298775497e2cfabbdf1a434066bb15e92f4ac/doc/sw-requirements/sw_req.trlc#L66" target="_blank">doc/sw-requirements/sw_req.trlc:66</a>
+</div>
+<div class="attribute">
+<blockquote>The software shall support the command line argument &#x27;--version&#x27; to show the version information.</blockquote>
+</div>
+<div class="attribute">
+<div>Issues:
+<ul>
+<li>missing reference to SwTests</li>
+</ul>
+</div>
+</div>
+<div class="attribute">Build Reference: <strong>5f5298775497e2cfabbdf1a434066bb15e92f4ac</strong> | Timestamp: 2025-02-28 19:31:16+00:00</div>
+</div>
+<!-- end item -->
+<!-- begin item req SwRequirements.sw_req_cli_source -->
+<div class="item-missing" id="item-b8a732a7d7692e494113dcfdf8f300d041c4f206">
+<div class="item-name"><svg width="24" height="24" viewBox="0 0 520 516" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" overflow="hidden"><g transform="translate(-137 -85)"><path d="M162 506 397 113 632 506Z" stroke="#000000" stroke-width="27.5" stroke-miterlimit="8" fill="#FF9900" fill-rule="evenodd"/><text font-family="Aptos,Aptos_MSFontService,sans-serif" font-weight="700" font-size="202" transform="matrix(1 0 0 1 367.145 423)">!</text></g></svg> TRLC Swreq SwRequirements.sw_req_cli_source</div>
+<div class="attribute">Source: 
+<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-external-link"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+<a href="https://github.com/NewTec-GmbH/pyTRLCConverter/blob/5f5298775497e2cfabbdf1a434066bb15e92f4ac/doc/sw-requirements/sw_req.trlc#L72" target="_blank">doc/sw-requirements/sw_req.trlc:72</a>
+</div>
+<div class="attribute">
+<blockquote>The software shall support the command line argument &#x27;-s&#x27; and &#x27;--source&#x27; multiple times to specify the source file(s) (*.rsl and *.trlc).</blockquote>
+</div>
+<div class="attribute">
+<div>Issues:
+<ul>
+<li>missing reference to SwTests</li>
+</ul>
+</div>
+</div>
+<div class="attribute">Build Reference: <strong>5f5298775497e2cfabbdf1a434066bb15e92f4ac</strong> | Timestamp: 2025-02-28 19:31:16+00:00</div>
+</div>
+<!-- end item -->
+<!-- begin item req SwRequirements.sw_req_cli_include -->
+<div class="item-missing" id="item-1f336cf1280581304317fe779809d5b93eeac413">
+<div class="item-name"><svg width="24" height="24" viewBox="0 0 520 516" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" overflow="hidden"><g transform="translate(-137 -85)"><path d="M162 506 397 113 632 506Z" stroke="#000000" stroke-width="27.5" stroke-miterlimit="8" fill="#FF9900" fill-rule="evenodd"/><text font-family="Aptos,Aptos_MSFontService,sans-serif" font-weight="700" font-size="202" transform="matrix(1 0 0 1 367.145 423)">!</text></g></svg> TRLC Swreq SwRequirements.sw_req_cli_include</div>
+<div class="attribute">Source: 
+<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-external-link"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+<a href="https://github.com/NewTec-GmbH/pyTRLCConverter/blob/5f5298775497e2cfabbdf1a434066bb15e92f4ac/doc/sw-requirements/sw_req.trlc#L78" target="_blank">doc/sw-requirements/sw_req.trlc:78</a>
+</div>
+<div class="attribute">
+<blockquote>The software shall support the command line argument &#x27;-i&#x27; and &#x27;--include&#x27; multiple times to specify the file(s) for automatic inclusion.</blockquote>
+</div>
+<div class="attribute">
+<div>Issues:
+<ul>
+<li>missing reference to SwTests</li>
+</ul>
+</div>
+</div>
+<div class="attribute">Build Reference: <strong>5f5298775497e2cfabbdf1a434066bb15e92f4ac</strong> | Timestamp: 2025-02-28 19:31:16+00:00</div>
+</div>
+<!-- end item -->
+<!-- begin item req SwRequirements.sw_req_cli_exclude -->
+<div class="item-missing" id="item-69943dfa591a042079097f884cc4ff6fc9c1db1c">
+<div class="item-name"><svg width="24" height="24" viewBox="0 0 520 516" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" overflow="hidden"><g transform="translate(-137 -85)"><path d="M162 506 397 113 632 506Z" stroke="#000000" stroke-width="27.5" stroke-miterlimit="8" fill="#FF9900" fill-rule="evenodd"/><text font-family="Aptos,Aptos_MSFontService,sans-serif" font-weight="700" font-size="202" transform="matrix(1 0 0 1 367.145 423)">!</text></g></svg> TRLC Swreq SwRequirements.sw_req_cli_exclude</div>
+<div class="attribute">Source: 
+<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-external-link"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+<a href="https://github.com/NewTec-GmbH/pyTRLCConverter/blob/5f5298775497e2cfabbdf1a434066bb15e92f4ac/doc/sw-requirements/sw_req.trlc#L84" target="_blank">doc/sw-requirements/sw_req.trlc:84</a>
+</div>
+<div class="attribute">
+<blockquote>The software shall support the command line argument &#x27;-ex&#x27; and &#x27;--exclude&#x27; multiple times to specify the file(s) for automatic exclusion.</blockquote>
+</div>
+<div class="attribute">
+<div>Issues:
+<ul>
+<li>missing reference to SwTests</li>
+</ul>
+</div>
+</div>
+<div class="attribute">Build Reference: <strong>5f5298775497e2cfabbdf1a434066bb15e92f4ac</strong> | Timestamp: 2025-02-28 19:31:16+00:00</div>
+</div>
+<!-- end item -->
+<!-- begin item req SwRequirements.sw_req_no_prj_spec -->
+<div class="item-missing" id="item-808c46eb5f4e5b2d477338a8b10f54ec3cbe451d">
+<div class="item-name"><svg width="24" height="24" viewBox="0 0 520 516" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" overflow="hidden"><g transform="translate(-137 -85)"><path d="M162 506 397 113 632 506Z" stroke="#000000" stroke-width="27.5" stroke-miterlimit="8" fill="#FF9900" fill-rule="evenodd"/><text font-family="Aptos,Aptos_MSFontService,sans-serif" font-weight="700" font-size="202" transform="matrix(1 0 0 1 367.145 423)">!</text></g></svg> TRLC Swreq SwRequirements.sw_req_no_prj_spec</div>
+<div class="attribute">Source: 
+<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-external-link"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+<a href="https://github.com/NewTec-GmbH/pyTRLCConverter/blob/5f5298775497e2cfabbdf1a434066bb15e92f4ac/doc/sw-requirements/sw_req.trlc#L90" target="_blank">doc/sw-requirements/sw_req.trlc:90</a>
+</div>
+<div class="attribute">
+<blockquote>If no project specific conversion file is provided, the software shall use a default conversion.</blockquote>
+</div>
+<div class="attribute">
+<div>Issues:
+<ul>
+<li>missing reference to SwTests</li>
+</ul>
+</div>
+</div>
+<div class="attribute">Build Reference: <strong>5f5298775497e2cfabbdf1a434066bb15e92f4ac</strong> | Timestamp: 2025-02-28 19:31:16+00:00</div>
+</div>
+<!-- end item -->
+<!-- begin item req SwRequirements.sw_req_cli_out -->
+<div class="item-missing" id="item-e7e9775dab723ec2391b79202167e6e9b1294782">
+<div class="item-name"><svg width="24" height="24" viewBox="0 0 520 516" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" overflow="hidden"><g transform="translate(-137 -85)"><path d="M162 506 397 113 632 506Z" stroke="#000000" stroke-width="27.5" stroke-miterlimit="8" fill="#FF9900" fill-rule="evenodd"/><text font-family="Aptos,Aptos_MSFontService,sans-serif" font-weight="700" font-size="202" transform="matrix(1 0 0 1 367.145 423)">!</text></g></svg> TRLC Swreq SwRequirements.sw_req_cli_out</div>
+<div class="attribute">Source: 
+<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-external-link"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+<a href="https://github.com/NewTec-GmbH/pyTRLCConverter/blob/5f5298775497e2cfabbdf1a434066bb15e92f4ac/doc/sw-requirements/sw_req.trlc#L95" target="_blank">doc/sw-requirements/sw_req.trlc:95</a>
+</div>
+<div class="attribute">
+<blockquote>The software shall support the command line argument &#x27;-o&#x27; and &#x27;--out&#x27; to specify the output directory.</blockquote>
+</div>
+<div class="attribute">
+<div>Issues:
+<ul>
+<li>missing reference to SwTests</li>
+</ul>
+</div>
+</div>
+<div class="attribute">Build Reference: <strong>5f5298775497e2cfabbdf1a434066bb15e92f4ac</strong> | Timestamp: 2025-02-28 19:31:16+00:00</div>
+</div>
+<!-- end item -->
+<!-- begin item req SwRequirements.sw_req_markdown -->
+<div class="item-missing" id="item-ef8c3a04115bf56ed753d37987123acc7ed10b96">
+<div class="item-name"><svg width="24" height="24" viewBox="0 0 520 516" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" overflow="hidden"><g transform="translate(-137 -85)"><path d="M162 506 397 113 632 506Z" stroke="#000000" stroke-width="27.5" stroke-miterlimit="8" fill="#FF9900" fill-rule="evenodd"/><text font-family="Aptos,Aptos_MSFontService,sans-serif" font-weight="700" font-size="202" transform="matrix(1 0 0 1 367.145 423)">!</text></g></svg> TRLC Swreq SwRequirements.sw_req_markdown</div>
+<div class="attribute">Source: 
+<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-external-link"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+<a href="https://github.com/NewTec-GmbH/pyTRLCConverter/blob/5f5298775497e2cfabbdf1a434066bb15e92f4ac/doc/sw-requirements/sw_req.trlc#L102" target="_blank">doc/sw-requirements/sw_req.trlc:102</a>
+</div>
+<div class="attribute">
+<blockquote>The software shall support the conversion into Markdown format.</blockquote>
+</div>
+<div class="attribute">
+<div>Issues:
+<ul>
+<li>missing reference to SwTests</li>
+</ul>
+</div>
+</div>
+<div class="attribute">Build Reference: <strong>5f5298775497e2cfabbdf1a434066bb15e92f4ac</strong> | Timestamp: 2025-02-28 19:31:16+00:00</div>
+</div>
+<!-- end item -->
+<!-- begin item req SwRequirements.sw_req_markdown_section -->
+<div class="item-missing" id="item-a355e12d97f976bf5dc78b46454b1a2d4d44e6f3">
+<div class="item-name"><svg width="24" height="24" viewBox="0 0 520 516" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" overflow="hidden"><g transform="translate(-137 -85)"><path d="M162 506 397 113 632 506Z" stroke="#000000" stroke-width="27.5" stroke-miterlimit="8" fill="#FF9900" fill-rule="evenodd"/><text font-family="Aptos,Aptos_MSFontService,sans-serif" font-weight="700" font-size="202" transform="matrix(1 0 0 1 367.145 423)">!</text></g></svg> TRLC Swreq SwRequirements.sw_req_markdown_section</div>
+<div class="attribute">Source: 
+<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-external-link"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+<a href="https://github.com/NewTec-GmbH/pyTRLCConverter/blob/5f5298775497e2cfabbdf1a434066bb15e92f4ac/doc/sw-requirements/sw_req.trlc#L107" target="_blank">doc/sw-requirements/sw_req.trlc:107</a>
+</div>
+<div class="attribute">
+<blockquote>The Markdown converter shall convert a TRLC section into a Markdown heading by considering the depth level.</blockquote>
+</div>
+<div class="attribute">
+<div>Issues:
+<ul>
+<li>missing reference to SwTests</li>
+</ul>
+</div>
+</div>
+<div class="attribute">Build Reference: <strong>5f5298775497e2cfabbdf1a434066bb15e92f4ac</strong> | Timestamp: 2025-02-28 19:31:16+00:00</div>
+</div>
+<!-- end item -->
+<!-- begin item req SwRequirements.sw_req_markdown_record -->
+<div class="item-missing" id="item-f77e2546700898bce71a59b2da61aa45a703259b">
+<div class="item-name"><svg width="24" height="24" viewBox="0 0 520 516" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" overflow="hidden"><g transform="translate(-137 -85)"><path d="M162 506 397 113 632 506Z" stroke="#000000" stroke-width="27.5" stroke-miterlimit="8" fill="#FF9900" fill-rule="evenodd"/><text font-family="Aptos,Aptos_MSFontService,sans-serif" font-weight="700" font-size="202" transform="matrix(1 0 0 1 367.145 423)">!</text></g></svg> TRLC Swreq SwRequirements.sw_req_markdown_record</div>
+<div class="attribute">Source: 
+<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-external-link"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+<a href="https://github.com/NewTec-GmbH/pyTRLCConverter/blob/5f5298775497e2cfabbdf1a434066bb15e92f4ac/doc/sw-requirements/sw_req.trlc#L112" target="_blank">doc/sw-requirements/sw_req.trlc:112</a>
+</div>
+<div class="attribute">
+<blockquote>The Markdown converter shall convert the attributes of a TRLC record into a Markdown table.</blockquote>
+</div>
+<div class="attribute">
+<div>Issues:
+<ul>
+<li>missing reference to SwTests</li>
+</ul>
+</div>
+</div>
+<div class="attribute">Build Reference: <strong>5f5298775497e2cfabbdf1a434066bb15e92f4ac</strong> | Timestamp: 2025-02-28 19:31:16+00:00</div>
+</div>
+<!-- end item -->
+<!-- begin item req SwRequirements.sw_req_markdown_escape -->
+<div class="item-missing" id="item-b016fed7169bbf4b9c9d07709e26a460c0c8883e">
+<div class="item-name"><svg width="24" height="24" viewBox="0 0 520 516" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" overflow="hidden"><g transform="translate(-137 -85)"><path d="M162 506 397 113 632 506Z" stroke="#000000" stroke-width="27.5" stroke-miterlimit="8" fill="#FF9900" fill-rule="evenodd"/><text font-family="Aptos,Aptos_MSFontService,sans-serif" font-weight="700" font-size="202" transform="matrix(1 0 0 1 367.145 423)">!</text></g></svg> TRLC Swreq SwRequirements.sw_req_markdown_escape</div>
+<div class="attribute">Source: 
+<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-external-link"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+<a href="https://github.com/NewTec-GmbH/pyTRLCConverter/blob/5f5298775497e2cfabbdf1a434066bb15e92f4ac/doc/sw-requirements/sw_req.trlc#L117" target="_blank">doc/sw-requirements/sw_req.trlc:117</a>
+</div>
+<div class="attribute">
+<blockquote>The software shall escape all strings according the Markdown format.</blockquote>
+</div>
+<div class="attribute">
+<div>Issues:
+<ul>
+<li>missing reference to SwTests</li>
+</ul>
+</div>
+</div>
+<div class="attribute">Build Reference: <strong>5f5298775497e2cfabbdf1a434066bb15e92f4ac</strong> | Timestamp: 2025-02-28 19:31:16+00:00</div>
+</div>
+<!-- end item -->
+<!-- begin item req SwRequirements.sw_req_markdown_heading -->
+<div class="item-missing" id="item-6e16b693c23304cac2a08f8480bade04c9b50c0c">
+<div class="item-name"><svg width="24" height="24" viewBox="0 0 520 516" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" overflow="hidden"><g transform="translate(-137 -85)"><path d="M162 506 397 113 632 506Z" stroke="#000000" stroke-width="27.5" stroke-miterlimit="8" fill="#FF9900" fill-rule="evenodd"/><text font-family="Aptos,Aptos_MSFontService,sans-serif" font-weight="700" font-size="202" transform="matrix(1 0 0 1 367.145 423)">!</text></g></svg> TRLC Swreq SwRequirements.sw_req_markdown_heading</div>
+<div class="attribute">Source: 
+<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-external-link"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+<a href="https://github.com/NewTec-GmbH/pyTRLCConverter/blob/5f5298775497e2cfabbdf1a434066bb15e92f4ac/doc/sw-requirements/sw_req.trlc#L122" target="_blank">doc/sw-requirements/sw_req.trlc:122</a>
+</div>
+<div class="attribute">
+<blockquote>The Markdown converter shall provide a function to create a Markdown heading.</blockquote>
+</div>
+<div class="attribute">
+<div>Issues:
+<ul>
+<li>missing reference to SwTests</li>
+</ul>
+</div>
+</div>
+<div class="attribute">Build Reference: <strong>5f5298775497e2cfabbdf1a434066bb15e92f4ac</strong> | Timestamp: 2025-02-28 19:31:16+00:00</div>
+</div>
+<!-- end item -->
+<!-- begin item req SwRequirements.sw_req_markdown_table -->
+<div class="item-missing" id="item-cca3b173f20319b3c0f3fa0c3f217add20c4b492">
+<div class="item-name"><svg width="24" height="24" viewBox="0 0 520 516" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" overflow="hidden"><g transform="translate(-137 -85)"><path d="M162 506 397 113 632 506Z" stroke="#000000" stroke-width="27.5" stroke-miterlimit="8" fill="#FF9900" fill-rule="evenodd"/><text font-family="Aptos,Aptos_MSFontService,sans-serif" font-weight="700" font-size="202" transform="matrix(1 0 0 1 367.145 423)">!</text></g></svg> TRLC Swreq SwRequirements.sw_req_markdown_table</div>
+<div class="attribute">Source: 
+<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-external-link"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+<a href="https://github.com/NewTec-GmbH/pyTRLCConverter/blob/5f5298775497e2cfabbdf1a434066bb15e92f4ac/doc/sw-requirements/sw_req.trlc#L127" target="_blank">doc/sw-requirements/sw_req.trlc:127</a>
+</div>
+<div class="attribute">
+<blockquote>The Markdown converter shall provide a function to create a Markdown table.</blockquote>
+</div>
+<div class="attribute">
+<div>Issues:
+<ul>
+<li>missing reference to SwTests</li>
+</ul>
+</div>
+</div>
+<div class="attribute">Build Reference: <strong>5f5298775497e2cfabbdf1a434066bb15e92f4ac</strong> | Timestamp: 2025-02-28 19:31:16+00:00</div>
+</div>
+<!-- end item -->
+<!-- begin item req SwRequirements.sw_req_markdown_link -->
+<div class="item-missing" id="item-7f2c53fe4767862dd678601bdef6c8cf8d30a63c">
+<div class="item-name"><svg width="24" height="24" viewBox="0 0 520 516" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" overflow="hidden"><g transform="translate(-137 -85)"><path d="M162 506 397 113 632 506Z" stroke="#000000" stroke-width="27.5" stroke-miterlimit="8" fill="#FF9900" fill-rule="evenodd"/><text font-family="Aptos,Aptos_MSFontService,sans-serif" font-weight="700" font-size="202" transform="matrix(1 0 0 1 367.145 423)">!</text></g></svg> TRLC Swreq SwRequirements.sw_req_markdown_link</div>
+<div class="attribute">Source: 
+<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-external-link"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+<a href="https://github.com/NewTec-GmbH/pyTRLCConverter/blob/5f5298775497e2cfabbdf1a434066bb15e92f4ac/doc/sw-requirements/sw_req.trlc#L132" target="_blank">doc/sw-requirements/sw_req.trlc:132</a>
+</div>
+<div class="attribute">
+<blockquote>The Markdown converter shall provide a function to create a Markdown link.</blockquote>
+</div>
+<div class="attribute">
+<div>Issues:
+<ul>
+<li>missing reference to SwTests</li>
+</ul>
+</div>
+</div>
+<div class="attribute">Build Reference: <strong>5f5298775497e2cfabbdf1a434066bb15e92f4ac</strong> | Timestamp: 2025-02-28 19:31:16+00:00</div>
+</div>
+<!-- end item -->
+<!-- begin item req SwRequirements.sw_req_markdown_image -->
+<div class="item-missing" id="item-207995f04f9162f2111704a13cf5c6475f7db10b">
+<div class="item-name"><svg width="24" height="24" viewBox="0 0 520 516" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" overflow="hidden"><g transform="translate(-137 -85)"><path d="M162 506 397 113 632 506Z" stroke="#000000" stroke-width="27.5" stroke-miterlimit="8" fill="#FF9900" fill-rule="evenodd"/><text font-family="Aptos,Aptos_MSFontService,sans-serif" font-weight="700" font-size="202" transform="matrix(1 0 0 1 367.145 423)">!</text></g></svg> TRLC Swreq SwRequirements.sw_req_markdown_image</div>
+<div class="attribute">Source: 
+<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-external-link"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+<a href="https://github.com/NewTec-GmbH/pyTRLCConverter/blob/5f5298775497e2cfabbdf1a434066bb15e92f4ac/doc/sw-requirements/sw_req.trlc#L137" target="_blank">doc/sw-requirements/sw_req.trlc:137</a>
+</div>
+<div class="attribute">
+<blockquote>The Markdown converter shall provide a function to create a Markdown image to embed images.</blockquote>
+</div>
+<div class="attribute">
+<div>Issues:
+<ul>
+<li>missing reference to SwTests</li>
+</ul>
+</div>
+</div>
+<div class="attribute">Build Reference: <strong>5f5298775497e2cfabbdf1a434066bb15e92f4ac</strong> | Timestamp: 2025-02-28 19:31:16+00:00</div>
+</div>
+<!-- end item -->
+<!-- begin item req SwRequirements.sw_req_markdown_text_color -->
+<div class="item-missing" id="item-5351b1e329a148b828904f4b996abcb875ea1780">
+<div class="item-name"><svg width="24" height="24" viewBox="0 0 520 516" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" overflow="hidden"><g transform="translate(-137 -85)"><path d="M162 506 397 113 632 506Z" stroke="#000000" stroke-width="27.5" stroke-miterlimit="8" fill="#FF9900" fill-rule="evenodd"/><text font-family="Aptos,Aptos_MSFontService,sans-serif" font-weight="700" font-size="202" transform="matrix(1 0 0 1 367.145 423)">!</text></g></svg> TRLC Swreq SwRequirements.sw_req_markdown_text_color</div>
+<div class="attribute">Source: 
+<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-external-link"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+<a href="https://github.com/NewTec-GmbH/pyTRLCConverter/blob/5f5298775497e2cfabbdf1a434066bb15e92f4ac/doc/sw-requirements/sw_req.trlc#L142" target="_blank">doc/sw-requirements/sw_req.trlc:142</a>
+</div>
+<div class="attribute">
+<blockquote>The Markdown converter shall provide a function to create colored text in Markdown format.</blockquote>
+</div>
+<div class="attribute">
+<div>Issues:
+<ul>
+<li>missing reference to SwTests</li>
+</ul>
+</div>
+</div>
+<div class="attribute">Build Reference: <strong>5f5298775497e2cfabbdf1a434066bb15e92f4ac</strong> | Timestamp: 2025-02-28 19:31:16+00:00</div>
+</div>
+<!-- end item -->
+<!-- begin item req SwRequirements.sw_req_markdown_out_folder -->
+<div class="item-missing" id="item-88620d965a8cfce8047303ccb1c57f869821bd6c">
+<div class="item-name"><svg width="24" height="24" viewBox="0 0 520 516" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" overflow="hidden"><g transform="translate(-137 -85)"><path d="M162 506 397 113 632 506Z" stroke="#000000" stroke-width="27.5" stroke-miterlimit="8" fill="#FF9900" fill-rule="evenodd"/><text font-family="Aptos,Aptos_MSFontService,sans-serif" font-weight="700" font-size="202" transform="matrix(1 0 0 1 367.145 423)">!</text></g></svg> TRLC Swreq SwRequirements.sw_req_markdown_out_folder</div>
+<div class="attribute">Source: 
+<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-external-link"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+<a href="https://github.com/NewTec-GmbH/pyTRLCConverter/blob/5f5298775497e2cfabbdf1a434066bb15e92f4ac/doc/sw-requirements/sw_req.trlc#L147" target="_blank">doc/sw-requirements/sw_req.trlc:147</a>
+</div>
+<div class="attribute">
+<blockquote>The Markdown converter shall create the converted files in the specified output folder.</blockquote>
+</div>
+<div class="attribute">
+<div>Issues:
+<ul>
+<li>missing reference to SwTests</li>
+</ul>
+</div>
+</div>
+<div class="attribute">Build Reference: <strong>5f5298775497e2cfabbdf1a434066bb15e92f4ac</strong> | Timestamp: 2025-02-28 19:31:16+00:00</div>
+</div>
+<!-- end item -->
+<!-- begin item req SwRequirements.sw_req_markdown_multiple_doc_mode -->
+<div class="item-missing" id="item-d2c9d02a916ed0b1b7ee5dfd31cd05ccfdbe2e96">
+<div class="item-name"><svg width="24" height="24" viewBox="0 0 520 516" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" overflow="hidden"><g transform="translate(-137 -85)"><path d="M162 506 397 113 632 506Z" stroke="#000000" stroke-width="27.5" stroke-miterlimit="8" fill="#FF9900" fill-rule="evenodd"/><text font-family="Aptos,Aptos_MSFontService,sans-serif" font-weight="700" font-size="202" transform="matrix(1 0 0 1 367.145 423)">!</text></g></svg> TRLC Swreq SwRequirements.sw_req_markdown_multiple_doc_mode</div>
+<div class="attribute">Source: 
+<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-external-link"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+<a href="https://github.com/NewTec-GmbH/pyTRLCConverter/blob/5f5298775497e2cfabbdf1a434066bb15e92f4ac/doc/sw-requirements/sw_req.trlc#L153" target="_blank">doc/sw-requirements/sw_req.trlc:153</a>
+</div>
+<div class="attribute">
+<blockquote>The software shall create a Markdown file for each TRLC file by default.</blockquote>
+</div>
+<div class="attribute">
+<div>Issues:
+<ul>
+<li>missing reference to SwTests</li>
+</ul>
+</div>
+</div>
+<div class="attribute">Build Reference: <strong>5f5298775497e2cfabbdf1a434066bb15e92f4ac</strong> | Timestamp: 2025-02-28 19:31:16+00:00</div>
+</div>
+<!-- end item -->
+<!-- begin item req SwRequirements.sw_req_markdown_single_doc_mode -->
+<div class="item-missing" id="item-08f9f8e59c49ef1125120d6c4db662330df2d6e1">
+<div class="item-name"><svg width="24" height="24" viewBox="0 0 520 516" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" overflow="hidden"><g transform="translate(-137 -85)"><path d="M162 506 397 113 632 506Z" stroke="#000000" stroke-width="27.5" stroke-miterlimit="8" fill="#FF9900" fill-rule="evenodd"/><text font-family="Aptos,Aptos_MSFontService,sans-serif" font-weight="700" font-size="202" transform="matrix(1 0 0 1 367.145 423)">!</text></g></svg> TRLC Swreq SwRequirements.sw_req_markdown_single_doc_mode</div>
+<div class="attribute">Source: 
+<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-external-link"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+<a href="https://github.com/NewTec-GmbH/pyTRLCConverter/blob/5f5298775497e2cfabbdf1a434066bb15e92f4ac/doc/sw-requirements/sw_req.trlc#L160" target="_blank">doc/sw-requirements/sw_req.trlc:160</a>
+</div>
+<div class="attribute">
+<blockquote>The software shall create a single Markdown file which combines all TRLC files if requested by command line arguments.</blockquote>
+</div>
+<div class="attribute">
+<div>Issues:
+<ul>
+<li>missing reference to SwTests</li>
+</ul>
+</div>
+</div>
+<div class="attribute">Build Reference: <strong>5f5298775497e2cfabbdf1a434066bb15e92f4ac</strong> | Timestamp: 2025-02-28 19:31:16+00:00</div>
+</div>
+<!-- end item -->
+<!-- begin item req SwRequirements.sw_req_markdown_out_file_name_default -->
+<div class="item-missing" id="item-33c6776ec1ad990ff2b7ce5061d245c95cebb703">
+<div class="item-name"><svg width="24" height="24" viewBox="0 0 520 516" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" overflow="hidden"><g transform="translate(-137 -85)"><path d="M162 506 397 113 632 506Z" stroke="#000000" stroke-width="27.5" stroke-miterlimit="8" fill="#FF9900" fill-rule="evenodd"/><text font-family="Aptos,Aptos_MSFontService,sans-serif" font-weight="700" font-size="202" transform="matrix(1 0 0 1 367.145 423)">!</text></g></svg> TRLC Swreq SwRequirements.sw_req_markdown_out_file_name_default</div>
+<div class="attribute">Source: 
+<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-external-link"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+<a href="https://github.com/NewTec-GmbH/pyTRLCConverter/blob/5f5298775497e2cfabbdf1a434066bb15e92f4ac/doc/sw-requirements/sw_req.trlc#L165" target="_blank">doc/sw-requirements/sw_req.trlc:165</a>
+</div>
+<div class="attribute">
+<blockquote>The output file name shall be &#x27;output.md&#x27; by default.</blockquote>
+</div>
+<div class="attribute">
+<div>Issues:
+<ul>
+<li>missing reference to SwTests</li>
+</ul>
+</div>
+</div>
+<div class="attribute">Build Reference: <strong>5f5298775497e2cfabbdf1a434066bb15e92f4ac</strong> | Timestamp: 2025-02-28 19:31:16+00:00</div>
+</div>
+<!-- end item -->
+<!-- begin item req SwRequirements.sw_req_markdown_out_file_name_custom -->
+<div class="item-missing" id="item-77e1ee37abdcb9a310194acc6a2049003a54d60d">
+<div class="item-name"><svg width="24" height="24" viewBox="0 0 520 516" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" overflow="hidden"><g transform="translate(-137 -85)"><path d="M162 506 397 113 632 506Z" stroke="#000000" stroke-width="27.5" stroke-miterlimit="8" fill="#FF9900" fill-rule="evenodd"/><text font-family="Aptos,Aptos_MSFontService,sans-serif" font-weight="700" font-size="202" transform="matrix(1 0 0 1 367.145 423)">!</text></g></svg> TRLC Swreq SwRequirements.sw_req_markdown_out_file_name_custom</div>
+<div class="attribute">Source: 
+<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-external-link"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+<a href="https://github.com/NewTec-GmbH/pyTRLCConverter/blob/5f5298775497e2cfabbdf1a434066bb15e92f4ac/doc/sw-requirements/sw_req.trlc#L170" target="_blank">doc/sw-requirements/sw_req.trlc:170</a>
+</div>
+<div class="attribute">
+<blockquote>The output file name shall be customizable by command line arguments.</blockquote>
+</div>
+<div class="attribute">
+<div>Issues:
+<ul>
+<li>missing reference to SwTests</li>
+</ul>
+</div>
+</div>
+<div class="attribute">Build Reference: <strong>5f5298775497e2cfabbdf1a434066bb15e92f4ac</strong> | Timestamp: 2025-02-28 19:31:16+00:00</div>
+</div>
+<!-- end item -->
+<!-- begin item req SwRequirements.sw_req_markdown_sd_top_level -->
+<div class="item-missing" id="item-c6704852cc415b7462becec8612186755bb50b68">
+<div class="item-name"><svg width="24" height="24" viewBox="0 0 520 516" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" overflow="hidden"><g transform="translate(-137 -85)"><path d="M162 506 397 113 632 506Z" stroke="#000000" stroke-width="27.5" stroke-miterlimit="8" fill="#FF9900" fill-rule="evenodd"/><text font-family="Aptos,Aptos_MSFontService,sans-serif" font-weight="700" font-size="202" transform="matrix(1 0 0 1 367.145 423)">!</text></g></svg> TRLC Swreq SwRequirements.sw_req_markdown_sd_top_level</div>
+<div class="attribute">Source: 
+<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-external-link"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+<a href="https://github.com/NewTec-GmbH/pyTRLCConverter/blob/5f5298775497e2cfabbdf1a434066bb15e92f4ac/doc/sw-requirements/sw_req.trlc#L175" target="_blank">doc/sw-requirements/sw_req.trlc:175</a>
+</div>
+<div class="attribute">
+<blockquote>The software shall add a top level heading to the Markdown file in single doc mode.</blockquote>
+</div>
+<div class="attribute">
+<div>Issues:
+<ul>
+<li>missing reference to SwTests</li>
+</ul>
+</div>
+</div>
+<div class="attribute">Build Reference: <strong>5f5298775497e2cfabbdf1a434066bb15e92f4ac</strong> | Timestamp: 2025-02-28 19:31:16+00:00</div>
+</div>
+<!-- end item -->
+<!-- begin item req SwRequirements.sw_req_markdown_sd_top_level_default -->
+<div class="item-missing" id="item-cc4125e09218f241590b34cc0f7f3fcbbf171233">
+<div class="item-name"><svg width="24" height="24" viewBox="0 0 520 516" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" overflow="hidden"><g transform="translate(-137 -85)"><path d="M162 506 397 113 632 506Z" stroke="#000000" stroke-width="27.5" stroke-miterlimit="8" fill="#FF9900" fill-rule="evenodd"/><text font-family="Aptos,Aptos_MSFontService,sans-serif" font-weight="700" font-size="202" transform="matrix(1 0 0 1 367.145 423)">!</text></g></svg> TRLC Swreq SwRequirements.sw_req_markdown_sd_top_level_default</div>
+<div class="attribute">Source: 
+<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-external-link"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+<a href="https://github.com/NewTec-GmbH/pyTRLCConverter/blob/5f5298775497e2cfabbdf1a434066bb15e92f4ac/doc/sw-requirements/sw_req.trlc#L180" target="_blank">doc/sw-requirements/sw_req.trlc:180</a>
+</div>
+<div class="attribute">
+<blockquote>The top level heading shall be &#x27;Specification&#x27; by default.</blockquote>
+</div>
+<div class="attribute">
+<div>Issues:
+<ul>
+<li>missing reference to SwTests</li>
+</ul>
+</div>
+</div>
+<div class="attribute">Build Reference: <strong>5f5298775497e2cfabbdf1a434066bb15e92f4ac</strong> | Timestamp: 2025-02-28 19:31:16+00:00</div>
+</div>
+<!-- end item -->
+<!-- begin item req SwRequirements.sw_req_markdown_sd_top_level_custom -->
+<div class="item-missing" id="item-48be614b9a66182a04e0e331b8ba6458956fa042">
+<div class="item-name"><svg width="24" height="24" viewBox="0 0 520 516" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" overflow="hidden"><g transform="translate(-137 -85)"><path d="M162 506 397 113 632 506Z" stroke="#000000" stroke-width="27.5" stroke-miterlimit="8" fill="#FF9900" fill-rule="evenodd"/><text font-family="Aptos,Aptos_MSFontService,sans-serif" font-weight="700" font-size="202" transform="matrix(1 0 0 1 367.145 423)">!</text></g></svg> TRLC Swreq SwRequirements.sw_req_markdown_sd_top_level_custom</div>
+<div class="attribute">Source: 
+<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-external-link"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+<a href="https://github.com/NewTec-GmbH/pyTRLCConverter/blob/5f5298775497e2cfabbdf1a434066bb15e92f4ac/doc/sw-requirements/sw_req.trlc#L185" target="_blank">doc/sw-requirements/sw_req.trlc:185</a>
+</div>
+<div class="attribute">
+<blockquote>The top level heading shall be customizable by command line arguments.</blockquote>
+</div>
+<div class="attribute">
+<div>Issues:
+<ul>
+<li>missing reference to SwTests</li>
+</ul>
+</div>
+</div>
+<div class="attribute">Build Reference: <strong>5f5298775497e2cfabbdf1a434066bb15e92f4ac</strong> | Timestamp: 2025-02-28 19:31:16+00:00</div>
+</div>
+<!-- end item -->
+<!-- begin item req SwRequirements.sw_req_docx -->
+<div class="item-missing" id="item-7241be3884587bc7b93f6ccf870b595f2461f0d0">
+<div class="item-name"><svg width="24" height="24" viewBox="0 0 520 516" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" overflow="hidden"><g transform="translate(-137 -85)"><path d="M162 506 397 113 632 506Z" stroke="#000000" stroke-width="27.5" stroke-miterlimit="8" fill="#FF9900" fill-rule="evenodd"/><text font-family="Aptos,Aptos_MSFontService,sans-serif" font-weight="700" font-size="202" transform="matrix(1 0 0 1 367.145 423)">!</text></g></svg> TRLC Swreq SwRequirements.sw_req_docx</div>
+<div class="attribute">Source: 
+<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-external-link"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+<a href="https://github.com/NewTec-GmbH/pyTRLCConverter/blob/5f5298775497e2cfabbdf1a434066bb15e92f4ac/doc/sw-requirements/sw_req.trlc#L193" target="_blank">doc/sw-requirements/sw_req.trlc:193</a>
+</div>
+<div class="attribute">
+<blockquote>The software shall support the conversion into docx format.</blockquote>
+</div>
+<div class="attribute">
+<div>Issues:
+<ul>
+<li>missing reference to SwTests</li>
+</ul>
+</div>
+</div>
+<div class="attribute">Build Reference: <strong>5f5298775497e2cfabbdf1a434066bb15e92f4ac</strong> | Timestamp: 2025-02-28 19:31:16+00:00</div>
+</div>
+<!-- end item -->
+<!-- begin item req SwRequirements.sw_req_docx_template -->
+<div class="item-missing" id="item-250ca6061202e96989a43619f05b763b2d526608">
+<div class="item-name"><svg width="24" height="24" viewBox="0 0 520 516" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" overflow="hidden"><g transform="translate(-137 -85)"><path d="M162 506 397 113 632 506Z" stroke="#000000" stroke-width="27.5" stroke-miterlimit="8" fill="#FF9900" fill-rule="evenodd"/><text font-family="Aptos,Aptos_MSFontService,sans-serif" font-weight="700" font-size="202" transform="matrix(1 0 0 1 367.145 423)">!</text></g></svg> TRLC Swreq SwRequirements.sw_req_docx_template</div>
+<div class="attribute">Source: 
+<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-external-link"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+<a href="https://github.com/NewTec-GmbH/pyTRLCConverter/blob/5f5298775497e2cfabbdf1a434066bb15e92f4ac/doc/sw-requirements/sw_req.trlc#L198" target="_blank">doc/sw-requirements/sw_req.trlc:198</a>
+</div>
+<div class="attribute">
+<blockquote>The software shall support loading a docx template to append docx content to.</blockquote>
+</div>
+<div class="attribute">
+<div>Issues:
+<ul>
+<li>missing reference to SwTests</li>
+</ul>
+</div>
+</div>
+<div class="attribute">Build Reference: <strong>5f5298775497e2cfabbdf1a434066bb15e92f4ac</strong> | Timestamp: 2025-02-28 19:31:16+00:00</div>
+</div>
+<!-- end item -->
+<!-- begin item req SwRequirements.sw_req_docx_file -->
+<div class="item-missing" id="item-0587c98506d2ef147ec34819a25afe36f6ee61cb">
+<div class="item-name"><svg width="24" height="24" viewBox="0 0 520 516" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" overflow="hidden"><g transform="translate(-137 -85)"><path d="M162 506 397 113 632 506Z" stroke="#000000" stroke-width="27.5" stroke-miterlimit="8" fill="#FF9900" fill-rule="evenodd"/><text font-family="Aptos,Aptos_MSFontService,sans-serif" font-weight="700" font-size="202" transform="matrix(1 0 0 1 367.145 423)">!</text></g></svg> TRLC Swreq SwRequirements.sw_req_docx_file</div>
+<div class="attribute">Source: 
+<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-external-link"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+<a href="https://github.com/NewTec-GmbH/pyTRLCConverter/blob/5f5298775497e2cfabbdf1a434066bb15e92f4ac/doc/sw-requirements/sw_req.trlc#L203" target="_blank">doc/sw-requirements/sw_req.trlc:203</a>
+</div>
+<div class="attribute">
+<blockquote>The software shall create a combined docx file for each TRLC file in file read order as provided by TRLC.</blockquote>
+</div>
+<div class="attribute">
+<div>Issues:
+<ul>
+<li>missing reference to SwTests</li>
+</ul>
+</div>
+</div>
+<div class="attribute">Build Reference: <strong>5f5298775497e2cfabbdf1a434066bb15e92f4ac</strong> | Timestamp: 2025-02-28 19:31:16+00:00</div>
+</div>
+<!-- end item -->
+<!-- begin item req SwRequirements.sw_req_docx_section -->
+<div class="item-missing" id="item-80e794d87dad076352fcdff6f08a933b3be7bc45">
+<div class="item-name"><svg width="24" height="24" viewBox="0 0 520 516" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" overflow="hidden"><g transform="translate(-137 -85)"><path d="M162 506 397 113 632 506Z" stroke="#000000" stroke-width="27.5" stroke-miterlimit="8" fill="#FF9900" fill-rule="evenodd"/><text font-family="Aptos,Aptos_MSFontService,sans-serif" font-weight="700" font-size="202" transform="matrix(1 0 0 1 367.145 423)">!</text></g></svg> TRLC Swreq SwRequirements.sw_req_docx_section</div>
+<div class="attribute">Source: 
+<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-external-link"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+<a href="https://github.com/NewTec-GmbH/pyTRLCConverter/blob/5f5298775497e2cfabbdf1a434066bb15e92f4ac/doc/sw-requirements/sw_req.trlc#L208" target="_blank">doc/sw-requirements/sw_req.trlc:208</a>
+</div>
+<div class="attribute">
+<blockquote>If no project specific conversion file is available, a TRLC section shall be converted into a Docx heading by considering the depth level.</blockquote>
+</div>
+<div class="attribute">
+<div>Issues:
+<ul>
+<li>missing reference to SwTests</li>
+</ul>
+</div>
+</div>
+<div class="attribute">Build Reference: <strong>5f5298775497e2cfabbdf1a434066bb15e92f4ac</strong> | Timestamp: 2025-02-28 19:31:16+00:00</div>
+</div>
+<!-- end item -->
+<!-- begin item req SwRequirements.sw_req_docx_record -->
+<div class="item-missing" id="item-4aca790ce7059b1e07b00734ed33495cad94de3f">
+<div class="item-name"><svg width="24" height="24" viewBox="0 0 520 516" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" overflow="hidden"><g transform="translate(-137 -85)"><path d="M162 506 397 113 632 506Z" stroke="#000000" stroke-width="27.5" stroke-miterlimit="8" fill="#FF9900" fill-rule="evenodd"/><text font-family="Aptos,Aptos_MSFontService,sans-serif" font-weight="700" font-size="202" transform="matrix(1 0 0 1 367.145 423)">!</text></g></svg> TRLC Swreq SwRequirements.sw_req_docx_record</div>
+<div class="attribute">Source: 
+<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-external-link"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+<a href="https://github.com/NewTec-GmbH/pyTRLCConverter/blob/5f5298775497e2cfabbdf1a434066bb15e92f4ac/doc/sw-requirements/sw_req.trlc#L213" target="_blank">doc/sw-requirements/sw_req.trlc:213</a>
+</div>
+<div class="attribute">
+<blockquote>If no project specific conversion file is available, consecutive TRLC records shall be converted into a docx heading with depth+1 and a table listing the attributes.</blockquote>
+</div>
+<div class="attribute">
+<div>Issues:
+<ul>
+<li>missing reference to SwTests</li>
+</ul>
+</div>
+</div>
+<div class="attribute">Build Reference: <strong>5f5298775497e2cfabbdf1a434066bb15e92f4ac</strong> | Timestamp: 2025-02-28 19:31:16+00:00</div>
+</div>
+<!-- end item -->
+<!-- begin item req SwRequirements.sw_req_ascii_conversion -->
+<div class="item-missing" id="item-0db0de66f7b9277dee18376c43903e98a37d960a">
+<div class="item-name"><svg width="24" height="24" viewBox="0 0 520 516" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" overflow="hidden"><g transform="translate(-137 -85)"><path d="M162 506 397 113 632 506Z" stroke="#000000" stroke-width="27.5" stroke-miterlimit="8" fill="#FF9900" fill-rule="evenodd"/><text font-family="Aptos,Aptos_MSFontService,sans-serif" font-weight="700" font-size="202" transform="matrix(1 0 0 1 367.145 423)">!</text></g></svg> TRLC Swreq SwRequirements.sw_req_ascii_conversion</div>
+<div class="attribute">Source: 
+<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-external-link"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+<a href="https://github.com/NewTec-GmbH/pyTRLCConverter/blob/5f5298775497e2cfabbdf1a434066bb15e92f4ac/doc/sw-requirements/sw_req.trlc#L220" target="_blank">doc/sw-requirements/sw_req.trlc:220</a>
+</div>
+<div class="attribute">
+<blockquote>The software shall support a simple conversion into text format to console out.</blockquote>
+</div>
+<div class="attribute">
+<div>Issues:
+<ul>
+<li>missing reference to SwTests</li>
+</ul>
+</div>
+</div>
+<div class="attribute">Build Reference: <strong>5f5298775497e2cfabbdf1a434066bb15e92f4ac</strong> | Timestamp: 2025-02-28 19:31:16+00:00</div>
+</div>
+<!-- end item -->
+<!-- begin item req SwRequirements.sw_req_plantuml -->
+<div class="item-missing" id="item-6ca65654e1ffeb6e6e199afd5b0df5bc5a7ec70a">
+<div class="item-name"><svg width="24" height="24" viewBox="0 0 520 516" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" overflow="hidden"><g transform="translate(-137 -85)"><path d="M162 506 397 113 632 506Z" stroke="#000000" stroke-width="27.5" stroke-miterlimit="8" fill="#FF9900" fill-rule="evenodd"/><text font-family="Aptos,Aptos_MSFontService,sans-serif" font-weight="700" font-size="202" transform="matrix(1 0 0 1 367.145 423)">!</text></g></svg> TRLC Swreq SwRequirements.sw_req_plantuml</div>
+<div class="attribute">Source: 
+<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-external-link"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+<a href="https://github.com/NewTec-GmbH/pyTRLCConverter/blob/5f5298775497e2cfabbdf1a434066bb15e92f4ac/doc/sw-requirements/sw_req.trlc#L227" target="_blank">doc/sw-requirements/sw_req.trlc:227</a>
+</div>
+<div class="attribute">
+<blockquote>The software shall support the conversion of a PlantUML diagram to a propriate image format.</blockquote>
+</div>
+<div class="attribute">
+<div>Issues:
+<ul>
+<li>missing reference to SwTests</li>
+</ul>
+</div>
+</div>
+<div class="attribute">Build Reference: <strong>5f5298775497e2cfabbdf1a434066bb15e92f4ac</strong> | Timestamp: 2025-02-28 19:31:16+00:00</div>
+</div>
+<!-- end item -->
+<h4 id="sec-024c7febd35f8c410ed57f70fc1c354e">SwTests</h4>
+<h5>doc/sw-test/sw_test.trlc</h5>
+<!-- begin item req SwTests.tc1 -->
+<div class="item-ok" id="item-8a0fa9541d8ce8941d75c6f226e3562c98e697f5">
+<div class="item-name"><svg width="24" height="24" viewBox="0 0 456 461" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" overflow="hidden"><g transform="translate(-825 -84)"><path d="M839 310.5C839 193.139 934.811 98 1053 98 1171.19 98 1267 193.139 1267 310.5 1267 427.86 1171.19 523 1053 523 934.811 523 839 427.86 839 310.5Z" stroke="#008000" stroke-width="27.5" stroke-miterlimit="8" fill="#4EA72E" fill-rule="evenodd"/><text font-family="Segoe UI Symbol,Segoe UI Symbol_MSFontService,sans-serif" font-weight="400" font-size="202" transform="matrix(1 0 0 1 972.144 378)">✔</text></g></svg> TRLC Swtestcase SwTests.tc1</div>
+<div class="attribute">Source: 
+<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-external-link"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+<a href="https://github.com/NewTec-GmbH/pyTRLCConverter/blob/5f5298775497e2cfabbdf1a434066bb15e92f4ac/doc/sw-test/sw_test.trlc#L12" target="_blank">doc/sw-test/sw_test.trlc:12</a>
+</div>
+<div class="attribute">
+<blockquote>This test case ...</blockquote>
+</div>
+<div class="attribute">
+<div>Traces to:
+<ul>
+<li>PyUnit Test <a href='#item-de7e246f5a2c7969a762237309fac785c464d5ad'>test_example.test_tc1:28</a></li>
+<li>PyUnit Test <a href='#item-909a066a5b80e72858ab188a975bcbebc3dba498'>test_plantuml.test_make_server_url:59</a></li>
+</ul>
+</div>
+<div>Derived from:
+<ul>
+<li>TRLC Swreq <a href='#item-5ad2fb1b64ad3ae5c29c024d26e2c7239c0a20bf'>SwRequirements.sw_req_cli</a></li>
+</ul>
+</div>
+</div>
+<div class="attribute">Build Reference: <strong>5f5298775497e2cfabbdf1a434066bb15e92f4ac</strong> | Timestamp: 2025-02-28 19:31:16+00:00</div>
+</div>
+<!-- end item -->
+<!-- begin item req SwTests.tc2 -->
+<div class="item-ok" id="item-246e2a1aab893290119eb2b68cef977be99570ca">
+<div class="item-name"><svg width="24" height="24" viewBox="0 0 456 461" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" overflow="hidden"><g transform="translate(-825 -84)"><path d="M839 310.5C839 193.139 934.811 98 1053 98 1171.19 98 1267 193.139 1267 310.5 1267 427.86 1171.19 523 1053 523 934.811 523 839 427.86 839 310.5Z" stroke="#008000" stroke-width="27.5" stroke-miterlimit="8" fill="#4EA72E" fill-rule="evenodd"/><text font-family="Segoe UI Symbol,Segoe UI Symbol_MSFontService,sans-serif" font-weight="400" font-size="202" transform="matrix(1 0 0 1 972.144 378)">✔</text></g></svg> TRLC Swtestcase SwTests.tc2</div>
+<div class="attribute">Source: 
+<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-external-link"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+<a href="https://github.com/NewTec-GmbH/pyTRLCConverter/blob/5f5298775497e2cfabbdf1a434066bb15e92f4ac/doc/sw-test/sw_test.trlc#L17" target="_blank">doc/sw-test/sw_test.trlc:17</a>
+</div>
+<div class="attribute">
+<blockquote>This test case ...</blockquote>
+</div>
+<div class="attribute">
+<div>Traces to:
+<ul>
+<li>PyUnit Test <a href='#item-9452455349cc28e84bcda748be180da530eccea0'>test_example.test_tc2:39</a></li>
+</ul>
+</div>
+<div>Derived from:
+<ul>
+<li>TRLC Swreq <a href='#item-08bbd1bdfab482ddb209f0a3f83c0f9b13fb4e04'>SwRequirements.sw_req_prj_spec</a></li>
+</ul>
+</div>
+</div>
+<div class="attribute">Build Reference: <strong>5f5298775497e2cfabbdf1a434066bb15e92f4ac</strong> | Timestamp: 2025-02-28 19:31:16+00:00</div>
+</div>
+<!-- end item -->
+<h3>Implementation</h3>
+<h3>Verification and Validation</h3>
+<h4 id="sec-561fb4ac032e7f3d727cc0fcbde976fc">SwTestCode</h4>
+<h5>tests/test_example.py</h5>
+<!-- begin item pyunit test_example.test_tc1:28 -->
+<div class="item-ok" id="item-de7e246f5a2c7969a762237309fac785c464d5ad">
+<div class="item-name"><svg width="24" height="24" viewBox="0 0 456 461" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" overflow="hidden"><g transform="translate(-825 -84)"><path d="M839 310.5C839 193.139 934.811 98 1053 98 1171.19 98 1267 193.139 1267 310.5 1267 427.86 1171.19 523 1053 523 934.811 523 839 427.86 839 310.5Z" stroke="#008000" stroke-width="27.5" stroke-miterlimit="8" fill="#4EA72E" fill-rule="evenodd"/><text font-family="Segoe UI Symbol,Segoe UI Symbol_MSFontService,sans-serif" font-weight="400" font-size="202" transform="matrix(1 0 0 1 972.144 378)">✔</text></g></svg> PyUnit Test test_example.test_tc1:28</div>
+<div class="attribute">Source: 
+<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-external-link"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+<a href="https://github.com/NewTec-GmbH/pyTRLCConverter/blob/5f5298775497e2cfabbdf1a434066bb15e92f4ac/tests/test_example.py#L28" target="_blank">tests/test_example.py:28</a>
+</div>
+<div class="attribute">
+<div>Derived from:
+<ul>
+<li>TRLC Swtestcase <a href='#item-8a0fa9541d8ce8941d75c6f226e3562c98e697f5'>SwTests.tc1</a></li>
+</ul>
+</div>
+</div>
+<div class="attribute">Build Reference: <strong>5f5298775497e2cfabbdf1a434066bb15e92f4ac</strong> | Timestamp: 2025-02-28 19:31:16+00:00</div>
+</div>
+<!-- end item -->
+<!-- begin item pyunit test_example.test_tc2:39 -->
+<div class="item-ok" id="item-9452455349cc28e84bcda748be180da530eccea0">
+<div class="item-name"><svg width="24" height="24" viewBox="0 0 456 461" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" overflow="hidden"><g transform="translate(-825 -84)"><path d="M839 310.5C839 193.139 934.811 98 1053 98 1171.19 98 1267 193.139 1267 310.5 1267 427.86 1171.19 523 1053 523 934.811 523 839 427.86 839 310.5Z" stroke="#008000" stroke-width="27.5" stroke-miterlimit="8" fill="#4EA72E" fill-rule="evenodd"/><text font-family="Segoe UI Symbol,Segoe UI Symbol_MSFontService,sans-serif" font-weight="400" font-size="202" transform="matrix(1 0 0 1 972.144 378)">✔</text></g></svg> PyUnit Test test_example.test_tc2:39</div>
+<div class="attribute">Source: 
+<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-external-link"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+<a href="https://github.com/NewTec-GmbH/pyTRLCConverter/blob/5f5298775497e2cfabbdf1a434066bb15e92f4ac/tests/test_example.py#L39" target="_blank">tests/test_example.py:39</a>
+</div>
+<div class="attribute">
+<div>Derived from:
+<ul>
+<li>TRLC Swtestcase <a href='#item-246e2a1aab893290119eb2b68cef977be99570ca'>SwTests.tc2</a></li>
+</ul>
+</div>
+</div>
+<div class="attribute">Build Reference: <strong>5f5298775497e2cfabbdf1a434066bb15e92f4ac</strong> | Timestamp: 2025-02-28 19:31:16+00:00</div>
+</div>
+<!-- end item -->
+<h5>tests/test_plantuml.py</h5>
+<!-- begin item pyunit test_plantuml.test_make_server_url:59 -->
+<div class="item-ok" id="item-909a066a5b80e72858ab188a975bcbebc3dba498">
+<div class="item-name"><svg width="24" height="24" viewBox="0 0 456 461" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" overflow="hidden"><g transform="translate(-825 -84)"><path d="M839 310.5C839 193.139 934.811 98 1053 98 1171.19 98 1267 193.139 1267 310.5 1267 427.86 1171.19 523 1053 523 934.811 523 839 427.86 839 310.5Z" stroke="#008000" stroke-width="27.5" stroke-miterlimit="8" fill="#4EA72E" fill-rule="evenodd"/><text font-family="Segoe UI Symbol,Segoe UI Symbol_MSFontService,sans-serif" font-weight="400" font-size="202" transform="matrix(1 0 0 1 972.144 378)">✔</text></g></svg> PyUnit Test test_plantuml.test_make_server_url:59</div>
+<div class="attribute">Source: 
+<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-external-link"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+<a href="https://github.com/NewTec-GmbH/pyTRLCConverter/blob/5f5298775497e2cfabbdf1a434066bb15e92f4ac/tests/test_plantuml.py#L59" target="_blank">tests/test_plantuml.py:59</a>
+</div>
+<div class="attribute">
+<div>Derived from:
+<ul>
+<li>TRLC Swtestcase <a href='#item-8a0fa9541d8ce8941d75c6f226e3562c98e697f5'>SwTests.tc1</a></li>
+</ul>
+</div>
+</div>
+<div class="attribute">Build Reference: <strong>5f5298775497e2cfabbdf1a434066bb15e92f4ac</strong> | Timestamp: 2025-02-28 19:31:16+00:00</div>
+</div>
+<!-- end item -->
+</div>
+</div>
+</div>
+<script>
+function buttonFilter(filter) {
+    var elms = document.getElementsByTagName("div");
+    var issue_elms = document.getElementsByClassName("issue");
+    for (i = 0; i < elms.length; i++) {
+        if (elms[i].id.startsWith("item-")) {
+            console.log("elms[i].className ", elms[i].className)
+            if (filter == "all") {
+                elms[i].style.display = "block";
+            } else if (elms[i].className == "item-" + filter) {
+                elms[i].style.display = "block";
+            } else {
+                elms[i].style.display = "none";
+            }
+        }
+    }
+    // filter the issues list based on the issue filter button clicked
+    for (i = 0; i < issue_elms.length; i++) {
+        console.log("log ", issue_elms[i].className)
+        if (filter == "all") {
+            issue_elms[i].style.display = "list-item";
+        } else if (issue_elms[i].className == "issue issue-" + filter) {
+            issue_elms[i].style.display = "list-item";
+        } else {
+            issue_elms[i].style.display = "none";
+        }
+    }
+    activeButton(filter);
+    //call the search filering which could have been overwritten by the current filtering
+    searchItem();
+}
+
+
+function activeButton(filter) {
+    var elms = document.getElementsByTagName("button");
+    console.log("the click buitton is " + filter);
+    for (i = 0; i < elms.length; i++) {
+        if (elms[i].className.includes("buttonActive")) {
+            console.log("elem active found : " + elms[i].className);
+            elms[i].className = elms[i].className.replace("buttonActive", "");
+        } else if (elms[i].className.toLowerCase().includes("button" + filter.toLowerCase())) {
+            console.log("elem to be activated found : " + elms[i].className);
+            elms[i].className = elms[i].className + " buttonActive";
+        }
+    }
+}
+
+
+function ToggleIssues() {
+    var div_issue = document.getElementById("issues-section");
+    if (div_issue.style.display == "block" || div_issue.style.display == "") {
+        div_issue.style.display = "none";
+        document.getElementById("BtnToggleIssue").innerHTML = "Show Issues";
+        document.getElementById("BtnToggleIssue").className = document.getElementById("BtnToggleIssue").className + " buttonActive";
+    } else {
+        div_issue.style = 'display: block; flex-direction: column; height: 200px;' +
+            'overflow:auto;';
+        document.getElementById("BtnToggleIssue").innerHTML = "Hide Issues";
+        document.getElementById("BtnToggleIssue").className = document.getElementById("BtnToggleIssue").className.replace("buttonActive", "");
+    }
+}
+
+
+function searchItem() {
+    var input = document.getElementById('search').value
+    input = input.toLowerCase();
+
+    var divs = document.getElementsByClassName('item-name');
+    for (i = 0; i < divs.length; i++) {
+        var title = divs[i].parentNode.getAttribute("title");
+        // get requirement name: 2nd part when we cut the long string with /svg
+        var reqname = divs[i].innerHTML.toLowerCase().split("</svg>").pop();
+        reqname = reqname.split(" ").pop();
+        if (reqname.includes(input)) {
+            // the search pattern has been found, if this elem has the title "hidden-not-matching", put it back to diplayed
+            if (title) {
+                if (title.startsWith("hidden-not-matching")) {
+                    divs[i].parentNode.style.display = "block";
+                }
+            }
+            divs[i].parentNode.setAttribute("title", "matching-" + input)
+        } else {
+            // not maching, we hide
+            divs[i].parentNode.setAttribute("title", "hidden-not-matching")
+            divs[i].parentNode.style.display = "none";
+        }
+    }
+}
+</script>
+<script>
+
+window.onscroll = function() {stickyNavbar()};
+
+var navbar = document.getElementById("navbar");
+var sticky = navbar.offsetTop;
+
+function stickyNavbar() {
+  if (window.pageYOffset >= sticky) {
+    navbar.classList.add("sticky")
+  } else {
+    navbar.classList.remove("sticky");
+  }
+}
+</script>
+</body>
+</html>
+</section>
+
+
+      </div>
+      <div class="bottomnav" role="navigation" aria-label="Bottom">
+      
+        <p>
+        «&#160;&#160;<a href="sw_req_tracing_report.html">SW-Requirements Tracing Report</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="index.html">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="coverage_resport.html">Coverage Report</a>&#160;&#160;»
+        </p>
+
+      </div>
+
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2025, NewTec GmbH.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.1.
+    </div>
+  </body>
+</html>
