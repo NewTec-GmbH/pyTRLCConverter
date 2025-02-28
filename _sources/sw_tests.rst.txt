@@ -1,5 +1,4 @@
 SW-Test Cases
 -------------
 
-.. include:: ../../tc2markdown/out/sw-tests/markdown/sw_test.md
-   :parser: myst_parser.sphinx_
+.. include:: ../../tc2rst/out/sw-tests/rst/sw_test.rst

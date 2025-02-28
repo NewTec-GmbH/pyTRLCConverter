@@ -1,5 +1,4 @@
 SW-Requirements
 ---------------
 
-.. include:: ../../req2markdown/out/sw-requirements/markdown/sw_req.md
-   :parser: myst_parser.sphinx_
+.. include:: ../../req2rst/out/sw-requirements/rst/sw_req.rst

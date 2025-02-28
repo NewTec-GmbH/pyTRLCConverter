@@ -7,7 +7,7 @@
 
     <title>SW-Requirements &#8212; pyTRLCConverter  documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=47202671" />
-    <link rel="stylesheet" type="text/css" href="_static/haiku.css?v=fce32b03" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=748b4f47" />
     <script src="_static/documentation_options.js?v=5929fcd5"></script>
     <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
@@ -38,14 +38,9 @@
   <section id="sw-requirements">
 <h1>SW-Requirements<a class="headerlink" href="#sw-requirements" title="Link to this heading">¶</a></h1>
 <section id="pytrlcconverter">
-<h2>pyTRLCConverter<a class="headerlink" href="#pytrlcconverter" title="Link to this heading">¶</a></h2>
-<p>This file contains the software requirements for the pyTRLCConverter tool.</p>
-<section id="software-requirements">
-<h3>Software Requirements<a class="headerlink" href="#software-requirements" title="Link to this heading">¶</a></h3>
-<section id="general">
-<h4>General<a class="headerlink" href="#general" title="Link to this heading">¶</a></h4>
-<section id="sw-req-cli">
-<h5>sw_req_cli<a class="headerlink" href="#sw-req-cli" title="Link to this heading">¶</a></h5>
+<span id="sw-req-rst-pytrlcconverter"></span><h2>pyTRLCConverter<a class="headerlink" href="#pytrlcconverter" title="Link to this heading">¶</a></h2>
+<div class="admonition-sw-req-info-about-sw-req admonition" id="sw-req-rst-sw-req-info-about-sw-req">
+<p class="admonition-title">sw_req_info_about_sw_req</p>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
@@ -53,23 +48,42 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>Description</p></td>
+<tr class="row-even"><td><p>description</p></td>
+<td><p>This file contains the software requirements for the pyTRLCConverter tool.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<section id="software-requirements">
+<span id="sw-req-rst-software-requirements"></span><h3>Software Requirements<a class="headerlink" href="#software-requirements" title="Link to this heading">¶</a></h3>
+<section id="general">
+<span id="sw-req-rst-general"></span><h4>General<a class="headerlink" href="#general" title="Link to this heading">¶</a></h4>
+<div class="admonition-sw-req-cli admonition" id="sw-req-rst-sw-req-cli">
+<p class="admonition-title">sw_req_cli</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>description</p></td>
 <td><p>The software shall be a command-line interface (CLI) application.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Note</p></td>
+<tr class="row-odd"><td><p>note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>Derived</p></td>
+<tr class="row-even"><td><p>derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>Verification Criteria</p></td>
+<tr class="row-odd"><td><p>verification_criteria</p></td>
 <td><p>Every feature shall be accessible via the command line. Therefore its verified by the CLI tests.</p></td>
 </tr>
 </tbody>
 </table>
-</section>
-<section id="sw-req-prj-spec">
-<h5>sw_req_prj_spec<a class="headerlink" href="#sw-req-prj-spec" title="Link to this heading">¶</a></h5>
+</div>
+<div class="admonition-sw-req-prj-spec admonition" id="sw-req-rst-sw-req-prj-spec">
+<p class="admonition-title">sw_req_prj_spec</p>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
@@ -77,23 +91,23 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>Description</p></td>
+<tr class="row-even"><td><p>description</p></td>
 <td><p>The software shall support project specific adaptions for the conversion.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Note</p></td>
+<tr class="row-odd"><td><p>note</p></td>
 <td><p>Every project might have different requirements how the converted output should look like.</p></td>
 </tr>
-<tr class="row-even"><td><p>Derived</p></td>
+<tr class="row-even"><td><p>derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>Verification Criteria</p></td>
+<tr class="row-odd"><td><p>verification_criteria</p></td>
 <td><p>Verify by converting one or more TRLC files with a project specific conversion file.</p></td>
 </tr>
 </tbody>
 </table>
-</section>
-<section id="sw-req-version">
-<h5>sw_req_version<a class="headerlink" href="#sw-req-version" title="Link to this heading">¶</a></h5>
+</div>
+<div class="admonition-sw-req-version admonition" id="sw-req-rst-sw-req-version">
+<p class="admonition-title">sw_req_version</p>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
@@ -101,23 +115,23 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>Description</p></td>
+<tr class="row-even"><td><p>description</p></td>
 <td><p>The software shall provide a version information in the format ‘&lt;program-name&gt; &lt;major&gt;.&lt;minor&gt;.&lt;patch&gt;’.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Note</p></td>
+<tr class="row-odd"><td><p>note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>Derived</p></td>
+<tr class="row-even"><td><p>derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>Verification Criteria</p></td>
+<tr class="row-odd"><td><p>verification_criteria</p></td>
 <td><p>Verify by requesting the version information and use the format ‘&lt;program-name&gt; &lt;major&gt;.&lt;minor&gt;.&lt;patch&gt;’.</p></td>
 </tr>
 </tbody>
 </table>
-</section>
-<section id="sw-req-process-trlc-symbols">
-<h5>sw_req_process_trlc_symbols<a class="headerlink" href="#sw-req-process-trlc-symbols" title="Link to this heading">¶</a></h5>
+</div>
+<div class="admonition-sw-req-process-trlc-symbols admonition" id="sw-req-rst-sw-req-process-trlc-symbols">
+<p class="admonition-title">sw_req_process_trlc_symbols</p>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
@@ -125,23 +139,23 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>Description</p></td>
+<tr class="row-even"><td><p>description</p></td>
 <td><p>The software shall process all TRLC symbols from the TRLC files.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Note</p></td>
+<tr class="row-odd"><td><p>note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>Derived</p></td>
+<tr class="row-even"><td><p>derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>Verification Criteria</p></td>
+<tr class="row-odd"><td><p>verification_criteria</p></td>
 <td><p>Verify DumpConverter output against a known good reference.</p></td>
 </tr>
 </tbody>
 </table>
-</section>
-<section id="sw-req-destination-format">
-<h5>sw_req_destination_format<a class="headerlink" href="#sw-req-destination-format" title="Link to this heading">¶</a></h5>
+</div>
+<div class="admonition-sw-req-destination-format admonition" id="sw-req-rst-sw-req-destination-format">
+<p class="admonition-title">sw_req_destination_format</p>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
@@ -149,23 +163,23 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>Description</p></td>
+<tr class="row-even"><td><p>description</p></td>
 <td><p>The software shall convert the TRLC files to the required destination format.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Note</p></td>
+<tr class="row-odd"><td><p>note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>Derived</p></td>
+<tr class="row-even"><td><p>derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>Verification Criteria</p></td>
+<tr class="row-odd"><td><p>verification_criteria</p></td>
 <td><p>Verify by converting to one or more destination formats. Depended on the available formats.</p></td>
 </tr>
 </tbody>
 </table>
-</section>
-<section id="sw-req-verbose-mode">
-<h5>sw_req_verbose_mode<a class="headerlink" href="#sw-req-verbose-mode" title="Link to this heading">¶</a></h5>
+</div>
+<div class="admonition-sw-req-verbose-mode admonition" id="sw-req-rst-sw-req-verbose-mode">
+<p class="admonition-title">sw_req_verbose_mode</p>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
@@ -173,26 +187,26 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>Description</p></td>
+<tr class="row-even"><td><p>description</p></td>
 <td><p>The software shall show additional conversion information in verbose mode.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Note</p></td>
+<tr class="row-odd"><td><p>note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>Derived</p></td>
+<tr class="row-even"><td><p>derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>Verification Criteria</p></td>
+<tr class="row-odd"><td><p>verification_criteria</p></td>
 <td><p>Verify by converting one or more TRLC files with the verbose mode enabled.</p></td>
 </tr>
 </tbody>
 </table>
-</section>
+</div>
 </section>
 <section id="project-specific-conversion">
-<h4>Project Specific Conversion<a class="headerlink" href="#project-specific-conversion" title="Link to this heading">¶</a></h4>
-<section id="sw-req-prj-spec-file">
-<h5>sw_req_prj_spec_file<a class="headerlink" href="#sw-req-prj-spec-file" title="Link to this heading">¶</a></h5>
+<span id="sw-req-rst-project-specific-conversion"></span><h4>Project Specific Conversion<a class="headerlink" href="#project-specific-conversion" title="Link to this heading">¶</a></h4>
+<div class="admonition-sw-req-prj-spec-file admonition" id="sw-req-rst-sw-req-prj-spec-file">
+<p class="admonition-title">sw_req_prj_spec_file</p>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
@@ -200,23 +214,23 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>Description</p></td>
+<tr class="row-even"><td><p>description</p></td>
 <td><p>The project specific conversion file shall be a Python file.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Note</p></td>
+<tr class="row-odd"><td><p>note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>Derived</p></td>
-<td><p><a class="reference internal" href="#sw_req.md#sw_req_prj_spec"><span class="xref myst">SwRequirements.sw_req_prj_spec</span></a></p></td>
+<tr class="row-even"><td><p>derived</p></td>
+<td><p><a class="reference internal" href="#sw-req-rst-sw-req-prj-spec"><span class="std std-ref">SwRequirements.sw_req_prj_spec</span></a></p></td>
 </tr>
-<tr class="row-odd"><td><p>Verification Criteria</p></td>
+<tr class="row-odd"><td><p>verification_criteria</p></td>
 <td><p>Verify by converting one or more TRLC files with a project specific conversion file.</p></td>
 </tr>
 </tbody>
 </table>
-</section>
-<section id="sw-req-prj-spec-interface">
-<h5>sw_req_prj_spec_interface<a class="headerlink" href="#sw-req-prj-spec-interface" title="Link to this heading">¶</a></h5>
+</div>
+<div class="admonition-sw-req-prj-spec-interface admonition" id="sw-req-rst-sw-req-prj-spec-interface">
+<p class="admonition-title">sw_req_prj_spec_interface</p>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
@@ -224,26 +238,26 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>Description</p></td>
+<tr class="row-even"><td><p>description</p></td>
 <td><p>The project specific conversion interface shall be realized by an abstract interface.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Note</p></td>
+<tr class="row-odd"><td><p>note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>Derived</p></td>
+<tr class="row-even"><td><p>derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>Verification Criteria</p></td>
+<tr class="row-odd"><td><p>verification_criteria</p></td>
 <td><p>Verify by converting one or more TRLC files with a project specific conversion file.</p></td>
 </tr>
 </tbody>
 </table>
-</section>
+</div>
 </section>
 <section id="command-line-arguments">
-<h4>Command Line Arguments<a class="headerlink" href="#command-line-arguments" title="Link to this heading">¶</a></h4>
-<section id="sw-req-cli-help">
-<h5>sw_req_cli_help<a class="headerlink" href="#sw-req-cli-help" title="Link to this heading">¶</a></h5>
+<span id="sw-req-rst-command-line-arguments"></span><h4>Command Line Arguments<a class="headerlink" href="#command-line-arguments" title="Link to this heading">¶</a></h4>
+<div class="admonition-sw-req-cli-help admonition" id="sw-req-rst-sw-req-cli-help">
+<p class="admonition-title">sw_req_cli_help</p>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
@@ -251,23 +265,23 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>Description</p></td>
-<td><p>The software shall support the command line argument ‘-h’ and –help’ to show the help information.</p></td>
+<tr class="row-even"><td><p>description</p></td>
+<td><p>The software shall support the command line argument ‘-h’ and --help’ to show the help information.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Note</p></td>
+<tr class="row-odd"><td><p>note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>Derived</p></td>
+<tr class="row-even"><td><p>derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>Verification Criteria</p></td>
-<td><p>Verify by calling the software with the argument ‘–help’ and check if the help information is shown.</p></td>
+<tr class="row-odd"><td><p>verification_criteria</p></td>
+<td><p>Verify by calling the software with the argument ‘--help’ and check if the help information is shown.</p></td>
 </tr>
 </tbody>
 </table>
-</section>
-<section id="sw-req-cli-version">
-<h5>sw_req_cli_version<a class="headerlink" href="#sw-req-cli-version" title="Link to this heading">¶</a></h5>
+</div>
+<div class="admonition-sw-req-cli-version admonition" id="sw-req-rst-sw-req-cli-version">
+<p class="admonition-title">sw_req_cli_version</p>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
@@ -275,23 +289,23 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>Description</p></td>
-<td><p>The software shall support the command line argument ‘–version’ to show the version information.</p></td>
+<tr class="row-even"><td><p>description</p></td>
+<td><p>The software shall support the command line argument ‘--version’ to show the version information.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Note</p></td>
+<tr class="row-odd"><td><p>note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>Derived</p></td>
-<td><p><a class="reference internal" href="#sw_req.md#sw_req_version"><span class="xref myst">SwRequirements.sw_req_version</span></a></p></td>
+<tr class="row-even"><td><p>derived</p></td>
+<td><p><a class="reference internal" href="#sw-req-rst-sw-req-version"><span class="std std-ref">SwRequirements.sw_req_version</span></a></p></td>
 </tr>
-<tr class="row-odd"><td><p>Verification Criteria</p></td>
-<td><p>Verify by calling the software with the argument ‘–version’ and check if the version information is shown.</p></td>
+<tr class="row-odd"><td><p>verification_criteria</p></td>
+<td><p>Verify by calling the software with the argument ‘--version’ and check if the version information is shown.</p></td>
 </tr>
 </tbody>
 </table>
-</section>
-<section id="sw-req-cli-source">
-<h5>sw_req_cli_source<a class="headerlink" href="#sw-req-cli-source" title="Link to this heading">¶</a></h5>
+</div>
+<div class="admonition-sw-req-cli-source admonition" id="sw-req-rst-sw-req-cli-source">
+<p class="admonition-title">sw_req_cli_source</p>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
@@ -299,23 +313,23 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>Description</p></td>
-<td><p>The software shall support the command line argument ‘-s’ and ‘–source’ multiple times to specify the source file(s) (*.rsl and *.trlc).</p></td>
+<tr class="row-even"><td><p>description</p></td>
+<td><p>The software shall support the command line argument ‘-s’ and ‘--source’ multiple times to specify the source file(s) (*.rsl and *.trlc).</p></td>
 </tr>
-<tr class="row-odd"><td><p>Note</p></td>
-<td><p>Its equal to TRLC –source program argument.</p></td>
+<tr class="row-odd"><td><p>note</p></td>
+<td><p>Its equal to TRLC --source program argument.</p></td>
 </tr>
-<tr class="row-even"><td><p>Derived</p></td>
+<tr class="row-even"><td><p>derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>Verification Criteria</p></td>
-<td><p>Verify by calling the software with the argument ‘–source’ and check if the source file(s) are used for conversion.</p></td>
+<tr class="row-odd"><td><p>verification_criteria</p></td>
+<td><p>Verify by calling the software with the argument ‘--source’ and check if the source file(s) are used for conversion.</p></td>
 </tr>
 </tbody>
 </table>
-</section>
-<section id="sw-req-cli-include">
-<h5>sw_req_cli_include<a class="headerlink" href="#sw-req-cli-include" title="Link to this heading">¶</a></h5>
+</div>
+<div class="admonition-sw-req-cli-include admonition" id="sw-req-rst-sw-req-cli-include">
+<p class="admonition-title">sw_req_cli_include</p>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
@@ -323,23 +337,23 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>Description</p></td>
-<td><p>The software shall support the command line argument ‘-i’ and ‘–include’ multiple times to specify the file(s) for automatic inclusion.</p></td>
+<tr class="row-even"><td><p>description</p></td>
+<td><p>The software shall support the command line argument ‘-i’ and ‘--include’ multiple times to specify the file(s) for automatic inclusion.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Note</p></td>
-<td><p>Its equal to TRLC –include program argument.</p></td>
+<tr class="row-odd"><td><p>note</p></td>
+<td><p>Its equal to TRLC --include program argument.</p></td>
 </tr>
-<tr class="row-even"><td><p>Derived</p></td>
+<tr class="row-even"><td><p>derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>Verification Criteria</p></td>
-<td><p>Verify by calling the software with the argument ‘–include’ and check if the file(s) are included.</p></td>
+<tr class="row-odd"><td><p>verification_criteria</p></td>
+<td><p>Verify by calling the software with the argument ‘--include’ and check if the file(s) are included.</p></td>
 </tr>
 </tbody>
 </table>
-</section>
-<section id="sw-req-cli-exclude">
-<h5>sw_req_cli_exclude<a class="headerlink" href="#sw-req-cli-exclude" title="Link to this heading">¶</a></h5>
+</div>
+<div class="admonition-sw-req-cli-exclude admonition" id="sw-req-rst-sw-req-cli-exclude">
+<p class="admonition-title">sw_req_cli_exclude</p>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
@@ -347,23 +361,23 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>Description</p></td>
-<td><p>The software shall support the command line argument ‘-ex’ and ‘–exclude’ multiple times to specify the file(s) for automatic exclusion.</p></td>
+<tr class="row-even"><td><p>description</p></td>
+<td><p>The software shall support the command line argument ‘-ex’ and ‘--exclude’ multiple times to specify the file(s) for automatic exclusion.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Note</p></td>
+<tr class="row-odd"><td><p>note</p></td>
 <td><p>This is necessary in case an defined archtecture element traces to a requirement, but the requirement should not be included in the output.</p></td>
 </tr>
-<tr class="row-even"><td><p>Derived</p></td>
+<tr class="row-even"><td><p>derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>Verification Criteria</p></td>
-<td><p>Verify by calling the software with the argument ‘–exclude’ and check if the file(s) are excluded.</p></td>
+<tr class="row-odd"><td><p>verification_criteria</p></td>
+<td><p>Verify by calling the software with the argument ‘--exclude’ and check if the file(s) are excluded.</p></td>
 </tr>
 </tbody>
 </table>
-</section>
-<section id="sw-req-no-prj-spec">
-<h5>sw_req_no_prj_spec<a class="headerlink" href="#sw-req-no-prj-spec" title="Link to this heading">¶</a></h5>
+</div>
+<div class="admonition-sw-req-no-prj-spec admonition" id="sw-req-rst-sw-req-no-prj-spec">
+<p class="admonition-title">sw_req_no_prj_spec</p>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
@@ -371,23 +385,23 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>Description</p></td>
+<tr class="row-even"><td><p>description</p></td>
 <td><p>If no project specific conversion file is provided, the software shall use a default conversion.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Note</p></td>
+<tr class="row-odd"><td><p>note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>Derived</p></td>
+<tr class="row-even"><td><p>derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>Verification Criteria</p></td>
+<tr class="row-odd"><td><p>verification_criteria</p></td>
 <td><p>Verify by converting one or more TRLC files without a project specific conversion file.</p></td>
 </tr>
 </tbody>
 </table>
-</section>
-<section id="sw-req-cli-out">
-<h5>sw_req_cli_out<a class="headerlink" href="#sw-req-cli-out" title="Link to this heading">¶</a></h5>
+</div>
+<div class="admonition-sw-req-cli-out admonition" id="sw-req-rst-sw-req-cli-out">
+<p class="admonition-title">sw_req_cli_out</p>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
@@ -395,26 +409,26 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>Description</p></td>
-<td><p>The software shall support the command line argument ‘-o’ and ‘–out’ to specify the output directory.</p></td>
+<tr class="row-even"><td><p>description</p></td>
+<td><p>The software shall support the command line argument ‘-o’ and ‘--out’ to specify the output directory.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Note</p></td>
+<tr class="row-odd"><td><p>note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>Derived</p></td>
+<tr class="row-even"><td><p>derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>Verification Criteria</p></td>
-<td><p>Verify by calling the software with the argument ‘–out’ and check if the output is written to the specified directory.</p></td>
+<tr class="row-odd"><td><p>verification_criteria</p></td>
+<td><p>Verify by calling the software with the argument ‘--out’ and check if the output is written to the specified directory.</p></td>
 </tr>
 </tbody>
 </table>
-</section>
+</div>
 </section>
 <section id="markdown">
-<h4>Markdown<a class="headerlink" href="#markdown" title="Link to this heading">¶</a></h4>
-<section id="sw-req-markdown">
-<h5>sw_req_markdown<a class="headerlink" href="#sw-req-markdown" title="Link to this heading">¶</a></h5>
+<span id="sw-req-rst-markdown"></span><h4>Markdown<a class="headerlink" href="#markdown" title="Link to this heading">¶</a></h4>
+<div class="admonition-sw-req-markdown admonition" id="sw-req-rst-sw-req-markdown">
+<p class="admonition-title">sw_req_markdown</p>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
@@ -422,23 +436,23 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>Description</p></td>
+<tr class="row-even"><td><p>description</p></td>
 <td><p>The software shall support the conversion into Markdown format.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Note</p></td>
+<tr class="row-odd"><td><p>note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>Derived</p></td>
+<tr class="row-even"><td><p>derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>Verification Criteria</p></td>
+<tr class="row-odd"><td><p>verification_criteria</p></td>
 <td><p>Verify by converting one or more TRLC files into Markdown format.</p></td>
 </tr>
 </tbody>
 </table>
-</section>
-<section id="sw-req-markdown-section">
-<h5>sw_req_markdown_section<a class="headerlink" href="#sw-req-markdown-section" title="Link to this heading">¶</a></h5>
+</div>
+<div class="admonition-sw-req-markdown-section admonition" id="sw-req-rst-sw-req-markdown-section">
+<p class="admonition-title">sw_req_markdown_section</p>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
@@ -446,23 +460,23 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>Description</p></td>
+<tr class="row-even"><td><p>description</p></td>
 <td><p>The Markdown converter shall convert a TRLC section into a Markdown heading by considering the depth level.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Note</p></td>
+<tr class="row-odd"><td><p>note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>Derived</p></td>
+<tr class="row-even"><td><p>derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>Verification Criteria</p></td>
+<tr class="row-odd"><td><p>verification_criteria</p></td>
 <td><p>Verify by converting a TRLC section into a Markdown heading.</p></td>
 </tr>
 </tbody>
 </table>
-</section>
-<section id="sw-req-markdown-record">
-<h5>sw_req_markdown_record<a class="headerlink" href="#sw-req-markdown-record" title="Link to this heading">¶</a></h5>
+</div>
+<div class="admonition-sw-req-markdown-record admonition" id="sw-req-rst-sw-req-markdown-record">
+<p class="admonition-title">sw_req_markdown_record</p>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
@@ -470,23 +484,23 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>Description</p></td>
+<tr class="row-even"><td><p>description</p></td>
 <td><p>The Markdown converter shall convert the attributes of a TRLC record into a Markdown table.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Note</p></td>
+<tr class="row-odd"><td><p>note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>Derived</p></td>
+<tr class="row-even"><td><p>derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>Verification Criteria</p></td>
+<tr class="row-odd"><td><p>verification_criteria</p></td>
 <td><p>Verify by converting consecutive TRLC records into a Markdown table.</p></td>
 </tr>
 </tbody>
 </table>
-</section>
-<section id="sw-req-markdown-escape">
-<h5>sw_req_markdown_escape<a class="headerlink" href="#sw-req-markdown-escape" title="Link to this heading">¶</a></h5>
+</div>
+<div class="admonition-sw-req-markdown-escape admonition" id="sw-req-rst-sw-req-markdown-escape">
+<p class="admonition-title">sw_req_markdown_escape</p>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
@@ -494,23 +508,23 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>Description</p></td>
+<tr class="row-even"><td><p>description</p></td>
 <td><p>The software shall escape all strings according the Markdown format.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Note</p></td>
+<tr class="row-odd"><td><p>note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>Derived</p></td>
+<tr class="row-even"><td><p>derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>Verification Criteria</p></td>
+<tr class="row-odd"><td><p>verification_criteria</p></td>
 <td><p>Verify by using strings with characters, which needs escaping.</p></td>
 </tr>
 </tbody>
 </table>
-</section>
-<section id="sw-req-markdown-heading">
-<h5>sw_req_markdown_heading<a class="headerlink" href="#sw-req-markdown-heading" title="Link to this heading">¶</a></h5>
+</div>
+<div class="admonition-sw-req-markdown-heading admonition" id="sw-req-rst-sw-req-markdown-heading">
+<p class="admonition-title">sw_req_markdown_heading</p>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
@@ -518,23 +532,23 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>Description</p></td>
+<tr class="row-even"><td><p>description</p></td>
 <td><p>The Markdown converter shall provide a function to create a Markdown heading.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Note</p></td>
+<tr class="row-odd"><td><p>note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>Derived</p></td>
+<tr class="row-even"><td><p>derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>Verification Criteria</p></td>
+<tr class="row-odd"><td><p>verification_criteria</p></td>
 <td><p>Verify by creating a Markdown heading.</p></td>
 </tr>
 </tbody>
 </table>
-</section>
-<section id="sw-req-markdown-table">
-<h5>sw_req_markdown_table<a class="headerlink" href="#sw-req-markdown-table" title="Link to this heading">¶</a></h5>
+</div>
+<div class="admonition-sw-req-markdown-table admonition" id="sw-req-rst-sw-req-markdown-table">
+<p class="admonition-title">sw_req_markdown_table</p>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
@@ -542,23 +556,23 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>Description</p></td>
+<tr class="row-even"><td><p>description</p></td>
 <td><p>The Markdown converter shall provide a function to create a Markdown table.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Note</p></td>
+<tr class="row-odd"><td><p>note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>Derived</p></td>
+<tr class="row-even"><td><p>derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>Verification Criteria</p></td>
+<tr class="row-odd"><td><p>verification_criteria</p></td>
 <td><p>Verify by creating a Markdown table.</p></td>
 </tr>
 </tbody>
 </table>
-</section>
-<section id="sw-req-markdown-link">
-<h5>sw_req_markdown_link<a class="headerlink" href="#sw-req-markdown-link" title="Link to this heading">¶</a></h5>
+</div>
+<div class="admonition-sw-req-markdown-link admonition" id="sw-req-rst-sw-req-markdown-link">
+<p class="admonition-title">sw_req_markdown_link</p>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
@@ -566,23 +580,23 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>Description</p></td>
+<tr class="row-even"><td><p>description</p></td>
 <td><p>The Markdown converter shall provide a function to create a Markdown link.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Note</p></td>
+<tr class="row-odd"><td><p>note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>Derived</p></td>
+<tr class="row-even"><td><p>derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>Verification Criteria</p></td>
+<tr class="row-odd"><td><p>verification_criteria</p></td>
 <td><p>Verify by creating a Markdown link.</p></td>
 </tr>
 </tbody>
 </table>
-</section>
-<section id="sw-req-markdown-image">
-<h5>sw_req_markdown_image<a class="headerlink" href="#sw-req-markdown-image" title="Link to this heading">¶</a></h5>
+</div>
+<div class="admonition-sw-req-markdown-image admonition" id="sw-req-rst-sw-req-markdown-image">
+<p class="admonition-title">sw_req_markdown_image</p>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
@@ -590,23 +604,23 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>Description</p></td>
+<tr class="row-even"><td><p>description</p></td>
 <td><p>The Markdown converter shall provide a function to create a Markdown image to embed images.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Note</p></td>
+<tr class="row-odd"><td><p>note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>Derived</p></td>
+<tr class="row-even"><td><p>derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>Verification Criteria</p></td>
+<tr class="row-odd"><td><p>verification_criteria</p></td>
 <td><p>Verify by creating a Markdown image.</p></td>
 </tr>
 </tbody>
 </table>
-</section>
-<section id="sw-req-markdown-text-color">
-<h5>sw_req_markdown_text_color<a class="headerlink" href="#sw-req-markdown-text-color" title="Link to this heading">¶</a></h5>
+</div>
+<div class="admonition-sw-req-markdown-text-color admonition" id="sw-req-rst-sw-req-markdown-text-color">
+<p class="admonition-title">sw_req_markdown_text_color</p>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
@@ -614,23 +628,23 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>Description</p></td>
+<tr class="row-even"><td><p>description</p></td>
 <td><p>The Markdown converter shall provide a function to create colored text in Markdown format.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Note</p></td>
+<tr class="row-odd"><td><p>note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>Derived</p></td>
+<tr class="row-even"><td><p>derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>Verification Criteria</p></td>
+<tr class="row-odd"><td><p>verification_criteria</p></td>
 <td><p>Verify by creating colored text in Markdown format.</p></td>
 </tr>
 </tbody>
 </table>
-</section>
-<section id="sw-req-markdown-out-folder">
-<h5>sw_req_markdown_out_folder<a class="headerlink" href="#sw-req-markdown-out-folder" title="Link to this heading">¶</a></h5>
+</div>
+<div class="admonition-sw-req-markdown-soft-return admonition" id="sw-req-rst-sw-req-markdown-soft-return">
+<p class="admonition-title">sw_req_markdown_soft_return</p>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
@@ -638,25 +652,49 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>Description</p></td>
+<tr class="row-even"><td><p>description</p></td>
+<td><p>The Markdown convert shall provide a function to convert a line feed to Markdown soft return.</p></td>
+</tr>
+<tr class="row-odd"><td><p>note</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-even"><td><p>derived</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-odd"><td><p>verification_criteria</p></td>
+<td><p>Verify by creating a text with one and more line feeds.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-sw-req-markdown-out-folder admonition" id="sw-req-rst-sw-req-markdown-out-folder">
+<p class="admonition-title">sw_req_markdown_out_folder</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>description</p></td>
 <td><p>The Markdown converter shall create the converted files in the specified output folder.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Note</p></td>
+<tr class="row-odd"><td><p>note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>Derived</p></td>
+<tr class="row-even"><td><p>derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>Verification Criteria</p></td>
+<tr class="row-odd"><td><p>verification_criteria</p></td>
 <td><p>Verify by specifing an output folder, that doesn’t exist. It must exist after the conversion.</p></td>
 </tr>
 </tbody>
 </table>
-</section>
+</div>
 <section id="multiple-documents-mode">
-<h5>Multiple Documents Mode<a class="headerlink" href="#multiple-documents-mode" title="Link to this heading">¶</a></h5>
-<section id="sw-req-markdown-multiple-doc-mode">
-<h6>sw_req_markdown_multiple_doc_mode<a class="headerlink" href="#sw-req-markdown-multiple-doc-mode" title="Link to this heading">¶</a></h6>
+<span id="sw-req-rst-multiple-documents-mode"></span><h5>Multiple Documents Mode<a class="headerlink" href="#multiple-documents-mode" title="Link to this heading">¶</a></h5>
+<div class="admonition-sw-req-markdown-multiple-doc-mode admonition" id="sw-req-rst-sw-req-markdown-multiple-doc-mode">
+<p class="admonition-title">sw_req_markdown_multiple_doc_mode</p>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
@@ -664,26 +702,23 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>Description</p></td>
+<tr class="row-even"><td><p>description</p></td>
 <td><p>The software shall create a Markdown file for each TRLC file by default.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Note</p></td>
+<tr class="row-odd"><td><p>note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>Derived</p></td>
+<tr class="row-even"><td><p>derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>Verification Criteria</p></td>
+<tr class="row-odd"><td><p>verification_criteria</p></td>
 <td><p>Verify by converting one or more TRLC files into Markdown format and check if a Markdown file is created for each TRLC file.</p></td>
 </tr>
 </tbody>
 </table>
-</section>
-</section>
-<section id="single-document-mode">
-<h5>Single Document Mode<a class="headerlink" href="#single-document-mode" title="Link to this heading">¶</a></h5>
-<section id="sw-req-markdown-single-doc-mode">
-<h6>sw_req_markdown_single_doc_mode<a class="headerlink" href="#sw-req-markdown-single-doc-mode" title="Link to this heading">¶</a></h6>
+</div>
+<div class="admonition-sw-req-markdown-md-top-level admonition" id="sw-req-rst-sw-req-markdown-md-top-level">
+<p class="admonition-title">sw_req_markdown_md_top_level</p>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
@@ -691,23 +726,50 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>Description</p></td>
+<tr class="row-even"><td><p>description</p></td>
+<td><p>The software shall add a top level heading to the Markdown file if there is no top level section.</p></td>
+</tr>
+<tr class="row-odd"><td><p>note</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-even"><td><p>derived</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-odd"><td><p>verification_criteria</p></td>
+<td><p>Verify the top level heading in the Markdown file in multiple doc mode.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="single-document-mode">
+<span id="sw-req-rst-single-document-mode"></span><h5>Single Document Mode<a class="headerlink" href="#single-document-mode" title="Link to this heading">¶</a></h5>
+<div class="admonition-sw-req-markdown-single-doc-mode admonition" id="sw-req-rst-sw-req-markdown-single-doc-mode">
+<p class="admonition-title">sw_req_markdown_single_doc_mode</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>description</p></td>
 <td><p>The software shall create a single Markdown file which combines all TRLC files if requested by command line arguments.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Note</p></td>
+<tr class="row-odd"><td><p>note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>Derived</p></td>
+<tr class="row-even"><td><p>derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>Verification Criteria</p></td>
+<tr class="row-odd"><td><p>verification_criteria</p></td>
 <td><p>Verify by converting one or more TRLC files into Markdown format and check if a single Markdown file is created.</p></td>
 </tr>
 </tbody>
 </table>
-</section>
-<section id="sw-req-markdown-out-file-name-default">
-<h6>sw_req_markdown_out_file_name_default<a class="headerlink" href="#sw-req-markdown-out-file-name-default" title="Link to this heading">¶</a></h6>
+</div>
+<div class="admonition-sw-req-markdown-out-file-name-default admonition" id="sw-req-rst-sw-req-markdown-out-file-name-default">
+<p class="admonition-title">sw_req_markdown_out_file_name_default</p>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
@@ -715,23 +777,23 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>Description</p></td>
+<tr class="row-even"><td><p>description</p></td>
 <td><p>The output file name shall be ‘output.md’ by default.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Note</p></td>
+<tr class="row-odd"><td><p>note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>Derived</p></td>
+<tr class="row-even"><td><p>derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>Verification Criteria</p></td>
+<tr class="row-odd"><td><p>verification_criteria</p></td>
 <td><p>Verify by converting one or more TRLC files into Markdown format and check if the output file name is ‘output.md’.</p></td>
 </tr>
 </tbody>
 </table>
-</section>
-<section id="sw-req-markdown-out-file-name-custom">
-<h6>sw_req_markdown_out_file_name_custom<a class="headerlink" href="#sw-req-markdown-out-file-name-custom" title="Link to this heading">¶</a></h6>
+</div>
+<div class="admonition-sw-req-markdown-out-file-name-custom admonition" id="sw-req-rst-sw-req-markdown-out-file-name-custom">
+<p class="admonition-title">sw_req_markdown_out_file_name_custom</p>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
@@ -739,23 +801,23 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>Description</p></td>
+<tr class="row-even"><td><p>description</p></td>
 <td><p>The output file name shall be customizable by command line arguments.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Note</p></td>
+<tr class="row-odd"><td><p>note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>Derived</p></td>
+<tr class="row-even"><td><p>derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>Verification Criteria</p></td>
+<tr class="row-odd"><td><p>verification_criteria</p></td>
 <td><p>Verify by converting one or more TRLC files into Markdown format and check if the output file name is customizable.</p></td>
 </tr>
 </tbody>
 </table>
-</section>
-<section id="sw-req-markdown-sd-top-level">
-<h6>sw_req_markdown_sd_top_level<a class="headerlink" href="#sw-req-markdown-sd-top-level" title="Link to this heading">¶</a></h6>
+</div>
+<div class="admonition-sw-req-markdown-sd-top-level admonition" id="sw-req-rst-sw-req-markdown-sd-top-level">
+<p class="admonition-title">sw_req_markdown_sd_top_level</p>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
@@ -763,23 +825,23 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>Description</p></td>
+<tr class="row-even"><td><p>description</p></td>
 <td><p>The software shall add a top level heading to the Markdown file in single doc mode.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Note</p></td>
+<tr class="row-odd"><td><p>note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>Derived</p></td>
+<tr class="row-even"><td><p>derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>Verification Criteria</p></td>
+<tr class="row-odd"><td><p>verification_criteria</p></td>
 <td><p>Verify the top level heading in the Markdown file in single doc mode.</p></td>
 </tr>
 </tbody>
 </table>
-</section>
-<section id="sw-req-markdown-sd-top-level-default">
-<h6>sw_req_markdown_sd_top_level_default<a class="headerlink" href="#sw-req-markdown-sd-top-level-default" title="Link to this heading">¶</a></h6>
+</div>
+<div class="admonition-sw-req-markdown-top-level-default admonition" id="sw-req-rst-sw-req-markdown-top-level-default">
+<p class="admonition-title">sw_req_markdown_top_level_default</p>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
@@ -787,23 +849,23 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>Description</p></td>
+<tr class="row-even"><td><p>description</p></td>
 <td><p>The top level heading shall be ‘Specification’ by default.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Note</p></td>
+<tr class="row-odd"><td><p>note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>Derived</p></td>
+<tr class="row-even"><td><p>derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>Verification Criteria</p></td>
+<tr class="row-odd"><td><p>verification_criteria</p></td>
 <td><p>Verify the top level heading in the Markdown file in single doc mode.</p></td>
 </tr>
 </tbody>
 </table>
-</section>
-<section id="sw-req-markdown-sd-top-level-custom">
-<h6>sw_req_markdown_sd_top_level_custom<a class="headerlink" href="#sw-req-markdown-sd-top-level-custom" title="Link to this heading">¶</a></h6>
+</div>
+<div class="admonition-sw-req-markdown-top-level-custom admonition" id="sw-req-rst-sw-req-markdown-top-level-custom">
+<p class="admonition-title">sw_req_markdown_top_level_custom</p>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
@@ -811,27 +873,27 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>Description</p></td>
+<tr class="row-even"><td><p>description</p></td>
 <td><p>The top level heading shall be customizable by command line arguments.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Note</p></td>
+<tr class="row-odd"><td><p>note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>Derived</p></td>
+<tr class="row-even"><td><p>derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>Verification Criteria</p></td>
+<tr class="row-odd"><td><p>verification_criteria</p></td>
 <td><p>Verify by specifying a custom top level heading in the Markdown file in single doc mode.</p></td>
 </tr>
 </tbody>
 </table>
+</div>
 </section>
 </section>
-</section>
-<section id="docx">
-<h4>Docx<a class="headerlink" href="#docx" title="Link to this heading">¶</a></h4>
-<section id="sw-req-docx">
-<h5>sw_req_docx<a class="headerlink" href="#sw-req-docx" title="Link to this heading">¶</a></h5>
+<section id="restructuredtext">
+<span id="sw-req-rst-restructuredtext"></span><h4>reStructuredText<a class="headerlink" href="#restructuredtext" title="Link to this heading">¶</a></h4>
+<div class="admonition-sw-req-rst admonition" id="sw-req-rst-sw-req-rst">
+<p class="admonition-title">sw_req_rst</p>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
@@ -839,23 +901,440 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>Description</p></td>
+<tr class="row-even"><td><p>description</p></td>
+<td><p>The software shall support the conversion into reStructuredText format.</p></td>
+</tr>
+<tr class="row-odd"><td><p>note</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-even"><td><p>derived</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-odd"><td><p>verification_criteria</p></td>
+<td><p>Verify by converting one or more TRLC files into reStructuredText format.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-sw-req-rst-section admonition" id="sw-req-rst-sw-req-rst-section">
+<p class="admonition-title">sw_req_rst_section</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>description</p></td>
+<td><p>The reStructuredText converter shall convert a TRLC section into a reStructuredText heading by considering the depth level.</p></td>
+</tr>
+<tr class="row-odd"><td><p>note</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-even"><td><p>derived</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-odd"><td><p>verification_criteria</p></td>
+<td><p>Verify by converting a TRLC section into a reStructuredText heading.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-sw-req-rst-record admonition" id="sw-req-rst-sw-req-rst-record">
+<p class="admonition-title">sw_req_rst_record</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>description</p></td>
+<td><p>The reStructuredText converter shall convert the attributes of a TRLC record into a reStructuredText table.</p></td>
+</tr>
+<tr class="row-odd"><td><p>note</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-even"><td><p>derived</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-odd"><td><p>verification_criteria</p></td>
+<td><p>Verify by converting consecutive TRLC records into a reStructuredText table.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-sw-req-rst-escape admonition" id="sw-req-rst-sw-req-rst-escape">
+<p class="admonition-title">sw_req_rst_escape</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>description</p></td>
+<td><p>The software shall escape all strings according the reStructuredText format.</p></td>
+</tr>
+<tr class="row-odd"><td><p>note</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-even"><td><p>derived</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-odd"><td><p>verification_criteria</p></td>
+<td><p>Verify by using strings with characters, which needs escaping.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-sw-req-rst-heading admonition" id="sw-req-rst-sw-req-rst-heading">
+<p class="admonition-title">sw_req_rst_heading</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>description</p></td>
+<td><p>The reStructuredText converter shall provide a function to create a reStructuredText heading.</p></td>
+</tr>
+<tr class="row-odd"><td><p>note</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-even"><td><p>derived</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-odd"><td><p>verification_criteria</p></td>
+<td><p>Verify by creating a reStructuredText heading.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-sw-req-rst-table admonition" id="sw-req-rst-sw-req-rst-table">
+<p class="admonition-title">sw_req_rst_table</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>description</p></td>
+<td><p>The reStructuredText converter shall provide a function to create a reStructuredText table.</p></td>
+</tr>
+<tr class="row-odd"><td><p>note</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-even"><td><p>derived</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-odd"><td><p>verification_criteria</p></td>
+<td><p>Verify by creating a reStructuredText table.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-sw-req-rst-link admonition" id="sw-req-rst-sw-req-rst-link">
+<p class="admonition-title">sw_req_rst_link</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>description</p></td>
+<td><p>The reStructuredText converter shall provide a function to create a reStructuredText link.</p></td>
+</tr>
+<tr class="row-odd"><td><p>note</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-even"><td><p>derived</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-odd"><td><p>verification_criteria</p></td>
+<td><p>Verify by creating a reStructuredText link.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-sw-req-rst-image admonition" id="sw-req-rst-sw-req-rst-image">
+<p class="admonition-title">sw_req_rst_image</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>description</p></td>
+<td><p>The reStructuredText converter shall provide a function to create a reStructuredText image to embed images.</p></td>
+</tr>
+<tr class="row-odd"><td><p>note</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-even"><td><p>derived</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-odd"><td><p>verification_criteria</p></td>
+<td><p>Verify by creating a reStructuredText image.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-sw-req-rst-text-color admonition" id="sw-req-rst-sw-req-rst-text-color">
+<p class="admonition-title">sw_req_rst_text_color</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>description</p></td>
+<td><p>The reStructuredText converter shall provide a function to create colored text in reStructuredText format.</p></td>
+</tr>
+<tr class="row-odd"><td><p>note</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-even"><td><p>derived</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-odd"><td><p>verification_criteria</p></td>
+<td><p>Verify by creating colored text in reStructuredText format.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-sw-req-rst-out-folder admonition" id="sw-req-rst-sw-req-rst-out-folder">
+<p class="admonition-title">sw_req_rst_out_folder</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>description</p></td>
+<td><p>The reStructuredText converter shall create the converted files in the specified output folder.</p></td>
+</tr>
+<tr class="row-odd"><td><p>note</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-even"><td><p>derived</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-odd"><td><p>verification_criteria</p></td>
+<td><p>Verify by specifing an output folder, that doesn’t exist. It must exist after the conversion.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<section id="rest-multiple-documents-mode">
+<span id="sw-req-rst-rest-multiple-documents-mode"></span><h5>ReST Multiple Documents Mode<a class="headerlink" href="#rest-multiple-documents-mode" title="Link to this heading">¶</a></h5>
+<div class="admonition-sw-req-rst-multiple-doc-mode admonition" id="sw-req-rst-sw-req-rst-multiple-doc-mode">
+<p class="admonition-title">sw_req_rst_multiple_doc_mode</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>description</p></td>
+<td><p>The software shall create a reStructuredText file for each TRLC file by default.</p></td>
+</tr>
+<tr class="row-odd"><td><p>note</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-even"><td><p>derived</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-odd"><td><p>verification_criteria</p></td>
+<td><p>Verify by converting one or more TRLC files into reStructuredText format and check if a reStructuredText file is created for each TRLC file.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="rest-single-document-mode">
+<span id="sw-req-rst-rest-single-document-mode"></span><h5>ReST Single Document Mode<a class="headerlink" href="#rest-single-document-mode" title="Link to this heading">¶</a></h5>
+<div class="admonition-sw-req-rst-single-doc-mode admonition" id="sw-req-rst-sw-req-rst-single-doc-mode">
+<p class="admonition-title">sw_req_rst_single_doc_mode</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>description</p></td>
+<td><p>The software shall create a single reStructuredText file which combines all TRLC files if requested by command line arguments.</p></td>
+</tr>
+<tr class="row-odd"><td><p>note</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-even"><td><p>derived</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-odd"><td><p>verification_criteria</p></td>
+<td><p>Verify by converting one or more TRLC files into reStructuredText format and check if a single reStructuredText file is created.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-sw-req-rst-out-file-name-default admonition" id="sw-req-rst-sw-req-rst-out-file-name-default">
+<p class="admonition-title">sw_req_rst_out_file_name_default</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>description</p></td>
+<td><p>The output file name shall be ‘output.rst’ by default.</p></td>
+</tr>
+<tr class="row-odd"><td><p>note</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-even"><td><p>derived</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-odd"><td><p>verification_criteria</p></td>
+<td><p>Verify by converting one or more TRLC files into reStructuredText format and check if the output file name is ‘output.rst’.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-sw-req-rst-out-file-name-custom admonition" id="sw-req-rst-sw-req-rst-out-file-name-custom">
+<p class="admonition-title">sw_req_rst_out_file_name_custom</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>description</p></td>
+<td><p>The output file name shall be customizable by command line arguments.</p></td>
+</tr>
+<tr class="row-odd"><td><p>note</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-even"><td><p>derived</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-odd"><td><p>verification_criteria</p></td>
+<td><p>Verify by converting one or more TRLC files into reStructuredText format and check if the output file name is customizable.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-sw-req-rst-sd-top-level admonition" id="sw-req-rst-sw-req-rst-sd-top-level">
+<p class="admonition-title">sw_req_rst_sd_top_level</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>description</p></td>
+<td><p>The software shall add a top level heading to the reStructuredText file in single doc mode.</p></td>
+</tr>
+<tr class="row-odd"><td><p>note</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-even"><td><p>derived</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-odd"><td><p>verification_criteria</p></td>
+<td><p>Verify the top level heading in the reStructuredText file in single doc mode.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-sw-req-rst-sd-top-level-default admonition" id="sw-req-rst-sw-req-rst-sd-top-level-default">
+<p class="admonition-title">sw_req_rst_sd_top_level_default</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>description</p></td>
+<td><p>The top level heading shall be ‘Specification’ by default.</p></td>
+</tr>
+<tr class="row-odd"><td><p>note</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-even"><td><p>derived</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-odd"><td><p>verification_criteria</p></td>
+<td><p>Verify the top level heading in the reStructuredText file in single doc mode.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-sw-req-rst-sd-top-level-custom admonition" id="sw-req-rst-sw-req-rst-sd-top-level-custom">
+<p class="admonition-title">sw_req_rst_sd_top_level_custom</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>description</p></td>
+<td><p>The top level heading shall be customizable by command line arguments.</p></td>
+</tr>
+<tr class="row-odd"><td><p>note</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-even"><td><p>derived</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-odd"><td><p>verification_criteria</p></td>
+<td><p>Verify by specifying a custom top level heading in the reStructuredText file in single doc mode.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+<section id="docx">
+<span id="sw-req-rst-docx"></span><h4>Docx<a class="headerlink" href="#docx" title="Link to this heading">¶</a></h4>
+<div class="admonition-sw-req-docx admonition" id="sw-req-rst-sw-req-docx">
+<p class="admonition-title">sw_req_docx</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>description</p></td>
 <td><p>The software shall support the conversion into docx format.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Note</p></td>
+<tr class="row-odd"><td><p>note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>Derived</p></td>
+<tr class="row-even"><td><p>derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>Verification Criteria</p></td>
+<tr class="row-odd"><td><p>verification_criteria</p></td>
 <td><p>Verify by converting one or more TRLC files into Docx format.</p></td>
 </tr>
 </tbody>
 </table>
-</section>
-<section id="sw-req-docx-template">
-<h5>sw_req_docx_template<a class="headerlink" href="#sw-req-docx-template" title="Link to this heading">¶</a></h5>
+</div>
+<div class="admonition-sw-req-docx-template admonition" id="sw-req-rst-sw-req-docx-template">
+<p class="admonition-title">sw_req_docx_template</p>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
@@ -863,23 +1342,23 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>Description</p></td>
+<tr class="row-even"><td><p>description</p></td>
 <td><p>The software shall support loading a docx template to append docx content to.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Note</p></td>
+<tr class="row-odd"><td><p>note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>Derived</p></td>
+<tr class="row-even"><td><p>derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>Verification Criteria</p></td>
+<tr class="row-odd"><td><p>verification_criteria</p></td>
 <td><p>Verify that the generated docx file format starts with the content of the given template.</p></td>
 </tr>
 </tbody>
 </table>
-</section>
-<section id="sw-req-docx-file">
-<h5>sw_req_docx_file<a class="headerlink" href="#sw-req-docx-file" title="Link to this heading">¶</a></h5>
+</div>
+<div class="admonition-sw-req-docx-file admonition" id="sw-req-rst-sw-req-docx-file">
+<p class="admonition-title">sw_req_docx_file</p>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
@@ -887,23 +1366,23 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>Description</p></td>
+<tr class="row-even"><td><p>description</p></td>
 <td><p>The software shall create a combined docx file for each TRLC file in file read order as provided by TRLC.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Note</p></td>
+<tr class="row-odd"><td><p>note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>Derived</p></td>
+<tr class="row-even"><td><p>derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>Verification Criteria</p></td>
+<tr class="row-odd"><td><p>verification_criteria</p></td>
 <td><p>Verify by converting one or more TRLC files into docx format and check if a merged docx file is generated as expected.</p></td>
 </tr>
 </tbody>
 </table>
-</section>
-<section id="sw-req-docx-section">
-<h5>sw_req_docx_section<a class="headerlink" href="#sw-req-docx-section" title="Link to this heading">¶</a></h5>
+</div>
+<div class="admonition-sw-req-docx-section admonition" id="sw-req-rst-sw-req-docx-section">
+<p class="admonition-title">sw_req_docx_section</p>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
@@ -911,23 +1390,23 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>Description</p></td>
+<tr class="row-even"><td><p>description</p></td>
 <td><p>If no project specific conversion file is available, a TRLC section shall be converted into a Docx heading by considering the depth level.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Note</p></td>
+<tr class="row-odd"><td><p>note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>Derived</p></td>
+<tr class="row-even"><td><p>derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>Verification Criteria</p></td>
+<tr class="row-odd"><td><p>verification_criteria</p></td>
 <td><p>Verify by converting a TRLC section into a docx heading.</p></td>
 </tr>
 </tbody>
 </table>
-</section>
-<section id="sw-req-docx-record">
-<h5>sw_req_docx_record<a class="headerlink" href="#sw-req-docx-record" title="Link to this heading">¶</a></h5>
+</div>
+<div class="admonition-sw-req-docx-record admonition" id="sw-req-rst-sw-req-docx-record">
+<p class="admonition-title">sw_req_docx_record</p>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
@@ -935,26 +1414,26 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>Description</p></td>
+<tr class="row-even"><td><p>description</p></td>
 <td><p>If no project specific conversion file is available, consecutive TRLC records shall be converted into a docx heading with depth+1 and a table listing the attributes.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Note</p></td>
+<tr class="row-odd"><td><p>note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>Derived</p></td>
+<tr class="row-even"><td><p>derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>Verification Criteria</p></td>
+<tr class="row-odd"><td><p>verification_criteria</p></td>
 <td><p>Verify by converting consecutive TRLC records into a docx file.</p></td>
 </tr>
 </tbody>
 </table>
-</section>
+</div>
 </section>
 <section id="dump">
-<h4>Dump<a class="headerlink" href="#dump" title="Link to this heading">¶</a></h4>
-<section id="sw-req-ascii-conversion">
-<h5>sw_req_ascii_conversion<a class="headerlink" href="#sw-req-ascii-conversion" title="Link to this heading">¶</a></h5>
+<span id="sw-req-rst-dump"></span><h4>Dump<a class="headerlink" href="#dump" title="Link to this heading">¶</a></h4>
+<div class="admonition-sw-req-ascii-conversion admonition" id="sw-req-rst-sw-req-ascii-conversion">
+<p class="admonition-title">sw_req_ascii_conversion</p>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
@@ -962,26 +1441,26 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>Description</p></td>
+<tr class="row-even"><td><p>description</p></td>
 <td><p>The software shall support a simple conversion into text format to console out.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Note</p></td>
+<tr class="row-odd"><td><p>note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>Derived</p></td>
+<tr class="row-even"><td><p>derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>Verification Criteria</p></td>
+<tr class="row-odd"><td><p>verification_criteria</p></td>
 <td><p>Verify by converting one or more TRLC files using the dump converter.</p></td>
 </tr>
 </tbody>
 </table>
-</section>
+</div>
 </section>
 <section id="plantuml">
-<h4>PlantUML<a class="headerlink" href="#plantuml" title="Link to this heading">¶</a></h4>
-<section id="sw-req-plantuml">
-<h5>sw_req_plantuml<a class="headerlink" href="#sw-req-plantuml" title="Link to this heading">¶</a></h5>
+<span id="sw-req-rst-plantuml"></span><h4>PlantUML<a class="headerlink" href="#plantuml" title="Link to this heading">¶</a></h4>
+<div class="admonition-sw-req-plantuml admonition" id="sw-req-rst-sw-req-plantuml">
+<p class="admonition-title">sw_req_plantuml</p>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
@@ -989,27 +1468,27 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>Description</p></td>
+<tr class="row-even"><td><p>description</p></td>
 <td><p>The software shall support the conversion of a PlantUML diagram to a propriate image format.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Note</p></td>
+<tr class="row-odd"><td><p>note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>Derived</p></td>
+<tr class="row-even"><td><p>derived</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-odd"><td><p>Verification Criteria</p></td>
+<tr class="row-odd"><td><p>verification_criteria</p></td>
 <td><p>Verify by converting a PlantUML diagram into a propriate image format.</p></td>
 </tr>
 </tbody>
 </table>
-</section>
+</div>
 </section>
 </section>
 <section id="software-constraints">
-<h3>Software Constraints<a class="headerlink" href="#software-constraints" title="Link to this heading">¶</a></h3>
-<section id="sw-constraint-os-win">
-<h4>sw_constraint_os_win<a class="headerlink" href="#sw-constraint-os-win" title="Link to this heading">¶</a></h4>
+<span id="sw-req-rst-software-constraints"></span><h3>Software Constraints<a class="headerlink" href="#software-constraints" title="Link to this heading">¶</a></h3>
+<div class="admonition-sw-constraint-os-win admonition" id="sw-req-rst-sw-constraint-os-win">
+<p class="admonition-title">sw_constraint_os_win</p>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
@@ -1017,20 +1496,20 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>Description</p></td>
+<tr class="row-even"><td><p>description</p></td>
 <td><p>The software shall support the Windows operating system.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Note</p></td>
+<tr class="row-odd"><td><p>note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>Derived</p></td>
+<tr class="row-even"><td><p>derived</p></td>
 <td><p>N/A</p></td>
 </tr>
 </tbody>
 </table>
-</section>
-<section id="sw-constraint-os-linux">
-<h4>sw_constraint_os_linux<a class="headerlink" href="#sw-constraint-os-linux" title="Link to this heading">¶</a></h4>
+</div>
+<div class="admonition-sw-constraint-os-linux admonition" id="sw-req-rst-sw-constraint-os-linux">
+<p class="admonition-title">sw_constraint_os_linux</p>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
@@ -1038,20 +1517,20 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>Description</p></td>
+<tr class="row-even"><td><p>description</p></td>
 <td><p>The software shall support the Linux operating system.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Note</p></td>
+<tr class="row-odd"><td><p>note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>Derived</p></td>
+<tr class="row-even"><td><p>derived</p></td>
 <td><p>N/A</p></td>
 </tr>
 </tbody>
 </table>
-</section>
-<section id="sw-constraint-prg-lang">
-<h4>sw_constraint_prg_lang<a class="headerlink" href="#sw-constraint-prg-lang" title="Link to this heading">¶</a></h4>
+</div>
+<div class="admonition-sw-constraint-prg-lang admonition" id="sw-req-rst-sw-constraint-prg-lang">
+<p class="admonition-title">sw_constraint_prg_lang</p>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
@@ -1059,20 +1538,20 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>Description</p></td>
+<tr class="row-even"><td><p>description</p></td>
 <td><p>The software shall be implemented in the Python programming language v3.12.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Note</p></td>
+<tr class="row-odd"><td><p>note</p></td>
 <td><p>TRLC as 3rd party library supports only up to Python v3.12.</p></td>
 </tr>
-<tr class="row-even"><td><p>Derived</p></td>
+<tr class="row-even"><td><p>derived</p></td>
 <td><p>N/A</p></td>
 </tr>
 </tbody>
 </table>
-</section>
-<section id="sw-constraint-pep8">
-<h4>sw_constraint_pep8<a class="headerlink" href="#sw-constraint-pep8" title="Link to this heading">¶</a></h4>
+</div>
+<div class="admonition-sw-constraint-pep8 admonition" id="sw-req-rst-sw-constraint-pep8">
+<p class="admonition-title">sw_constraint_pep8</p>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
@@ -1080,18 +1559,18 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>Description</p></td>
+<tr class="row-even"><td><p>description</p></td>
 <td><p>The software shall comply with the PEP8 coding standard.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Note</p></td>
+<tr class="row-odd"><td><p>note</p></td>
 <td><p>N/A</p></td>
 </tr>
-<tr class="row-even"><td><p>Derived</p></td>
+<tr class="row-even"><td><p>derived</p></td>
 <td><p>N/A</p></td>
 </tr>
 </tbody>
 </table>
-</section>
+</div>
 </section>
 </section>
 </section>
