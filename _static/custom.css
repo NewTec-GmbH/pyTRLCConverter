@@ -1,5 +1,9 @@
 @import 'haiku.css';
 
+body {
+    max-width: 75% !important;
+}
+
 table.align-default {
     margin-left: 0;
     margin-right: 0;
