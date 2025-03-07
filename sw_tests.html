@@ -91,7 +91,8 @@
 <td><p>This test case check whether ‘--version’ shows the correct version format format &lt;program-name&gt; &lt;major&gt;.&lt;minor&gt;.&lt;patch&gt;.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Derived</p></td>
-<td><p><a class="reference internal" href="sw_requirements.html#sw-req-rst-sw-req-version"><span class="std std-ref">SwRequirements.sw_req_version</span></a></p></td>
+<td><p><a class="reference internal" href="sw_requirements.html#sw-req-rst-sw-req-version"><span class="std std-ref">SwRequirements.sw_req_version</span></a>
+<a class="reference internal" href="sw_requirements.html#sw-req-rst-sw-req-cli-version"><span class="std std-ref">SwRequirements.sw_req_cli_version</span></a></p></td>
 </tr>
 </tbody>
 </table>
@@ -110,7 +111,8 @@
 </tr>
 <tr class="row-odd"><td><p>Derived</p></td>
 <td><p><a class="reference internal" href="sw_requirements.html#sw-req-rst-sw-req-process-trlc-symbols"><span class="std std-ref">SwRequirements.sw_req_process_trlc_symbols</span></a>
-<a class="reference internal" href="sw_requirements.html#sw-req-rst-sw-req-destination-format"><span class="std std-ref">SwRequirements.sw_req_destination_format</span></a></p></td>
+<a class="reference internal" href="sw_requirements.html#sw-req-rst-sw-req-destination-format"><span class="std std-ref">SwRequirements.sw_req_destination_format</span></a>
+<a class="reference internal" href="sw_requirements.html#sw-req-rst-sw-req-cli-source"><span class="std std-ref">SwRequirements.sw_req_cli_source</span></a></p></td>
 </tr>
 </tbody>
 </table>
@@ -129,7 +131,8 @@
 </tr>
 <tr class="row-odd"><td><p>Derived</p></td>
 <td><p><a class="reference internal" href="sw_requirements.html#sw-req-rst-sw-req-process-trlc-symbols"><span class="std std-ref">SwRequirements.sw_req_process_trlc_symbols</span></a>
-<a class="reference internal" href="sw_requirements.html#sw-req-rst-sw-req-destination-format"><span class="std std-ref">SwRequirements.sw_req_destination_format</span></a></p></td>
+<a class="reference internal" href="sw_requirements.html#sw-req-rst-sw-req-destination-format"><span class="std std-ref">SwRequirements.sw_req_destination_format</span></a>
+<a class="reference internal" href="sw_requirements.html#sw-req-rst-sw-req-cli-source"><span class="std std-ref">SwRequirements.sw_req_cli_source</span></a></p></td>
 </tr>
 </tbody>
 </table>
@@ -148,6 +151,256 @@
 </tr>
 <tr class="row-odd"><td><p>Derived</p></td>
 <td><p><a class="reference internal" href="sw_requirements.html#sw-req-rst-sw-req-verbose-mode"><span class="std std-ref">SwRequirements.sw_req_verbose_mode</span></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="command-line-arguments">
+<span id="sw-test-rst-command-line-arguments"></span><h3>Command Line Arguments<a class="headerlink" href="#command-line-arguments" title="Link to this heading">¶</a></h3>
+<div class="admonition-tc-help admonition" id="sw-test-rst-tc-help">
+<p class="admonition-title">tc_help</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether the help information is shown with ‘--help’ without project specific converter.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Derived</p></td>
+<td><p><a class="reference internal" href="sw_requirements.html#sw-req-rst-sw-req-cli-help"><span class="std std-ref">SwRequirements.sw_req_cli_help</span></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-help-prj-spec admonition" id="sw-test-rst-tc-help-prj-spec">
+<p class="admonition-title">tc_help_prj_spec</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether the help information is shown with ‘--help’ with project specific converter.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Derived</p></td>
+<td><p><a class="reference internal" href="sw_requirements.html#sw-req-rst-sw-req-cli-help"><span class="std std-ref">SwRequirements.sw_req_cli_help</span></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-cli-exclude admonition" id="sw-test-rst-tc-cli-exclude">
+<p class="admonition-title">tc_cli_exclude</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether a TRLC file can be excluded from the conversion.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Derived</p></td>
+<td><p><a class="reference internal" href="sw_requirements.html#sw-req-rst-sw-req-cli-exclude"><span class="std std-ref">SwRequirements.sw_req_cli_exclude</span></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="markdown">
+<span id="sw-test-rst-markdown"></span><h3>Markdown<a class="headerlink" href="#markdown" title="Link to this heading">¶</a></h3>
+<div class="admonition-tc-markdown admonition" id="sw-test-rst-tc-markdown">
+<p class="admonition-title">tc_markdown</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether the conversion to Markdown format works.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Derived</p></td>
+<td><p><a class="reference internal" href="sw_requirements.html#sw-req-rst-sw-req-markdown"><span class="std std-ref">SwRequirements.sw_req_markdown</span></a>
+<a class="reference internal" href="sw_requirements.html#sw-req-rst-sw-req-markdown-record"><span class="std std-ref">SwRequirements.sw_req_markdown_record</span></a>
+<a class="reference internal" href="sw_requirements.html#sw-req-rst-sw-req-no-prj-spec"><span class="std std-ref">SwRequirements.sw_req_no_prj_spec</span></a>
+<a class="reference internal" href="sw_requirements.html#sw-req-rst-sw-req-cli-out"><span class="std std-ref">SwRequirements.sw_req_cli_out</span></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-markdown-section admonition" id="sw-test-rst-tc-markdown-section">
+<p class="admonition-title">tc_markdown_section</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether the conversion of a TRLC section to a Markdown section works.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Derived</p></td>
+<td><p><a class="reference internal" href="sw_requirements.html#sw-req-rst-sw-req-markdown-section"><span class="std std-ref">SwRequirements.sw_req_markdown_section</span></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-markdown-escape admonition" id="sw-test-rst-tc-markdown-escape">
+<p class="admonition-title">tc_markdown_escape</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether the default Markdown converter can convert strings with Markdown escaping.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Derived</p></td>
+<td><p><a class="reference internal" href="sw_requirements.html#sw-req-rst-sw-req-markdown-escape"><span class="std std-ref">SwRequirements.sw_req_markdown_escape</span></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-markdown-heading admonition" id="sw-test-rst-tc-markdown-heading">
+<p class="admonition-title">tc_markdown_heading</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether the default Markdown converter provides a function
+to create valid Markdown headings.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Derived</p></td>
+<td><p><a class="reference internal" href="sw_requirements.html#sw-req-rst-sw-req-markdown-heading"><span class="std std-ref">SwRequirements.sw_req_markdown_heading</span></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-markdown-table admonition" id="sw-test-rst-tc-markdown-table">
+<p class="admonition-title">tc_markdown_table</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether the default Markdown converter provides the functionality
+to create valid Markdown tables.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Derived</p></td>
+<td><p><a class="reference internal" href="sw_requirements.html#sw-req-rst-sw-req-markdown-table"><span class="std std-ref">SwRequirements.sw_req_markdown_table</span></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-markdown-link admonition" id="sw-test-rst-tc-markdown-link">
+<p class="admonition-title">tc_markdown_link</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether the default Markdown converter provides a function
+to create valid Markdown links.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Derived</p></td>
+<td><p><a class="reference internal" href="sw_requirements.html#sw-req-rst-sw-req-markdown-link"><span class="std std-ref">SwRequirements.sw_req_markdown_link</span></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-markdown-image admonition" id="sw-test-rst-tc-markdown-image">
+<p class="admonition-title">tc_markdown_image</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether the default Markdown converter provides a function
+to embed images in Markdown.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Derived</p></td>
+<td><p><a class="reference internal" href="sw_requirements.html#sw-req-rst-sw-req-markdown-image"><span class="std std-ref">SwRequirements.sw_req_markdown_image</span></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-markdown-text-color admonition" id="sw-test-rst-tc-markdown-text-color">
+<p class="admonition-title">tc_markdown_text_color</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether the default Markdown converter provides a function
+to create colored text in Markdown.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Derived</p></td>
+<td><p><a class="reference internal" href="sw_requirements.html#sw-req-rst-sw-req-markdown-text-color"><span class="std std-ref">SwRequirements.sw_req_markdown_text_color</span></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-markdown-soft-return admonition" id="sw-test-rst-tc-markdown-soft-return">
+<p class="admonition-title">tc_markdown_soft_return</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether the default Markdown converter provides a function
+to encode line feeds as Markdown soft returns.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Derived</p></td>
+<td><p><a class="reference internal" href="sw_requirements.html#sw-req-rst-sw-req-markdown-soft-return"><span class="std std-ref">SwRequirements.sw_req_markdown_soft_return</span></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-markdown-out-folder admonition" id="sw-test-rst-tc-markdown-out-folder">
+<p class="admonition-title">tc_markdown_out_folder</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether the default Markdown converter creates output files in the
+specified output folder.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Derived</p></td>
+<td><p><a class="reference internal" href="sw_requirements.html#sw-req-rst-sw-req-markdown-out-folder"><span class="std std-ref">SwRequirements.sw_req_markdown_out_folder</span></a></p></td>
 </tr>
 </tbody>
 </table>
