@@ -20,21 +20,19 @@
 # If not, see <https://www.gnu.org/licenses/>.
 
 # Imports **********************************************************************
-import docx
 from pyTRLCConverter.base_converter import RecordsPolicy
-from pyTRLCConverter.docx_converter import DocxConverter
 from pyTRLCConverter.ret import Ret
 from pyTRLCConverter.trlc_helper import Record_Object
 
 # pylint: disable=wrong-import-order
-from image_processing import convert_plantuml_to_image, locate_file
+from generic_rsl_docx_converter import GenericRslDocxConverter
 
 # Variables ********************************************************************
 
 # Classes **********************************************************************
 
-class CustomDocxConverter(DocxConverter):
-    """Custom Project specific Docx format converter. 
+class ProjectDocxConverter(GenericRslDocxConverter):
+    """Custom Project specific Docx format converter.
     """
     def __init__(self, args: any) -> None:
         """
@@ -45,17 +43,18 @@ class CustomDocxConverter(DocxConverter):
         """
         super().__init__(args)
 
-        # set project specific record handlers for the converter.
+        # Set project specific record handlers for the converter.
         self._set_project_record_handlers(
-            {
+           {
                 "Info": self._convert_record_object_info,
                 "Image": self._convert_record_object_image,
-                "PlantUML": self._convert_record_object_plantuml
-            }
+                "PlantUML": self._convert_record_object_plantuml,
+                "SwReq": self._convert_sw_req,
+                "SwReqNonFunc": self._convert_sw_req_non_func,
+                "SwConstraint": self._convert_sw_constraint
+           }
         )
-        self._record_policy = RecordsPolicy.RECORD_CONVERT_ALL
-
-        self._img_counter = 1
+        self._record_policy = RecordsPolicy.RECORD_SKIP_UNDEFINED
 
     @staticmethod
     def get_description() -> str:
@@ -66,78 +65,55 @@ class CustomDocxConverter(DocxConverter):
         """
         return "Convert into project specific docx format."
 
-    # pylint: disable=unused-argument
-    def _convert_record_object_info(self, record: Record_Object, level: int) -> Ret:
-        """Convert an information record object to the destination format.
+    
+    def _convert_sw_req(self, sw_req: Record_Object, level: int) -> Ret:
+        """Convert a requirement record object to the destination format.
 
         Args:
-            record (Record_Object): The record object to convert.
+            sw_req (Record_Object): Software requirement to print
             level (int): Current level of the record object
-        
-        Returns:
-            Ret: Status
         """
-        self._docx.add_paragraph(self._get_attribute(record, "description"))
-        return Ret.OK
 
-    def _convert_record_object_plantuml(self, record: Record_Object, level: int) -> Ret:
-        """Convert a Plantuml diagram record object to the destination format.
+        attribute_translation = {
+            "description": "Description",
+            "note": "Note",
+            "verification_criteria": "Verification Criteria",
+            "derived": "Derived"
+        }
+
+        return self._convert_record_object(sw_req, level, attribute_translation)
+
+    def _convert_sw_req_non_func(self, sw_req: Record_Object, level: int) -> Ret:
+        """Convert a software non-functional requirement.
 
         Args:
-            record (Record_Object): The record object to convert.
+            sw_req (Record_Object): Software non-functional requirement to print
             level (int): Current level of the record object
-        
-        Returns:
-            Ret: Status
         """
-        result = Ret.ERROR
 
-        image_file = convert_plantuml_to_image(
-            self._get_attribute(record, "file_path"),
-            self._args.out,
-            self._args.source
-        )
+        attribute_translation = {
+            "description": "Description",
+            "note": "Note",
+            "derived": "Derived"
+        }
 
-        if image_file is not None:
-            self._add_image(image_file, self._get_attribute(record, "caption"), level)
-            result = Ret.OK
+        return self._convert_record_object(sw_req, level, attribute_translation)
 
-        return result
-
-    def _convert_record_object_image(self, record: Record_Object, level: int) -> Ret:
-        """Convert a software diagram record object to the destination format.
+    def _convert_sw_constraint(self, sw_constraint: Record_Object, level: int) -> Ret:
+        """Convert a software constraint.
 
         Args:
-            record (Record_Object): The record object to convert.
-            level (int): Current level of the record object
-        
-        Returns:
-            Ret: Status
-        """
-        result = Ret.ERROR
-
-        image_file = locate_file(self._get_attribute(record, "file_path"), self._args.source)
-        if image_file is not None:
-            self._add_image(image_file, self._get_attribute(record, "caption"), level)
-            result = Ret.OK
-
-        return result
-
-    def _add_image(self, image_file: str, caption: str, level:int) -> None:
-        """Add an image to the docx file.
-
-        Args:
-            image_file (str): The image file to add.
-            caption (str): The caption of the image.
+            sw_constraint (Record_Object): Software constraint to print
             level (int): Current level of the record object
         """
-        p = self._docx.add_paragraph()
-        p.paragraph_format.alignment = docx.enum.text.WD_ALIGN_PARAGRAPH.CENTER
-        run = p.add_run()
-        run.add_picture(image_file, width=docx.shared.Inches(6))
-        run.add_text(f"Figure {self._img_counter} {caption}")
 
-        self._img_counter += 1
+        attribute_translation = {
+            "description": "Description",
+            "note": "Note",
+            "derived": "Derived"
+        }
+
+        return self._convert_record_object(sw_constraint, level, attribute_translation)
 
 # Functions ********************************************************************
 
