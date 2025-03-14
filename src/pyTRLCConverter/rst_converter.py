@@ -172,6 +172,7 @@ class RstConverter(BaseConverter):
             result = self._generate_out_file(self._args.name)
 
             if self._fd is not None:
+                self._write_empty_line_on_demand()
                 self._fd.write(RstConverter.rst_create_heading(self._args.top_level, 1, self._args.name))
 
                 # All headings will be shifted by one level.
@@ -433,7 +434,7 @@ class RstConverter(BaseConverter):
 
         return trlc_ast_walker
 
-    # pylint: disable=too-many-locals
+    # pylint: disable=too-many-locals, unused-argument
     def _convert_record_object(self, record: Record_Object, level: int, attribute_translation: Optional[dict]) -> Ret:
         # lobster-trace: SwRequirements.sw_req_rst_record
         """
@@ -449,16 +450,13 @@ class RstConverter(BaseConverter):
         """
         assert self._fd is not None
 
-        self._write_empty_line_on_demand()
-
-         # The record name will be the heading.
+         # The record name will be the admonition.
         file_name = os.path.basename(self._fd.name)
-        rst_heading = self.rst_create_heading(record.name,
-                                                    self._get_rst_heading_level(level + 1),
-                                                    file_name,
-                                                    is_object_heading=True)
+        rst_heading = self.rst_create_admonition(record.name,
+                                                 file_name)
         self._fd.write(rst_heading)
-        self._fd.write("\n")
+
+        self._write_empty_line_on_demand()
 
         # The record fields will be written to a table.
         column_titles = ["Attribute Name", "Attribute Value"]
@@ -533,8 +531,7 @@ class RstConverter(BaseConverter):
     def rst_create_heading(text: str,
                            level: int,
                            file_name: str,
-                           escape: bool = True,
-                           is_object_heading: bool = False) -> str:
+                           escape: bool = True) -> str:
         # lobster-trace: SwRequirements.sw_req_rst_heading
         """
         Create a reStructuredText heading with a label.
@@ -542,13 +539,49 @@ class RstConverter(BaseConverter):
 
         Args:
             text (str): Heading text
-            level (int): Heading level
+            level (int): Heading level [1; 7]
             file_name (str): File name where the heading is found
             escape (bool): Escape the text (default: True).
-            is_object_heading (bool): Indicates if this is an object heading (default: False).
 
         Returns:
             str: reStructuredText heading with a label
+        """
+        result = ""
+
+        if 1 <= level <= 7:
+            text_raw = text
+
+            if escape is True:
+                text_raw = RstConverter.rst_escape(text)
+
+            label = f"{file_name}-{text_raw.lower().replace(' ', '-')}"
+
+            underline_char = ["=", "#", "~", "^", "\"", "+", "'"][level - 1]
+            underline = underline_char * len(text_raw)
+
+            result = f".. _{label}:\n\n{text_raw}\n{underline}\n"
+
+        else:
+            print(f"Invalid heading level {level} for {text}.", file=sys.stderr)
+
+        return result
+
+    @staticmethod
+    def rst_create_admonition(text: str,
+                              file_name: str,
+                              escape: bool = True) -> str:
+        # lobster-trace: SwRequirements.sw_req_rst_admonition
+        """
+        Create a reStructuredText admonition with a label.
+        The text will be automatically escaped for reStructuredText if necessary.
+
+        Args:
+            text (str): Admonition text
+            file_name (str): File name where the heading is found
+            escape (bool): Escape the text (default: True).
+
+        Returns:
+            str: reStructuredText admonition with a label
         """
         text_raw = text
 
@@ -556,15 +589,9 @@ class RstConverter(BaseConverter):
             text_raw = RstConverter.rst_escape(text)
 
         label = f"{file_name}-{text_raw.lower().replace(' ', '-')}"
+        admonition_label = f".. admonition:: {text_raw}"
 
-        underline_char = ["=", "#", "~", "^", "\"", "+", "'"][level - 1]
-        underline = underline_char * len(text_raw)
-
-        if is_object_heading:
-            admonition_label = f".. admonition:: {text_raw}\n\n    "
-            return f".. _{label}:\n\n{admonition_label}"
-
-        return f".. _{label}:\n\n{text_raw}\n{underline}\n"
+        return f".. _{label}:\n\n{admonition_label}\n"
 
     @staticmethod
     def rst_create_table_head(column_titles: List[str], max_widths: List[int], escape: bool = True) -> str:
@@ -679,7 +706,10 @@ class RstConverter(BaseConverter):
         if escape is True:
             diagram_caption_raw = RstConverter.rst_escape(diagram_caption)
 
-        return f".. image:: ./{diagram_file_name}\n   :alt: {diagram_caption_raw}\n"
+        # Allowed are absolute and relative to source paths.
+        diagram_file_name = os.path.normpath(diagram_file_name)
+
+        return f".. image:: {diagram_file_name}\n    :alt: {diagram_caption_raw}\n"
 
     @staticmethod
     def rst_role(text: str, role: str, escape: bool = True) -> str:

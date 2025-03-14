@@ -49,12 +49,6 @@ set SW_TEST_LOBSTER_ONLINE_REPORT_OUT=lobster-online-report-sw-rest.lobster
 set SW_TEST_LOBSTER_HTML_OUT=sw_test_tracing_online_report.html
 
 set LOCAL_REPOSITORY_ROOT=..\..\..
-set COMMIT=%~1
-
-if "%1" == "" (
-    echo Branch/Commit hash is missing.
-    goto error
-)
 
 if not exist "%OUT_DIR%" (
     md %OUT_DIR%
@@ -98,7 +92,7 @@ if errorlevel 1 (
 )
 
 rem ********** Online Report SW-Requirements **********
-%LOBSTER_ONLINE_REPORT% --out %SW_REQ_LOBSTER_ONLINE_REPORT_OUT% %SW_REQ_LOBSTER_REPORT_OUT% --repo-root %LOCAL_REPOSITORY_ROOT% --commit %COMMIT%
+%LOBSTER_ONLINE_REPORT% --out %SW_REQ_LOBSTER_ONLINE_REPORT_OUT% %SW_REQ_LOBSTER_REPORT_OUT% --repo-root %LOCAL_REPOSITORY_ROOT%
 
 if errorlevel 1 (
     goto error
@@ -119,7 +113,7 @@ if errorlevel 1 (
 )
 
 rem ********** Online Report SW-Requirements **********
-%LOBSTER_ONLINE_REPORT% --out %SW_TEST_LOBSTER_ONLINE_REPORT_OUT% %SW_TEST_LOBSTER_REPORT_OUT% --repo-root %LOCAL_REPOSITORY_ROOT% --commit %COMMIT%
+%LOBSTER_ONLINE_REPORT% --out %SW_TEST_LOBSTER_ONLINE_REPORT_OUT% %SW_TEST_LOBSTER_REPORT_OUT% --repo-root %LOCAL_REPOSITORY_ROOT%
 
 if errorlevel 1 (
     goto error

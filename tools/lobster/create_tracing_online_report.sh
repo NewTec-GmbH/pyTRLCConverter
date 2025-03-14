@@ -49,12 +49,6 @@ SW_TEST_LOBSTER_ONLINE_REPORT_OUT=lobster-online-report-sw-rest.lobster
 SW_TEST_LOBSTER_HTML_OUT=sw_test_tracing_online_report.html
 
 LOCAL_REPOSITORY_ROOT=../../..
-COMMIT=$1
-
-if [ -z "$1" ]; then
-    echo "Branch/Commit hash is missing."
-    exit 1
-fi
 
 if [ ! -d "$OUT_DIR" ]; then
     mkdir -p $OUT_DIR
@@ -93,7 +87,7 @@ if [ $? -ne 0 ]; then
 fi
 
 # ********** Online Report SW-Requirements **********
-$LOBSTER_ONLINE_REPORT --out $SW_REQ_LOBSTER_ONLINE_REPORT_OUT $SW_REQ_LOBSTER_REPORT_OUT --repo-root $LOCAL_REPOSITORY_ROOT --commit $COMMIT
+$LOBSTER_ONLINE_REPORT --out $SW_REQ_LOBSTER_ONLINE_REPORT_OUT $SW_REQ_LOBSTER_REPORT_OUT --repo-root $LOCAL_REPOSITORY_ROOT
 if [ $? -ne 0 ]; then
     exit 1
 fi
@@ -111,7 +105,7 @@ if [ $? -ne 0 ]; then
 fi
 
 # ********** Online Report SW-Requirements **********
-$LOBSTER_ONLINE_REPORT --out $SW_TEST_LOBSTER_ONLINE_REPORT_OUT $SW_TEST_LOBSTER_REPORT_OUT --repo-root $LOCAL_REPOSITORY_ROOT --commit $COMMIT
+$LOBSTER_ONLINE_REPORT --out $SW_TEST_LOBSTER_ONLINE_REPORT_OUT $SW_TEST_LOBSTER_REPORT_OUT --repo-root $LOCAL_REPOSITORY_ROOT
 if [ $? -ne 0 ]; then
     exit 1
 fi

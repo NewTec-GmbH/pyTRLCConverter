@@ -89,7 +89,7 @@ class CustomMarkdownConverter(MarkdownConverter):
 
         self._fd.write(markdown_table_head)
 
-    def _print_test_case_result(self, test_case_result: Record_Object, level: int) -> None:
+    def _print_test_case_result(self, test_case_result: Record_Object, level: int) -> Ret:
         """Prints the software test case result.
 
         Args:
@@ -125,6 +125,8 @@ class CustomMarkdownConverter(MarkdownConverter):
 
         markdown_table_row = self.markdown_append_table_row(row, False)
         self._fd.write(markdown_table_row)
+
+        return Ret.OK
 
 # Functions ********************************************************************
 

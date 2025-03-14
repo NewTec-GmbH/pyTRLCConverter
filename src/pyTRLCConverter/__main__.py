@@ -149,61 +149,69 @@ def main() -> int:
     """
     ret_status = Ret.OK
 
-    # Handle program arguments.
+    # Create program arguments parser.
     args_parser = _create_args_parser()
     args_sub_parser = args_parser.add_subparsers(required='True')
 
     # Check if a project specific converter is given and load it.
-    project_converter_cmd = None
-    project_converter = _get_project_converter()
+    project_converter = None
 
-    if project_converter is not None:
-        project_converter.register(args_sub_parser)
-        project_converter_cmd = project_converter.get_subcommand()
-
-    # Load the built-in converters unless a project converter is replacing built-in.
-    # lobster-trace: SwRequirements.sw_req_no_prj_spec
-    for converter in BUILD_IN_CONVERTER_LIST:
-        if converter.get_subcommand() != project_converter_cmd:
-            converter.register(args_sub_parser)
-
-
-    args = args_parser.parse_args()
-
-    if args is None:
+    try:
+        project_converter = _get_project_converter()
+    except ValueError as exc:
+        print(exc, file=sys.stderr)
         ret_status = Ret.ERROR
 
-    else:
-        enable_verbose(args.verbose)
+    if ret_status == Ret.OK:
 
-        # In verbose mode print all program arguments.
-        if is_verbose_enabled() is True:
-            log_verbose("Program arguments: ")
+        project_converter_cmd = None
 
-            for arg in vars(args):
-                log_verbose(f"* {arg} = {vars(args)[arg]}")
-            log_verbose("\n")
+        if project_converter is not None:
+            project_converter.register(args_sub_parser)
+            project_converter_cmd = project_converter.get_subcommand()
 
-        # lobster-trace: SwRequirements.sw_req_process_trlc_symbols
-        symbols = get_trlc_symbols(args.source, args.include)
+        # Load the built-in converters unless a project converter is replacing built-in.
+        # lobster-trace: SwRequirements.sw_req_no_prj_spec
+        for converter in BUILD_IN_CONVERTER_LIST:
+            if converter.get_subcommand() != project_converter_cmd:
+                converter.register(args_sub_parser)
 
-        if symbols is None:
-            print(f"No items found at {args.source}.")
+        args = args_parser.parse_args()
+
+        if args is None:
             ret_status = Ret.ERROR
+
         else:
-            try:
-                _create_out_folder(args.out)
+            enable_verbose(args.verbose)
 
-                # Feed the items into the given converter.
-                log_verbose(
-                    f"Using converter {args.converter_class.__name__}: {args.converter_class.get_description()}.")
-                converter = args.converter_class(args)
+            # In verbose mode print all program arguments.
+            if is_verbose_enabled() is True:
+                log_verbose("Program arguments: ")
 
-                walker = ItemWalker(args, converter)
-                ret_status = walker.walk_symbols(symbols)
-            except (FileNotFoundError, OSError) as exc:
-                print(exc)
+                for arg in vars(args):
+                    log_verbose(f"* {arg} = {vars(args)[arg]}")
+                log_verbose("\n")
+
+            # lobster-trace: SwRequirements.sw_req_process_trlc_symbols
+            symbols = get_trlc_symbols(args.source, args.include)
+
+            if symbols is None:
+                print(f"No items found at {args.source}.")
                 ret_status = Ret.ERROR
+            else:
+                try:
+                    _create_out_folder(args.out)
+
+                    # Feed the items into the given converter.
+                    log_verbose(
+                        f"Using converter {args.converter_class.__name__}: {args.converter_class.get_description()}")
+                    converter = args.converter_class(args)
+
+                    walker = ItemWalker(args, converter)
+                    ret_status = walker.walk_symbols(symbols)
+                except (FileNotFoundError, OSError) as exc:
+                    print(exc)
+                    ret_status = Ret.ERROR
 
     return ret_status
 
@@ -233,16 +241,16 @@ def _get_project_converter() -> Optional[AbstractConverter]:
     if project_module_name is not None:
         # Dynamically load the module and search for an AbstractConverter class definition
         sys.path.append(os.path.dirname(project_module_name))
-        project_module_name = os.path.basename(project_module_name).replace('.py', '')
+        project_module_name_basename = os.path.basename(project_module_name).replace('.py', '')
 
         try:
-            module = importlib.import_module(project_module_name)
+            module = importlib.import_module(project_module_name_basename)
         except ImportError as exc:
             raise ValueError(f"Failed to import module {project_module_name}: {exc}") from exc
 
         #Filter classes that are defined in the module directly.
         classes = inspect.getmembers(module, inspect.isclass)
-        classes = {name: cls for name, cls in classes if cls.__module__ == project_module_name}
+        classes = {name: cls for name, cls in classes if cls.__module__ == project_module_name_basename}
 
         # lobster-trace: SwRequirements.sw_req_prj_spec_interface
         for class_name, class_def in classes.items():
@@ -250,7 +258,7 @@ def _get_project_converter() -> Optional[AbstractConverter]:
                 log_verbose(f"Found project specific converter type: {class_name}")
                 return class_def
 
-        raise ValueError(f"No AbstractConverter derived class found in {project_module_name}")
+        raise ValueError(f"No AbstractConverter derived class found in {project_module_name_basename}")
 
     return None
 

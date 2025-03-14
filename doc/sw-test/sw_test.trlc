@@ -3,19 +3,226 @@ package SwTests
 import Generic
 import SwRequirements
 
-section "SW-Test" {
+section "SW-Tests" {
 
     Generic.Info sw_test_info_about_sw_test {
         description = "This file contains the software test cases for the pyTRLCConverter tool."
     }
 
-    SwTestCase tc1 {
-        description = "This test case ..."
-        derived = [SwRequirements.sw_req_cli]
+    section "General" {
+
+        SwTestCase tc_cli {
+            description = "This test case checks whether the tool supports the command line arguments."
+            verifies = [SwRequirements.sw_req_cli]
+        }
+
+        SwTestCase tc_prj_spec {
+            description = "This test case check whether a project specific converter can be instantiated."
+            verifies = [SwRequirements.sw_req_prj_spec, SwRequirements.sw_req_prj_spec_file, SwRequirements.sw_req_prj_spec_interface]
+        }
+
+        SwTestCase tc_version {
+            description = "This test case check whether '--version' shows the correct version format format <program-name> <major>.<minor>.<patch>."
+            verifies = [SwRequirements.sw_req_version, SwRequirements.sw_req_cli_version]
+        }
+
+        SwTestCase tc_process_trlc_symbols_one_file_one_req {
+            description = "This test case check whether one single TRLC requirement is printed out of one TRLC file."
+            verifies = [SwRequirements.sw_req_process_trlc_symbols, SwRequirements.sw_req_destination_format, SwRequirements.sw_req_cli_source]
+        }
+
+        SwTestCase tc_process_trlc_symbols_two_files_one_req {
+            description = "This test case check whether one single TRLC requirement per TRLC file is printed out of two TRLC files."
+            verifies = [SwRequirements.sw_req_process_trlc_symbols, SwRequirements.sw_req_destination_format, SwRequirements.sw_req_cli_source]
+        }
+
+        SwTestCase tc_verbose {
+            description = "This test case check whether in verbose mode more information is printed out."
+            verifies = [SwRequirements.sw_req_verbose_mode]
+        }
     }
 
-    SwTestCase tc2 {
-        description = "This test case ..."
-        derived = [SwRequirements.sw_req_prj_spec]
+    section "Project Specific Conversion" {
+
+    }
+
+    section "Command Line Arguments" {
+
+        SwTestCase tc_help {
+            description = "This test case checks whether the help information is shown with '--help' without project specific converter."
+            verifies = [SwRequirements.sw_req_cli_help]
+        }
+
+        SwTestCase tc_help_prj_spec {
+            description = "This test case checks whether the help information is shown with '--help' with project specific converter."
+            verifies = [SwRequirements.sw_req_cli_help]
+        }
+
+        SwTestCase tc_cli_exclude {
+            description = "This test case checks whether a TRLC file can be excluded from the conversion."
+            verifies = [SwRequirements.sw_req_cli_exclude]
+        }
+    }
+
+    section "Markdown" {
+
+        SwTestCase tc_markdown {
+            description = "This test case checks whether the conversion to Markdown format works."
+            verifies = [
+                SwRequirements.sw_req_markdown,
+                SwRequirements.sw_req_markdown_record,
+                SwRequirements.sw_req_no_prj_spec,
+                SwRequirements.sw_req_cli_out,
+                SwRequirements.sw_req_markdown_single_doc_mode,
+                SwRequirements.sw_req_markdown_out_file_name_default,
+                SwRequirements.sw_req_markdown_sd_top_level,
+                SwRequirements.sw_req_markdown_top_level_default]
+        }
+
+        SwTestCase tc_markdown_section {
+            description = "This test case checks whether the conversion of a TRLC section to a Markdown section works."
+            verifies = [
+                SwRequirements.sw_req_markdown_section,
+                SwRequirements.sw_req_markdown_out_file_name_custom,
+                SwRequirements.sw_req_markdown_top_level_custom]
+        }
+
+        SwTestCase tc_markdown_escape {
+            description = "This test case checks whether the default Markdown converter can convert strings with Markdown escaping."
+            verifies = [SwRequirements.sw_req_markdown_escape]
+        }
+
+        SwTestCase tc_markdown_heading {
+            description = '''This test case checks whether the default Markdown converter provides a function
+             to create valid Markdown headings.'''
+            verifies = [SwRequirements.sw_req_markdown_heading]
+        }
+
+        SwTestCase tc_markdown_table {
+            description = '''This test case checks whether the default Markdown converter provides the functionality
+             to create valid Markdown tables.'''
+            verifies = [SwRequirements.sw_req_markdown_table]
+        }
+
+        SwTestCase tc_markdown_link {
+            description = '''This test case checks whether the default Markdown converter provides a function
+             to create valid Markdown links.'''
+            verifies = [SwRequirements.sw_req_markdown_link]
+        }
+
+        SwTestCase tc_markdown_image {
+            description = '''This test case checks whether the default Markdown converter provides a function
+             to embed images in Markdown.'''
+            verifies = [SwRequirements.sw_req_markdown_image]
+        }
+
+        SwTestCase tc_markdown_text_color {
+            description = '''This test case checks whether the default Markdown converter provides a function
+             to create colored text in Markdown.'''
+            verifies = [SwRequirements.sw_req_markdown_text_color]
+        }
+
+        SwTestCase tc_markdown_soft_return {
+            description = '''This test case checks whether the default Markdown converter provides a function
+             to encode line feeds as Markdown soft returns.'''
+            verifies = [SwRequirements.sw_req_markdown_soft_return]
+        }
+
+        SwTestCase tc_markdown_out_folder {
+            description = '''This test case checks whether the default Markdown converter creates output files in the
+             specified output folder.'''
+            verifies = [SwRequirements.sw_req_markdown_out_folder]
+        }
+
+        SwTestCase tc_markdown_multi_doc {
+            description = "This test case checks whether the conversion to markdown in multiple document mode convers one output document per TRLC source file."
+            verifies = [SwRequirements.sw_req_markdown_multiple_doc_mode]
+        }
+    }
+
+    section "reStructuredText" {
+
+        SwTestCase tc_rst {
+            description = "This test case checks whether the conversion to reStructuredText format works."
+            verifies = [
+                SwRequirements.sw_req_rst,
+                SwRequirements.sw_req_rst_record, 
+                SwRequirements.sw_req_no_prj_spec, 
+                SwRequirements.sw_req_cli_out, 
+                SwRequirements.sw_req_rst_single_doc_mode, 
+                SwRequirements.sw_req_rst_out_file_name_default, 
+                SwRequirements.sw_req_rst_sd_top_level, 
+                SwRequirements.sw_req_rst_sd_top_level_default]
+        }
+
+        SwTestCase tc_rst_section {
+            description = "This test case checks whether the conversion of a TRLC section to a reStructuredText section works."
+            verifies = [SwRequirements.sw_req_rst_section]
+        }
+
+        SwTestCase tc_rst_escape {
+            description = "This test case checks whether the default reStructuredText converter can convert strings with reStructuredText escaping."
+            verifies = [SwRequirements.sw_req_rst_escape]
+        }
+
+        SwTestCase tc_rst_heading {
+            description = '''This test case checks whether the default reStructuredText converter provides a function
+             to create valid reStructuredText headings.'''
+            verifies = [SwRequirements.sw_req_rst_heading]
+        }
+
+        SwTestCase tc_rst_admonition {
+            description = '''This test case checks whether the default reStructuredText converter provides a function
+             to create valid reStructuredText admonition.'''
+            verifies = [SwRequirements.sw_req_rst_admonition]
+        }
+
+        SwTestCase tc_rst_table {
+            description = '''This test case checks whether the default reStructuredText converter provides the functionality
+             to create valid reStructuredText tables.'''
+            verifies = [SwRequirements.sw_req_rst_table]
+        }
+
+        SwTestCase tc_rst_link {
+            description = '''This test case checks whether the default reStructuredText converter provides a function
+             to create valid reStructuredText links.'''
+            verifies = [SwRequirements.sw_req_rst_link]
+        }
+
+        SwTestCase tc_rst_image {
+            description = '''This test case checks whether the default reStructuredText converter provides a function
+             to embed images in reStructuredText.'''
+            verifies = [SwRequirements.sw_req_rst_image]
+        }
+
+        SwTestCase tc_rst_role {
+            description = '''This test case checks whether the default reStructuredText converter provides a function
+             to create colored text in reStructuredText.'''
+            verifies = [SwRequirements.sw_req_rst_role]
+        }
+
+        SwTestCase tc_rst_out_folder {
+            description = '''This test case checks whether the default reStructuredText converter creates output files in the
+             specified output folder.'''
+            verifies = [SwRequirements.sw_req_rst_out_folder]
+        }
+
+        SwTestCase tc_rst_single_doc_custom {
+            description = "This test case checks whether the conversion to reStructuredText in single document mode is customizeable."
+            verifies = [SwRequirements.sw_req_rst_out_file_name_custom, SwRequirements.sw_req_rst_sd_top_level_custom]
+        }
+
+        SwTestCase tc_rst_multi_doc {
+            description = "This test case checks whether the conversion to reStructuredText in multiple document mode convers one output document per TRLC source file."
+            verifies = [SwRequirements.sw_req_rst_multiple_doc_mode]
+        }
+    }
+
+    section "Dump" {
+
+        SwTestCase tc_ascii_conversion {
+            description = "This test case checks whether the conversion to ASCII format works."
+            verifies = [SwRequirements.sw_req_ascii_conversion]
+        }
     }
 }

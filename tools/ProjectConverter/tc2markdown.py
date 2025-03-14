@@ -81,7 +81,7 @@ class TestCaseMarkdownConverter(GenericRslMarkdownConverter):
 
         attribute_translation = {
             "description": "Description",
-            "derived": "Derived"
+            "verifies": "Verifies"
         }
 
         return self._convert_record_object(sw_test_case, level, attribute_translation)

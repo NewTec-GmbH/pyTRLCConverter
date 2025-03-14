@@ -49,7 +49,7 @@ jobs:
         run: |
             cd ./tools/lobster
             chmod +x create_tracing_online_report.sh
-            ./create_tracing_online_report.sh ${{ github.sha }}
+            ./create_tracing_online_report.sh
             rm -f ./out/*.lobster
             cd ../..
   

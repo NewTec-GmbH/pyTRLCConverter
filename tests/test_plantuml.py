@@ -57,7 +57,7 @@ def plantuml_instance():
 
 
 def test_make_server_url(record_property: any, plantuml_instance: PlantUML):
-    # lobster-trace: SwTests.tc1
+    # lobster-trace: SwTests.tc_cli
     """
     Test the _make_server_url method of the PlantUML instance.
     This test verifies that the _make_server_url method correctly generates
@@ -70,7 +70,7 @@ def test_make_server_url(record_property: any, plantuml_instance: PlantUML):
         The generated URL starts with the expected base URL.
         The generated URL matches the expected URL.
     """
-    record_property("lobster-trace", "SwTests.tc1")
+    record_property("lobster-trace", "SwTests.tc_cli")
     
     diagram_type = "svg"
     diagram_path = "test_diagram.puml"

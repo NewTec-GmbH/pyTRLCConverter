@@ -74,8 +74,15 @@ class ItemWalker:  # pylint: disable=too-few-public-methods
             for file_name, item_list in files_dict.items():
                 skip_it = False
 
+                # Normalize the file name to make it comparable.
+                file_name = os.path.normpath(file_name)
+
                 if self._exclude_files is not None:
                     for excluded_path in self._exclude_files:
+
+                        # Normalize the excluded path to make it comparable.
+                        excluded_path = os.path.normpath(excluded_path)
+
                         if os.path.commonpath([excluded_path, file_name]) == excluded_path:
                             skip_it = True
                             break

@@ -23,6 +23,7 @@
 # Imports **********************************************************************
 import os
 import shutil
+import fnmatch
 
 from urllib.parse import urlparse
 from sphinx.errors import ConfigError
@@ -86,28 +87,54 @@ plantuml = []
 
 # Functions ********************************************************************
 
+# List of files to copy to the output directory.
+#
+# The source is relative to the sphinx directory.
+# The destination is relative to the output directory.
+files_to_copy = [
+    {
+        'source': '../createTestReport/out/coverage',
+        'destination': 'coverage',
+        'exclude': []
+    },
+    {
+        'source': '../req2rst/out/sw-requirements/rst',
+        'destination': '.',
+        'exclude': ['*.rst']
+    },
+    {
+        'source': '../tc2rst/out/sw-tests/rst',
+        'destination': '.',
+        'exclude': ['*.rst']
+    }
+]
+
 def setup(app: any) -> None:
     """Setup sphinx.
 
     Args:
         app (any): The sphinx application.
     """
-    app.connect('builder-inited', copy_coverage_files)
+    app.connect('builder-inited', copy_files)
 
-def copy_coverage_files(app: any) -> None:
-    """Copy coverage files to the output directory.
+def copy_files(app: any) -> None:
+    """Copy files to the output directory.
 
     Args:
         app (any): The sphinx application.
     """
-    source_dir = os.path.abspath('../createTestReport/out/coverage')
-    target_dir = os.path.join(app.outdir, 'coverage')
-    if not os.path.exists(target_dir):
-        os.makedirs(target_dir)
-    for filename in os.listdir(source_dir):
-        full_file_name = os.path.join(source_dir, filename)
-        if os.path.isfile(full_file_name):
-            shutil.copy(full_file_name, target_dir)
+    for files in files_to_copy:
+        source = os.path.abspath(files['source'])
+        destination = os.path.join(app.outdir, files['destination'])
+
+        if not os.path.exists(destination):
+            os.makedirs(destination)
+        
+        for filename in os.listdir(source):
+            if not any(fnmatch.fnmatch(filename, pattern) for pattern in files['exclude']):
+                full_file_name = os.path.join(source, filename)
+                if os.path.isfile(full_file_name):
+                    shutil.copy(full_file_name, destination)
 
 # Main *************************************************************************
 

@@ -3,8 +3,16 @@
 [![License](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://github.com/NewTec-GmbH/pyTRLCConverter/blob/main/LICENSE) [![Repo Status](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip) [![CI](https://github.com/NewTec-GmbH/pyTRLCConverter/actions/workflows/test.yml/badge.svg)](https://github.com/NewTec-GmbH/pyTRLCConverter/actions/workflows/test.yml)
 [![Repo Status](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 
-pyTRLCConverter is a command-line tool to convert TRLC files to different output formats, e.g. Markdown or docx.
-Since the definition of TRLC types is project-specific, the built-in converters can be extended in an object-oriented manner.
+pyTRLCConverter is a command-line tool to convert TRLC files to different output formats. Since the definition of TRLC types is project-specific, the built-in converters can be extended in an object-oriented manner.
+
+Currently out of the box supported formats:
+
+* Markdown
+* docx
+* reStructuredText
+* dump
+
+## Table of Contents <!-- omit in toc -->
 
 - [Overview](#overview)
 - [Installation](#installation)
@@ -14,6 +22,7 @@ Since the definition of TRLC types is project-specific, the built-in converters 
 - [Usage](#usage)
   - [Conversion to Markdown format](#conversion-to-markdown-format)
   - [Conversion to docx format](#conversion-to-docx-format)
+  - [Conversion to reStructuredText format](#conversion-to-restructuredtext-format)
   - [Dump TRLC item list to console](#dump-trlc-item-list-to-console)
   - [Show tool version](#show-tool-version)
   - [PlantUML](#plantuml)
@@ -29,6 +38,8 @@ Since the definition of TRLC types is project-specific, the built-in converters 
 ## Overview
 
 ![context](https://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/NewTec-GmbH/pyTRLCConverter/refs/heads/main/doc/architecture/context_diagram.puml)
+
+Find the requirements, test cases, coverage and etc. deployed on [github pages](https://newtec-gmbh.github.io/pyTRLCConverter).
 
 ## Installation
 
@@ -116,6 +127,36 @@ options:
                         Load the given docx file as a template to append to.
   -n NAME, --name NAME  Name of the generated output file inside the output folder (default = output.docx).
 ```
+
+### Conversion to reStructuredText format
+
+The tool requires two kinds of TRLC input sources for the conversion. These are the requirements (\*.trlc) files and the model (\*.tls) files. These input files are specified using one or more --source  or -s options followed by a file name or directory path. If a path is given, all files with a .trlc or .tls extension are read by the tool.
+
+```bash
+pyTRLCConverter --source doc/models --source doc/sw-requirement rst
+```
+
+If the requirements are split into several files (\*.trlc), a reStructuredText file will be created for each. To generate a single reStructuredText file the argument --single-document can be used, which will create an ```output.md``` file by default.
+
+The converter supports additional arguments that are shown by adding the --help option after the reStructuredText subcommand.
+
+```bash
+pyTRLCConverter rst --help
+
+usage: pyTRLCConverter rst [-h] [-e EMPTY] [-n NAME] [-sd] [-tl TOP_LEVEL]
+
+options:
+  -h, --help            show this help message and exit
+  -e EMPTY, --empty EMPTY
+                        Every attribute value which is empty will output the string (default = N/A).
+  -n NAME, --name NAME  Name of the generated output file inside the output folder (default = output.rst) in case a single document is generated.
+  -sd, --single-document
+                        Generate a single document instead of multiple files. The default is to generate multiple files.
+  -tl TOP_LEVEL, --top-level TOP_LEVEL
+                        Name of the top level heading, required in single document mode (default = Specification).
+```
+
+More examples are shown in the [examples folder](./examples/).
 
 ### Dump TRLC item list to console
 

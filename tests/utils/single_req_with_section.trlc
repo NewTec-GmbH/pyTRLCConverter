@@ -1,0 +1,7 @@
+package Requirements
+
+section "Test section" {
+    Requirement req_id_2 {
+        description = "Test description"
+    }
+}

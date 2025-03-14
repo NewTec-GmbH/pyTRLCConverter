@@ -1,4 +1,6 @@
-"""Example
+"""Project specific converter for testing purposes only.
+
+    Author: Andreas Merkle (andreas.merkle@newtec.de)
 """
 
 # pyTRLCConverter - A tool to convert TRLC files to specific formats.
@@ -19,32 +21,52 @@
 
 # Imports **********************************************************************
 
+from trlc.ast import Record_Object
+
+from pyTRLCConverter.ret import Ret
+from pyTRLCConverter.base_converter import BaseConverter
+
 # Variables ********************************************************************
 
 # Classes **********************************************************************
 
+
+class DoNothingConverter(BaseConverter):
+    """
+    Custom project specific converter for testing purposes only.
+    """
+
+    @staticmethod
+    def get_subcommand() -> str:
+        """ Return subcommand token for this converter.
+
+        Returns:
+            str: subcomand argument token
+        """
+        return "doNothing"
+
+    @staticmethod
+    def get_description() -> str:
+        """ Return converter description.
+
+         Returns:
+            str: Converter description
+        """
+        return "Does just nothing."
+
+    def convert_record_object_generic(self, record: Record_Object, level: int) -> Ret:
+        """Convert a record object generically.
+
+        Args:
+            record (Record_Object): The record object
+            level (int): The record level
+
+        Returns:
+            Ret: Status
+        """
+
+        return Ret.OK
+
 # Functions ********************************************************************
-
-def test_tc1(record_property):
-    # lobster-trace: SwTests.tc1
-    """TC1: ...
-
-    Args:
-        record_property (Any): Used to inject the test case reference into the test results.
-    """
-    record_property("lobster-trace", "SwTests.tc1")
-
-    assert True
-
-def test_tc2(record_property):
-    # lobster-trace: SwTests.tc2
-    """TC2: ...
-
-    Args:
-        record_property (Any): Used to inject the test case reference into the test results.
-    """
-    record_property("lobster-trace", "SwTests.tc2")
-
-    assert True
 
 # Main *************************************************************************

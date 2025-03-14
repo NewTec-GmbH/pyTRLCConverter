@@ -130,7 +130,7 @@ section "pyTRLCConverter" {
             }
 
             SwReq sw_req_markdown_table {
-                description = "The Markdown converter shall provide a function to create a Markdown table."
+                description = "The Markdown converter shall provide the functionality to create a Markdown table."
                 verification_criteria = "Verify by creating a Markdown table."
             }
 
@@ -150,7 +150,7 @@ section "pyTRLCConverter" {
             }
 
             SwReq sw_req_markdown_soft_return {
-                description = "The Markdown convert shall provide a function to convert a line feed to Markdown soft return."
+                description = "The Markdown converter shall provide a function to convert a line feed to Markdown soft return."
                 verification_criteria = "Verify by creating a text with one and more line feeds."
             }
 
@@ -216,8 +216,8 @@ section "pyTRLCConverter" {
             }
 
             SwReq sw_req_rst_record {
-                description = "The reStructuredText converter shall convert the attributes of a TRLC record into a reStructuredText table."
-                verification_criteria = "Verify by converting consecutive TRLC records into a reStructuredText table."
+                description = "The reStructuredText converter shall convert the attributes of a TRLC record into a reStructuredText admonition with a table."
+                verification_criteria = "Verify by converting consecutive TRLC records into a reStructuredText admonition with a table."
             }
 
             SwReq sw_req_rst_escape {
@@ -228,6 +228,11 @@ section "pyTRLCConverter" {
             SwReq sw_req_rst_heading {
                 description = "The reStructuredText converter shall provide a function to create a reStructuredText heading."
                 verification_criteria = "Verify by creating a reStructuredText heading."
+            }
+
+            SwReq sw_req_rst_admonition {
+                description = "The reStructuredText converter shall provide a function to create a reStructuredText admonition."
+                verification_criteria = "Verify by creating a reStructuredText admonition."
             }
 
             SwReq sw_req_rst_table {
@@ -245,9 +250,9 @@ section "pyTRLCConverter" {
                 verification_criteria = "Verify by creating a reStructuredText image."
             }
 
-            SwReq sw_req_rst_text_color {
-                description = "The reStructuredText converter shall provide a function to create colored text in reStructuredText format."
-                verification_criteria = "Verify by creating colored text in reStructuredText format."
+            SwReq sw_req_rst_role {
+                description = "The reStructuredText converter shall provide a function to create role text in reStructuredText format."
+                verification_criteria = "Verify by creating role text in reStructuredText format."
             }
 
             SwReq sw_req_rst_out_folder {

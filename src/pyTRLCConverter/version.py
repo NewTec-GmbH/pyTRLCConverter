@@ -62,11 +62,11 @@ def init_from_metadata():
     my_metadata = meta.metadata('pyTRLCConverter')
 
     return \
-        my_metadata['Version'], \
-        my_metadata['Author'], \
-        my_metadata['Author-email'], \
-        my_metadata['Project-URL'].replace("repository, ", ""), \
-        my_metadata['License']
+        my_metadata.get('Version', '???'), \
+        my_metadata.get('Author', '???'), \
+        my_metadata.get('Author-email', '???'), \
+        my_metadata.get('Project-URL', 'repository, ???').replace("repository, ", ""), \
+        my_metadata.get('License', '???')
 
 def init_from_toml():
     # lobster-trace: SwRequirements.sw_req_version

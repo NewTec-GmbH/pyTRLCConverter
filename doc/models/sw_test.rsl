@@ -4,7 +4,7 @@ import SwRequirements
 // The software test case explains the steps to test a software requirement.
 type SwTestCase {
     description	String
-    derived     SwRequirements.SwReq [0 .. *]
+    verifies    SwRequirements.SwReq [0 .. *]
 }
 
 // Enumeration of the possible results of a test case.

@@ -228,6 +228,7 @@ class MarkdownConverter(BaseConverter):
             assert self._fd is not None
             self._fd.close()
             self._fd = None
+            self._is_top_level_heading_req = True
 
         return Ret.OK
 
@@ -301,6 +302,7 @@ class MarkdownConverter(BaseConverter):
         """
         if self._is_top_level_heading_req is True:
             self._fd.write(MarkdownConverter.markdown_create_heading(self._args.top_level, 1))
+            self._empty_line_required = True
             self._is_top_level_heading_req = False
 
     def _write_empty_line_on_demand(self) -> None:
@@ -554,18 +556,26 @@ class MarkdownConverter(BaseConverter):
 
         Args:
             text (str): Heading text
-            level (int): Heading level
+            level (int): Heading level [1; inf]
             escape (bool): Escape the text (default: True).
 
         Returns:
             str: Markdown heading
         """
-        text_raw = text
+        result = ""
 
-        if escape is True:
-            text_raw = MarkdownConverter.markdown_escape(text)
+        if 1 <= level:
+            text_raw = text
 
-        return f"{'#' * level} {text_raw}\n"
+            if escape is True:
+                text_raw = MarkdownConverter.markdown_escape(text)
+
+            result = f"{'#' * level} {text_raw}\n"
+
+        else:
+            print(f"Invalid heading level {level} for {text}.", file=sys.stderr)
+
+        return result
 
     @staticmethod
     def markdown_create_table_head(column_titles : List[str], escape: bool = True) -> str:
@@ -686,7 +696,10 @@ class MarkdownConverter(BaseConverter):
         if escape is True:
             diagram_caption_raw = MarkdownConverter.markdown_escape(diagram_caption)
 
-        return f"![{diagram_caption_raw}](./{diagram_file_name})\n"
+        # Allowed are absolute and relative to source paths.
+        diagram_file_name = os.path.normpath(diagram_file_name)
+
+        return f"![{diagram_caption_raw}]({diagram_file_name})\n"
 
     @staticmethod
     def markdown_text_color(text: str, color: str, escape: bool = True) -> str:
