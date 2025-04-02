@@ -158,6 +158,27 @@
 </table>
 </div>
 </section>
+<section id="plantuml">
+<span id="sw-test-rst-plantuml"></span><h3>PlantUML<a class="headerlink" href="#plantuml" title="Link to this heading">¶</a></h3>
+<div class="admonition-tc-plantuml admonition" id="sw-test-rst-tc-plantuml">
+<p class="admonition-title">tc_plantuml</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks the conversion of a PlantUML diagram into an image.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><p><a class="reference internal" href="sw_requirements.html#sw-req-rst-sw-req-plantuml"><span class="std std-ref">SwRequirements.sw_req_plantuml</span></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
 <section id="command-line-arguments">
 <span id="sw-test-rst-command-line-arguments"></span><h3>Command Line Arguments<a class="headerlink" href="#command-line-arguments" title="Link to this heading">¶</a></h3>
 <div class="admonition-tc-help admonition" id="sw-test-rst-tc-help">
@@ -210,6 +231,24 @@
 </tr>
 <tr class="row-odd"><td><p>Verifies</p></td>
 <td><p><a class="reference internal" href="sw_requirements.html#sw-req-rst-sw-req-cli-exclude"><span class="std std-ref">SwRequirements.sw_req_cli_exclude</span></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-cli-include admonition" id="sw-test-rst-tc-cli-include">
+<p class="admonition-title">tc_cli_include</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether a TRLC file can be included as on demand context in the conversion.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><p><a class="reference internal" href="sw_requirements.html#sw-req-rst-sw-req-cli-include"><span class="std std-ref">SwRequirements.sw_req_cli_include</span></a></p></td>
 </tr>
 </tbody>
 </table>
@@ -423,10 +462,12 @@ specified output folder.</p></td>
 </thead>
 <tbody>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>This test case checks whether the conversion to markdown in multiple document mode convers one output document per TRLC source file.</p></td>
+<td><p>This test case checks whether the conversion to markdown in multiple document mode creates one output document per TRLC source file and
+whether the top level heading is created when required.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Verifies</p></td>
-<td><p><a class="reference internal" href="sw_requirements.html#sw-req-rst-sw-req-markdown-multiple-doc-mode"><span class="std std-ref">SwRequirements.sw_req_markdown_multiple_doc_mode</span></a></p></td>
+<td><p><a class="reference internal" href="sw_requirements.html#sw-req-rst-sw-req-markdown-multiple-doc-mode"><span class="std std-ref">SwRequirements.sw_req_markdown_multiple_doc_mode</span></a>
+<a class="reference internal" href="sw_requirements.html#sw-req-rst-sw-req-markdown-md-top-level"><span class="std std-ref">SwRequirements.sw_req_markdown_md_top_level</span></a></p></td>
 </tr>
 </tbody>
 </table>
@@ -661,6 +702,82 @@ specified output folder.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Verifies</p></td>
 <td><p><a class="reference internal" href="sw_requirements.html#sw-req-rst-sw-req-rst-multiple-doc-mode"><span class="std std-ref">SwRequirements.sw_req_rst_multiple_doc_mode</span></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="docx">
+<span id="sw-test-rst-docx"></span><h3>Docx<a class="headerlink" href="#docx" title="Link to this heading">¶</a></h3>
+<div class="admonition-tc-docx admonition" id="sw-test-rst-tc-docx">
+<p class="admonition-title">tc_docx</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether the conversion to docx format works.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><p><a class="reference internal" href="sw_requirements.html#sw-req-rst-sw-req-docx"><span class="std std-ref">SwRequirements.sw_req_docx</span></a>
+<a class="reference internal" href="sw_requirements.html#sw-req-rst-sw-req-docx-record"><span class="std std-ref">SwRequirements.sw_req_docx_record</span></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-docx-section admonition" id="sw-test-rst-tc-docx-section">
+<p class="admonition-title">tc_docx_section</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether the conversion of a TRLC section to a docx section works.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><p><a class="reference internal" href="sw_requirements.html#sw-req-rst-sw-req-docx-section"><span class="std std-ref">SwRequirements.sw_req_docx_section</span></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-docx-file admonition" id="sw-test-rst-tc-docx-file">
+<p class="admonition-title">tc_docx_file</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether the conversion to docx combines the results from multiple TRLC files into one docx file</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><p><a class="reference internal" href="sw_requirements.html#sw-req-rst-sw-req-docx-file"><span class="std std-ref">SwRequirements.sw_req_docx_file</span></a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-docx-template admonition" id="sw-test-rst-tc-docx-template">
+<p class="admonition-title">tc_docx_template</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether the conversion using a template works correctly.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><p><a class="reference internal" href="sw_requirements.html#sw-req-rst-sw-req-docx-template"><span class="std std-ref">SwRequirements.sw_req_docx_template</span></a></p></td>
 </tr>
 </tbody>
 </table>
