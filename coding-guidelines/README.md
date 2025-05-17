@@ -72,3 +72,13 @@ The file index.rst is the first pate of the documentation and needs to be adapte
 The file conf.py is the main configuration file, there project name, author, ... needs to be filled in.
 
 To generate html documentation call `make.bat html`, that can be found under `/doc/detailed-design`. The output will be located in `detailed-design/_build/html`
+
+## Logging
+
+For error-logging it is recommended to use the `log_error()` function of `src\pyTRLCConverter\log_verbose.py`. 
+The function accepts two parameters:
+
+1. message (string): The message to be displayed.
+2. show_timestamp (boolean, optional): A flag indicating whether to include a timestamp with the message. Defaults to false if not provided.
+
+When invoked, the function outputs the message to standard error (stderr). If showTimestamp is set to true, the current timestamp will be prefixed to the message.

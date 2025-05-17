@@ -21,13 +21,12 @@
 
 # Imports **********************************************************************
 import os
-import sys
 from typing import List, Optional
 from trlc.ast import Implicit_Null, Record_Object, Record_Reference
 from pyTRLCConverter.base_converter import BaseConverter
 from pyTRLCConverter.ret import Ret
 from pyTRLCConverter.trlc_helper import TrlcAstWalker
-from pyTRLCConverter.log_verbose import log_verbose
+from pyTRLCConverter.logger import log_verbose, log_error
 
 # Variables ********************************************************************
 
@@ -384,7 +383,7 @@ class MarkdownConverter(BaseConverter):
         try:
             self._fd = open(file_name_with_path, "w", encoding="utf-8") #pylint: disable=consider-using-with
         except IOError as e:
-            print(f"Failed to open file {file_name_with_path}: {e}", file=sys.stderr)
+            log_error(f"Failed to open file {file_name_with_path}: {e}")
             result = Ret.ERROR
 
         return result
@@ -599,7 +598,7 @@ class MarkdownConverter(BaseConverter):
             result = f"{'#' * level} {text_raw}\n"
 
         else:
-            print(f"Invalid heading level {level} for {text}.", file=sys.stderr)
+            log_error(f"Invalid heading level {level} for {text}.")
 
         return result
 

@@ -29,7 +29,7 @@ import urllib
 import urllib.parse
 import requests
 
-from pyTRLCConverter.log_verbose import log_verbose
+from pyTRLCConverter.logger import log_verbose, log_error
 
 # Variables ********************************************************************
 
@@ -223,7 +223,7 @@ class PlantUML():
             try:
                 output = subprocess.run(plantuml_cmd, capture_output=True, text=True, check=False)
                 if output.stderr:
-                    print(output.stderr)
+                    log_error(output.stderr, True)
                 print(output.stdout)
             except FileNotFoundError as exc:
                 raise FileNotFoundError(f"{self._plantuml_jar} not found.") from exc

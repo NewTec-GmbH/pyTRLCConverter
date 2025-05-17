@@ -36,7 +36,7 @@ from pyTRLCConverter.version import __license__, __repository__, __version__
 from pyTRLCConverter.trlc_helper import get_trlc_symbols
 from pyTRLCConverter.markdown_converter import MarkdownConverter
 from pyTRLCConverter.docx_converter import DocxConverter
-from pyTRLCConverter.log_verbose import enable_verbose, log_verbose, is_verbose_enabled
+from pyTRLCConverter.logger import enable_verbose, log_verbose, is_verbose_enabled, log_error
 from pyTRLCConverter.rst_converter import RstConverter
 
 # Variables ********************************************************************
@@ -169,7 +169,7 @@ def main() -> int:
     try:
         project_converter = _get_project_converter()
     except ValueError as exc:
-        print(exc, file=sys.stderr)
+        log_error(exc)
         ret_status = Ret.ERROR
 
     if ret_status == Ret.OK:
@@ -206,7 +206,7 @@ def main() -> int:
             symbols = get_trlc_symbols(args.source, args.include)
 
             if symbols is None:
-                print(f"No items found at {args.source}.")
+                log_error(f"No items found at {args.source}.")
                 ret_status = Ret.ERROR
             else:
                 try:
@@ -221,7 +221,7 @@ def main() -> int:
                     ret_status = walker.walk_symbols(symbols)
 
                 except (FileNotFoundError, OSError) as exc:
-                    print(exc)
+                    log_error(exc)
                     ret_status = Ret.ERROR
 
     return ret_status
@@ -285,7 +285,7 @@ def _create_out_folder(path: str) -> None:
             try:
                 os.makedirs(path)
             except OSError as e:
-                print(f"Failed to create folder {path}: {e}", file=sys.stderr)
+                log_error(f"Failed to create folder {path}: {e}")
                 raise
 
 # Main *************************************************************************

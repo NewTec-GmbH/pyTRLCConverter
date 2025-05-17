@@ -20,13 +20,13 @@
 # If not, see <https://www.gnu.org/licenses/>.
 
 # Imports **********************************************************************
-import sys
 from enum import Enum
 from typing import Optional
 from pyTRLCConverter.abstract_converter import AbstractConverter
 from pyTRLCConverter.ret import Ret
 from pyTRLCConverter.trlc_helper import Record_Object
 from pyTRLCConverter.translator import Translator
+from pyTRLCConverter.logger import log_error
 
 # Variables ********************************************************************
 
@@ -163,7 +163,7 @@ class BaseConverter(AbstractConverter):
 
             # Don't trust project specific handlers to return a valid status.
             if not isinstance(result, Ret):
-                print(f"Invalid return value from record handler for record {record.n_typ.name}.", file=sys.stderr)
+                log_error(f"Invalid return value from record handler for record {record.n_typ.name}.", True)
                 result = Ret.ERROR
 
         elif self._record_policy == RecordsPolicy.RECORD_CONVERT_ALL:

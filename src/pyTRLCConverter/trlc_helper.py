@@ -25,7 +25,7 @@ from typing import Union, Optional
 from trlc.errors import Message_Handler
 from trlc.trlc import Source_Manager
 from trlc.ast import Array_Aggregate, Expression, Record_Object
-from pyTRLCConverter.log_verbose import log_verbose
+from pyTRLCConverter.logger import log_verbose
 
 # Variables ********************************************************************
 

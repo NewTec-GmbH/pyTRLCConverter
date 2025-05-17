@@ -50,12 +50,13 @@ end note
 
 rectangle Utilities {
 
-    class "log_verbose" as log_verbose <<module>> {
+    class "logger" as logger <<module>> {
     }
 
-    note top of log_verbose
+    note top of logger
         Module for handling
-         verbose logging.
+         verbose logging and 
+         error messages.
     end note
 
     class "plantuml" as plantuml <<module>> {

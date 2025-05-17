@@ -24,7 +24,7 @@ import os
 from typing import Optional
 import docx
 from pyTRLCConverter.base_converter import BaseConverter
-from pyTRLCConverter.log_verbose import log_verbose
+from pyTRLCConverter.logger import log_verbose
 from pyTRLCConverter.ret import Ret
 from pyTRLCConverter.trlc_helper import Record_Object
 

@@ -23,7 +23,7 @@ Author: Andreas Merkle (andreas.merkle@newtec.de)
 # Imports **********************************************************************
 import json
 from typing import Dict, Optional
-from pyTRLCConverter.log_verbose import log_verbose
+from pyTRLCConverter.logger import log_verbose
 
 # Variables ********************************************************************
 

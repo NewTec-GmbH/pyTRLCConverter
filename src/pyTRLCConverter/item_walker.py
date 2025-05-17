@@ -22,12 +22,11 @@ Author: Norbert Schulz (norbert.schulz@newtec.de)
 
 # Imports **********************************************************************
 import os
-import sys
 import traceback
 from trlc.ast import Symbol_Table
 
 from pyTRLCConverter.abstract_converter import AbstractConverter
-from pyTRLCConverter.log_verbose import log_verbose
+from pyTRLCConverter.logger import log_verbose, log_error
 from pyTRLCConverter.trlc_helper import get_file_dict_from_symbols, is_item_record, is_item_section
 from pyTRLCConverter.ret import Ret
 
@@ -122,7 +121,7 @@ class ItemWalker:  # pylint: disable=too-few-public-methods
                         result = Ret.OK
 
         except Exception as e:  # pylint: disable=broad-except
-            print(f"Error processing file {file_name}: {e}", file=sys.stderr)
+            log_error(f"Error processing file {file_name}: {e}")
 
         return result
 
@@ -146,7 +145,7 @@ class ItemWalker:  # pylint: disable=too-few-public-methods
                 if result != Ret.OK:
                     break
         except Exception as e:  # pylint: disable=broad-except
-            print(f"Error processing item {item}: {e}", file=sys.stderr)
+            log_error(f"Error processing item {item}: {e}")
             traceback.print_exc()
             result = Ret.ERROR
 
@@ -169,7 +168,7 @@ class ItemWalker:  # pylint: disable=too-few-public-methods
         elif is_item_record(item):
             result = self._converter.convert_record_object(item[0], item[1])
         else:
-            print(f"Unrecognized item type {item}", file=sys.stderr)
+            log_error(f"Unrecognized item type {item}")
             result = Ret.ERROR
 
         return result
