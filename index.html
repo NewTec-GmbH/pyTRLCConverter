@@ -7,7 +7,7 @@
 
     <title>pyTRLCConverter documentation &#8212; pyTRLCConverter  documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=47202671" />
-    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=1ddbb825" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=aa52c60a" />
     <script src="_static/documentation_options.js?v=5929fcd5"></script>
     <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
@@ -37,7 +37,7 @@
 <p>pyTRLCConverter is a command-line tool to convert TRLC files to different output formats, e.g. Markdown or docx.
 Since the definition of TRLC types is project-specific, the built-in converters can be extended in an object-oriented manner.</p>
 <p class="plantuml">
-<img src="_images/plantuml-700a9a2932e3309164cb60e2f13b75ee3901479b.png" alt="&#64;startuml context_diagram
+<img src="_images/plantuml-69d8ee10f7355a35507bff8c9919e9258f1d68dd.png" alt="&#64;startuml context_diagram
 
 left to right direction
 skinparam linetype ortho
@@ -45,6 +45,7 @@ skinparam linetype ortho
 database &quot;Filesystem&quot; as fileSystemSrc {
     file &quot;Requirement Specification Language file(s)\n(*.rsl)&quot; as rlsFiles
     file &quot;Source file(s)\n(*.trlc)&quot; as srcFiles
+    file &quot;Translation file\n(*.json)&quot; as translationFile
     file &quot;Project specific conversion file (PRJSCF)\n(*.py)&quot; as projectSpecificConversionFile
 }
 
@@ -59,6 +60,7 @@ rectangle &quot;System&quot; as system {
 
 rlsFiles ...&gt; tool: &lt;&lt;flow&gt;&gt;
 srcFiles ...&gt; tool: &lt;&lt;flow&gt;&gt;
+translationFile ...&gt; tool: &lt;&lt;flow&gt;&gt;\n&lt;&lt;optional&gt;&gt;
 projectSpecificConversionFile ...&gt; tool: &lt;&lt;flow&gt;&gt;\n&lt;&lt;optional&gt;&gt;
 
 tool ...&gt; dstFiles: &lt;&lt;flow&gt;&gt;

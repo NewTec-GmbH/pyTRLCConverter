@@ -1,4 +1,4 @@
 SW-Requirements
 ---------------
 
-.. include:: ../../req2rst/out/sw-requirements/rst/sw_req.rst
+.. include:: ../../req2rst/out/sw-requirements/rst/swe-req.rst

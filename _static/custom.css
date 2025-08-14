@@ -24,3 +24,8 @@ p.admonition-title {
 .green {
     color: green;
 }
+
+span.caption-text {
+    display: block;
+    text-align: center;
+}
