@@ -23,6 +23,8 @@
 import json
 import re
 
+from pyTRLCConverter.logger import log_verbose
+
 # Variables ********************************************************************
 
 # Classes **********************************************************************
@@ -32,9 +34,13 @@ class RenderConfig():
     """Render configuration provider.
     """
 
+    FORMAT_SPECIFIER_PLAIN = "plain"
     FORMAT_SPECIFIER_MD = "md"
+    FORMAT_SPECIFIER_RST = "rst"
 
     def __init__(self):
+        """Constructs the render configuration provider.
+        """
         # The render configuration as dict.
         #
         # Example in JSON format:
@@ -51,6 +57,8 @@ class RenderConfig():
            bool: True if successful, False otherwise.
         """
         status = False
+
+        log_verbose(f"Loading render configuration {file_name}.")
 
         try:
             with open(file_name, 'r', encoding='utf-8') as f:
@@ -144,7 +152,20 @@ class RenderConfig():
 
         return format_specifier
 
-    def is_format_md(self, trlc_package: str, trlc_type: str, trlc_type_attribute: str) -> str:
+    def is_format_plain(self, trlc_package: str, trlc_type: str, trlc_type_attribute: str) -> bool:
+        """Checks if the given TRLC package, type and attribute should be rendered in plain text format.
+
+        Args:
+            trlc_package (str): The TRLC package.
+            trlc_type (str): The TRLC type.
+            trlc_type_attribute (str): The TRLC type attribute.
+        
+        Returns:
+           bool: True if the given TRLC attribute has plain text format, otherwise False.
+        """
+        return self.get_format_specifier(trlc_package, trlc_type, trlc_type_attribute) == self.FORMAT_SPECIFIER_PLAIN
+
+    def is_format_md(self, trlc_package: str, trlc_type: str, trlc_type_attribute: str) -> bool:
         """Checks if the given TRLC package, type and attribute should be rendered in markdown format.
 
         Args:
@@ -153,10 +174,22 @@ class RenderConfig():
             trlc_type_attribute (str): The TRLC type attribute.
         
         Returns:
-           bool: True if the given TRLC type and attribute should be rendered in markdown format, False otherwise.
+           bool: True if the given TRLC attribute has Markdown format, otherwise False.
         """
         return self.get_format_specifier(trlc_package, trlc_type, trlc_type_attribute) == self.FORMAT_SPECIFIER_MD
 
+    def is_format_rst(self, trlc_package: str, trlc_type: str, trlc_type_attribute: str) -> bool:
+        """Checks if the given TRLC package, type and attribute should be rendered in reStructuredText format.
+
+        Args:
+            trlc_package (str): The TRLC package.
+            trlc_type (str): The TRLC type.
+            trlc_type_attribute (str): The TRLC type attribute.
+
+        Returns:
+           bool: True if the given TRLC attribute has reStructuredText format, otherwise False.
+        """
+        return self.get_format_specifier(trlc_package, trlc_type, trlc_type_attribute) == self.FORMAT_SPECIFIER_RST
 
 # Functions ********************************************************************
 

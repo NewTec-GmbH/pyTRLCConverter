@@ -21,7 +21,7 @@
 
 # Imports **********************************************************************
 import os
-from typing import List, Optional
+from typing import List, Optional, Any
 from trlc.ast import Implicit_Null, Record_Object, Record_Reference
 from pyTRLCConverter.base_converter import BaseConverter
 from pyTRLCConverter.ret import Ret
@@ -39,13 +39,13 @@ class RstConverter(BaseConverter):
     OUTPUT_FILE_NAME_DEFAULT = "output.rst"
     TOP_LEVEL_DEFAULT = "Specification"
 
-    def __init__(self, args: any) -> None:
+    def __init__(self, args: Any) -> None:
         # lobster-trace: SwRequirements.sw_req_rst
         """
         Initializes the converter.
 
         Args:
-            args (any): The parsed program arguments.
+            args (Any): The parsed program arguments.
         """
         super().__init__(args)
 
@@ -93,7 +93,7 @@ class RstConverter(BaseConverter):
         return "Convert into reStructuredText format."
 
     @classmethod
-    def register(cls, args_parser: any) -> None:
+    def register(cls, args_parser: Any) -> None:
         # lobster-trace: SwRequirements.sw_req_rst_multiple_doc_mode
         # lobster-trace: SwRequirements.sw_req_rst_single_doc_mode
         # lobster-trace: SwRequirements.sw_req_rst_sd_top_level_default
@@ -104,7 +104,7 @@ class RstConverter(BaseConverter):
         Register converter specific argument parser.
 
         Args:
-            args_parser (any): Argument parser
+            args_parser (Any): Argument parser
         """
         super().register(args_parser)
 
@@ -304,6 +304,8 @@ class RstConverter(BaseConverter):
         have an empty line before. And at the document bottom, there shall be just one empty
         line.
         """
+        assert self._fd is not None
+
         if self._empty_line_required is False:
             self._empty_line_required = True
         else:
@@ -452,7 +454,7 @@ class RstConverter(BaseConverter):
             None
         )
         trlc_ast_walker.set_other_dispatcher(
-            lambda expression: RstConverter.rst_escape(str(expression.to_python_object()))
+            lambda expression: str(expression.to_python_object())
         )
 
         return trlc_ast_walker
@@ -503,6 +505,10 @@ class RstConverter(BaseConverter):
                 attribute_value = self.rst_create_list(walker_result, False)
             else:
                 attribute_value = walker_result
+
+                # If the attribute value is not already in reStructuredText format, it will be escaped.
+                if self._render_cfg.is_format_rst(record.n_package.name, record.n_typ.name, name) is False:
+                    attribute_value = self.rst_escape(walker_result)
 
             rows.append([attribute_name, attribute_value])
 
