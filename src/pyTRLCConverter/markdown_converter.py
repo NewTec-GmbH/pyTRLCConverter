@@ -482,6 +482,26 @@ class MarkdownConverter(BaseConverter):
 
         return trlc_ast_walker
 
+    def _render(self, record: Record_Object, attribute_name: str, attribute_value: str) -> str:
+        """Render the attribute value depened on its format.
+
+        Args:
+            record (Record_Object): The record object.
+            attribute_name (str): The attribute name.
+            attribute_value (str): The attribute value.
+
+        Returns:
+            str: The rendered attribute value.
+        """
+        result = attribute_value
+
+        # If the attribute value is not already in Markdown format, it will be escaped.
+        if self._render_cfg.is_format_md(record.n_package.name, record.n_typ.name, attribute_name) is False:
+            result = self.markdown_escape(attribute_value)
+            result = self.markdown_lf2soft_return(result)
+
+        return result
+
     # pylint: disable=too-many-locals
     def _convert_record_object(self, record: Record_Object, level: int, translation: Optional[dict]) -> Ret:
         # lobster-trace: SwRequirements.sw_req_markdown_record
@@ -524,11 +544,7 @@ class MarkdownConverter(BaseConverter):
             if isinstance(walker_result, list):
                 attribute_value = self.markdown_create_list(walker_result, True, False)
             else:
-                attribute_value = walker_result
-
-                # If the attribute value is not already in Markdown format, it will be escaped.
-                if self._render_cfg.is_format_md(record.n_package.name, record.n_typ.name, name) is False:
-                    attribute_value = self.markdown_escape(walker_result)
+                attribute_value = self._render(record, name, walker_result)
 
             # Write the attribute name and value to the Markdown table as row.
             markdown_table_row = self.markdown_append_table_row([attribute_name, attribute_value], False)

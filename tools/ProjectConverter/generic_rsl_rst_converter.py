@@ -61,14 +61,11 @@ class GenericRslRstConverter(RstConverter):
 
         self._write_empty_line_on_demand()
 
-        rst_info = self._get_attribute(info, "description")
-
-        # If the attribute value is not already in reStructuredText format, it will be escaped.
-        if self._render_cfg.is_format_rst(info.n_package.name, info.n_typ.name, "description") is False:
-            rst_info = self.rst_escape(rst_info)
+        rst_info = self._render(info, "description", self._get_attribute(info, "description"))
 
         self._fd.write(rst_info)
         self._fd.write("\n")
+
         return Ret.OK
 
     # pylint: disable=unused-argument

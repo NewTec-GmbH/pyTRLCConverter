@@ -23,10 +23,12 @@
 import os
 from typing import List, Optional, Any
 from trlc.ast import Implicit_Null, Record_Object, Record_Reference
+from marko import Markdown
 from pyTRLCConverter.base_converter import BaseConverter
 from pyTRLCConverter.ret import Ret
 from pyTRLCConverter.trlc_helper import TrlcAstWalker
 from pyTRLCConverter.logger import log_verbose, log_error
+from pyTRLCConverter.marko.rst_renderer import RSTRenderer
 
 # Variables ********************************************************************
 
@@ -459,6 +461,34 @@ class RstConverter(BaseConverter):
 
         return trlc_ast_walker
 
+    def _render(self, record: Record_Object, attribute_name: str, attribute_value: str) -> str:
+        """Render the attribute value depened on its format.
+
+        Args:
+            record (Record_Object): The record object.
+            attribute_name (str): The attribute name.
+            attribute_value (str): The attribute value.
+
+        Returns:
+            str: The rendered attribute value.
+        """
+        result = attribute_value
+
+        # If the attribute value is not already in reStructuredText format, it will be escaped.
+        if self._render_cfg.is_format_rst(record.n_package.name, record.n_typ.name, attribute_name) is False:
+
+            # Is it Markdown format?
+            if self._render_cfg.is_format_md(record.n_package.name, record.n_typ.name, attribute_name) is True:
+                # Convert Markdown to reStructuredText.
+                markdown = Markdown(renderer=RSTRenderer)
+                result = markdown.convert(attribute_value)
+
+            # Otherwise escape the text for reStructuredText.
+            else:
+                result = self.rst_escape(attribute_value)
+
+        return result
+
     # pylint: disable=too-many-locals, unused-argument
     def _convert_record_object(self, record: Record_Object, level: int, translation: Optional[dict]) -> Ret:
         # lobster-trace: SwRequirements.sw_req_rst_record
@@ -504,11 +534,7 @@ class RstConverter(BaseConverter):
             if isinstance(walker_result, list):
                 attribute_value = self.rst_create_list(walker_result, False)
             else:
-                attribute_value = walker_result
-
-                # If the attribute value is not already in reStructuredText format, it will be escaped.
-                if self._render_cfg.is_format_rst(record.n_package.name, record.n_typ.name, name) is False:
-                    attribute_value = self.rst_escape(walker_result)
+                attribute_value = self._render(record, name, walker_result)
 
             rows.append([attribute_name, attribute_value])
 
