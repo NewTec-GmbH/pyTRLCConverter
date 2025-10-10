@@ -57,6 +57,8 @@ class GenericRslMarkdownConverter(MarkdownConverter):
         Returns:
            Ret: Status
         """
+        assert self._fd is not None
+
         self._write_empty_line_on_demand()
 
         markdown_info = self._get_attribute(info, "description")
@@ -83,6 +85,8 @@ class GenericRslMarkdownConverter(MarkdownConverter):
         Returns:
            Ret: Status
         """
+        assert self._fd is not None
+
         image_file = convert_plantuml_to_image(
             self._get_attribute(diagram, "file_path"),
             self._args.out,
@@ -112,6 +116,8 @@ class GenericRslMarkdownConverter(MarkdownConverter):
         Returns:
            Ret: Status
         """
+        assert self._fd is not None
+
         image_file = locate_file(self._get_attribute(image, "file_path"), self._args.source)
         if image_file is not None:
             # Copy image image file to output folder.

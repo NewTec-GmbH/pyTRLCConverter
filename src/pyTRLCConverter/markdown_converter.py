@@ -21,7 +21,7 @@
 
 # Imports **********************************************************************
 import os
-from typing import List, Optional
+from typing import List, Optional, Any
 from trlc.ast import Implicit_Null, Record_Object, Record_Reference
 from pyTRLCConverter.base_converter import BaseConverter
 from pyTRLCConverter.ret import Ret
@@ -41,14 +41,14 @@ class MarkdownConverter(BaseConverter):
     OUTPUT_FILE_NAME_DEFAULT = "output.md"
     TOP_LEVEL_DEFAULT = "Specification"
 
-    def __init__(self, args: any) -> None:
+    def __init__(self, args: Any) -> None:
         # lobster-trace: SwRequirements.sw_req_no_prj_spec
         # lobster-trace: SwRequirements.sw_req_markdown
         """
         Initializes the converter.
 
         Args:
-            args (any): The parsed program arguments.
+            args (Any): The parsed program arguments.
         """
         super().__init__(args)
 
@@ -101,7 +101,7 @@ class MarkdownConverter(BaseConverter):
         return "Convert into markdown format."
 
     @classmethod
-    def register(cls, args_parser: any) -> None:
+    def register(cls, args_parser: Any) -> None:
         # lobster-trace: SwRequirements.sw_req_markdown_multiple_doc_mode
         # lobster-trace: SwRequirements.sw_req_markdown_single_doc_mode
         # lobster-trace: SwRequirements.sw_req_markdown_top_level_default
@@ -112,7 +112,7 @@ class MarkdownConverter(BaseConverter):
         Register converter specific argument parser.
 
         Args:
-            args_parser (any): Argument parser
+            args_parser (Any): Argument parser
         """
         super().register(args_parser)
 
@@ -311,6 +311,8 @@ class MarkdownConverter(BaseConverter):
         # lobster-trace: SwRequirements.sw_req_markdown_sd_top_level
         """Write the top level heading if necessary.
         """
+        assert self._fd is not None
+
         if self._is_top_level_heading_req is True:
             self._fd.write(MarkdownConverter.markdown_create_heading(self._args.top_level, 1))
             self._empty_line_required = True
@@ -326,6 +328,8 @@ class MarkdownConverter(BaseConverter):
         have an empty line before. And at the document bottom, there shall be just one empty
         line.
         """
+        assert self._fd is not None
+
         if self._empty_line_required is False:
             self._empty_line_required = True
         else:

@@ -23,7 +23,7 @@ support for the TRLC record types defined in Generic.rsl.
 # If not, see <https://www.gnu.org/licenses/>.
 
 # Imports **********************************************************************
-from typing import Optional
+from typing import Optional, Any
 import docx
 # pylint: disable=import-error
 from pyTRLCConverter.docx_converter import DocxConverter
@@ -41,12 +41,12 @@ class GenericRslDocxConverter(DocxConverter):
     """
     Project specific docx converter subclass for generic.rsl types.
     """
-    def __init__(self, args: any) -> None:
+    def __init__(self, args: Any) -> None:
         """
         Initialize the custom docx converter.
 
         Args:
-            args (any): The parsed program arguments.
+            args (Any): The parsed program arguments.
         """
         super().__init__(args)
 
