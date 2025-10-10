@@ -32,6 +32,7 @@ if TYPE_CHECKING:
 
 # Classes **********************************************************************
 
+# pylint: disable-next=too-many-public-methods
 class RSTRenderer(Renderer):
     """Renderer for reStructuredText output."""
 
