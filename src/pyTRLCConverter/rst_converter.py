@@ -22,8 +22,8 @@
 # Imports **********************************************************************
 import os
 from typing import List, Optional, Any
-from trlc.ast import Implicit_Null, Record_Object, Record_Reference
 from marko import Markdown
+from trlc.ast import Implicit_Null, Record_Object, Record_Reference
 from pyTRLCConverter.base_converter import BaseConverter
 from pyTRLCConverter.ret import Ret
 from pyTRLCConverter.trlc_helper import TrlcAstWalker
