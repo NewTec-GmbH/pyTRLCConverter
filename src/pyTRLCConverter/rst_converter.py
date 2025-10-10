@@ -492,9 +492,7 @@ class RstConverter(BaseConverter):
         rows = []
         trlc_ast_walker = self._get_trlc_ast_walker()
         for name, value in record.field.items():
-            attribute_name = name
-            if translation is not None and name in translation:
-                attribute_name = translation[name]
+            attribute_name = self._translate_attribute_name(translation, name)
             attribute_name = self.rst_escape(attribute_name)
 
             # Retrieve the attribute value by processing the field value.

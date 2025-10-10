@@ -39,7 +39,7 @@ if not exist %SWE_REQ_OUT_DIR% (
 )
 
 echo Generate software requirements ...
-pyTRLCConverter --source=..\..\trlc\swe-req --source=..\..\trlc\model -o=%SWE_REQ_OUT_DIR% --verbose --project=%SWE_REQ_CONVERTER% --translation=%TRANSLATION% %SWE_REQ_OUT_FORMAT%
+pyTRLCConverter --source=..\..\trlc\swe-req --source=..\..\trlc\model -o=%SWE_REQ_OUT_DIR% --verbose --project=%SWE_REQ_CONVERTER% --translation=%TRANSLATION% --renderCfg=renderCfg.json %SWE_REQ_OUT_FORMAT%
 
 if errorlevel 1 (
     pause

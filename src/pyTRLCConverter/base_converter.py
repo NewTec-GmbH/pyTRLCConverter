@@ -27,6 +27,7 @@ from pyTRLCConverter.ret import Ret
 from pyTRLCConverter.trlc_helper import Record_Object
 from pyTRLCConverter.translator import Translator
 from pyTRLCConverter.logger import log_error
+from pyTRLCConverter.render_config import RenderConfig
 
 # Variables ********************************************************************
 
@@ -82,6 +83,9 @@ class BaseConverter(AbstractConverter):
         # Requirement type attribute translator.
         self._translator = Translator()
 
+        # Render configuration used to know how to interprete the attribute value.
+        self._render_cfg = RenderConfig()
+
     @classmethod
     def register(cls, args_parser: any) -> None:
         """Register converter specific argument parser.
@@ -94,6 +98,14 @@ class BaseConverter(AbstractConverter):
             help=cls.get_description()
         )
         BaseConverter._parser.set_defaults(converter_class=cls)
+
+    def set_render_cfg(self, render_cfg: RenderConfig) -> None:
+        """Set the render configuration.
+
+        Args:
+            render_cfg (RenderConfig): Render configuration
+        """
+        self._render_cfg = render_cfg
 
     def begin(self) -> Ret:
         """ Begin the conversion process.
@@ -234,6 +246,24 @@ class BaseConverter(AbstractConverter):
             attribute_value = self._empty_attribute_value
 
         return attribute_value
+
+    def _translate_attribute_name(self, translation: Optional[dict], attribute_name: str) -> str:
+        """Translate attribute name on demand.
+            If no translation is provided, the attribute name will be returned as is.
+
+        Args:
+            translation (Optional[dict]): The translation dictionary.
+            attribute_name (str): The attribute name to translate.
+
+        Returns:
+            str: The translated attribute name.
+        """
+
+        if translation is not None:
+            if attribute_name in translation:
+                attribute_name = translation[attribute_name]
+
+        return attribute_name
 
 # Functions ********************************************************************
 

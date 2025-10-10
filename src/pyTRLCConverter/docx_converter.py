@@ -195,9 +195,7 @@ class DocxConverter(BaseConverter):
             if value is None:
                 value = self._empty_attribute_value
 
-            if translation is not None:
-                if key in translation:
-                    key = translation[key]
+            key = self._translate_attribute_name(translation, key)
 
             cells = table.add_row().cells
             cells[0].text = key

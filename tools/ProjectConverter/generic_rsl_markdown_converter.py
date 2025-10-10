@@ -59,10 +59,13 @@ class GenericRslMarkdownConverter(MarkdownConverter):
         """
         self._write_empty_line_on_demand()
 
-        description = self._get_attribute(info, "description")
+        markdown_info = self._get_attribute(info, "description")
 
-        markdown_info = self.markdown_escape(description)
-        markdown_info = self.markdown_lf2soft_return(markdown_info)
+        # If the attribute value is not already in Markdown format, it will be escaped.
+        if self._render_cfg.is_format_md(info.n_package.name, info.n_typ.name, "description") is False:
+            markdown_info = self.markdown_escape(markdown_info)
+            markdown_info = self.markdown_lf2soft_return(markdown_info)
+
         self._fd.write(markdown_info)
         self._fd.write("\n")
         return Ret.OK

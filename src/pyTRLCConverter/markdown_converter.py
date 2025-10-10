@@ -473,7 +473,7 @@ class MarkdownConverter(BaseConverter):
             None
         )
         trlc_ast_walker.set_other_dispatcher(
-            lambda expression: MarkdownConverter.markdown_escape(str(expression.to_python_object()))
+            lambda expression: str(expression.to_python_object())
         )
 
         return trlc_ast_walker
@@ -510,12 +510,7 @@ class MarkdownConverter(BaseConverter):
         trlc_ast_walker = self._get_trlc_ast_walker()
 
         for name, value in record.field.items():
-            # Translate the attribute name if available.
-            attribute_name = name
-            if translation is not None:
-                if name in translation:
-                    attribute_name = translation[name]
-
+            attribute_name = self._translate_attribute_name(translation, name)
             attribute_name = self.markdown_escape(attribute_name)
 
             # Retrieve the attribute value by processing the field value.
@@ -526,6 +521,10 @@ class MarkdownConverter(BaseConverter):
                 attribute_value = self.markdown_create_list(walker_result, True, False)
             else:
                 attribute_value = walker_result
+
+                # If the attribute value is not already in Markdown format, it will be escaped.
+                if self._render_cfg.is_format_md(record.n_package.name, record.n_typ.name, name) is False:
+                    attribute_value = self.markdown_escape(walker_result)
 
             # Write the attribute name and value to the Markdown table as row.
             markdown_table_row = self.markdown_append_table_row([attribute_name, attribute_value], False)
