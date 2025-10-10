@@ -44,7 +44,7 @@ class GenericRslRstConverter(RstConverter):
     """Project specific reStructuredText converter subclass for generic.rsl types.
     """
 
-    # pylint: disable=unused-argument
+    # pylint: disable-next=unused-argument
     def _print_info(self, info: Record_Object, level: int, translation: Optional[dict]) -> Ret:
         """Prints the information.
 
@@ -68,7 +68,7 @@ class GenericRslRstConverter(RstConverter):
 
         return Ret.OK
 
-    # pylint: disable=unused-argument
+    # pylint: disable-next=unused-argument
     def _print_plantuml(self, diagram: Record_Object, level: int, translation: Optional[dict]) -> Ret:
         """Prints a plantuml diagram.
 
@@ -99,7 +99,7 @@ class GenericRslRstConverter(RstConverter):
 
         return Ret.OK
 
-    # pylint: disable=unused-argument
+    # pylint: disable-next=unused-argument
     def _print_image(self, image: Record_Object, level: int, translation: Optional[dict]) -> Ret:
         """Prints the image.
 

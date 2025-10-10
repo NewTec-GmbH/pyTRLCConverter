@@ -32,7 +32,7 @@ from pyTRLCConverter.logger import log_verbose, log_error
 
 # Classes **********************************************************************
 
-# pylint: disable=too-many-instance-attributes
+# pylint: disable-next=too-many-instance-attributes
 class MarkdownConverter(BaseConverter):
     """
     MarkdownConverter provides functionality for converting to a markdown format.
@@ -415,7 +415,7 @@ class MarkdownConverter(BaseConverter):
         """
         return self._create_markdown_link_from_record_object_reference(record_reference)
 
-    # pylint: disable=line-too-long
+    # pylint: disable-next=line-too-long
     def _create_markdown_link_from_record_object_reference(self, record_reference: Record_Reference) -> str:
         # lobster-trace: SwRequirements.sw_req_markdown_record
         """
@@ -502,7 +502,7 @@ class MarkdownConverter(BaseConverter):
 
         return result
 
-    # pylint: disable=too-many-locals
+    # pylint: disable-next=too-many-locals
     def _convert_record_object(self, record: Record_Object, level: int, translation: Optional[dict]) -> Ret:
         # lobster-trace: SwRequirements.sw_req_markdown_record
         """

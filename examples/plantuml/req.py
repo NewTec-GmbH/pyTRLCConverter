@@ -74,7 +74,7 @@ class ExamplePlantumlMarkdownConverter(MarkdownConverter):
 
         self._fd.write(markdown_table_head)
 
-    # pylint: disable=unused-argument
+    # pylint: disable-next=unused-argument
     def _print_diagram(self, diagram: Record_Object, level: int) -> Ret:
         """Prints the diagram.
 

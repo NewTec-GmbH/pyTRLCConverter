@@ -90,7 +90,7 @@ class CustomMarkdownConverter(MarkdownConverter):
 
         self._fd.write(markdown_table_head)
 
-    # pylint: disable=line-too-long
+    # pylint: disable-next=line-too-long
     def _print_test_case_result(self, test_case_result: Record_Object, _level: int, _translation: Optional[dict]) -> Ret:
         """Prints the software test case result.
 

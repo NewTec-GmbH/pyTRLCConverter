@@ -52,7 +52,7 @@ class GenericRslDocxConverter(DocxConverter):
 
         self._img_counter = 1
 
-    # pylint: disable=unused-argument
+    # pylint: disable-next=unused-argument
     def _convert_record_object_info(self, record: Record_Object, level: int, translation: Optional[dict]) -> Ret:
         """Convert an information record object to the destination format.
 
@@ -68,6 +68,7 @@ class GenericRslDocxConverter(DocxConverter):
         self._docx.add_paragraph(self._get_attribute(record, "description"))
         return Ret.OK
 
+    # pylint: disable-next=unused-argument
     def _convert_record_object_plantuml(self, record: Record_Object, level: int, translation: Optional[dict]) -> Ret:
         """Convert a Plantuml diagram record object to the destination format.
 
@@ -94,6 +95,7 @@ class GenericRslDocxConverter(DocxConverter):
 
         return result
 
+    # pylint: disable-next=unused-argument
     def _convert_record_object_image(self, record: Record_Object, level: int, translation: Optional[dict]) -> Ret:
         """Convert a software diagram record object to the destination format.
 
@@ -115,6 +117,7 @@ class GenericRslDocxConverter(DocxConverter):
 
         return result
 
+    # pylint: disable-next=unused-argument
     def _add_image(self, image_file: str, caption: str, level: int) -> None:
         """Add an image to the docx file.
 

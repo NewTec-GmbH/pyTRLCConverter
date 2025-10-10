@@ -70,7 +70,7 @@ class TrlcAstWalker():
         """
         return self._on_general(expression)
 
-    # pylint: disable=line-too-long
+    # pylint: disable-next=line-too-long
     def add_dispatcher(self, type_name: type, begin: Optional[callable], process: Optional[callable], finish: Optional[callable]) -> None:
         """
         Add a dispatcher to the walker.

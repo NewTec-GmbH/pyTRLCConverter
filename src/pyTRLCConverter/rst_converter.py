@@ -489,7 +489,7 @@ class RstConverter(BaseConverter):
 
         return result
 
-    # pylint: disable=too-many-locals, unused-argument
+    # pylint: disable-next=too-many-locals, unused-argument
     def _convert_record_object(self, record: Record_Object, level: int, translation: Optional[dict]) -> Ret:
         # lobster-trace: SwRequirements.sw_req_rst_record
         """

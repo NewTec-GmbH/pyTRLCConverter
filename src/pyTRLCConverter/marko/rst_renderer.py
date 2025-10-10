@@ -35,11 +35,6 @@ if TYPE_CHECKING:
 class RSTRenderer(Renderer):
     """Renderer for reStructuredText output."""
 
-    def __init__(self) -> None:
-        """Constructs the reStructuredText renderer.
-        """
-        super().__init__()
-
     def render_paragraph(self, element: block.Paragraph) -> str:
         """
         Renders a paragraph element.
@@ -143,6 +138,7 @@ class RSTRenderer(Renderer):
 
         return "::\n\n    " + "\n    ".join(body.splitlines()) + "\n\n"
 
+    # pylint: disable-next=unused-argument
     def render_thematic_break(self, element: block.ThematicBreak) -> str:
         """
         Renders a thematic break (horizontal rule) element.
@@ -189,6 +185,7 @@ class RSTRenderer(Renderer):
         """
         return self.render_heading(cast("block.Heading", element))
 
+    # pylint: disable-next=unused-argument
     def render_blank_line(self, element: block.BlankLine) -> str:
         """
         Renders a blank line element.
@@ -201,6 +198,7 @@ class RSTRenderer(Renderer):
         """
         return "\n"
 
+    # pylint: disable-next=unused-argument
     def render_link_ref_def(self, element: block.LinkRefDef) -> str:
         """
         Renders a link reference definition element.
@@ -280,7 +278,7 @@ class RSTRenderer(Renderer):
         body = self.render_children(element)
         url = element.dest
         title = f" ({element.title})" if element.title else ""
-    
+
         return f"`{body} <{url}>`_{title}"
 
     def render_auto_link(self, element: inline.AutoLink) -> str:
@@ -336,6 +334,7 @@ class RSTRenderer(Renderer):
         """
         return f"{element.children}"
 
+    # pylint: disable-next=unused-argument
     def render_line_break(self, element: inline.LineBreak) -> str:
         """
         Renders a line break element.
