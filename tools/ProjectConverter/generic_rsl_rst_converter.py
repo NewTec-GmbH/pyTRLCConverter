@@ -61,7 +61,10 @@ class GenericRslRstConverter(RstConverter):
 
         self._write_empty_line_on_demand()
 
-        rst_info = self._render(info, "description", self._get_attribute(info, "description"))
+        rst_info = self._render(info.n_package.name,
+                                info.n_typ.name,
+                                "description",
+                                self._get_attribute(info, "description"))
 
         self._fd.write(rst_info)
         self._fd.write("\n")

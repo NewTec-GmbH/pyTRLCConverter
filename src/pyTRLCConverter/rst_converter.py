@@ -23,7 +23,7 @@
 import os
 from typing import List, Optional, Any
 from marko import Markdown
-from trlc.ast import Implicit_Null, Record_Object, Record_Reference
+from trlc.ast import Implicit_Null, Record_Object, Record_Reference, String_Literal
 from pyTRLCConverter.base_converter import BaseConverter
 from pyTRLCConverter.ret import Ret
 from pyTRLCConverter.trlc_helper import TrlcAstWalker
@@ -71,6 +71,10 @@ class RstConverter(BaseConverter):
         # But all following parts (heading, table, paragraph, image, etc.) shall have an empty line before.
         # And at the document bottom, there shall be just one empty line.
         self._empty_line_required = False
+
+        # The AST walker meta data for processing the record object fields.
+        # This will hold the information about the current package, type and attribute being processed.
+        self._ast_meta_data = None
 
     @staticmethod
     def get_subcommand() -> str:
@@ -377,7 +381,7 @@ class RstConverter(BaseConverter):
         Process the given implicit null value.
         
         Returns:
-            str: The implicit null value
+            str: The implicit null value.
         """
         return self.rst_escape(self._empty_attribute_value)
 
@@ -393,6 +397,27 @@ class RstConverter(BaseConverter):
             str: reStructuredText link to the record reference.
         """
         return self._create_rst_link_from_record_object_reference(record_reference)
+
+    def _on_string_literal(self, string_literal: String_Literal) -> str:
+        """
+        Process the given string literal value.
+
+        Args:
+            string_literal (String_Literal): The string literal value.
+        
+        Returns:
+            str: The string literal value.
+        """
+        result = string_literal.to_string()
+
+        if self._ast_meta_data is not None:
+            package_name = self._ast_meta_data.get("package_name", "")
+            type_name = self._ast_meta_data.get("type_name", "")
+            attribute_name = self._ast_meta_data.get("attribute_name", "")
+
+            result = self._render(package_name, type_name, attribute_name, result)
+
+        return result
 
     def _create_rst_link_from_record_object_reference(self, record_reference: Record_Reference) -> str:
         # lobster-trace: SwRequirements.sw_req_rst_link
@@ -455,17 +480,24 @@ class RstConverter(BaseConverter):
             self._on_record_reference,
             None
         )
+        trlc_ast_walker.add_dispatcher(
+            String_Literal,
+            None,
+            self._on_string_literal,
+            None
+        )
         trlc_ast_walker.set_other_dispatcher(
-            lambda expression: str(expression.to_python_object())
+            lambda expression: self.rst_escape(str(expression.to_python_object()))
         )
 
         return trlc_ast_walker
 
-    def _render(self, record: Record_Object, attribute_name: str, attribute_value: str) -> str:
+    def _render(self, package_name: str, type_name: str, attribute_name: str, attribute_value: str) -> str:
         """Render the attribute value depened on its format.
 
         Args:
-            record (Record_Object): The record object.
+            package_name (str): The package name.
+            type_name (str): The type name.
             attribute_name (str): The attribute name.
             attribute_value (str): The attribute value.
 
@@ -475,10 +507,10 @@ class RstConverter(BaseConverter):
         result = attribute_value
 
         # If the attribute value is not already in reStructuredText format, it will be escaped.
-        if self._render_cfg.is_format_rst(record.n_package.name, record.n_typ.name, attribute_name) is False:
+        if self._render_cfg.is_format_rst(package_name, type_name, attribute_name) is False:
 
             # Is it Markdown format?
-            if self._render_cfg.is_format_md(record.n_package.name, record.n_typ.name, attribute_name) is True:
+            if self._render_cfg.is_format_md(package_name, type_name, attribute_name) is True:
                 # Convert Markdown to reStructuredText.
                 markdown = Markdown(renderer=RSTRenderer)
                 result = markdown.convert(attribute_value)
@@ -528,13 +560,24 @@ class RstConverter(BaseConverter):
             attribute_name = self.rst_escape(attribute_name)
 
             # Retrieve the attribute value by processing the field value.
+            # The result will be a string representation of the value.
+            # If the value is an array of record references, the result will be a Markdown list of links.
+            # If the value is a single record reference, the result will be a Markdown link.
+            # If the value is a string literal, the result will be the string literal value that considers
+            # its formatting.
+            # Otherwise the result will be the attribute value in a proper format.
+            self._ast_meta_data = {
+                "package_name": record.n_package.name,
+                "type_name": record.n_typ.name,
+                "attribute_name": name
+            }
             walker_result = trlc_ast_walker.walk(value)
 
             attribute_value = ""
             if isinstance(walker_result, list):
                 attribute_value = self.rst_create_list(walker_result, False)
             else:
-                attribute_value = self._render(record, name, walker_result)
+                attribute_value = walker_result
 
             rows.append([attribute_name, attribute_value])
 

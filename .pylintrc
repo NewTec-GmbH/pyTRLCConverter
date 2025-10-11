@@ -42,4 +42,4 @@ ignore-long-lines=(?x)(
 [SIMILARITIES]
 # Minimum lines number of a similarity.
 # Some of the converters use similar code and further breakdown will decrease the readability.
-min-similarity-lines=14
+min-similarity-lines=20

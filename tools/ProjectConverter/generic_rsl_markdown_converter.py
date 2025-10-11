@@ -61,7 +61,10 @@ class GenericRslMarkdownConverter(MarkdownConverter):
 
         self._write_empty_line_on_demand()
 
-        markdown_info = self._render(info, "description", self._get_attribute(info, "description"))
+        markdown_info = self._render(info.n_package.name,
+                                     info.n_typ.name,
+                                     "description",
+                                     self._get_attribute(info, "description"))
 
         self._fd.write(markdown_info)
         self._fd.write("\n")
