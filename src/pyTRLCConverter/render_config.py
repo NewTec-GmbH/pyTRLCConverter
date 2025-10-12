@@ -31,6 +31,7 @@ from pyTRLCConverter.logger import log_verbose
 
 
 class RenderConfig():
+    # lobster-trace: SwRequirements.sw_req_render_configuration
     """Render configuration provider.
     """
 

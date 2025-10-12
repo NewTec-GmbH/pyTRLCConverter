@@ -30,6 +30,12 @@ section "pyTRLCConverter" {
                 note = "Some attribute names may contain underscores or other special characters. These shall be translated to a humand readable names."
             }
 
+            SwReq sw_req_render_configuration {
+                description = "The software shall support to specify the format of a string literal via a render configuration in JSON format."
+                verification_criteria = "Verify by converting one or more TRLC files with a render configuration file."
+                valid_status = AbstractRequirements.VALID_STATUS.valid
+            }
+
             SwReq sw_req_prj_spec {
                 description = "The software shall support project specific adaptions for the conversion."
                 verification_criteria = "Verify by converting one or more TRLC files with a project specific conversion file."
@@ -135,6 +141,12 @@ section "pyTRLCConverter" {
                 verification_criteria = "Verify by calling the software with the argument '--translation' and check if the output is written to the specified directory."
                 valid_status = AbstractRequirements.VALID_STATUS.valid
             }
+
+            SwReq sw_req_cli_render_cfg {
+                description = "The software shall support the command line argument '-rc' and '--renderCfg' to specify the render configuration JSON file."
+                verification_criteria = "Verify by calling the software with the argument '--renderCfg' and check if e.g. Markdown is rendered correctly for string literals."
+                valid_status = AbstractRequirements.VALID_STATUS.valid
+            }
         }
 
         section "Markdown" {
@@ -157,8 +169,14 @@ section "pyTRLCConverter" {
             }
 
             SwReq sw_req_markdown_escape {
-                description = "The software shall escape all strings according the Markdown format."
+                description = "The software shall escape strings according the Markdown format."
                 verification_criteria = "Verify by using strings with characters, which needs escaping."
+                valid_status = AbstractRequirements.VALID_STATUS.valid
+            }
+
+            SwReq sw_req_markdown_string_format {
+                description = "The software shall not escape strings that are already in Markdown format."
+                verification_criteria = "Verify by using strings in Markdown format, which needs no escaping."
                 valid_status = AbstractRequirements.VALID_STATUS.valid
             }
 
@@ -285,6 +303,18 @@ section "pyTRLCConverter" {
             SwReq sw_req_rst_escape {
                 description = "The software shall escape all strings according the reStructuredText format."
                 verification_criteria = "Verify by using strings with characters, which needs escaping."
+                valid_status = AbstractRequirements.VALID_STATUS.valid
+            }
+
+            SwReq sw_req_rst_string_format {
+                description = "The software shall not escape strings that are already in reStructuredText format."
+                verification_criteria = "Verify by using strings in reStructuredText format, which needs no escaping."
+                valid_status = AbstractRequirements.VALID_STATUS.valid
+            }
+
+            SwReq sw_req_rst_string_format_md {
+                description = "The software shall convert strings in Markdown format to reStructuredText format without escaping."
+                verification_criteria = "Verify by using strings in Markdown format, which are converted and needs no escaping."
                 valid_status = AbstractRequirements.VALID_STATUS.valid
             }
 

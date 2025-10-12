@@ -138,6 +138,7 @@ def _create_args_parser() -> argparse.ArgumentParser:
         help="Python module with project specific conversion functions."
     )
 
+    # lobster-trace: SwRequirements.sw_req_cli_render_cfg
     parser.add_argument(
         "-rc",
         "--renderCfg",
