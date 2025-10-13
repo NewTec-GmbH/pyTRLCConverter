@@ -21,7 +21,7 @@
 
 # Imports **********************************************************************
 import os
-from typing import Union, Optional
+from typing import Union, Optional, Any
 from trlc.errors import Message_Handler
 from trlc.trlc import Source_Manager
 from trlc.ast import Array_Aggregate, Expression, Record_Object
@@ -58,7 +58,7 @@ class TrlcAstWalker():
         self._dispatcher_map_finish = {}
         self._other_dispatcher = None
 
-    def walk(self, expression: Expression) -> Union[list[str],str]:
+    def walk(self, expression: Expression) -> Union[list[Any],Any]:
         """
         Walk through the TRLC AST.
 
@@ -66,7 +66,7 @@ class TrlcAstWalker():
             expression (Expression): The AST node.
 
         Returns:
-            Union[list[str],str]: The result of the walking as string or list of strings.
+            Union[list[Any],Any]: The result of the walking as string or list of strings.
         """
         return self._on_general(expression)
 
@@ -99,7 +99,7 @@ class TrlcAstWalker():
         """
         self._other_dispatcher = dispatcher
 
-    def _dispatch(self, dispatcher_map: dict, expression: Expression, handle_other: bool) -> Union[list[str],str]:
+    def _dispatch(self, dispatcher_map: dict, expression: Expression, handle_other: bool) -> Union[list[Any],Any]:
         """
         Dispatch the expression to the dispatcher map.
 
@@ -109,7 +109,7 @@ class TrlcAstWalker():
             handle_other (bool): If True, the other dispatcher is called when no dispatcher is found.
 
         Returns:
-            Union[list[str],str]: The result of the dispatcher.
+            Union[list[Any],Any]: The result of the dispatcher.
         """
         result = ""
 
@@ -122,7 +122,7 @@ class TrlcAstWalker():
 
         return result
 
-    def _on_array_aggregate(self, array_aggregate: Array_Aggregate) -> list[str]:
+    def _on_array_aggregate(self, array_aggregate: Array_Aggregate) -> list[Any]:
         """
         Handle the Array_Aggregate node.
 
@@ -130,7 +130,7 @@ class TrlcAstWalker():
             array_aggregate (Array_Aggregate): The AST node.
 
         Returns:
-            list[str]: The result of the handling.
+            list[Any]: The result of the handling.
         """
         result = []
 
@@ -148,7 +148,7 @@ class TrlcAstWalker():
 
         return result
 
-    def _on_general(self, expression: Expression) -> Union[list[str],str]:
+    def _on_general(self, expression: Expression) -> Union[list[Any],Any]:
         """
         Handle the general case.
 
@@ -164,7 +164,7 @@ class TrlcAstWalker():
 
         return result
 
-    def _on_other(self, expression: Expression) -> Union[list[str],str]:
+    def _on_other(self, expression: Expression) -> Union[list[Any],str]:
         """
         Handle the other case.
 
@@ -172,7 +172,7 @@ class TrlcAstWalker():
             expression (Expression): The AST node.
 
         Returns:
-            Union[list[str],str]: The result of the handling.
+            Union[list[Any],str]: The result of the handling.
         """
         result = ""
 
