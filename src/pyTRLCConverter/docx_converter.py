@@ -27,7 +27,7 @@ from docx.text.paragraph import Paragraph
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 from docx.enum.dml import MSO_THEME_COLOR_INDEX
-from trlc.ast import Implicit_Null, Record_Object, Record_Reference, String_Literal
+from trlc.ast import Implicit_Null, Record_Object, Record_Reference, String_Literal, Array_Aggregate, Expression
 from pyTRLCConverter.base_converter import BaseConverter
 from pyTRLCConverter.ret import Ret
 from pyTRLCConverter.trlc_helper import TrlcAstWalker
@@ -67,6 +67,10 @@ class DocxConverter(BaseConverter):
 
         # The current docx container the AST walker shall add the paragraph.
         self._container = None
+
+        # A table cell is always created with a single empty paragraph element.
+        # This flag indicates whether its the first paragraph or not.
+        self._is_first_paragraph = True
 
     @staticmethod
     def get_subcommand() -> str:
@@ -180,7 +184,13 @@ class DocxConverter(BaseConverter):
         Returns:
             Paragraph: The implicit null value as paragraph.
         """
-        return self._container.add_paragraph(self._empty_attribute_value)
+        if self._is_first_paragraph is True:
+            paragraph = self._container.text = self._empty_attribute_value
+            self._is_first_paragraph = False
+        else:
+            paragraph = self._container.add_paragraph(self._empty_attribute_value)
+
+        return paragraph
 
     def _on_record_reference(self, record_reference: Record_Reference) -> Paragraph:
         # lobster-trace: SwRequirements.sw_req_docx_record
@@ -193,7 +203,12 @@ class DocxConverter(BaseConverter):
         Returns:
             Paragraph: Paragraph with hyperlink to record reference.
         """
-        paragraph = self._container.add_paragraph()
+        if self._is_first_paragraph is True:
+            paragraph = self._container.paragraphs[0]
+            self._is_first_paragraph = False
+        else:
+            paragraph = self._container.add_paragraph()
+
         DocxConverter.docx_add_link_to_bookmark(paragraph,
                                                 record_reference.target.name,
                                                 f"{record_reference.package.name}.{record_reference.target.name}")
@@ -210,7 +225,46 @@ class DocxConverter(BaseConverter):
         Returns:
             Paragraph: Paragraph with string literal as text.
         """
-        return self._container.add_paragraph(string_literal.to_string())
+        if self._is_first_paragraph is True:
+            paragraph = self._container.text = string_literal.to_string()
+            self._is_first_paragraph = False
+        else:
+            paragraph = self._container.add_paragraph(string_literal.to_string())
+
+        return paragraph
+
+    # pylint: disable-next=unused-argument
+    def _on_array_aggregate_finish(self, array_aggregate: Array_Aggregate) -> None:
+        """
+        Handle the list by adding the style 'List Bullet' to each element.
+
+        Args:
+            array_aggregate (Array_Aggregate): The AST node.
+        """
+        assert isinstance(self._container.paragraphs, list)
+
+        for element in self._container.paragraphs:
+            assert isinstance(element, Paragraph)
+            element.style = 'List Bullet'
+
+    def _other_dispatcher(self, expression: Expression) -> Paragraph:
+        """
+        Dispatcher for all other expressions.
+
+        Args:
+            expression (Expression): The expression to process.
+
+        Returns:
+            Paragraph: Paragraph with expression as text.
+        """
+        if self._is_first_paragraph:
+            paragraph = self._container
+            paragraph.text = str(expression.to_python_object())
+            self._is_first_paragraph = False
+        else:
+            paragraph = self._container.add_paragraph(str(expression.to_python_object()))
+
+        return paragraph
 
     def _get_trlc_ast_walker(self) -> TrlcAstWalker:
         # lobster-trace: SwRequirements.sw_req_docx_record
@@ -244,9 +298,13 @@ class DocxConverter(BaseConverter):
             self._on_string_literal,
             None
         )
-        trlc_ast_walker.set_other_dispatcher(
-            lambda expression: self._container.add_paragraph(str(expression.to_python_object()))
+        trlc_ast_walker.add_dispatcher(
+            Array_Aggregate,
+            None,
+            None,
+            self._on_array_aggregate_finish
         )
+        trlc_ast_walker.set_other_dispatcher(self._other_dispatcher)
 
         return trlc_ast_walker
 
@@ -286,11 +344,8 @@ class DocxConverter(BaseConverter):
             cells[0].text = attribute_name
 
             self._container = cells[1]
-            walker_result = trlc_ast_walker.walk(value)
-
-            if isinstance(walker_result, list):
-                for element in walker_result:
-                    element.style = 'List Bullet'
+            self._is_first_paragraph = True # A cell already has one paragraph.
+            trlc_ast_walker.walk(value)
 
         # Add a paragraph with the record object location
         p = self._docx.add_paragraph()
