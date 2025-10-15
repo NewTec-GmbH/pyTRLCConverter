@@ -21,7 +21,7 @@
 
 # Imports **********************************************************************
 import os
-from typing import Optional
+from typing import Optional, Any
 import docx
 from docx.text.paragraph import Paragraph
 from docx.oxml import OxmlElement
@@ -44,7 +44,7 @@ class DocxConverter(BaseConverter):
 
     OUTPUT_FILE_NAME_DEFAULT = "output.docx"
 
-    def __init__(self, args: any) -> None:
+    def __init__(self, args: Any) -> None:
         # lobster-trace: SwRequirements.sw_req_no_prj_spec
         # lobster-trace: SwRequirements.sw_req_docx
         # lobster-trace: SwRequirements.sw_req_docx_template
@@ -52,7 +52,7 @@ class DocxConverter(BaseConverter):
         Initialize the docx converter.
 
         Args:
-            args (any): The parsed program arguments.
+            args (Any): The parsed program arguments.
         """
         super().__init__(args)
 
@@ -93,12 +93,12 @@ class DocxConverter(BaseConverter):
         return "Convert into docx format."
 
     @classmethod
-    def register(cls, args_parser: any) -> None:
+    def register(cls, args_parser: Any) -> None:
         # lobster-trace: SwRequirements.sw_req_docx
         """Register converter specific argument parser.
 
         Args:
-            args_parser (any): Argument parser
+            args_parser (Any): Argument parser
         """
         super().register(args_parser)
 
@@ -353,7 +353,7 @@ class DocxConverter(BaseConverter):
 
         return Ret.OK
 
-    @staticmethod        
+    @staticmethod
     def docx_add_bookmark(paragraph: Paragraph, bookmark_name: str) -> None:
         """
         Adds a bookmark to a paragraph.
