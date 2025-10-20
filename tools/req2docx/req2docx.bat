@@ -33,13 +33,14 @@ set SWE_REQ_OUT_FORMAT=docx
 set SWE_REQ_OUT_DIR=.\out\sw-requirements\%SWE_REQ_OUT_FORMAT%
 set SWE_REQ_CONVERTER=..\ProjectConverter\req2docx
 set TRANSLATION=..\ProjectConverter\translation.json
+set RENDER_CFG=..\ProjectConverter\renderCfg.json
 
 if not exist %SWE_REQ_OUT_DIR% (
     md %SWE_REQ_OUT_DIR%
 )
 
 echo Generate software requirements ...
-pyTRLCConverter --source=..\..\trlc\swe-req --source=..\..\trlc\model --verbose -o=%SWE_REQ_OUT_DIR% --project=%SWE_REQ_CONVERTER% --translation=%TRANSLATION% %SWE_REQ_OUT_FORMAT% --template template.docx
+pyTRLCConverter --source=..\..\trlc\swe-req --source=..\..\trlc\model --verbose -o=%SWE_REQ_OUT_DIR% --project=%SWE_REQ_CONVERTER% --translation=%TRANSLATION% --renderCfg=%RENDER_CFG% %SWE_REQ_OUT_FORMAT% --template template.docx
 
 if errorlevel 1 (
     pause

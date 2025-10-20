@@ -22,9 +22,9 @@ classifiers = [
 dependencies = [
     "toml >= 0.10.2",
     "requests >= 2.32.0",
-    "python-docx >= 1.1.2",
+    "python-docx >= 1.2.0",
     "trlc == 2.0.*",
-    "marko >= 2.2.0"
+    "marko >= 2.2.1"
 ]
 
 [project.optional-dependencies]

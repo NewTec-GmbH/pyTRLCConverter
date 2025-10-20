@@ -21,14 +21,17 @@
 
 # Imports **********************************************************************
 import os
-from typing import Optional, Any
+from typing import Optional, Any, Union, cast
 import docx
+from docx.document import Document as DocumentObject
 from docx.text.paragraph import Paragraph
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 from docx.enum.dml import MSO_THEME_COLOR_INDEX
+from marko import Markdown
 from trlc.ast import Implicit_Null, Record_Object, Record_Reference, String_Literal, Array_Aggregate, Expression
 from pyTRLCConverter.base_converter import BaseConverter
+from pyTRLCConverter.marko.docx_renderer import DocxRenderer
 from pyTRLCConverter.ret import Ret
 from pyTRLCConverter.trlc_helper import TrlcAstWalker
 from pyTRLCConverter.logger import log_verbose
@@ -40,6 +43,13 @@ from pyTRLCConverter.logger import log_verbose
 class DocxConverter(BaseConverter):
     """
     Converter to docx format.
+
+    The following Word docx objects are used:
+    - Document: Represents the entire Word document. You can create a new document or load an existing one.
+    - Paragraph: A block of text in the document. It has its own formatting properties.
+    - Run: A contiguous run of text with the same formatting. You can change the formatting of a run
+            independently within a paragraph.
+    - Table: A two-dimensional structure for presenting data in rows and columns.
     """
 
     OUTPUT_FILE_NAME_DEFAULT = "output.docx"
@@ -65,12 +75,12 @@ class DocxConverter(BaseConverter):
         if not 'Table Grid' in self._docx.styles:
             self._docx.styles.add_style('Table Grid', docx.enum.style.WD_STYLE_TYPE.TABLE, builtin=True)
 
-        # The current docx container the AST walker shall add the paragraph.
-        self._container = None
+        # The AST walker meta data for processing the record object fields.
+        # This will hold the information about the current package, type and attribute being processed.
+        self._ast_meta_data = None
 
-        # A table cell is always created with a single empty paragraph element.
-        # This flag indicates whether its the first paragraph or not.
-        self._is_first_paragraph = True
+        # Current list item indentation level.
+        self._list_item_indent_level = 0
 
     @staticmethod
     def get_subcommand() -> str:
@@ -176,23 +186,20 @@ class DocxConverter(BaseConverter):
 
         return result
 
-    def _on_implict_null(self, _: Implicit_Null) -> Paragraph:
+    def _on_implict_null(self, _: Implicit_Null) -> DocumentObject:
         # lobster-trace: SwRequirements.sw_req_docx_record
         """
         Process the given implicit null value.
         
         Returns:
-            Paragraph: The implicit null value as paragraph.
+            DocumentObject: The implicit null value as document object.
         """
-        if self._is_first_paragraph is True:
-            paragraph = self._container.text = self._empty_attribute_value
-            self._is_first_paragraph = False
-        else:
-            paragraph = self._container.add_paragraph(self._empty_attribute_value)
+        docx_document = docx.Document()
+        docx_document.add_paragraph(self._empty_attribute_value)
 
-        return paragraph
+        return docx_document
 
-    def _on_record_reference(self, record_reference: Record_Reference) -> Paragraph:
+    def _on_record_reference(self, record_reference: Record_Reference) -> DocumentObject:
         # lobster-trace: SwRequirements.sw_req_docx_record
         """
         Process the given record reference value and return a hyperlink paragraph.
@@ -201,53 +208,100 @@ class DocxConverter(BaseConverter):
             record_reference (Record_Reference): The record reference value.
         
         Returns:
-            Paragraph: Paragraph with hyperlink to record reference.
+            DocumentObject: The record reference as document object.
         """
-        if self._is_first_paragraph is True:
-            paragraph = self._container.paragraphs[0]
-            self._is_first_paragraph = False
-        else:
-            paragraph = self._container.add_paragraph()
+        docx_document = docx.Document()
+        paragraph = docx_document.add_paragraph()
 
         DocxConverter.docx_add_link_to_bookmark(paragraph,
                                                 record_reference.target.name,
                                                 f"{record_reference.package.name}.{record_reference.target.name}")
-        return paragraph
 
-    def _on_string_literal(self, string_literal: String_Literal) -> Paragraph:
+        return docx_document
+
+    def _on_string_literal(self, string_literal: String_Literal) -> DocumentObject:
         # lobster-trace: SwRequirements.sw_req_docx_string_format
         """
         Process the given string literal value.
 
         Args:
             string_literal (String_Literal): The string literal value.
-        
-        Returns:
-            Paragraph: Paragraph with string literal as text.
-        """
-        if self._is_first_paragraph is True:
-            paragraph = self._container.text = string_literal.to_string()
-            self._is_first_paragraph = False
-        else:
-            paragraph = self._container.add_paragraph(string_literal.to_string())
 
-        return paragraph
+        Returns:
+            DocumentObject: The string literal as document object.
+        """
+        docx_document = docx.Document()
+
+        is_handled = False
+
+        if self._ast_meta_data is not None:
+            package_name = self._ast_meta_data.get("package_name", "")
+            type_name = self._ast_meta_data.get("type_name", "")
+            attribute_name = self._ast_meta_data.get("attribute_name", "")
+
+            # If the attribute is marked as markdown format, convert it.
+            if self._render_cfg.is_format_md(package_name, type_name, attribute_name) is True:
+                markdown = Markdown(renderer=DocxRenderer)
+                docx_temp_document = cast(DocumentObject, markdown.convert(string_literal.to_string()))
+
+                # Transfer all paragraphs from the generated docx document to the current container.
+                for para in docx_temp_document.paragraphs:
+                    new_paragraph = docx_document.add_paragraph()
+
+                    DocxConverter.docx_copy_paragraph(para, new_paragraph)
+
+                is_handled = True
+
+        if is_handled is False:
+            docx_document.add_paragraph(string_literal.to_string())
+
+        return docx_document
 
     # pylint: disable-next=unused-argument
-    def _on_array_aggregate_finish(self, array_aggregate: Array_Aggregate) -> None:
+    def _on_array_aggregate_begin(self, array_aggregate: Array_Aggregate) -> None:
         """
-        Handle the list by adding the style 'List Bullet' to each element.
+        Handle the beginning of a list.
 
         Args:
             array_aggregate (Array_Aggregate): The AST node.
         """
-        assert isinstance(self._container.paragraphs, list)
+        self._list_item_indent_level += 1
 
-        for element in self._container.paragraphs:
-            assert isinstance(element, Paragraph)
-            element.style = 'List Bullet'
+    # pylint: disable-next=unused-argument
+    def _on_list_item(self, expression: Expression, item_result: Union[list[DocumentObject],DocumentObject]) -> Any:
+        # lobster-trace: SwRequirements.sw_req_docx_record
+        """
+        Handle the list item by adding a bullet point.
 
-    def _other_dispatcher(self, expression: Expression) -> Paragraph:
+        Args:
+            expression (Expression): The AST node.
+            item_result (Union[list[DocumentObject],DocumentObject]): The result of processing the list item.
+
+        Returns:
+            Any: The processed list item.
+        """
+        if isinstance(item_result, DocumentObject):
+            for para in item_result.paragraphs:
+                style = 'List Bullet'
+
+                if 1 < self._list_item_indent_level:
+                    style += f' {self._list_item_indent_level}'
+
+                para.style = style
+
+        return item_result
+
+    # pylint: disable-next=unused-argument
+    def _on_array_aggregate_finish(self, array_aggregate: Array_Aggregate) -> None:
+        """
+        Handle the end of a list.
+
+        Args:
+            array_aggregate (Array_Aggregate): The AST node.
+        """
+        self._list_item_indent_level -= 1
+
+    def _other_dispatcher(self, expression: Expression) -> DocumentObject:
         """
         Dispatcher for all other expressions.
 
@@ -255,16 +309,12 @@ class DocxConverter(BaseConverter):
             expression (Expression): The expression to process.
 
         Returns:
-            Paragraph: Paragraph with expression as text.
+            DocumentObject: Document object with expression as text.
         """
-        if self._is_first_paragraph:
-            paragraph = self._container
-            paragraph.text = str(expression.to_python_object())
-            self._is_first_paragraph = False
-        else:
-            paragraph = self._container.add_paragraph(str(expression.to_python_object()))
+        docx_document = docx.Document()
+        docx_document.add_paragraph(str(expression.to_python_object()))
 
-        return paragraph
+        return docx_document
 
     def _get_trlc_ast_walker(self) -> TrlcAstWalker:
         # lobster-trace: SwRequirements.sw_req_docx_record
@@ -300,11 +350,12 @@ class DocxConverter(BaseConverter):
         )
         trlc_ast_walker.add_dispatcher(
             Array_Aggregate,
-            None,
+            self._on_array_aggregate_begin,
             None,
             self._on_array_aggregate_finish
         )
         trlc_ast_walker.set_other_dispatcher(self._other_dispatcher)
+        trlc_ast_walker.set_list_item_dispatcher(self._on_list_item)
 
         return trlc_ast_walker
 
@@ -343,15 +394,69 @@ class DocxConverter(BaseConverter):
             cells = table.add_row().cells
             cells[0].text = attribute_name
 
-            self._container = cells[1]
-            self._is_first_paragraph = True # A cell already has one paragraph.
-            trlc_ast_walker.walk(value)
+            self._ast_meta_data = {
+                "package_name": record.n_package.name,
+                "type_name": record.n_typ.name,
+                "attribute_name": name
+            }
+            walker_result = trlc_ast_walker.walk(value)
+            docx_temp_docs = walker_result if isinstance(walker_result, list) else [walker_result]
+
+            # A table cell is always created with a single empty paragraph element.
+            # This flag indicates whether its the first paragraph to update or not.
+            is_first_paragraph = True
+
+            # Walk through all generated temporary docx documents and transfer their paragraphs to the table cell.
+            for docx_temp_doc in docx_temp_docs:
+                for para in docx_temp_doc.paragraphs:
+
+                    if is_first_paragraph is True:
+                        new_paragraph = cells[1].paragraphs[0]
+                        is_first_paragraph = False
+                    else:
+                        new_paragraph = cells[1].add_paragraph()
+
+                    DocxConverter.docx_copy_paragraph(para, new_paragraph)
 
         # Add a paragraph with the record object location
         p = self._docx.add_paragraph()
         p.add_run(f"from {record.location.file_name}:{record.location.line_no}").italic = True
 
         return Ret.OK
+
+    @staticmethod
+    def docx_copy_paragraph(source_paragraph: Paragraph, target_paragraph: Paragraph) -> None:
+        """
+        Copy the content and formatting from source_paragraph to target_paragraph.
+
+        Attention: This is a simplified copy function and may not cover all formatting cases.
+
+        Args:
+            source_paragraph (Paragraph): The source paragraph to copy from.
+            target_paragraph (Paragraph): The target paragraph to copy to.
+        """
+        # Copy each run (text with formatting) from the source paragraph
+        # to the target paragraph.
+        for run in source_paragraph.runs:
+            target_run = target_paragraph.add_run(run.text, run.style)
+
+            # Copy simple boolean formatting when available
+            if run.bold is not None:
+                target_run.bold = run.bold
+            if run.italic is not None:
+                target_run.italic = run.italic
+            if run.underline is not None:
+                target_run.underline = run.underline
+
+            target_run.font.name = run.font.name
+            target_run.font.size = run.font.size
+            target_run.font.color.rgb = run.font.color.rgb
+            target_run.font.color.theme_color = run.font.color.theme_color
+            target_run.font.underline = run.font.underline
+
+        # Copy style
+        if source_paragraph.style is not None:
+            target_paragraph.style = source_paragraph.style.name
 
     @staticmethod
     def docx_add_bookmark(paragraph: Paragraph, bookmark_name: str) -> None:
@@ -387,11 +492,11 @@ class DocxConverter(BaseConverter):
             bookmark_name (str): The name of the bookmark.
             link_text (str): The text to display for the hyperlink.
         """
-        hyperlink = docx.oxml.shared.OxmlElement('w:hyperlink')
-        hyperlink.set(docx.oxml.shared.qn('w:anchor'), bookmark_name)
+        hyperlink = OxmlElement('w:hyperlink')
+        hyperlink.set(qn('w:anchor'), bookmark_name)
 
-        new_run = docx.oxml.shared.OxmlElement('w:r')
-        run_properties = docx.oxml.shared.OxmlElement('w:rPr')
+        new_run = OxmlElement('w:r')
+        run_properties = OxmlElement('w:rPr')
         new_run.append(run_properties)
         new_run.text = link_text
         hyperlink.append(new_run)

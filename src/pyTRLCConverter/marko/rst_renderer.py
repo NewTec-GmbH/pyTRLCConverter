@@ -1,4 +1,4 @@
-"""reStructuredText Renderer for Marko.
+"""reStructuredText renderer for Marko.
 
     Author: Andreas Merkle (andreas.merkle@newtec.de)
 """
