@@ -21,13 +21,12 @@
 
 # Imports **********************************************************************
 import os
-from typing import Optional, Any, Union, cast
+from typing import Optional, Any
 import docx
-from docx.document import Document as DocumentObject
+from docx.blkcntnr import BlockItemContainer
 from docx.text.paragraph import Paragraph
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
-from docx.enum.dml import MSO_THEME_COLOR_INDEX
 from marko import Markdown
 from trlc.ast import Implicit_Null, Record_Object, Record_Reference, String_Literal, Array_Aggregate, Expression
 from pyTRLCConverter.base_converter import BaseConverter
@@ -81,6 +80,9 @@ class DocxConverter(BaseConverter):
 
         # Current list item indentation level.
         self._list_item_indent_level = 0
+
+        # Docx block item container to add content to during conversion and markdown rendering.
+        self._block_item_container: Optional[BlockItemContainer] = None
 
     @staticmethod
     def get_subcommand() -> str:
@@ -186,51 +188,38 @@ class DocxConverter(BaseConverter):
 
         return result
 
-    def _on_implict_null(self, _: Implicit_Null) -> DocumentObject:
+    def _on_implict_null(self, _: Implicit_Null) -> None:
         # lobster-trace: SwRequirements.sw_req_docx_record
         """
-        Process the given implicit null value.
-        
-        Returns:
-            DocumentObject: The implicit null value as document object.
+        Process the given implicit null value.        
         """
-        docx_document = docx.Document()
-        docx_document.add_paragraph(self._empty_attribute_value)
+        assert self._block_item_container is not None
+        self._block_item_container.add_paragraph(self._empty_attribute_value)
 
-        return docx_document
-
-    def _on_record_reference(self, record_reference: Record_Reference) -> DocumentObject:
+    def _on_record_reference(self, record_reference: Record_Reference) -> None:
         # lobster-trace: SwRequirements.sw_req_docx_record
         """
         Process the given record reference value and return a hyperlink paragraph.
 
         Args:
-            record_reference (Record_Reference): The record reference value.
-        
-        Returns:
-            DocumentObject: The record reference as document object.
+            record_reference (Record_Reference): The record reference value.        
         """
-        docx_document = docx.Document()
-        paragraph = docx_document.add_paragraph()
+        assert self._block_item_container is not None
+        paragraph = self._block_item_container.add_paragraph()
 
         DocxConverter.docx_add_link_to_bookmark(paragraph,
                                                 record_reference.target.name,
                                                 f"{record_reference.package.name}.{record_reference.target.name}")
 
-        return docx_document
-
-    def _on_string_literal(self, string_literal: String_Literal) -> DocumentObject:
+    def _on_string_literal(self, string_literal: String_Literal) -> None:
         # lobster-trace: SwRequirements.sw_req_docx_string_format
         """
         Process the given string literal value.
 
         Args:
             string_literal (String_Literal): The string literal value.
-
-        Returns:
-            DocumentObject: The string literal as document object.
         """
-        docx_document = docx.Document()
+        assert self._block_item_container is not None
 
         is_handled = False
 
@@ -241,21 +230,14 @@ class DocxConverter(BaseConverter):
 
             # If the attribute is marked as markdown format, convert it.
             if self._render_cfg.is_format_md(package_name, type_name, attribute_name) is True:
+                DocxRenderer.block_item_container = self._block_item_container
                 markdown = Markdown(renderer=DocxRenderer)
-                docx_temp_document = cast(DocumentObject, markdown.convert(string_literal.to_string()))
-
-                # Transfer all paragraphs from the generated docx document to the current container.
-                for para in docx_temp_document.paragraphs:
-                    new_paragraph = docx_document.add_paragraph()
-
-                    DocxConverter.docx_copy_paragraph(para, new_paragraph)
+                markdown.convert(string_literal.to_string())
 
                 is_handled = True
 
         if is_handled is False:
-            docx_document.add_paragraph(string_literal.to_string())
-
-        return docx_document
+            self._block_item_container.add_paragraph(string_literal.to_string())
 
     # pylint: disable-next=unused-argument
     def _on_array_aggregate_begin(self, array_aggregate: Array_Aggregate) -> None:
@@ -268,7 +250,7 @@ class DocxConverter(BaseConverter):
         self._list_item_indent_level += 1
 
     # pylint: disable-next=unused-argument
-    def _on_list_item(self, expression: Expression, item_result: Union[list[DocumentObject],DocumentObject]) -> Any:
+    def _on_list_item(self, expression: Expression, item_result: Any) -> Any:
         # lobster-trace: SwRequirements.sw_req_docx_record
         """
         Handle the list item by adding a bullet point.
@@ -280,14 +262,17 @@ class DocxConverter(BaseConverter):
         Returns:
             Any: The processed list item.
         """
-        if isinstance(item_result, DocumentObject):
-            for para in item_result.paragraphs:
-                style = 'List Bullet'
+        assert self._block_item_container is not None
 
-                if 1 < self._list_item_indent_level:
-                    style += f' {self._list_item_indent_level}'
+        # Add list item style to last added paragraph.
+        last_paragraph = self._block_item_container.paragraphs[-1]
 
-                para.style = style
+        style = 'List Bullet'
+
+        if 1 < self._list_item_indent_level:
+            style += f' {self._list_item_indent_level}'
+
+        last_paragraph.style = style
 
         return item_result
 
@@ -301,20 +286,15 @@ class DocxConverter(BaseConverter):
         """
         self._list_item_indent_level -= 1
 
-    def _other_dispatcher(self, expression: Expression) -> DocumentObject:
+    def _other_dispatcher(self, expression: Expression) -> None:
         """
         Dispatcher for all other expressions.
 
         Args:
             expression (Expression): The expression to process.
-
-        Returns:
-            DocumentObject: Document object with expression as text.
         """
-        docx_document = docx.Document()
-        docx_document.add_paragraph(str(expression.to_python_object()))
-
-        return docx_document
+        assert self._block_item_container is not None
+        self._block_item_container.add_paragraph(expression.to_string())
 
     def _get_trlc_ast_walker(self) -> TrlcAstWalker:
         # lobster-trace: SwRequirements.sw_req_docx_record
@@ -399,64 +379,23 @@ class DocxConverter(BaseConverter):
                 "type_name": record.n_typ.name,
                 "attribute_name": name
             }
-            walker_result = trlc_ast_walker.walk(value)
-            docx_temp_docs = walker_result if isinstance(walker_result, list) else [walker_result]
+            self._block_item_container = cells[1]
+            trlc_ast_walker.walk(value)
 
-            # A table cell is always created with a single empty paragraph element.
-            # This flag indicates whether its the first paragraph to update or not.
-            is_first_paragraph = True
+            # Remove first empty paragraph added by default to the table cell.
+            if 1 < len(cells[1].paragraphs):
+                first_paragraph = cells[1].paragraphs[0]
 
-            # Walk through all generated temporary docx documents and transfer their paragraphs to the table cell.
-            for docx_temp_doc in docx_temp_docs:
-                for para in docx_temp_doc.paragraphs:
-
-                    if is_first_paragraph is True:
-                        new_paragraph = cells[1].paragraphs[0]
-                        is_first_paragraph = False
-                    else:
-                        new_paragraph = cells[1].add_paragraph()
-
-                    DocxConverter.docx_copy_paragraph(para, new_paragraph)
+                if first_paragraph.text == "":
+                    p_element = first_paragraph._element # pylint: disable=protected-access
+                    p_element.getparent().remove(p_element)
+                    p_element._p = p_element._element = None # pylint: disable=protected-access
 
         # Add a paragraph with the record object location
-        p = self._docx.add_paragraph()
-        p.add_run(f"from {record.location.file_name}:{record.location.line_no}").italic = True
+        paragraph = self._docx.add_paragraph()
+        paragraph.add_run(f"from {record.location.file_name}:{record.location.line_no}").italic = True
 
         return Ret.OK
-
-    @staticmethod
-    def docx_copy_paragraph(source_paragraph: Paragraph, target_paragraph: Paragraph) -> None:
-        """
-        Copy the content and formatting from source_paragraph to target_paragraph.
-
-        Attention: This is a simplified copy function and may not cover all formatting cases.
-
-        Args:
-            source_paragraph (Paragraph): The source paragraph to copy from.
-            target_paragraph (Paragraph): The target paragraph to copy to.
-        """
-        # Copy each run (text with formatting) from the source paragraph
-        # to the target paragraph.
-        for run in source_paragraph.runs:
-            target_run = target_paragraph.add_run(run.text, run.style)
-
-            # Copy simple boolean formatting when available
-            if run.bold is not None:
-                target_run.bold = run.bold
-            if run.italic is not None:
-                target_run.italic = run.italic
-            if run.underline is not None:
-                target_run.underline = run.underline
-
-            target_run.font.name = run.font.name
-            target_run.font.size = run.font.size
-            target_run.font.color.rgb = run.font.color.rgb
-            target_run.font.color.theme_color = run.font.color.theme_color
-            target_run.font.underline = run.font.underline
-
-        # Copy style
-        if source_paragraph.style is not None:
-            target_paragraph.style = source_paragraph.style.name
 
     @staticmethod
     def docx_add_bookmark(paragraph: Paragraph, bookmark_name: str) -> None:
@@ -469,16 +408,16 @@ class DocxConverter(BaseConverter):
         """
         element = paragraph._p # pylint: disable=protected-access
 
-        # Create a bookmark start element
+        # Create a bookmark start element.
         bookmark_start = OxmlElement('w:bookmarkStart')
         bookmark_start.set(qn('w:id'), '0')  # ID must be unique
         bookmark_start.set(qn('w:name'), bookmark_name)
 
-        # Create a bookmark end element
+        # Create a bookmark end element.
         bookmark_end = OxmlElement('w:bookmarkEnd')
         bookmark_end.set(qn('w:id'), '0')
 
-        # Add the bookmark to the paragraph
+        # Add the bookmark to the paragraph.
         element.insert(0, bookmark_start)
         element.append(bookmark_end)
 
@@ -492,20 +431,30 @@ class DocxConverter(BaseConverter):
             bookmark_name (str): The name of the bookmark.
             link_text (str): The text to display for the hyperlink.
         """
+        # Create hyperlink element pointing to the bookmark.
         hyperlink = OxmlElement('w:hyperlink')
         hyperlink.set(qn('w:anchor'), bookmark_name)
 
+        # Create a run and run properties for the hyperlink.
         new_run = OxmlElement('w:r')
         run_properties = OxmlElement('w:rPr')
+
+        # Use the built-in Hyperlink run style so Word will display it correctly (blue/underline).
+        r_style = OxmlElement('w:rStyle')
+        r_style.set(qn('w:val'), 'Hyperlink')
+        run_properties.append(r_style)
+
         new_run.append(run_properties)
-        new_run.text = link_text
+
+        # Add the text node inside the run (w:t).
+        text_element = OxmlElement('w:t')
+        text_element.text = link_text
+        new_run.append(text_element)
+
         hyperlink.append(new_run)
 
-        run = paragraph.add_run()
-        run._r.append (hyperlink) # pylint: disable=protected-access
-        run.font.name = "Calibri"
-        run.font.color.theme_color = MSO_THEME_COLOR_INDEX.HYPERLINK
-        run.font.underline = True
+        # Append the hyperlink element directly to the paragraph XML so Word renders it.
+        paragraph._p.append(hyperlink)  # pylint: disable=protected-access
 
 # Functions ********************************************************************
 

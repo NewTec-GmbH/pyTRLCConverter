@@ -22,7 +22,7 @@
 # Imports **********************************************************************
 import os
 from typing import List, Optional, Any
-from trlc.ast import Implicit_Null, Record_Object, Record_Reference, String_Literal
+from trlc.ast import Implicit_Null, Record_Object, Record_Reference, String_Literal, Expression
 from pyTRLCConverter.base_converter import BaseConverter
 from pyTRLCConverter.ret import Ret
 from pyTRLCConverter.trlc_helper import TrlcAstWalker
@@ -477,6 +477,18 @@ class MarkdownConverter(BaseConverter):
 
         return MarkdownConverter.markdown_create_link(str(record_reference.to_python_object()), anchor_tag)
 
+    def _other_dispatcher(self, expression: Expression) -> str:
+        """
+        Dispatcher for all other expressions.
+
+        Args:
+            expression (Expression): The expression to process.
+
+        Returns:
+            str: The processed expression.
+        """
+        return self.markdown_escape(expression.to_string())
+
     def _get_trlc_ast_walker(self) -> TrlcAstWalker:
         # lobster-trace: SwRequirements.sw_req_markdown_record
         # lobster-trace: SwRequirements.sw_req_markdown_escape
@@ -510,9 +522,7 @@ class MarkdownConverter(BaseConverter):
             self._on_string_literal,
             None
         )
-        trlc_ast_walker.set_other_dispatcher(
-            lambda expression: self.markdown_escape(str(expression.to_python_object()))
-        )
+        trlc_ast_walker.set_other_dispatcher(self._other_dispatcher)
 
         return trlc_ast_walker
 

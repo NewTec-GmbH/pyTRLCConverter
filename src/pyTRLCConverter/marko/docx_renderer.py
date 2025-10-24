@@ -22,30 +22,55 @@
 # Imports **********************************************************************
 
 from __future__ import annotations
-from typing import TYPE_CHECKING, Any, cast
+from typing import TYPE_CHECKING, Any, cast, Optional
 from marko import Renderer
-import docx
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
-from docx.document import Document as DocxDocument
+from docx.blkcntnr import BlockItemContainer
 
 if TYPE_CHECKING:
     from . import block, inline
-    from .element import Element
-    from .block import Document
 
 # Variables ********************************************************************
 
 # Classes **********************************************************************
 
+class Singleton(type):
+    """Singleton metaclass to ensure only one instance of a class exists."""
+    _instances = {}
+
+    def __call__(cls, *args, **kwargs):
+        """
+        Returns the singleton instance of the class.
+
+        Returns:
+            instance (cls): The singleton instance of the class.
+        """
+
+        if cls not in cls._instances:
+            cls._instances[cls] = super(Singleton, cls).__call__(*args, **kwargs)
+
+        return cls._instances[cls]
+
 # pylint: disable-next=too-many-public-methods
-class DocxRenderer(Renderer):
+class DocxRenderer(Renderer, metaclass=Singleton):
     """Renderer for docx output."""
+
+    # Docx block item container to add content to.
+    block_item_container: Optional[BlockItemContainer] = None
 
     def __init__(self) -> None:
         """Initialize docx renderer."""
         super().__init__()
         self._list_indent_level = 0
+        self._is_italic = False
+        self._is_bold = False
+        self._is_underline = False
+        self._is_heading = False
+        self._heading_level = 0
+        self._is_list_item = False
+        self._list_style = []
+        self._is_quote = False
 
     def render_children(self, element: Any) -> Any:
         """
@@ -58,42 +83,30 @@ class DocxRenderer(Renderer):
         Returns:
             DocxDocument: The rendered children as a docx document.
         """
-        docx_document = docx.Document()
-
         for child in element.children:
-            docx_child_document = self.render(child)
+            self.render(child)
 
-            # Copy paragraphs from the child document to the main document.
-            # This is a simple way to merge documents and includes text and basic formatting.
-            for para in docx_child_document.paragraphs:
-                docx_document._body._element.append(para._element) # pylint: disable=protected-access
+        return None
 
-        return docx_document
-
-    def render_paragraph(self, element: block.Paragraph) -> DocxDocument:
+    def render_paragraph(self, element: block.Paragraph) -> None:
         """
         Renders a paragraph element.
 
         Args:
             element (block.Paragraph): The paragraph element to render.
-
-        Returns:
-            DocxDocument: The rendered paragraph as a docx document.
         """
-        return self.render_children(element)
+        self.render_children(element)
 
-    def render_list(self, element: block.List) -> DocxDocument:
+    def render_list(self, element: block.List) -> None:
         """
         Renders a list (ordered or unordered) element.
 
         Args:
             element (block.List): The list element to render.
-
-        Returns:
-            DocxDocument: The rendered list as a docx document.
         """
-        docx_document = docx.Document()
+        assert self.block_item_container is not None
 
+        self._is_list_item = True
         self._list_indent_level += 1
 
         style = "List Number" if element.ordered else "List Bullet"
@@ -101,116 +114,72 @@ class DocxRenderer(Renderer):
         if self._list_indent_level > 1:
             style += f" {self._list_indent_level}"
 
+        self._list_style.append(style)
+
         for child in element.children:
-            docx_child_document = self.render_list_item(child)
+            self.render_children(child)
 
-            # Copy paragraphs from the child document to the main document.
-            # This is a simple way to merge documents and includes text and basic formatting.
-            for para in docx_child_document.paragraphs:
-
-                # Add style to paragraph if not already set.
-                # This avoids overwriting existing styles in nested lists.
-                # Only set style if paragraph doesn't have an explicit style name
-                current_style = getattr(para, "style", None)
-                style_name = getattr(current_style, "name", None) if current_style else None
-                if not style_name or style_name == 'Normal':
-                    para.style = style
-
-                docx_document._body._element.append(para._element) # pylint: disable=protected-access
+        self._list_style.pop()
 
         self._list_indent_level -= 1
 
-        return docx_document
+        if self._list_indent_level == 0:
+            self._is_list_item = False
 
-    def render_list_item(self, element: block.ListItem) -> DocxDocument:
-        """
-        Renders a list item element.
-
-        Args:
-            element (block.ListItem): The list item element to render.
-            marker (str, optional): The marker to use for the list item. Defaults to "*".
-
-        Returns:
-            DocxDocument: The rendered list item as a docx document.
-        """
-        return self.render_children(element)
-
-    def render_quote(self, element: block.Quote) -> DocxDocument:
+    def render_quote(self, element: block.Quote) -> None:
         """
         Renders a blockquote element.
 
         Args:
             element (block.Quote): The blockquote element to render.
-
-        Returns:
-            DocxDocument: The rendered blockquote as a docx document.
         """
-        # For simplicity, render blockquote content as normal content.
-        return self.render_children(element)
+        self._is_quote = True
+        self.render_children(element)
+        self._is_quote = False
 
-    def render_fenced_code(self, element: block.FencedCode) -> DocxDocument:
+    def render_fenced_code(self, element: block.FencedCode) -> None:
         """
         Renders a fenced code block element.
 
         Args:
             element (block.FencedCode): The fenced code block element to render.
-
-        Returns:
-            DocxDocument: The rendered fenced code block as a docx document.
         """
-        lang = getattr(element, 'lang', "")
-        code = element.children
+        assert self.block_item_container is not None
 
-        docx_document = docx.Document()
-        para = docx_document.add_paragraph()
-        run = para.add_run(code)
+        paragraph = self.block_item_container.add_paragraph()
+        run = paragraph.add_run(element.children[0].children)
         run.font.name = "Consolas"
-        para.style = "Code" if "Code" in [s.name for s in docx_document.styles] else para.style
 
-        # Optionally, add language as a comment or prefix
-        if lang:
-            para.insert_paragraph_before(f"[{lang}]")
-
-        return docx_document
-
-    def render_code_block(self, element: block.CodeBlock) -> DocxDocument:
+    def render_code_block(self, element: block.CodeBlock) -> None:
         """
         Renders a code block element.
 
         Args:
             element (block.CodeBlock): The code block element to render.
-
-        Returns:
-            DocxDocument: The rendered code block as a docx document.
         """
-        return self.render_fenced_code(cast("block.FencedCode", element))
+        self.render_fenced_code(cast("block.FencedCode", element))
 
-    def render_html_block(self, element: block.HTMLBlock) -> DocxDocument:
+    def render_html_block(self, element: block.HTMLBlock) -> None:
         """
         Renders a raw HTML block element.
 
         Args:
             element (block.HTMLBlock): The HTML block element to render.
-
-        Returns:
-            DocxDocument: The rendered HTML block as a docx document.
         """
-        return self.render_fenced_code(cast("block.FencedCode", element))
+        self.render_fenced_code(cast("block.FencedCode", element))
 
     # pylint: disable-next=unused-argument
-    def render_thematic_break(self, element: block.ThematicBreak) -> DocxDocument:
+    def render_thematic_break(self, element: block.ThematicBreak) -> None:
         """
         Renders a thematic break (horizontal rule) element.
 
         Args:
             element (block.ThematicBreak): The thematic break element to render.
-
-        Returns:
-            DocxDocument: The rendered thematic break as a docx document.
         """
-        docx_document = docx.Document()
+        assert self.block_item_container is not None
+
         # Add a horizontal rule by inserting a paragraph with a bottom border
-        para = docx_document.add_paragraph()
+        para = self.block_item_container.add_paragraph()
         p = para._element # pylint: disable=protected-access
 
         paragraph_properties = p.get_or_add_pPr()
@@ -223,170 +192,149 @@ class DocxRenderer(Renderer):
         p_bdr.append(bottom)
         paragraph_properties.append(p_bdr)
 
-        return docx_document
-
-    def render_heading(self, element: block.Heading) -> DocxDocument:
+    def render_heading(self, element: block.Heading) -> None:
         """
         Renders a heading element.
 
         Args:
             element (block.Heading): The heading element to render.
-
-        Returns:
-            DocxDocument: The rendered heading as a docx document.
         """
-        docx_document = docx.Document()
+        assert self.block_item_container is not None
 
-        level = min(max(element.level, 1), 9)  # docx supports levels 1-9
-        heading = docx_document.add_heading(level=level)
-        heading.add_run(self.render_children(element).text)
+        self._is_heading = True
+        self._heading_level = min(max(element.level, 1), 9)  # docx supports levels 1-9
 
-        return docx_document
+        self.render_children(element)
 
-    def render_setext_heading(self, element: block.SetextHeading) -> DocxDocument:
+        self._is_heading = False
+        self._heading_level = 0
+
+    def render_setext_heading(self, element: block.SetextHeading) -> None:
         """
         Renders a setext heading element.
 
         Args:
             element (block.SetextHeading): The setext heading element to render.
-
-        Returns:
-            DocxDocument: The rendered setext heading as a docx document.
         """
-        return self.render_heading(cast("block.Heading", element))
+        self.render_heading(cast("block.Heading", element))
 
     # pylint: disable-next=unused-argument
-    def render_blank_line(self, element: block.BlankLine) -> DocxDocument:
+    def render_blank_line(self, element: block.BlankLine) -> None:
         """
         Renders a blank line element.
 
         Args:
             element (block.BlankLine): The blank line element to render.
-
-        Returns:
-            DocxDocument: The rendered blank line as a docx.Document.
         """
-        docx_document = docx.Document()
-        docx_document.add_paragraph()
-        return docx_document
+        assert self.block_item_container is not None
+
+        paragraph = self.block_item_container.add_paragraph()
+        run = paragraph.add_run("")
+        run.bold = self._is_bold
+        run.italic = self._is_italic
+        run.underline = self._is_underline
+
+        if self._is_heading is True:
+            paragraph.style = f"Heading {self._heading_level}"
+        elif self._is_list_item:
+            paragraph.style = self._list_style[-1]
 
     # pylint: disable-next=unused-argument
-    def render_link_ref_def(self, element: block.LinkRefDef) -> DocxDocument:
+    def render_link_ref_def(self, element: block.LinkRefDef) -> None:
         """
         Renders a link reference definition element.
 
         Args:
             element (block.LinkRefDef): The link reference definition element to render.
-
-        Returns:
-            DocxDocument: The rendered link reference definition as a docx.Document.
         """
         # reStructuredText uses reference links differently; skip for now.
-        return docx.Document()
 
-    def render_emphasis(self, element: inline.Emphasis) -> DocxDocument:
+    def render_emphasis(self, element: inline.Emphasis) -> None:
         """
         Renders an emphasis (italic) element.
 
         Args:
             element (inline.Emphasis): The emphasis element to render.
-
-        Returns:
-            DocxDocument: The rendered emphasis as a docx document.
         """
-        docx_document = docx.Document()
-        children = self.render_children(element)
+        assert self.block_item_container is not None
 
-        for para in children.paragraphs:
-            run = para.add_run()
-            run.italic = True
-            run.add_text(para.text)
+        self._is_italic = True
 
-        return docx_document
+        self.render_children(element)
 
-    def render_strong_emphasis(self, element: inline.StrongEmphasis) -> DocxDocument:
+        self._is_italic = False
+
+    def render_strong_emphasis(self, element: inline.StrongEmphasis) -> None:
         """
         Renders a strong emphasis (bold) element.
 
         Args:
             element (inline.StrongEmphasis): The strong emphasis element to render.
-
-        Returns:
-            DocxDocument: The rendered strong emphasis as a docx document.
         """
-        docx_document = docx.Document()
-        children = self.render_children(element)
+        assert self.block_item_container is not None
 
-        for para in children.paragraphs:
-            run = para.add_run()
-            run.bold = True
-            run.add_text(para.text)
+        self._is_bold = True
 
-        return docx_document
+        self.render_children(element)
 
-    def render_inline_html(self, element: inline.InlineHTML) -> DocxDocument:
+        self._is_bold = False
+
+    def render_inline_html(self, element: inline.InlineHTML) -> None:
         """
         Renders an inline HTML element.
 
         Args:
             element (inline.InlineHTML): The inline HTML element to render.
-
-        Returns:
-            DocxDocument: The rendered inline HTML as a docx document.
         """
-        return self.render_fenced_code(cast("block.FencedCode", element))
+        assert self.block_item_container is not None
 
-    def render_plain_text(self, element: Any) -> DocxDocument:
+        paragraph = self.block_item_container.add_paragraph()
+        run = paragraph.add_run(element.children)
+        run.font.name = "Consolas"
+
+    def render_plain_text(self, element: Any) -> None:
         """
         Renders plain text or any element with string children.
 
         Args:
             element (Any): The element to render.
-
-        Returns:
-            DocxDocument: The rendered plain text as a docx document.
         """
+        assert self.block_item_container is not None
+
         if isinstance(element.children, str):
-            docx_document = docx.Document()
-            docx_document.add_paragraph(element.children)
-            return docx_document
+            paragraph = self.block_item_container.add_paragraph()
+            run = paragraph.add_run(element.children)
+            run.bold = self._is_bold
+            run.italic = self._is_italic
+            run.underline = self._is_underline
 
-        return self.render_children(element)
+            if self._is_heading is True:
+                paragraph.style = f"Heading {self._heading_level}"
+            elif self._is_list_item:
+                paragraph.style = self._list_style[-1]
+        else:
+            self.render_children(element)
 
-    def render_link(self, element: inline.Link) -> DocxDocument:
+    def render_link(self, element: inline.Link) -> None:
         """
         Renders a link element.
 
         Args:
             element (inline.Link): The link element to render.
-
-        Returns:
-            DocxDocument: The rendered link as a docx document.
         """
-        body = self.render_children(element)
-        url = element.dest
-        title = f" ({element.title})" if element.title else ""
+        # Link handling in docx is non-trivial; for simplicity, render link text only.
+        self.render_children(element)
 
-        docx_document = docx.Document()
-        for para in body.paragraphs:
-            run = para.add_run()
-            run.text = f"{para.text} [{url}{title}]"
-
-        return docx_document
-
-    def render_auto_link(self, element: inline.AutoLink) -> DocxDocument:
+    def render_auto_link(self, element: inline.AutoLink) -> None:
         """
         Renders an auto link element.
 
         Args:
             element (inline.AutoLink): The auto link element to render.
-
-        Returns:
-            DocxDocument: The rendered auto link as a docx document.
         """
-        return self.render_link(cast("inline.Link", element))
+        self.render_link(cast("inline.Link", element))
 
-    def render_image(self, element: inline.Image) -> DocxDocument:
+    def render_image(self, element: inline.Image) -> None:
         """
         Renders an image element.
 
@@ -396,29 +344,22 @@ class DocxRenderer(Renderer):
         Returns:
             DocxDocument: The rendered image as a docx document.
         """
-        url = element.dest
-        alt = self.render_children(element)
-        title = f"  :alt: {alt}" if alt else ""
-        extra_title = f"  :title: {element.title}" if element.title else ""
+        # Image handling in docx is non-trivial; for simplicity just render title and URL.
+        if element.title:
+            assert self.block_item_container is not None
+            self.block_item_container.add_paragraph(text=element.title)
+            self.block_item_container.add_paragraph(text=f" ({element.dest})")
 
-        docx_document = docx.Document()
-        docx_document.add_paragraph(f"{url}\n{title}\n{extra_title}\n")
-
-        return docx_document
-
-    def render_literal(self, element: inline.Literal) -> DocxDocument:
+    def render_literal(self, element: inline.Literal) -> None:
         """
         Renders a literal (inline code) element.
 
         Args:
             element (inline.Literal): The literal element to render.
-
-        Returns:
-            DocxDocument: The rendered literal as a docx document.
         """
-        return self.render_raw_text(cast("inline.RawText", element))
+        self.render_raw_text(cast("inline.RawText", element))
 
-    def render_raw_text(self, element: inline.RawText) -> DocxDocument:
+    def render_raw_text(self, element: inline.RawText) -> None:
         """
         Renders a raw text element.
 
@@ -428,13 +369,23 @@ class DocxRenderer(Renderer):
         Returns:
             DocxDocument: The rendered raw text as a docx document.
         """
-        docx_document = docx.Document()
-        docx_document.add_paragraph(element.children)
+        assert self.block_item_container is not None
 
-        return docx_document
+        paragraph = self.block_item_container.add_paragraph()
+        run = paragraph.add_run(element.children)
+        run.bold = self._is_bold
+        run.italic = self._is_italic
+        run.underline = self._is_underline
+
+        if self._is_heading is True:
+            paragraph.style = f"Heading {self._heading_level}"
+        elif self._is_list_item is True:
+            paragraph.style = self._list_style[-1]
+        elif self._is_quote is True:
+            paragraph.style = "Quote"
 
     # pylint: disable-next=unused-argument
-    def render_line_break(self, element: inline.LineBreak) -> DocxDocument:
+    def render_line_break(self, element: inline.LineBreak) -> None:
         """
         Renders a line break element.
 
@@ -444,12 +395,13 @@ class DocxRenderer(Renderer):
         Returns:
             DocxDocument: The rendered line break as a docx document.
         """
-        docx_document = docx.Document()
-        docx_document.add_paragraph("\n")
+        assert self.block_item_container is not None
 
-        return docx_document
+        paragraph = self.block_item_container.add_paragraph()
+        run = paragraph.add_run()
+        run.add_break()
 
-    def render_code_span(self, element: inline.CodeSpan) -> DocxDocument:
+    def render_code_span(self, element: inline.CodeSpan) -> None:
         """
         Renders a code span (inline code) element.
 
@@ -459,10 +411,11 @@ class DocxRenderer(Renderer):
         Returns:
             DocxDocument: The rendered code span as a docx document.
         """
-        docx_document = docx.Document()
-        docx_document.add_paragraph(f"``{cast(str, element.children)}``")
+        assert self.block_item_container is not None
 
-        return docx_document
+        paragraph = self.block_item_container.add_paragraph()
+        run = paragraph.add_run(cast(str, element.children))
+        run.font.name = "Consolas"
 
 # Functions ********************************************************************
 
