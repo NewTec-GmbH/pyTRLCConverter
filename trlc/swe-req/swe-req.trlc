@@ -5,14 +5,7 @@ import Generic
 section "pyTRLCConverter" {
 
     Generic.Info sw_req_info_about_sw_req {
-        description = 
-        '''
-        * A
-        * B
-        * C
-
-        Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-        '''
+        description = "This file contains the software requirements for the pyTRLCConverter tool."
     }
 
     Generic.PlantUML sw_req_tool_context_diagram {
@@ -25,14 +18,7 @@ section "pyTRLCConverter" {
         section "General" {
 
             SwReq sw_req_cli {
-                description =
-                '''
-                * A
-                * B
-                * C
-
-                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-                '''
+                description = "The software shall be a command-line interface (CLI) application."
                 verification_criteria = "Every feature shall be accessible via the command line. Therefore its verified by the CLI tests."
                 valid_status = AbstractRequirements.VALID_STATUS.valid
             }
@@ -330,7 +316,6 @@ section "pyTRLCConverter" {
                 description = "The software shall convert strings in Markdown format to reStructuredText format without escaping."
                 verification_criteria = "Verify by using strings in Markdown format, which are converted and needs no escaping."
                 valid_status = AbstractRequirements.VALID_STATUS.valid
-                derived = [sw_req_markdown_string_format, sw_req_render_configuration]
             }
 
             SwReq sw_req_rst_heading {
