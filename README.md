@@ -3,7 +3,7 @@
 [![License](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://github.com/NewTec-GmbH/pyTRLCConverter/blob/main/LICENSE) [![Repo Status](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip) [![CI](https://github.com/NewTec-GmbH/pyTRLCConverter/actions/workflows/test.yml/badge.svg)](https://github.com/NewTec-GmbH/pyTRLCConverter/actions/workflows/test.yml)
 [![Repo Status](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 
-pyTRLCConverter is a command-line tool to convert TRLC files to different output formats. Since the definition of TRLC types is project-specific, the built-in converters can be extended in an object-oriented manner.
+pyTRLCConverter is a command-line tool to convert [TRLC (Treat Requiremnts Like Code)](https://github.com/bmw-software-engineering/trlc) files to different output formats. Since the definition of TRLC types is project-specific, the built-in converters can be extended in an object-oriented manner.
 
 Currently out of the box supported formats:
 
@@ -26,7 +26,8 @@ Find the requirements, test cases, coverage and etc. on the [github pages](https
   - [Conversion to docx format](#conversion-to-docx-format)
   - [Conversion to reStructuredText format](#conversion-to-restructuredtext-format)
   - [Dump TRLC item list to console](#dump-trlc-item-list-to-console)
-  - [Use an attribute name translation](#use-an-attribute-name-translation)
+  - [Apply attribute name translation](#apply-attribute-name-translation)
+  - [Requirement description in Markdown](#requirement-description-in-markdown)
   - [Show tool version](#show-tool-version)
   - [PlantUML](#plantuml)
 - [Examples](#examples)
@@ -69,8 +70,16 @@ Note:
 
 ### Tool Installation
 
+The *developers* might like to install it in editable mode.
+
 ```bash
 pip install -e .
+```
+
+The *users* of the tool install it as usual.
+
+```bash
+pip install .
 ```
 
 ## Usage
@@ -169,7 +178,7 @@ Mainly for development all TRLC items can be dumped to the console.
 pyTRLCConverter --source trlc/model --source trlc/swe-req dump
 ```
 
-### Use an attribute name translation
+### Apply attribute name translation
 
 The built-in converters display the requirements and their attributes in a table. The first column always contains the attribute name, and the second column contains the attribute value. Since the attribute names must comply with the TRLC standard, they are not always human-readable.
 
@@ -186,6 +195,27 @@ Translation file example:
 ```
 
 See the [example](./examples/simple_req_translation/) for more information.
+
+### Requirement description in Markdown
+
+When requirements include lists or need bold/italic emphasis, TRLC currently supports plain text only. pyTRLCConverter lets you write requirement descriptions in Markdown and converts them to the chosen target format (e.g., reStructuredText). To enable this, you must explicitly specify in a JSON configuration which attribute contains Markdown-formatted content.
+
+Configuration example:
+
+```json
+{
+    "renderCfg": [{
+        "package": ".*",
+        "type": "Info",
+        "attribute": "description",
+        "format": "md"
+    }]
+}
+```
+
+The package, type and attribute supports regex which makes it easier to set the format for several types. Currently **only Markdown** is supported as format.
+
+Use the ```--renderCfg <RENDER-CFG-FILE>``` program argument to specify the configuration file.
 
 ### Show tool version
 
