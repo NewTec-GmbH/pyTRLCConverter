@@ -65,7 +65,15 @@ class GenericRslDocxConverter(DocxConverter):
         Returns:
             Ret: Status
         """
-        self._docx.add_paragraph(self._get_attribute(record, "description"))
+        # Its important to set the block item container before rendering,
+        # as the render function uses it to add the content.
+        self._block_item_container = self._docx # type: ignore
+
+        self._render(record.n_package.name,
+                     record.n_typ.name,
+                     "description",
+                     self._get_attribute(record, "description"))
+
         return Ret.OK
 
     # pylint: disable-next=unused-argument
@@ -126,6 +134,8 @@ class GenericRslDocxConverter(DocxConverter):
             caption (str): The caption of the image.
             level (int): Current level of the record object
         """
+        assert self._docx is not None
+
         p = self._docx.add_paragraph()
         p.paragraph_format.alignment = docx.enum.text.WD_ALIGN_PARAGRAPH.CENTER
         run = p.add_run()

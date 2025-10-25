@@ -228,13 +228,8 @@ class DocxConverter(BaseConverter):
             type_name = self._ast_meta_data.get("type_name", "")
             attribute_name = self._ast_meta_data.get("attribute_name", "")
 
-            # If the attribute is marked as markdown format, convert it.
-            if self._render_cfg.is_format_md(package_name, type_name, attribute_name) is True:
-                DocxRenderer.block_item_container = self._block_item_container
-                markdown = Markdown(renderer=DocxRenderer)
-                markdown.convert(string_literal.to_string())
-
-                is_handled = True
+            self._render(package_name, type_name, attribute_name, string_literal.to_string())
+            is_handled = True
 
         if is_handled is False:
             self._block_item_container.add_paragraph(string_literal.to_string())
@@ -338,6 +333,27 @@ class DocxConverter(BaseConverter):
         trlc_ast_walker.set_list_item_dispatcher(self._on_list_item)
 
         return trlc_ast_walker
+
+    def _render(self, package_name: str, type_name: str, attribute_name: str, attribute_value: str) -> None:
+        # lobster-trace: SwRequirements.sw_req_rst_string_format
+        # lobster-trace: SwRequirements.sw_req_rst_string_format_md
+        """Render the attribute value depened on its format.
+
+        Args:
+            package_name (str): The package name.
+            type_name (str): The type name.
+            attribute_name (str): The attribute name.
+            attribute_value (str): The attribute value.
+        """
+        assert self._block_item_container is not None
+
+        # If the attribute is marked as markdown format, convert it.
+        if self._render_cfg.is_format_md(package_name, type_name, attribute_name) is True:
+            DocxRenderer.block_item_container = self._block_item_container
+            markdown = Markdown(renderer=DocxRenderer)
+            markdown.convert(attribute_value)
+        else:
+            self._block_item_container.add_paragraph(attribute_value)
 
     def _convert_record_object(self, record: Record_Object, level: int, translation: Optional[dict]) -> Ret:
         # lobster-trace: SwRequirements.sw_req_docx_record

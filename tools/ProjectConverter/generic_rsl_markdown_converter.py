@@ -68,6 +68,7 @@ class GenericRslMarkdownConverter(MarkdownConverter):
 
         self._fd.write(markdown_info)
         self._fd.write("\n")
+
         return Ret.OK
 
     # pylint: disable-next=unused-argument
