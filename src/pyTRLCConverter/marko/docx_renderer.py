@@ -52,7 +52,7 @@ class Singleton(type):
 
         return cls._instances[cls]
 
-# pylint: disable-next=too-many-public-methods
+# pylint: disable-next=too-many-public-methods, too-many-instance-attributes
 class DocxRenderer(Renderer, metaclass=Singleton):
     """Renderer for docx output."""
 
@@ -72,21 +72,16 @@ class DocxRenderer(Renderer, metaclass=Singleton):
         self._list_style = []
         self._is_quote = False
 
-    def render_children(self, element: Any) -> Any:
+    def render_children(self, element: Any) -> None:
         """
         Recursively renders child elements of a given element to
         a docx document.
 
         Args:
             element (Element): The parent element whose children are to be rendered.
-
-        Returns:
-            DocxDocument: The rendered children as a docx document.
         """
         for child in element.children:
             self.render(child)
-
-        return None
 
     def render_paragraph(self, element: block.Paragraph) -> None:
         """
