@@ -90,10 +90,22 @@ section "pyTRLCConverter" {
         }
 
         section "Command Line Arguments" {
+
+            Generic.Info sw_req_info_cli {
+                description = "The following requirements describe the general command line arguments supported by the software. They are independent of the destination format."
+            }
+
             SwReq sw_req_cli_help {
                 description = "The software shall support the command line argument '-h' and --help' to show the help information."
                 verification_criteria = "Verify by calling the software with the argument '--help' and check if the help information is shown."
                 valid_status = AbstractRequirements.VALID_STATUS.valid
+            }
+
+            SwReq sw_req_cli_verbose {
+                description = "The software shall support the command line argument '-v' and '--verbose' to enable verbose mode."
+                verification_criteria = "Verify by calling the software with the argument '--verbose' and check if the verbose output is shown."
+                valid_status = AbstractRequirements.VALID_STATUS.valid
+                derived = [sw_req_verbose_mode]
             }
 
             SwReq sw_req_cli_version {
@@ -150,6 +162,11 @@ section "pyTRLCConverter" {
         }
 
         section "Markdown" {
+
+            Generic.Info sw_req_info_markdown {
+                description = "The following requirements describe the Markdown destination format supported by the software."
+            }
+
             SwReq sw_req_markdown {
                 description = "The software shall support the conversion into Markdown format."
                 verification_criteria = "Verify by converting one or more TRLC files into Markdown format."
@@ -279,9 +296,23 @@ section "pyTRLCConverter" {
                     valid_status = AbstractRequirements.VALID_STATUS.valid
                 }
             }
+
+            section "Markdown Render Configuration" {
+
+                SwReq sw_req_markdown_render_md {
+                    description = "The software shall render strings in Markdown format if specified in the render configuration."
+                    verification_criteria = "Verify by using strings in Markdown format, which needs no escaping."
+                    valid_status = AbstractRequirements.VALID_STATUS.valid
+                }
+            }
         }
 
         section "reStructuredText" {
+
+            Generic.Info sw_req_info_rst {
+                description = "The following requirements describe the reStructuredText destination format supported by the software."
+            }
+
             SwReq sw_req_rst {
                 description = "The software shall support the conversion into reStructuredText format."
                 verification_criteria = "Verify by converting one or more TRLC files into reStructuredText format."
@@ -366,7 +397,7 @@ section "pyTRLCConverter" {
                 valid_status = AbstractRequirements.VALID_STATUS.valid
             }
 
-            section "ReST Multiple Documents Mode" {
+            section "ReStructuredText Multiple Documents Mode" {
                 SwReq sw_req_rst_multiple_doc_mode {
                     description = "The software shall create a reStructuredText file for each TRLC file by default."
                     verification_criteria = "Verify by converting one or more TRLC files into reStructuredText format and check if a reStructuredText file is created for each TRLC file."
@@ -374,7 +405,7 @@ section "pyTRLCConverter" {
                 }
             }
 
-            section "ReST Single Document Mode" {
+            section "ReStructuredText Single Document Mode" {
                 SwReq sw_req_rst_single_doc_mode {
                     description = "The software shall create a single reStructuredText file which combines all TRLC files if requested by command line arguments."
                     verification_criteria = "Verify by converting one or more TRLC files into reStructuredText format and check if a single reStructuredText file is created."
@@ -411,9 +442,23 @@ section "pyTRLCConverter" {
                     valid_status = AbstractRequirements.VALID_STATUS.valid
                 }
             }
+
+            section "ReStructuredText Render Configuration" {
+
+                SwReq sw_req_rst_render_md {
+                    description = "The software shall convert strings in Markdown format to reStructuredText format if specified in the render configuration."
+                    verification_criteria = "Verify by using strings in Markdown format, that are converted."
+                    valid_status = AbstractRequirements.VALID_STATUS.valid
+                }
+            }
         }
 
         section "Docx" {
+
+            Generic.Info sw_req_info_docx {
+                description = "The following requirements describe the docx destination format supported by the software."
+            }
+
             SwReq sw_req_docx {
                 description = "The software shall support the conversion into docx format."
                 verification_criteria = "Verify by converting one or more TRLC files into Docx format."
@@ -443,9 +488,23 @@ section "pyTRLCConverter" {
                 verification_criteria = "Verify by converting consecutive TRLC records into a docx file."
                 valid_status = AbstractRequirements.VALID_STATUS.valid
             }
+
+            section "ReStructuredText Render Configuration" {
+
+                SwReq sw_req_docx_render_md {
+                    description = "The software shall convert strings in Markdown format to docx format if specified in the render configuration."
+                    verification_criteria = "Verify by using strings in Markdown format, that are converted."
+                    valid_status = AbstractRequirements.VALID_STATUS.valid
+                }
+            }
         }
 
         section "Dump" {
+
+            Generic.Info sw_req_info_dump {
+                description = "The following requirements describe the dump destination format supported by the software."
+            }
+
             SwReq sw_req_ascii_conversion {
                 description = "The software shall support a simple conversion into text format to console out."
                 verification_criteria = "Verify by converting one or more TRLC files using the dump converter."
@@ -454,6 +513,11 @@ section "pyTRLCConverter" {
         }
 
         section "PlantUML" {
+
+            Generic.Info sw_req_info_plantuml {
+                description = "The following requirements describe the PlantUML destination format supported by the software."
+            }
+
             SwReq sw_req_plantuml {
                 description = "The software shall support the conversion of a PlantUML diagram to a propriate image format."
                 verification_criteria = "Verify by converting a PlantUML diagram into a propriate image format."

@@ -114,6 +114,8 @@ class RstConverter(BaseConverter):
         """
         super().register(args_parser)
 
+        assert BaseConverter._parser is not None
+
         BaseConverter._parser.add_argument(
             "-e",
             "--empty",
@@ -400,6 +402,7 @@ class RstConverter(BaseConverter):
 
     def _on_string_literal(self, string_literal: String_Literal) -> str:
         # lobster-trace: SwReq sw_req_rst_string_format
+        # lobster-trace: SwRequirements.sw_req_rst_render_md
         """
         Process the given string literal value.
 
@@ -432,6 +435,8 @@ class RstConverter(BaseConverter):
         Returns:
             str: reStructuredText cross-reference
         """
+        assert record_reference.target is not None
+
         file_name = ""
 
         # Single document mode?
@@ -507,7 +512,7 @@ class RstConverter(BaseConverter):
 
     def _render(self, package_name: str, type_name: str, attribute_name: str, attribute_value: str) -> str:
         # lobster-trace: SwRequirements.sw_req_rst_string_format
-        # lobster-trace: SwRequirements.sw_req_rst_string_format_md
+        # lobster-trace: SwRequirements.sw_req_rst_render_md
         """Render the attribute value depened on its format.
 
         Args:

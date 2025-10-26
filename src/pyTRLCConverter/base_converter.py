@@ -21,7 +21,7 @@
 
 # Imports **********************************************************************
 from enum import Enum
-from typing import Optional
+from typing import Optional, Any, Callable
 from pyTRLCConverter.abstract_converter import AbstractConverter
 from pyTRLCConverter.ret import Ret
 from pyTRLCConverter.trlc_helper import Record_Object
@@ -60,19 +60,19 @@ class BaseConverter(AbstractConverter):
     # Default value used to replace empty attribute values.
     EMPTY_ATTRIBUTE_DEFAULT = "N/A"
 
-    def __init__(self, args: any) -> None:
+    def __init__(self, args: Any) -> None:
         """
         Initializes the converter with the given arguments.
 
         Args:
-            args (any): The parsed program arguments.
+            args (Any): The parsed program arguments.
         """
 
         # Store the command line arguments.
         self._args = args
 
         # Record handler dictionary for project specific record handlers.
-        self._record_handler_dict = {}  # type: dict[str, callable]
+        self._record_handler_dict = {}  # type: dict[str, Callable]
 
         # Set the default policy for handling records.
         self._record_policy = RecordsPolicy.RECORD_CONVERT_ALL
@@ -87,11 +87,11 @@ class BaseConverter(AbstractConverter):
         self._render_cfg = RenderConfig()
 
     @classmethod
-    def register(cls, args_parser: any) -> None:
+    def register(cls, args_parser: Any) -> None:
         """Register converter specific argument parser.
 
         Args:
-            args_parser (any): Argument parser
+            args_parser (Any): Argument parser
         """
         BaseConverter._parser = args_parser.add_parser(
             cls.get_subcommand(),
@@ -208,20 +208,20 @@ class BaseConverter(AbstractConverter):
 
         raise NotImplementedError
 
-    def _set_project_record_handler(self, record_type: str, handler: callable) -> None:
+    def _set_project_record_handler(self, record_type: str, handler: Callable) -> None:
         """Set a project specific record handler.
 
         Args:
             record_type (str): The record type
-            handler (callable): The handler function
+            handler (Callable): The handler function
         """
         self._record_handler_dict[record_type] = handler
 
-    def _set_project_record_handlers(self, handlers: dict[str, callable]) -> None:
+    def _set_project_record_handlers(self, handlers: dict[str, Callable]) -> None:
         """Set project specific record handlers.
 
         Args:
-            handler (dict[str, callable]): List of record type and handler function tuples
+            handler (dict[str, Callable]): List of record type and handler function tuples
         """
         for record_type, handler in handlers.items():
             self._set_project_record_handler(record_type, handler)

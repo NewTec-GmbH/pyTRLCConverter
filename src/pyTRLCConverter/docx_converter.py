@@ -27,6 +27,7 @@ from docx.blkcntnr import BlockItemContainer
 from docx.text.paragraph import Paragraph
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
+from docx.enum.style import WD_STYLE_TYPE
 from marko import Markdown
 from trlc.ast import Implicit_Null, Record_Object, Record_Reference, String_Literal, Array_Aggregate, Expression
 from pyTRLCConverter.base_converter import BaseConverter
@@ -72,7 +73,7 @@ class DocxConverter(BaseConverter):
 
         # Ensure default table style is present in the document.
         if not 'Table Grid' in self._docx.styles:
-            self._docx.styles.add_style('Table Grid', docx.enum.style.WD_STYLE_TYPE.TABLE, builtin=True)
+            self._docx.styles.add_style('Table Grid', WD_STYLE_TYPE.TABLE, builtin=True)
 
         # The AST walker meta data for processing the record object fields.
         # This will hold the information about the current package, type and attribute being processed.
@@ -114,6 +115,8 @@ class DocxConverter(BaseConverter):
         """
         super().register(args_parser)
 
+        assert BaseConverter._parser is not None
+
         BaseConverter._parser.add_argument(
             "-t",
             "--template",
@@ -143,6 +146,8 @@ class DocxConverter(BaseConverter):
         Returns:
             Ret: Status
         """
+        assert self._docx is not None
+
         self._docx.add_heading(section, level)
 
         return Ret.OK
@@ -204,7 +209,9 @@ class DocxConverter(BaseConverter):
         Args:
             record_reference (Record_Reference): The record reference value.        
         """
+        assert record_reference.target is not None
         assert self._block_item_container is not None
+
         paragraph = self._block_item_container.add_paragraph()
 
         DocxConverter.docx_add_link_to_bookmark(paragraph,
@@ -213,6 +220,7 @@ class DocxConverter(BaseConverter):
 
     def _on_string_literal(self, string_literal: String_Literal) -> None:
         # lobster-trace: SwRequirements.sw_req_docx_string_format
+        # lobster-trace: SwRequirements.sw_req_docx_render_md
         """
         Process the given string literal value.
 
@@ -336,7 +344,7 @@ class DocxConverter(BaseConverter):
 
     def _render(self, package_name: str, type_name: str, attribute_name: str, attribute_value: str) -> None:
         # lobster-trace: SwRequirements.sw_req_rst_string_format
-        # lobster-trace: SwRequirements.sw_req_rst_string_format_md
+        # lobster-trace: SwRequirements.sw_req_docx_render_md
         """Render the attribute value depened on its format.
 
         Args:
@@ -369,6 +377,8 @@ class DocxConverter(BaseConverter):
         Returns:
             Ret: Status
         """
+        assert self._docx is not None
+
         heading = self._docx.add_heading(f"{record.name} ({record.n_typ.name})", level + 1)
         DocxConverter.docx_add_bookmark(heading, record.name)
 

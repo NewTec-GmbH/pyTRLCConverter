@@ -78,6 +78,7 @@ def _create_args_parser() -> argparse.ArgumentParser:
         version="%(prog)s " + __version__
     )
 
+    # lobster-trace: SwRequirements.sw_req_cli_verbose
     parser.add_argument(
         "-v",
         "--verbose",
@@ -174,7 +175,7 @@ def _setup_converters(args_sub_parser: argparse._SubParsersAction) -> Ret:
     try:
         project_converter = _get_project_converter()
     except ValueError as exc:
-        log_error(exc)
+        log_error(str(exc))
         ret_status = Ret.ERROR
 
     if ret_status == Ret.OK:
@@ -298,7 +299,7 @@ def main() -> int:
 
     # Create program arguments parser.
     args_parser = _create_args_parser()
-    args_sub_parser = args_parser.add_subparsers(required='True')
+    args_sub_parser = args_parser.add_subparsers(required=True)
 
     ret_status = _setup_converters(args_sub_parser)
 
@@ -340,7 +341,7 @@ def main() -> int:
                     ret_status = walker.walk_symbols(symbols)
 
                 except (FileNotFoundError, OSError) as exc:
-                    log_error(exc)
+                    log_error(str(exc))
                     ret_status = Ret.ERROR
 
     return ret_status

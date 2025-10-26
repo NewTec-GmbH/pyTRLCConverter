@@ -36,7 +36,9 @@ if TYPE_CHECKING:
 # Classes **********************************************************************
 
 class Singleton(type):
+    # lobster-trace: SwRequirements.sw_req_docx_render_md
     """Singleton metaclass to ensure only one instance of a class exists."""
+
     _instances = {}
 
     def __call__(cls, *args, **kwargs):
@@ -54,6 +56,7 @@ class Singleton(type):
 
 # pylint: disable-next=too-many-public-methods, too-many-instance-attributes
 class DocxRenderer(Renderer, metaclass=Singleton):
+    # lobster-trace: SwRequirements.sw_req_docx_render_md
     """Renderer for docx output."""
 
     # Docx block item container to add content to.

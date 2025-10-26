@@ -34,6 +34,7 @@ if TYPE_CHECKING:
 
 # pylint: disable-next=too-many-public-methods
 class RSTRenderer(Renderer):
+    # lobster-trace: SwRequirements.sw_req_rst_render_md
     """Renderer for reStructuredText output."""
 
     def render_paragraph(self, element: block.Paragraph) -> str:

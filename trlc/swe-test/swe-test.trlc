@@ -43,7 +43,7 @@ section "SW-Tests" {
 
         SwTestCase tc_verbose {
             description = "This test case check whether in verbose mode more information is printed out."
-            verifies = [SwRequirements.sw_req_verbose_mode]
+            verifies = [SwRequirements.sw_req_verbose_mode, SwRequirements.sw_req_cli_verbose]
         }
 
         SwTestCase tc_error {

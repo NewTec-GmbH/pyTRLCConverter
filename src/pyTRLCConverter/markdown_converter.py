@@ -120,6 +120,8 @@ class MarkdownConverter(BaseConverter):
         """
         super().register(args_parser)
 
+        assert BaseConverter._parser is not None
+
         BaseConverter._parser.add_argument(
             "-e",
             "--empty",
@@ -421,6 +423,7 @@ class MarkdownConverter(BaseConverter):
 
     def _on_string_literal(self, string_literal: String_Literal) -> str:
         # lobster-trace: SwRequirements.sw_req_markdown_string_format
+        # lobster-trace: SwRequirements.sw_req_markdown_render_md
         """
         Process the given string literal value.
 
@@ -454,6 +457,8 @@ class MarkdownConverter(BaseConverter):
         Returns:
             str: Markdown link
         """
+        assert record_reference.target is not None
+
         file_name = ""
 
         # Single document mode?
@@ -528,6 +533,7 @@ class MarkdownConverter(BaseConverter):
 
     def _render(self, package_name: str, type_name: str, attribute_name: str, attribute_value: str) -> str:
         # lobster-trace: SwRequirements.sw_req_markdown_string_format
+        # lobster-trace: SwRequirements.sw_req_markdown_render_md
         """Render the attribute value depened on its format.
 
         Args:

@@ -301,6 +301,7 @@ def get_file_dict_from_symbols(symbols):
                 item_list = file_dict[item]
 
             else:
+                assert item_list is not None
                 item_list.append(item)
 
     return file_dict

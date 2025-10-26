@@ -21,6 +21,7 @@ Author: Norbert Schulz (norbert.schulz@newtec.de)
 
 # Imports **********************************************************************
 from abc import ABC, abstractmethod
+from typing import Any
 from pyTRLCConverter.ret import Ret
 from pyTRLCConverter.trlc_helper import Record_Object
 
@@ -33,11 +34,11 @@ class AbstractConverter(ABC):
     """Abstract converter interface.
     """
     @classmethod
-    def register(cls, args_parser: any) -> None:
+    def register(cls, args_parser: Any) -> None:
         """Register converter specific argument parser.
 
         Args:
-            args_parser (any): Argument parser
+            args_parser (Any): Argument parser
         """
         raise NotImplementedError
 
