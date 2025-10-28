@@ -577,10 +577,9 @@ class MarkdownConverter(BaseConverter):
         self._fd.write("\n")
 
         # The record fields will be written to a table.
-        # First write the table head.
-        column_titles = ["Attribute Name", "Attribute Value"]
-        markdown_table_head = self.markdown_create_table_head(column_titles)
-        self._fd.write(markdown_table_head)
+        # First define the table column titles.
+        table_column_titles = ["Attribute Name", "Attribute Value"]
+        table_rows = []
 
         # Walk through the record object fields and write the table rows.
         trlc_ast_walker = self._get_trlc_ast_walker()
@@ -605,13 +604,15 @@ class MarkdownConverter(BaseConverter):
 
             attribute_value = ""
             if isinstance(walker_result, list):
-                attribute_value = self.markdown_create_list(walker_result, True, False)
+                attribute_value = self.markdown_create_list(walker_result, False)
             else:
                 attribute_value = walker_result
 
-            # Write the attribute name and value to the Markdown table as row.
-            markdown_table_row = self.markdown_append_table_row([attribute_name, attribute_value], False)
-            self._fd.write(markdown_table_row)
+            # Append the attribute name and value to the table rows.
+            table_rows.append([attribute_name, attribute_value])
+
+        html_table = self.markdown_create_table(table_column_titles, table_rows)
+        self._fd.write(html_table)
 
         return Ret.OK
 
@@ -679,112 +680,81 @@ class MarkdownConverter(BaseConverter):
         return result
 
     @staticmethod
-    def markdown_create_table_head(column_titles : List[str], escape: bool = True) -> str:
+    def markdown_create_table(column_titles : List[str], row_values_list: List[List[str]]) -> str:
         # lobster-trace: SwRequirements.sw_req_markdown_table
         """
-        Create the table head for a Markdown table.
-        The titles will be automatically escaped for Markdown if necessary.
+        Create a complete Markdown table in HTML format to support multi-line cells and
+        other complex content.
 
         Args:
-            column_titles ([str]): List of column titles.
-            escape (bool): Escape the titles (default: True).
+            column_titles (List[str]): List of column titles.
+            row_values_list (List[List[str]]): List of row values.
 
         Returns:
-            str: Table head
+            str: Markdown table
         """
-        table_head = "|"
+        indent = 2
+        level = 1
+
+        table = "<table>\n"
+        table += f"{' ' * indent * level}<thead>\n"
+        level += 1
+        table += f"{' ' * indent * level}<tr>\n"
+        level += 1
 
         for column_title in column_titles:
-            column_title_raw = column_title
+            table += f"{' ' * indent * level}<th>{column_title}</th>\n"
 
-            if escape is True:
-                column_title_raw = MarkdownConverter.markdown_escape(column_title)
+        level -= 1
+        table += f"{' ' * indent * level}</tr>\n"
 
-            table_head += f" {column_title_raw} |"
+        level -= 1
+        table += f"{' ' * indent * level}</thead>\n"
 
-        table_head += "\n"
+        table += f"{' ' * indent * level}<tbody>\n"
+        level += 1
 
-        table_head += "|"
+        for row_values in row_values_list:
+            table += f"{' ' * indent * level}<tr>\n"
+            level += 1
 
-        for column_title in column_titles:
-            column_title_raw = column_title
+            for cell_value in row_values:
+                # If the cell value contains Markdown formatting, it will only be rendered properly
+                # in case there is an empty line after the HTML <td> tag. And it must start on the
+                # left side without any spaces before.
+                table += f"{' ' * indent * level}<td>\n\n"
+                table += f"{cell_value}\n"
+                table += f"{' ' * indent * level}</td>\n"
 
-            if escape is True:
-                column_title_raw = MarkdownConverter.markdown_escape(column_title)
+            level -= 1
+            table += f"{' ' * indent * level}</tr>\n"
 
-            table_head += " "
+        level -= 1
+        table += f"{' ' * indent * level}</tbody>\n"
+        table += "</table>\n"
 
-            for _ in range(len(column_title_raw)):
-                table_head += "-"
-
-            table_head += " |"
-
-        table_head += "\n"
-
-        return table_head
-
-    @staticmethod
-    def markdown_append_table_row(row_values: List[str], escape: bool = True) -> str:
-        # lobster-trace: SwRequirements.sw_req_markdown_table
-        """
-        Append a row to a Markdown table.
-        The values will be automatically escaped for Markdown if necessary.
-
-        Args:
-            row_values ([str]): List of row values.
-            escape (bool): Escapes every row value (default: True).
-
-        Returns:
-            str: Table row
-        """
-        table_row = "|"
-
-        for row_value in row_values:
-            row_value_raw = row_value
-
-            if escape is True:
-                row_value_raw = MarkdownConverter.markdown_escape(row_value)
-
-            # Replace every LF with a HTML <br>.
-            row_value_raw = row_value_raw.replace("\n", "<br>")
-
-            table_row += f" {row_value_raw} |"
-
-        table_row += "\n"
-
-        return table_row
+        return table
 
     @staticmethod
-    def markdown_create_list(list_values: List[str], use_html: bool = False, escape: bool = True) -> str:
+    def markdown_create_list(list_values: List[str], escape: bool = True) -> str:
         # lobster-trace: SwRequirements.sw_req_markdown_list
         """Create a unordered Markdown list.
         The values will be automatically escaped for Markdown if necessary.
 
         Args:
             list_values (List[str]): List of list values.
-            use_html (bool): Use HTML for the list (default: False).
             escape (bool): Escapes every list value (default: True).
         Returns:
             str: Markdown list
         """
         list_str = ""
 
-        if use_html is True:
-            list_str += "<ul>"
-
         for value_raw in list_values:
             value = value_raw
 
             if escape is True:  # Escape the value if necessary.
                 value = MarkdownConverter.markdown_escape(value)
-
-            if use_html is True:
-                list_str += f"<li>{value}</li>" # No line feed here, because the HTML list is not a Markdown list.
-            else:
-                list_str += f"* {value}\n"
-
-        if use_html is True:
-            list_str += "</ul>" # No line feed here, because the HTML list is not a Markdown list.
+                list_str += f"- {value}\n"
 
         return list_str
 
