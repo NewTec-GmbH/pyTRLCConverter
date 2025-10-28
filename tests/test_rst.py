@@ -466,6 +466,7 @@ def test_tc_rst_single_doc_exclude(record_property, capsys, monkeypatch, tmp_pat
         "--source", "./tests/utils",
         "--exclude", "./tests/utils/single_req_no_section.trlc",
         "--exclude", "./tests/utils/single_req_with_section.trlc",
+        "--exclude", "./tests/utils/single_req_description_md.trlc",
         "--out", str(tmp_path),
         "rst",
         "--single-document",
