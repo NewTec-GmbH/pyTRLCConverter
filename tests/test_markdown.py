@@ -72,70 +72,60 @@ def _assert_table(lines: list[str],
         int: The number of lines consumed.
     """
     index = 0
-    indention = 2
-    level = 1
 
     # Check for HTML table.
     assert lines[index] == "<table>\n"
     index += 1
 
     # Check for table header.
-    assert lines[index] == f"{' ' * indention * level}<thead>\n"
+    assert lines[index] == "<thead>\n"
     index += 1
-    level += 1
 
     # Check table header.
     for row in expected_headers:
-        assert lines[index] == f"{' ' * indention * level}<tr>\n"
+        assert lines[index] == "<tr>\n"
         index += 1
-        level += 1
 
         for cell in row:
-            assert lines[index] == f"{' ' * indention * level}<th>{cell}</th>\n"
+            assert lines[index] == f"<th>{cell}</th>\n"
             index += 1
 
-        level -= 1
-        assert lines[index] == f"{' ' * indention * level}</tr>\n"
+        assert lines[index] == "</tr>\n"
         index += 1
 
-    level -= 1
-    assert lines[index] == f"{' ' * indention * level}</thead>\n"
+    assert lines[index] == "</thead>\n"
     index += 1
 
     # Check for table body.
-    assert lines[index] == f"{' ' * indention * level}<tbody>\n"
+    assert lines[index] == "<tbody>\n"
     index += 1
-    level += 1
 
     # Check for table rows after header.
     for row in expected_rows:
-        assert lines[index] == f"{' ' * indention * level}<tr>\n"
+        assert lines[index] == "<tr>\n"
         index += 1
-        level += 1
 
         for cell in row:
-            assert lines[index] == f"{' ' * indention * level}<td>\n"
+            assert lines[index] == "<td>\n"
             index += 1
             assert lines[index] == "\n"
             index += 1
 
             # Get cell content line(s).
             content = ""
-            while lines[index] != f"{' ' * indention * level}</td>\n":
+            while lines[index] != "</td>\n":
                 content += lines[index]
                 index += 1
 
-            assert content == f"{cell}\n"
+            assert content == f"{cell}\n\n"
 
-            assert lines[index] == f"{' ' * indention * level}</td>\n"
+            assert lines[index] == "</td>\n"
             index += 1
 
-        level -= 1
-        assert lines[index] == f"{' ' * indention * level}</tr>\n"
+        assert lines[index] == "</tr>\n"
         index += 1
 
-    level -= 1
-    assert lines[index] == f"{' ' * indention * level}</tbody>\n"
+    assert lines[index] == "</tbody>\n"
     index += 1
 
     assert lines[index] == "</table>\n"

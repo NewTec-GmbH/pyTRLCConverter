@@ -693,44 +693,33 @@ class MarkdownConverter(BaseConverter):
         Returns:
             str: Markdown table
         """
-        indent = 2
-        level = 1
-
         table = "<table>\n"
-        table += f"{' ' * indent * level}<thead>\n"
-        level += 1
-        table += f"{' ' * indent * level}<tr>\n"
-        level += 1
+        table += "<thead>\n"
+        table += "<tr>\n"
 
         for column_title in column_titles:
-            table += f"{' ' * indent * level}<th>{column_title}</th>\n"
+            table += f"<th>{column_title}</th>\n"
 
-        level -= 1
-        table += f"{' ' * indent * level}</tr>\n"
-
-        level -= 1
-        table += f"{' ' * indent * level}</thead>\n"
-
-        table += f"{' ' * indent * level}<tbody>\n"
-        level += 1
+        table += "</tr>\n"
+        table += "</thead>\n"
+        table += "<tbody>\n"
 
         for row_values in row_values_list:
-            table += f"{' ' * indent * level}<tr>\n"
-            level += 1
+            table += "<tr>\n"
 
             for cell_value in row_values:
-                # If the cell value contains Markdown formatting, it will only be rendered properly
-                # in case there is an empty line after the HTML <td> tag. And it must start on the
-                # left side without any spaces before.
-                table += f"{' ' * indent * level}<td>\n\n"
+                # To allow Markdown content inside table cells, a blank line is required
+                # before and after the cell content.
+                # See https://spec.commonmark.org/0.31.2/#html-blocks
+                table += "<td>\n"
+                table += "\n"
                 table += f"{cell_value}\n"
-                table += f"{' ' * indent * level}</td>\n"
+                table += "\n"
+                table += "</td>\n"
 
-            level -= 1
-            table += f"{' ' * indent * level}</tr>\n"
+            table += "</tr>\n"
 
-        level -= 1
-        table += f"{' ' * indent * level}</tbody>\n"
+        table += "</tbody>\n"
         table += "</table>\n"
 
         return table

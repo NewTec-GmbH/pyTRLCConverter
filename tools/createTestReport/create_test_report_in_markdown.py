@@ -20,7 +20,7 @@
 # If not, see <https://www.gnu.org/licenses/>.
 
 # Imports **********************************************************************
-from typing import Optional
+from typing import Optional, Any
 from pyTRLCConverter.base_converter import RecordsPolicy
 from pyTRLCConverter.ret import Ret
 from pyTRLCConverter.markdown_converter import MarkdownConverter
@@ -36,7 +36,7 @@ class CustomMarkdownConverter(MarkdownConverter):
         SW test case results into Markdown format.
     """
 
-    def __init__(self, args: any) -> None:
+    def __init__(self, args: Any) -> None:
         """Initializes the converter.
         """
         super().__init__(args)
@@ -49,8 +49,6 @@ class CustomMarkdownConverter(MarkdownConverter):
         )
 
         self._record_policy = RecordsPolicy.RECORD_SKIP_UNDEFINED
-
-        self._is_table_head_req = True
 
     @staticmethod
     def get_description() -> str:
@@ -80,16 +78,6 @@ class CustomMarkdownConverter(MarkdownConverter):
 
         return Ret.OK
 
-    def _print_table_head(self) -> None:
-        """Prints the table head for software test case results.
-        """
-        self._write_empty_line_on_demand()
-
-        column_titles = ["Test Case", "Test Function", "Test Result"]
-        markdown_table_head = self.markdown_create_table_head(column_titles)
-
-        self._fd.write(markdown_table_head)
-
     # pylint: disable-next=line-too-long
     def _print_test_case_result(self, test_case_result: Record_Object, _level: int, _translation: Optional[dict]) -> Ret:
         """Prints the software test case result.
@@ -103,9 +91,7 @@ class CustomMarkdownConverter(MarkdownConverter):
         Returns:
            Ret: Status
         """
-        if self._is_table_head_req is True:
-            self._print_table_head()
-            self._is_table_head_req = False
+        assert self._fd is not None
 
         test_case_result_attributes = test_case_result.to_python_dict()
 
@@ -130,8 +116,9 @@ class CustomMarkdownConverter(MarkdownConverter):
 
         row = [test_case, test_function_name, test_result]
 
-        markdown_table_row = self.markdown_append_table_row(row, False)
-        self._fd.write(markdown_table_row)
+        markdown_table = self.markdown_create_table(["Test Case", "Test Function", "Test Result"], [row])
+
+        self._fd.write(markdown_table)
 
         return Ret.OK
 

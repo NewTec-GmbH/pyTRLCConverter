@@ -22,7 +22,7 @@
 # Imports **********************************************************************
 import os
 import shutil
-from typing import Optional
+from typing import Optional, Any
 from pyTRLCConverter.base_converter import RecordsPolicy
 from pyTRLCConverter.ret import Ret
 from pyTRLCConverter.plantuml import PlantUML
@@ -39,12 +39,12 @@ class ExamplePlantumlMarkdownConverter(MarkdownConverter):
     """Custom Project specific Markdown Converter.
     """
 
-    def __init__(self, args: any) -> None:
+    def __init__(self, args: Any) -> None:
         """
         Initialize the custom markdown converter.
 
         Args:
-            args (any): The parsed program arguments.
+            args (Any): The parsed program arguments.
         """
         super().__init__(args)
 
@@ -66,14 +66,6 @@ class ExamplePlantumlMarkdownConverter(MarkdownConverter):
         """
         return "Convert into project extended markdown format."
 
-    def _print_table_head(self) -> None:
-        """Prints the table head for software requirements and constraints.
-        """
-        column_titles = ["Attribute", "Value"]
-        markdown_table_head = self.markdown_create_table_head(column_titles)
-
-        self._fd.write(markdown_table_head)
-
     # pylint: disable-next=unused-argument
     def _print_diagram(self, diagram: Record_Object, level: int) -> Ret:
         """Prints the diagram.
@@ -85,6 +77,8 @@ class ExamplePlantumlMarkdownConverter(MarkdownConverter):
         Returns:
             Ret: Status
         """
+        assert self._fd is not None
+
         plantuml_generator = PlantUML()
         image_format = "png"
         diagram_dict = diagram.to_python_dict()
@@ -142,22 +136,15 @@ class ExamplePlantumlMarkdownConverter(MarkdownConverter):
         Returns:
             Ret: Status
         """
+        assert self._fd is not None
+
         description = self._get_attribute(req, "description")
 
-        markdown_text = self.markdown_create_heading(req.name, level + 1)
-        self._fd.write(markdown_text)
+        markdown_heading = self.markdown_create_heading(req.name, level + 1)
+        markdown_description = self.markdown_escape(description)
+        markdown_table = self.markdown_create_table(["Attribute", "Value"], [["Description", markdown_description]])
 
-        self._print_table_head()
-
-        table = [
-            ["Description", self.markdown_escape(description)]
-        ]
-
-        for row in table:
-            markdown_table_row = self.markdown_append_table_row(row, False)
-            self._fd.write(markdown_table_row)
-
-        self._fd.write("\n")
+        self._fd.write(f"{markdown_heading}\n{markdown_table}\n")
 
         return Ret.OK
 
