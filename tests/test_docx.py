@@ -18,9 +18,7 @@
 # If not, see <https://www.gnu.org/licenses/>.
 
 # Imports **********************************************************************
-import os
-from argparse import Namespace
-from collections import namedtuple
+
 import docx
 
 from pyTRLCConverter.__main__ import main

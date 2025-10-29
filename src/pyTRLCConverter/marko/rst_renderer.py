@@ -37,6 +37,13 @@ class RSTRenderer(Renderer):
     # lobster-trace: SwRequirements.sw_req_rst_render_md
     """Renderer for reStructuredText output."""
 
+    def __init__(self) -> None:
+        """
+        Initializes the RSTRenderer.
+        """
+        super().__init__()
+        self._list_indent_level = 0
+
     def render_paragraph(self, element: block.Paragraph) -> str:
         """
         Renders a paragraph element.
@@ -60,15 +67,19 @@ class RSTRenderer(Renderer):
             str: The rendered list as a string.
         """
         items = []
-        marker = "#" if element.ordered else "*"
 
-        for child in element.children:
+        self._list_indent_level += 1
+
+        for index, child in enumerate(element.children):
+            marker = f"{index + 1}." if element.ordered else "-"
             item = self.render_list_item(child, marker)
             items.append(item)
 
+        self._list_indent_level -= 1
+
         return "\n".join(items) + "\n"
 
-    def render_list_item(self, element: block.ListItem, marker="*") -> str:
+    def render_list_item(self, element: block.ListItem, marker="-") -> str:
         """
         Renders a list item element.
 
@@ -79,9 +90,10 @@ class RSTRenderer(Renderer):
         Returns:
             str: The rendered list item as a string.
         """
+        indent = 2
         content = self.render_children(element)
 
-        return f"{marker} {content}"
+        return f"{' ' * indent * (self._list_indent_level - 1)}{marker} {content}"
 
     def render_quote(self, element: block.Quote) -> str:
         """
