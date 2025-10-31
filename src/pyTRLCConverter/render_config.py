@@ -136,7 +136,7 @@ class RenderConfig():
         Returns:
             str: The format specifier for the given TRLC package, type and attribute.
         """
-        format_specifier = ""
+        format_specifier = RenderConfig.FORMAT_SPECIFIER_PLAIN
 
         if "renderCfg" in self._cfg:
             for item in self._cfg["renderCfg"]:

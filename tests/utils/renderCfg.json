@@ -4,5 +4,10 @@
         "type": ".*",
         "attribute": "description",
         "format": "md"
+    }, {
+        "package": "package",
+        "type": "typeRst",
+        "attribute": "description",
+        "format": "rst"
     }]
 }
