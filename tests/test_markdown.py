@@ -539,7 +539,8 @@ def test_tc_markdown_single_doc_exclude_none(record_property, capsys, monkeypatc
     output_file_name = "myReq.md"
     monkeypatch.setattr("sys.argv", [
         "pyTRLCConverter",
-        "--source", "./tests/utils",
+        "--source", "./tests/utils/req.rsl",
+        "--source", "./tests/utils/single_req_no_section.trlc",
         "--out", str(tmp_path),
         "markdown",
         "--single-document",
@@ -557,15 +558,18 @@ def test_tc_markdown_single_doc_exclude_none(record_property, capsys, monkeypatc
     # Verify
     with open(os.path.join(tmp_path, output_file_name), "r", encoding='utf-8') as generated_md:
         lines = generated_md.readlines()
-        assert lines[0] == "# Specification\n"
-        assert lines[1] == "\n"
-        assert lines[2] == r"### req\_id\_1" + "\n"
-        assert lines[3] == "\n"
-        assert lines[4] == r"| Attribute Name | Attribute Value |" + "\n"
-        assert lines[5] == r"| -------------- | --------------- |" + "\n"
-        assert lines[6] == r"| description | Test description |" + "\n"
-        assert lines[7] == r"| link | N/A |" + "\n"
-        # Not all lines are checked.
+        line_index = 0
+        line_index += _assert_heading(lines[line_index:], 1, "Specification")
+        line_index += _assert_empty_line(lines[line_index:])
+        line_index += _assert_heading(lines[line_index:], 3, r"req\_id\_1")
+        line_index += _assert_empty_line(lines[line_index:])
+        line_index += _assert_table(lines[line_index:],
+                                    [["Attribute Name", "Attribute Value"]],
+                                    [["description", "Test description"],
+                                     ["link", "N/A"],
+                                     ["index", "1"],
+                                     ["precision", "N/A"],
+                                     ["valid", "N/A"]])
 
 def test_tc_markdown_multi_doc(record_property, capsys, monkeypatch, tmp_path):
     # lobster-trace: SwTests.tc_markdown_multi_doc
