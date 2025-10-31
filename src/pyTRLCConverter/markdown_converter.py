@@ -55,8 +55,8 @@ class MarkdownConverter(BaseConverter):
         # The path to the given output folder.
         self._out_path = args.out
 
-        # The excluded files in normalized form.
-        self._excluded_files = []
+        # The excluded paths in normalized form.
+        self._excluded_paths = []
 
         if args.exclude is not None:
             self._excluded_paths = [os.path.normpath(path) for path in args.exclude]

@@ -522,6 +522,51 @@ def test_tc_markdown_single_doc_exclude(record_property, capsys, monkeypatch, tm
                                      ["precision", "N/A"],
                                      ["valid", "False"]])
 
+def test_tc_markdown_single_doc_exclude_none(record_property, capsys, monkeypatch, tmp_path):
+    # lobster-trace: SwTests.tc_cli_exclude
+    """
+    The software shall support excluding nothing when no exclude arguments are given.
+
+    Args:
+        record_property (Any): Used to inject the test case reference into the test results.
+        capsys (Any): Used to capture stdout and stderr.
+        monkeypatch (Any): Used to mock program arguments.
+        tmp_path (Path): Used to create a temporary output directory.
+    """
+    record_property("lobster-trace", "SwTests.tc_cli_exclude")
+
+    # Mock program arguments to specify an output folder.
+    output_file_name = "myReq.md"
+    monkeypatch.setattr("sys.argv", [
+        "pyTRLCConverter",
+        "--source", "./tests/utils",
+        "--out", str(tmp_path),
+        "markdown",
+        "--single-document",
+        "--name", output_file_name
+    ])
+
+    # Expect the program to run without any exceptions.
+    main()
+
+    # Capture stdout and stderr.
+    captured = capsys.readouterr()
+    # Check that no errors were reported.
+    assert captured.err == ""
+
+    # Verify
+    with open(os.path.join(tmp_path, output_file_name), "r", encoding='utf-8') as generated_md:
+        lines = generated_md.readlines()
+        assert lines[0] == "# Specification\n"
+        assert lines[1] == "\n"
+        assert lines[2] == r"### req\_id\_1" + "\n"
+        assert lines[3] == "\n"
+        assert lines[4] == r"| Attribute Name | Attribute Value |" + "\n"
+        assert lines[5] == r"| -------------- | --------------- |" + "\n"
+        assert lines[6] == r"| description | Test description |" + "\n"
+        assert lines[7] == r"| link | N/A |" + "\n"
+        # Not all lines are checked.
+
 def test_tc_markdown_multi_doc(record_property, capsys, monkeypatch, tmp_path):
     # lobster-trace: SwTests.tc_markdown_multi_doc
     """
