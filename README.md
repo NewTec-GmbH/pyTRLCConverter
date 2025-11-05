@@ -213,7 +213,7 @@ Configuration example:
 }
 ```
 
-The package, type and attribute supports regex which makes it easier to set the format for several types. Currently **only Markdown** is supported as format.
+The package, type and attribute supports regex which makes it easier to set the format for several types. Currently **only Markdown** is supported as format. Always the first match wins.
 
 Use the ```--renderCfg <RENDER-CFG-FILE>``` program argument to specify the configuration file.
 

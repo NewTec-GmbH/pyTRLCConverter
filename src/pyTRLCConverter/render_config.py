@@ -151,6 +151,9 @@ class RenderConfig():
                     if "format" in item:
                         format_specifier = item["format"]
 
+                        # First match wins.
+                        break
+
         return format_specifier
 
     def is_format_plain(self, trlc_package: str, trlc_type: str, trlc_type_attribute: str) -> bool:

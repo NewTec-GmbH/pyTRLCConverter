@@ -245,7 +245,8 @@ class DocxRenderer(Renderer, metaclass=Singleton):
         Args:
             element (block.LinkRefDef): The link reference definition element to render.
         """
-        # reStructuredText uses reference links differently; skip for now.
+        # reStructuredText uses reference links differently than Markdown.
+        # It shall not be rendered in the document.
 
     def render_emphasis(self, element: inline.Emphasis) -> None:
         """

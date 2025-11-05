@@ -223,7 +223,8 @@ class RSTRenderer(Renderer):
         Returns:
             str: The rendered link reference definition as a string.
         """
-        # reStructuredText uses reference links differently; skip for now.
+        # reStructuredText uses reference links differently than Markdown.
+        # It shall not be rendered in the document.
         return ""
 
     def render_emphasis(self, element: inline.Emphasis) -> str:
