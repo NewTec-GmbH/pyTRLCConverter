@@ -85,11 +85,7 @@ class SimpleConverter(BaseConverter):
         attributes = record.to_python_dict()
         attribute_name = "description"
         description = attributes[attribute_name]
-        attribute_name_translation = attribute_name
-
-        if translation is not None:
-            if attribute_name in translation:
-                attribute_name_translation = translation[attribute_name]
+        attribute_name_translation = self._translate_attribute_name(translation, attribute_name)
 
         print(f"{record.name}")
         print(f"{attribute_name_translation}: {description}")

@@ -21,12 +21,14 @@
 
 # Imports **********************************************************************
 import os
-from typing import List, Optional
-from trlc.ast import Implicit_Null, Record_Object, Record_Reference
+from typing import List, Optional, Any
+from marko import Markdown
+from trlc.ast import Implicit_Null, Record_Object, Record_Reference, String_Literal, Expression
 from pyTRLCConverter.base_converter import BaseConverter
 from pyTRLCConverter.ret import Ret
 from pyTRLCConverter.trlc_helper import TrlcAstWalker
 from pyTRLCConverter.logger import log_verbose, log_error
+from pyTRLCConverter.marko.rst_renderer import RSTRenderer
 
 # Variables ********************************************************************
 
@@ -39,13 +41,13 @@ class RstConverter(BaseConverter):
     OUTPUT_FILE_NAME_DEFAULT = "output.rst"
     TOP_LEVEL_DEFAULT = "Specification"
 
-    def __init__(self, args: any) -> None:
+    def __init__(self, args: Any) -> None:
         # lobster-trace: SwRequirements.sw_req_rst
         """
         Initializes the converter.
 
         Args:
-            args (any): The parsed program arguments.
+            args (Any): The parsed program arguments.
         """
         super().__init__(args)
 
@@ -70,6 +72,10 @@ class RstConverter(BaseConverter):
         # And at the document bottom, there shall be just one empty line.
         self._empty_line_required = False
 
+        # The AST walker meta data for processing the record object fields.
+        # This will hold the information about the current package, type and attribute being processed.
+        self._ast_meta_data = None
+
     @staticmethod
     def get_subcommand() -> str:
         # lobster-trace: SwRequirements.sw_req_rst
@@ -93,7 +99,7 @@ class RstConverter(BaseConverter):
         return "Convert into reStructuredText format."
 
     @classmethod
-    def register(cls, args_parser: any) -> None:
+    def register(cls, args_parser: Any) -> None:
         # lobster-trace: SwRequirements.sw_req_rst_multiple_doc_mode
         # lobster-trace: SwRequirements.sw_req_rst_single_doc_mode
         # lobster-trace: SwRequirements.sw_req_rst_sd_top_level_default
@@ -104,9 +110,11 @@ class RstConverter(BaseConverter):
         Register converter specific argument parser.
 
         Args:
-            args_parser (any): Argument parser
+            args_parser (Any): Argument parser
         """
         super().register(args_parser)
+
+        assert BaseConverter._parser is not None
 
         BaseConverter._parser.add_argument(
             "-e",
@@ -304,6 +312,8 @@ class RstConverter(BaseConverter):
         have an empty line before. And at the document bottom, there shall be just one empty
         line.
         """
+        assert self._fd is not None
+
         if self._empty_line_required is False:
             self._empty_line_required = True
         else:
@@ -373,7 +383,7 @@ class RstConverter(BaseConverter):
         Process the given implicit null value.
         
         Returns:
-            str: The implicit null value
+            str: The implicit null value.
         """
         return self.rst_escape(self._empty_attribute_value)
 
@@ -390,6 +400,29 @@ class RstConverter(BaseConverter):
         """
         return self._create_rst_link_from_record_object_reference(record_reference)
 
+    def _on_string_literal(self, string_literal: String_Literal) -> str:
+        # lobster-trace: SwReq sw_req_rst_string_format
+        # lobster-trace: SwRequirements.sw_req_rst_render_md
+        """
+        Process the given string literal value.
+
+        Args:
+            string_literal (String_Literal): The string literal value.
+        
+        Returns:
+            str: The string literal value.
+        """
+        result = string_literal.to_string()
+
+        if self._ast_meta_data is not None:
+            package_name = self._ast_meta_data.get("package_name", "")
+            type_name = self._ast_meta_data.get("type_name", "")
+            attribute_name = self._ast_meta_data.get("attribute_name", "")
+
+            result = self._render(package_name, type_name, attribute_name, result)
+
+        return result
+
     def _create_rst_link_from_record_object_reference(self, record_reference: Record_Reference) -> str:
         # lobster-trace: SwRequirements.sw_req_rst_link
         """
@@ -402,6 +435,8 @@ class RstConverter(BaseConverter):
         Returns:
             str: reStructuredText cross-reference
         """
+        assert record_reference.target is not None
+
         file_name = ""
 
         # Single document mode?
@@ -426,8 +461,22 @@ class RstConverter(BaseConverter):
 
         return RstConverter.rst_create_link(str(record_reference.to_python_object()), target_id)
 
+    def _other_dispatcher(self, expression: Expression) -> str:
+        """
+        Dispatcher for all other expressions.
+
+        Args:
+            expression (Expression): The expression to process.
+
+        Returns:
+            str: The processed expression.
+        """
+        return self.rst_escape(expression.to_string())
+
     def _get_trlc_ast_walker(self) -> TrlcAstWalker:
         # lobster-trace: SwRequirements.sw_req_rst_record
+        # lobster-trace: SwRequirements.sw_req_rst_escape
+        # lobster-trace: SwReq sw_req_rst_string_format
         """
         If a record object contains a record reference, the record reference will be converted to
         a Markdown link.
@@ -451,13 +500,48 @@ class RstConverter(BaseConverter):
             self._on_record_reference,
             None
         )
-        trlc_ast_walker.set_other_dispatcher(
-            lambda expression: RstConverter.rst_escape(str(expression.to_python_object()))
+        trlc_ast_walker.add_dispatcher(
+            String_Literal,
+            None,
+            self._on_string_literal,
+            None
         )
+        trlc_ast_walker.set_other_dispatcher(self._other_dispatcher)
 
         return trlc_ast_walker
 
-    # pylint: disable=too-many-locals, unused-argument
+    def _render(self, package_name: str, type_name: str, attribute_name: str, attribute_value: str) -> str:
+        # lobster-trace: SwRequirements.sw_req_rst_string_format
+        # lobster-trace: SwRequirements.sw_req_rst_render_md
+        """Render the attribute value depened on its format.
+
+        Args:
+            package_name (str): The package name.
+            type_name (str): The type name.
+            attribute_name (str): The attribute name.
+            attribute_value (str): The attribute value.
+
+        Returns:
+            str: The rendered attribute value.
+        """
+        result = attribute_value
+
+        # If the attribute value is not already in reStructuredText format, it will be escaped.
+        if self._render_cfg.is_format_rst(package_name, type_name, attribute_name) is False:
+
+            # Is it Markdown format?
+            if self._render_cfg.is_format_md(package_name, type_name, attribute_name) is True:
+                # Convert Markdown to reStructuredText.
+                markdown = Markdown(renderer=RSTRenderer)
+                result = markdown.convert(attribute_value)
+
+            # Otherwise escape the text for reStructuredText.
+            else:
+                result = self.rst_escape(attribute_value)
+
+        return result
+
+    # pylint: disable-next=too-many-locals, unused-argument
     def _convert_record_object(self, record: Record_Object, level: int, translation: Optional[dict]) -> Ret:
         # lobster-trace: SwRequirements.sw_req_rst_record
         """
@@ -492,12 +576,21 @@ class RstConverter(BaseConverter):
         rows = []
         trlc_ast_walker = self._get_trlc_ast_walker()
         for name, value in record.field.items():
-            attribute_name = name
-            if translation is not None and name in translation:
-                attribute_name = translation[name]
+            attribute_name = self._translate_attribute_name(translation, name)
             attribute_name = self.rst_escape(attribute_name)
 
             # Retrieve the attribute value by processing the field value.
+            # The result will be a string representation of the value.
+            # If the value is an array of record references, the result will be a Markdown list of links.
+            # If the value is a single record reference, the result will be a Markdown link.
+            # If the value is a string literal, the result will be the string literal value that considers
+            # its formatting.
+            # Otherwise the result will be the attribute value in a proper format.
+            self._ast_meta_data = {
+                "package_name": record.n_package.name,
+                "type_name": record.n_typ.name,
+                "attribute_name": name
+            }
             walker_result = trlc_ast_walker.walk(value)
 
             attribute_value = ""

@@ -270,8 +270,8 @@ def test_tc_verbose(record_property, capsys, monkeypatch):
 
     # Check if the expected output.
     lines = captured.out.splitlines()
-    assert len(lines) == 17
-    assert lines[15] == "req_id_1"
-    assert lines[16] == "description: Test description"
+    assert len(lines) == 18
+    assert lines[16] == "req_id_1"
+    assert lines[17] == "description: Test description"
 
 # Main *************************************************************************

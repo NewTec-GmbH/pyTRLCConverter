@@ -1,0 +1,13 @@
+{
+    "renderCfg": [{
+        "package": "package",
+        "type": "typeRst",
+        "attribute": "description",
+        "format": "rst"
+    }, {
+        "package": ".*",
+        "type": ".*",
+        "attribute": "description",
+        "format": "md"
+    }]
+}

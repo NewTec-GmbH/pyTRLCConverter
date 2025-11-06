@@ -43,6 +43,7 @@ def test_tc_ascii_conversion(record_property, capsys, monkeypatch):
     monkeypatch.setattr("sys.argv", [
         "pyTRLCConverter",
         "--source", "./tests/utils",
+        "--exclude", "./tests/utils/single_req_description_md.trlc",
         "dump"
     ])
 

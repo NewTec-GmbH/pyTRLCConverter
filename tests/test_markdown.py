@@ -31,6 +31,108 @@ from pyTRLCConverter.markdown_converter import MarkdownConverter
 
 # Functions ********************************************************************
 
+def _assert_heading(lines: list[str], level: int, text: str) -> int:
+    """Helper function to assert a Markdown heading line.
+
+    Args:
+        lines (list[str]): The lines to check.
+        level (int): The expected heading level (1-6).
+        text (str): The expected heading text.
+
+    Returns:
+        int: The number of lines consumed (always 1).
+    """
+    expected_heading = "#" * level + " " + text + "\n"
+    assert lines[0] == expected_heading
+    return 1
+
+def _assert_empty_line(lines: list[str]) -> int:
+    """Helper function to assert an empty line.
+
+    Args:
+        lines (list[str]): The lines to check.
+
+    Returns:
+        int: The number of lines consumed (always 1).
+    """
+    assert lines[0] == "\n"
+    return 1
+
+def _assert_table(lines: list[str],
+                  expected_headers: list[list[str]],
+                  expected_rows: list[list[str]]) -> int:
+    """Helper function to assert a Markdown table.
+
+    Args:
+        lines (list[str]): The lines to check.
+        expected_headers (list[list[str]]): The expected table headers.
+        expected_rows (list[list[str]]): The expected table rows.
+
+    Returns:
+        int: The number of lines consumed.
+    """
+    index = 0
+
+    # Check for HTML table.
+    assert lines[index] == "<table>\n"
+    index += 1
+
+    # Check for table header.
+    assert lines[index] == "<thead>\n"
+    index += 1
+
+    # Check table header.
+    for row in expected_headers:
+        assert lines[index] == "<tr>\n"
+        index += 1
+
+        for cell in row:
+            assert lines[index] == f"<th>{cell}</th>\n"
+            index += 1
+
+        assert lines[index] == "</tr>\n"
+        index += 1
+
+    assert lines[index] == "</thead>\n"
+    index += 1
+
+    # Check for table body.
+    assert lines[index] == "<tbody>\n"
+    index += 1
+
+    # Check for table rows after header.
+    for row in expected_rows:
+        assert lines[index] == "<tr>\n"
+        index += 1
+
+        for cell in row:
+            assert lines[index] == "<td>\n"
+            index += 1
+            assert lines[index] == "\n"
+            index += 1
+
+            # Get cell content line(s).
+            content = ""
+            while lines[index] != "</td>\n":
+                content += lines[index]
+                index += 1
+
+            assert content == f"{cell}\n\n"
+
+            assert lines[index] == "</td>\n"
+            index += 1
+
+        assert lines[index] == "</tr>\n"
+        index += 1
+
+    assert lines[index] == "</tbody>\n"
+    index += 1
+
+    assert lines[index] == "</table>\n"
+    index += 1
+
+    return index
+
 def test_tc_markdown(record_property, capsys, monkeypatch, tmp_path):
     # lobster-trace: SwTests.tc_markdown
     """
@@ -65,13 +167,18 @@ def test_tc_markdown(record_property, capsys, monkeypatch, tmp_path):
     # Read the contents of the generated Markdown file and assert it is the expected valid Markdown.
     with open(tmp_path / "output.md", "r", encoding='utf-8') as generated_md:
         lines = generated_md.readlines()
-        assert lines[0] == "# Specification\n"  # Default top level name
-        assert lines[1] == "\n"
-        assert lines[2] == r"### req\_id\_1" + "\n"  # Expect lvl3 heading as section heading would be lvl2.
-        assert lines[3] == "\n"
-        assert lines[4] == r"| Attribute Name | Attribute Value |" + "\n"
-        assert lines[5] == r"| -------------- | --------------- |" + "\n"
-        assert lines[6] == r"| description | Test description |" + "\n"
+        line_index = 0
+        line_index += _assert_heading(lines[line_index:], 1, "Specification")
+        line_index += _assert_empty_line(lines[line_index:])
+        line_index += _assert_heading(lines[line_index:], 3, r"req\_id\_1")
+        line_index += _assert_empty_line(lines[line_index:])
+        line_index += _assert_table(lines[line_index:],
+                                    [["Attribute Name", "Attribute Value"]],
+                                    [["description", "Test description"],
+                                     ["link", "N/A"],
+                                     ["index", "1"],
+                                     ["precision", "N/A"],
+                                     ["valid", "N/A"]])
 
 def test_tc_markdown_section(record_property, capsys, monkeypatch, tmp_path):
     # lobster-trace: SwTests.tc_markdown_section
@@ -109,15 +216,20 @@ def test_tc_markdown_section(record_property, capsys, monkeypatch, tmp_path):
     # Read the contents of the generated Markdown file and assert it is the expected valid Markdown.
     with open(tmp_path / "custom.md", "r", encoding='utf-8') as generated_md:
         lines = generated_md.readlines()
-        assert lines[0] == "# Requirement Specification\n"
-        assert lines[1] == "\n"
-        assert lines[2] == r"## Test section" + "\n"
-        assert lines[3] == "\n"
-        assert lines[4] == r"### req\_id\_2" + "\n"
-        assert lines[5] == "\n"
-        assert lines[6] == r"| Attribute Name | Attribute Value |" + "\n"
-        assert lines[7] == r"| -------------- | --------------- |" + "\n"
-        assert lines[8] == r"| description | Test description |" + "\n"
+        line_index = 0
+        line_index += _assert_heading(lines[line_index:], 1, "Requirement Specification")
+        line_index += _assert_empty_line(lines[line_index:])
+        line_index += _assert_heading(lines[line_index:], 2, "Test section")
+        line_index += _assert_empty_line(lines[line_index:])
+        line_index += _assert_heading(lines[line_index:], 3, r"req\_id\_2")
+        line_index += _assert_empty_line(lines[line_index:])
+        line_index += _assert_table(lines[line_index:],
+                                    [["Attribute Name", "Attribute Value"]],
+                                    [["description", "Test description"],
+                                     ["link", "N/A"],
+                                     ["index", "N/A"],
+                                     ["precision", "1/100"],
+                                     ["valid", "N/A"]])
 
 
 def test_tc_markdown_escape(record_property, tmp_path):
@@ -192,24 +304,10 @@ def test_tc_markdown_table(record_property, tmp_path):
     markdown_converter = MarkdownConverter(Namespace(out=str(tmp_path), exclude=None))
 
     # Create a table header. Expect 2 lines. First containing the column titles, second the separator.
-    assert markdown_converter.markdown_create_table_head(["Header1", "Header2"]).split('\n') == \
-        [r"| Header1 | Header2 |", r"| ------- | ------- |", ""]
-    assert markdown_converter.markdown_create_table_head(["Header1", "Header2", "Header3"]).split('\n') == \
-        [r"| Header1 | Header2 | Header3 |", r"| ------- | ------- | ------- |", ""]
-    assert markdown_converter.markdown_create_table_head(["Header!", "Header#"]).split('\n') == \
-        [r"| Header\! | Header\# |", r"| -------- | -------- |", ""]
-    assert markdown_converter.markdown_create_table_head(["Header!", "Header#"], escape=False).split('\n') == \
-        [r"| Header! | Header# |", r"| ------- | ------- |", ""]
-
-    # Create a table row.
-    assert markdown_converter.markdown_append_table_row(["Value1", "Value2"]) == \
-        r"| Value1 | Value2 |" + "\n"
-    assert markdown_converter.markdown_append_table_row(["Value1", "Value2", "Value3"]) == \
-        r"| Value1 | Value2 | Value3 |" + "\n"
-    assert markdown_converter.markdown_append_table_row(["Value!", "Value#"]) == \
-        r"| Value\! | Value\# |" + "\n"
-    assert markdown_converter.markdown_append_table_row(["Value!", "Value#"], escape=False) == \
-        r"| Value! | Value# |" + "\n"
+    table = markdown_converter.markdown_create_table(["Header1", "Header2"], [["left", "center"]])
+    lines = table.splitlines(keepends=True)
+    line_index = 0
+    line_index += _assert_table(lines, [["Header1", "Header2"]], [["left", "center"]])
 
 def test_tc_markdown_list(record_property, tmp_path):
     # lobster-trace: SwTests.tc_markdown_list
@@ -224,13 +322,9 @@ def test_tc_markdown_list(record_property, tmp_path):
 
     markdown_converter = MarkdownConverter(Namespace(out=str(tmp_path), exclude=None))
 
-    # Create a Markdown list without html. Expect each item to be prefixed with an asterix and space.
-    assert markdown_converter.markdown_create_list(["Item1", "Item2!"], use_html=False, escape=False) == \
-        "* Item1\n* Item2!\n"
-    # Create a Markdown list with html.
-    # Expect each item to be a list element and the full list to be enclosed in an unordered list tag.
-    assert markdown_converter.markdown_create_list(["Item1", "Item2!"], use_html=True) == \
-        "<ul><li>Item1</li><li>Item2\\!</li></ul>"
+    # Create a Markdown list. Expect each item to be prefixed with a hyphen and space.
+    markdown_list = markdown_converter.markdown_create_list(["Item1", "Item2"])
+    assert markdown_list == "- Item1\n- Item2\n"
 
 def test_tc_markdown_link(record_property, tmp_path):
     # lobster-trace: SwTests.tc_markdown_link
@@ -397,6 +491,7 @@ def test_tc_markdown_single_doc_exclude(record_property, capsys, monkeypatch, tm
         "--source", "./tests/utils",
         "--exclude", "./tests/utils/single_req_no_section.trlc",
         "--exclude", "./tests/utils/single_req_with_section.trlc",
+        "--exclude", "./tests/utils/single_req_description_md.trlc",
         "--out", str(tmp_path),
         "markdown",
         "--single-document",
@@ -414,14 +509,18 @@ def test_tc_markdown_single_doc_exclude(record_property, capsys, monkeypatch, tm
     # Verify
     with open(os.path.join(tmp_path, output_file_name), "r", encoding='utf-8') as generated_md:
         lines = generated_md.readlines()
-        assert lines[0] == "# Specification\n"
-        assert lines[1] == "\n"
-        assert lines[2] == r"### req\_id\_3" + "\n"
-        assert lines[3] == "\n"
-        assert lines[4] == r"| Attribute Name | Attribute Value |" + "\n"
-        assert lines[5] == r"| -------------- | --------------- |" + "\n"
-        assert lines[6] == r"| description | Test description |" + "\n"
-        assert lines[7] == r"| link | [Requirements\.req\_id\_2](single_req_with_section.md#req_id_2) |" + "\n"
+        line_index = 0
+        line_index += _assert_heading(lines[line_index:], 1, "Specification")
+        line_index += _assert_empty_line(lines[line_index:])
+        line_index += _assert_heading(lines[line_index:], 3, r"req\_id\_3")
+        line_index += _assert_empty_line(lines[line_index:])
+        line_index += _assert_table(lines[line_index:],
+                                    [["Attribute Name", "Attribute Value"]],
+                                    [["description", "Test description"],
+                                     ["link", r"[Requirements\.req\_id\_2](single_req_with_section.md#req_id_2)"],
+                                     ["index", "N/A"],
+                                     ["precision", "N/A"],
+                                     ["valid", "False"]])
 
 def test_tc_markdown_single_doc_exclude_none(record_property, capsys, monkeypatch, tmp_path):
     # lobster-trace: SwTests.tc_cli_exclude
@@ -440,7 +539,8 @@ def test_tc_markdown_single_doc_exclude_none(record_property, capsys, monkeypatc
     output_file_name = "myReq.md"
     monkeypatch.setattr("sys.argv", [
         "pyTRLCConverter",
-        "--source", "./tests/utils",
+        "--source", "./tests/utils/req.rsl",
+        "--source", "./tests/utils/single_req_no_section.trlc",
         "--out", str(tmp_path),
         "markdown",
         "--single-document",
@@ -458,15 +558,18 @@ def test_tc_markdown_single_doc_exclude_none(record_property, capsys, monkeypatc
     # Verify
     with open(os.path.join(tmp_path, output_file_name), "r", encoding='utf-8') as generated_md:
         lines = generated_md.readlines()
-        assert lines[0] == "# Specification\n"
-        assert lines[1] == "\n"
-        assert lines[2] == r"### req\_id\_1" + "\n"
-        assert lines[3] == "\n"
-        assert lines[4] == r"| Attribute Name | Attribute Value |" + "\n"
-        assert lines[5] == r"| -------------- | --------------- |" + "\n"
-        assert lines[6] == r"| description | Test description |" + "\n"
-        assert lines[7] == r"| link | N/A |" + "\n"
-        # Not all lines are checked.
+        line_index = 0
+        line_index += _assert_heading(lines[line_index:], 1, "Specification")
+        line_index += _assert_empty_line(lines[line_index:])
+        line_index += _assert_heading(lines[line_index:], 3, r"req\_id\_1")
+        line_index += _assert_empty_line(lines[line_index:])
+        line_index += _assert_table(lines[line_index:],
+                                    [["Attribute Name", "Attribute Value"]],
+                                    [["description", "Test description"],
+                                     ["link", "N/A"],
+                                     ["index", "1"],
+                                     ["precision", "N/A"],
+                                     ["valid", "N/A"]])
 
 def test_tc_markdown_multi_doc(record_property, capsys, monkeypatch, tmp_path):
     # lobster-trace: SwTests.tc_markdown_multi_doc
@@ -501,31 +604,123 @@ def test_tc_markdown_multi_doc(record_property, capsys, monkeypatch, tmp_path):
     # Read the contents of the generated Markdown file and assert it is the expected valid Markdown.
     with open(tmp_path / "single_req_no_section.md", "r", encoding='utf-8') as generated_md:
         lines = generated_md.readlines()
-        assert lines[0] == "# Specification\n"  # Automatically generated top level heading.
-        assert lines[1] == "\n"
-        assert lines[2] == r"## req\_id\_1" + "\n"
-        assert lines[3] == "\n"
-        assert lines[4] == r"| Attribute Name | Attribute Value |" + "\n"
-        assert lines[5] == r"| -------------- | --------------- |" + "\n"
-        assert lines[6] == r"| description | Test description |" + "\n"
+        line_index = 0
+        line_index += _assert_heading(lines[line_index:], 1, "Specification")
+        line_index += _assert_empty_line(lines[line_index:])
+        line_index += _assert_heading(lines[line_index:], 2, r"req\_id\_1")
+        line_index += _assert_empty_line(lines[line_index:])
+        line_index += _assert_table(lines[line_index:],
+                                    [["Attribute Name", "Attribute Value"]],
+                                    [["description", "Test description"],
+                                     ["link", "N/A"],
+                                     ["index", "1"],
+                                     ["precision", "N/A"],
+                                     ["valid", "N/A"]])
+
 
     with open(tmp_path / "single_req_with_link.md", "r", encoding='utf-8') as generated_md:
         lines = generated_md.readlines()
-        assert lines[0] == "# Specification\n"
-        assert lines[1] == "\n"
-        assert lines[2] == r"## req\_id\_3" + "\n"
-        assert lines[3] == "\n"
-        assert lines[4] == r"| Attribute Name | Attribute Value |" + "\n"
-        assert lines[5] == r"| -------------- | --------------- |" + "\n"
-        assert lines[6] == r"| description | Test description |" + "\n"
-        assert lines[7] == r"| link | [Requirements\.req\_id\_2](single_req_with_section.md#req_id_2) |" + "\n"
+        line_index = 0
+        line_index += _assert_heading(lines[line_index:], 1, "Specification")
+        line_index += _assert_empty_line(lines[line_index:])
+        line_index += _assert_heading(lines[line_index:], 2, r"req\_id\_3")
+        line_index += _assert_empty_line(lines[line_index:])
+        line_index += _assert_table(lines[line_index:],
+                                    [["Attribute Name", "Attribute Value"]],
+                                    [["description", "Test description"],
+                                     ["link", r"[Requirements\.req\_id\_2](single_req_with_section.md#req_id_2)"],
+                                     ["index", "N/A"],
+                                     ["precision", "N/A"],
+                                     ["valid", "False"]])
 
     with open(tmp_path / "single_req_with_section.md", "r", encoding='utf-8') as generated_md:
         lines = generated_md.readlines()
-        assert lines[0] == r"# Test section" + "\n"
-        assert lines[1] == "\n"
-        assert lines[2] == r"## req\_id\_2" + "\n"
-        assert lines[3] == "\n"
-        assert lines[4] == r"| Attribute Name | Attribute Value |" + "\n"
-        assert lines[5] == r"| -------------- | --------------- |" + "\n"
-        assert lines[6] == r"| description | Test description |" + "\n"
+        line_index = 0
+        line_index += _assert_heading(lines[line_index:], 1, "Test section")
+        line_index += _assert_empty_line(lines[line_index:])
+        line_index += _assert_heading(lines[line_index:], 2, r"req\_id\_2")
+        line_index += _assert_empty_line(lines[line_index:])
+        line_index += _assert_table(lines[line_index:],
+                                    [["Attribute Name", "Attribute Value"]],
+                                    [["description", "Test description"],
+                                     ["link", "N/A"],
+                                     ["index", "N/A"],
+                                     ["precision", "1/100"],
+                                     ["valid", "N/A"]])
+
+def test_tc_markdown_render_md(record_property, capsys, monkeypatch, tmp_path):
+    # lobster-trace: SwTests.tc_markdown_render_md
+    """
+    The software shall support rendering requirement attributes containing Markdown syntax.
+
+    Args:
+        record_property (Any): Used to inject the test case reference into the test results.
+        capsys (Any): Used to capture stdout and stderr.
+        monkeypatch (Any): Used to mock program arguments.
+        tmp_path (Path): Used to create a temporary output directory.
+    """
+    record_property("lobster-trace", "SwTests.tc_cli_exclude")
+
+    # Mock program arguments to specify an output folder.
+    output_file_name = "myReq.md"
+    monkeypatch.setattr("sys.argv", [
+        "pyTRLCConverter",
+        "--source", "./tests/utils/req.rsl",
+        "--source", "./tests/utils/single_req_description_md.trlc",
+        "--out", str(tmp_path),
+        "--renderCfg", "./tests/utils/renderCfg.json",
+        "markdown",
+        "--single-document",
+        "--name", output_file_name
+    ])
+
+    # Expect the program to run without any exceptions.
+    main()
+
+    # Capture stdout and stderr.
+    captured = capsys.readouterr()
+    # Check that no errors were reported.
+    assert captured.err == ""
+
+    attribute_value = \
+'''# Heading 1
+
+## Heading 2
+
+- Bullet point 1
+- Bullet point 2
+    - Sub bullet point 1
+    - Sub bullet point 2
+
+1. Numbered point 1
+2. Numbered point 2
+    1. Sub numbered point 1
+    2. Sub numbered point 2
+
+**Bold text**, *italic text* and __underlined text__.
+
+```
+Code block example
+```
+
+--- Divider ---
+
+> Blockquote example
+
+[Link to pyTRLCConverter](https://github.com/NewTec-GmbH/pyTRLCConverter)'''
+
+    # Verify
+    with open(os.path.join(tmp_path, output_file_name), "r", encoding='utf-8') as generated_md:
+        lines = generated_md.readlines()
+        line_index = 0
+        line_index += _assert_heading(lines[line_index:], 1, "Specification")
+        line_index += _assert_empty_line(lines[line_index:])
+        line_index += _assert_heading(lines[line_index:], 3, r"req\_id\_4")
+        line_index += _assert_empty_line(lines[line_index:])
+        line_index += _assert_table(lines[line_index:],
+                                    [["Attribute Name", "Attribute Value"]],
+                                    [["description", attribute_value],
+                                     ["link", "N/A"],
+                                     ["index", "N/A"],
+                                     ["precision", "N/A"],
+                                     ["valid", "N/A"]])

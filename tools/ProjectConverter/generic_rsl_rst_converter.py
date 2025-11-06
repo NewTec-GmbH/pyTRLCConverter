@@ -44,7 +44,7 @@ class GenericRslRstConverter(RstConverter):
     """Project specific reStructuredText converter subclass for generic.rsl types.
     """
 
-    # pylint: disable=unused-argument
+    # pylint: disable-next=unused-argument
     def _print_info(self, info: Record_Object, level: int, translation: Optional[dict]) -> Ret:
         """Prints the information.
 
@@ -57,16 +57,21 @@ class GenericRslRstConverter(RstConverter):
         Returns:
            Ret: Status
         """
+        assert self._fd is not None
+
         self._write_empty_line_on_demand()
 
-        description = self._get_attribute(info, "description")
+        rst_info = self._render(info.n_package.name,
+                                info.n_typ.name,
+                                "description",
+                                self._get_attribute(info, "description"))
 
-        rst_info = self.rst_escape(description)
         self._fd.write(rst_info)
         self._fd.write("\n")
+
         return Ret.OK
 
-    # pylint: disable=unused-argument
+    # pylint: disable-next=unused-argument
     def _print_plantuml(self, diagram: Record_Object, level: int, translation: Optional[dict]) -> Ret:
         """Prints a plantuml diagram.
 
@@ -79,6 +84,8 @@ class GenericRslRstConverter(RstConverter):
         Returns:
            Ret: Status
         """
+        assert self._fd is not None
+
         image_file = convert_plantuml_to_image(
             self._get_attribute(diagram, "file_path"),
             self._args.out,
@@ -95,7 +102,7 @@ class GenericRslRstConverter(RstConverter):
 
         return Ret.OK
 
-    # pylint: disable=unused-argument
+    # pylint: disable-next=unused-argument
     def _print_image(self, image: Record_Object, level: int, translation: Optional[dict]) -> Ret:
         """Prints the image.
 
@@ -108,6 +115,8 @@ class GenericRslRstConverter(RstConverter):
         Returns:
            Ret: Status
         """
+        assert self._fd is not None
+
         image_file = locate_file(self._get_attribute(image, "file_path"), self._args.source)
         if image_file is not None:
             # Copy image image file to output folder.

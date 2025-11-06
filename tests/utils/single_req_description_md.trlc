@@ -1,0 +1,32 @@
+package Requirements
+
+Requirement req_id_4 {
+    description =
+    '''
+    # Heading 1
+    
+    ## Heading 2
+
+    - Bullet point 1
+    - Bullet point 2
+        - Sub bullet point 1
+        - Sub bullet point 2
+
+    1. Numbered point 1
+    2. Numbered point 2
+        1. Sub numbered point 1
+        2. Sub numbered point 2
+
+    **Bold text**, *italic text* and __underlined text__.
+
+    ```
+    Code block example
+    ```
+
+    --- Divider ---
+
+    > Blockquote example
+
+    [Link to pyTRLCConverter](https://github.com/NewTec-GmbH/pyTRLCConverter)
+    '''
+}

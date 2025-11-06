@@ -38,6 +38,7 @@ from pyTRLCConverter.markdown_converter import MarkdownConverter
 from pyTRLCConverter.docx_converter import DocxConverter
 from pyTRLCConverter.logger import enable_verbose, log_verbose, is_verbose_enabled, log_error
 from pyTRLCConverter.rst_converter import RstConverter
+from pyTRLCConverter.render_config import RenderConfig
 
 # Variables ********************************************************************
 
@@ -77,6 +78,7 @@ def _create_args_parser() -> argparse.ArgumentParser:
         version="%(prog)s " + __version__
     )
 
+    # lobster-trace: SwRequirements.sw_req_cli_verbose
     parser.add_argument(
         "-v",
         "--verbose",
@@ -137,6 +139,16 @@ def _create_args_parser() -> argparse.ArgumentParser:
         help="Python module with project specific conversion functions."
     )
 
+    # lobster-trace: SwRequirements.sw_req_cli_render_cfg
+    parser.add_argument(
+        "-rc",
+        "--renderCfg",
+        type=str,
+        default=None,
+        required=False,
+        help="Render configuriation JSON file."
+    )
+
     # lobster-trace: SwRequirements.sw_req_cli_translation
     parser.add_argument(
         "-tr",
@@ -149,19 +161,13 @@ def _create_args_parser() -> argparse.ArgumentParser:
 
     return parser
 
-def main() -> int:
-    # lobster-trace: SwRequirements.sw_req_cli
-    # lobster-trace: SwRequirements.sw_req_destination_format
-    """Main program entry point.
+def _setup_converters(args_sub_parser: argparse._SubParsersAction) -> Ret:
+    """Setup the converters.
 
     Returns:
-        int: Program status
+        Ret: Status of the setup.
     """
     ret_status = Ret.OK
-
-    # Create program arguments parser.
-    args_parser = _create_args_parser()
-    args_sub_parser = args_parser.add_subparsers(required='True')
 
     # Check if a project specific converter is given and load it.
     project_converter = None
@@ -169,7 +175,7 @@ def main() -> int:
     try:
         project_converter = _get_project_converter()
     except ValueError as exc:
-        log_error(exc)
+        log_error(str(exc))
         ret_status = Ret.ERROR
 
     if ret_status == Ret.OK:
@@ -186,45 +192,38 @@ def main() -> int:
             if converter.get_subcommand() != project_converter_cmd:
                 converter.register(args_sub_parser)
 
-        args = args_parser.parse_args()
-
-        if args is None:
-            ret_status = Ret.ERROR
-
-        else:
-            enable_verbose(args.verbose)
-
-            # In verbose mode print all program arguments.
-            if is_verbose_enabled() is True:
-                log_verbose("Program arguments: ")
-
-                for arg in vars(args):
-                    log_verbose(f"* {arg} = {vars(args)[arg]}")
-                log_verbose("\n")
-
-            # lobster-trace: SwRequirements.sw_req_process_trlc_symbols
-            symbols = get_trlc_symbols(args.source, args.include)
-
-            if symbols is None:
-                log_error(f"No items found at {args.source}.")
-                ret_status = Ret.ERROR
-            else:
-                try:
-                    _create_out_folder(args.out)
-
-                    # Feed the items into the given converter.
-                    log_verbose(
-                        f"Using converter {args.converter_class.__name__}: {args.converter_class.get_description()}")
-                    converter = args.converter_class(args)
-
-                    walker = ItemWalker(args, converter)
-                    ret_status = walker.walk_symbols(symbols)
-
-                except (FileNotFoundError, OSError) as exc:
-                    log_error(exc)
-                    ret_status = Ret.ERROR
-
     return ret_status
+
+def _show_program_arguments(args: argparse.Namespace) -> None:
+    """Show program arguments in verbose mode to the user.
+
+    Args:
+        args (argparse.Namespace): Program arguments
+    """
+    if is_verbose_enabled() is True:
+        log_verbose("Program arguments: ")
+
+        for arg in vars(args):
+            log_verbose(f"* {arg} = {vars(args)[arg]}")
+        log_verbose("\n")
+
+def _setup_render_configuration(file_name: Optional[str]) -> Optional[RenderConfig]:
+    """Setup render configuration.
+
+    Args:
+        file_name (str|None): File name of the render configuration file.
+
+    Returns:
+        RenderConfig|None: Render configuration or None if render configuration file could not be loaded.
+    """
+    # Load render configuration
+    render_cfg = RenderConfig()
+
+    if file_name is not None:
+        if render_cfg.load(file_name) is False:
+            render_cfg = None
+
+    return render_cfg
 
 def _get_project_converter() -> Optional[AbstractConverter]:
     # lobster-trace: SwRequirements.sw_req_prj_spec
@@ -287,6 +286,65 @@ def _create_out_folder(path: str) -> None:
             except OSError as e:
                 log_error(f"Failed to create folder {path}: {e}")
                 raise
+
+def main() -> int:
+    # lobster-trace: SwRequirements.sw_req_cli
+    # lobster-trace: SwRequirements.sw_req_destination_format
+    """Main program entry point.
+
+    Returns:
+        int: Program status
+    """
+    ret_status = Ret.OK
+
+    # Create program arguments parser.
+    args_parser = _create_args_parser()
+    args_sub_parser = args_parser.add_subparsers(required=True)
+
+    ret_status = _setup_converters(args_sub_parser)
+
+    if ret_status == Ret.OK:
+
+        args = args_parser.parse_args()
+
+        if args is None:
+            ret_status = Ret.ERROR
+
+        else:
+            enable_verbose(args.verbose)
+            _show_program_arguments(args)
+
+            # lobster-trace: SwRequirements.sw_req_trlc_type_attr_md
+            render_cfg = _setup_render_configuration(args.renderCfg)
+
+            # lobster-trace: SwRequirements.sw_req_process_trlc_symbols
+            symbols = get_trlc_symbols(args.source, args.include)
+
+            if render_cfg is None:
+                log_error(f"Failed to load render configuration file {args.renderCfg}.")
+                ret_status = Ret.ERROR
+            if symbols is None:
+                log_error(f"No items found at {args.source}.")
+                ret_status = Ret.ERROR
+            else:
+                try:
+                    _create_out_folder(args.out)
+
+                    # Feed the items into the given converter.
+                    log_verbose(
+                        f"Using converter {args.converter_class.__name__}: {args.converter_class.get_description()}")
+
+                    converter = args.converter_class(args)
+                    converter.set_render_cfg(render_cfg)
+
+                    walker = ItemWalker(args, converter)
+                    ret_status = walker.walk_symbols(symbols)
+
+                except (FileNotFoundError, OSError) as exc:
+                    log_error(str(exc))
+                    ret_status = Ret.ERROR
+
+    return ret_status
 
 # Main *************************************************************************
 

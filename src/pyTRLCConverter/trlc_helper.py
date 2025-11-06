@@ -21,7 +21,7 @@
 
 # Imports **********************************************************************
 import os
-from typing import Union, Optional
+from typing import Union, Optional, Any, Callable
 from trlc.errors import Message_Handler
 from trlc.trlc import Source_Manager
 from trlc.ast import Array_Aggregate, Expression, Record_Object
@@ -57,8 +57,9 @@ class TrlcAstWalker():
         }
         self._dispatcher_map_finish = {}
         self._other_dispatcher = None
+        self._list_item_dispatcher = None
 
-    def walk(self, expression: Expression) -> Union[list[str],str]:
+    def walk(self, expression: Expression) -> Union[list[Any],Any]:
         """
         Walk through the TRLC AST.
 
@@ -66,20 +67,20 @@ class TrlcAstWalker():
             expression (Expression): The AST node.
 
         Returns:
-            Union[list[str],str]: The result of the walking as string or list of strings.
+            Union[list[Any],Any]: The result of the walking as string or list of strings.
         """
         return self._on_general(expression)
 
-    # pylint: disable=line-too-long
-    def add_dispatcher(self, type_name: type, begin: Optional[callable], process: Optional[callable], finish: Optional[callable]) -> None:
+    # pylint: disable-next=line-too-long
+    def add_dispatcher(self, type_name: type, begin: Optional[Callable], process: Optional[Callable], finish: Optional[Callable]) -> None:
         """
         Add a dispatcher to the walker.
 
         Args:
             type_name (type): The type name
-            begin (Optional[callable]): The begin handler
-            process (Optional[callable]): The process handler
-            finish (Optional[callable]): The finish handler
+            begin (Optional[Callable]): The begin handler
+            process (Optional[Callable]): The process handler
+            finish (Optional[Callable]): The finish handler
         """
         if begin is not None:
             self._dispatcher_map_begin[type_name] = begin
@@ -90,16 +91,25 @@ class TrlcAstWalker():
         if finish is not None:
             self._dispatcher_map_finish[type_name] = finish
 
-    def set_other_dispatcher(self, dispatcher: callable) -> None:
+    def set_other_dispatcher(self, dispatcher: Callable) -> None:
         """
         Set the other dispatcher. This dispatcher is called when no dispatcher is found for the node.
 
         Args:
-            dispatcher (callable): The other dispatcher
+            dispatcher (Callable): The other dispatcher
         """
         self._other_dispatcher = dispatcher
 
-    def _dispatch(self, dispatcher_map: dict, expression: Expression, handle_other: bool) -> Union[list[str],str]:
+    def set_list_item_dispatcher(self, dispatcher: Callable) -> None:
+        """
+        Set the list item dispatcher. This dispatcher is called when a list item is processed.
+
+        Args:
+            dispatcher (Callable): The list item dispatcher.
+        """
+        self._list_item_dispatcher = dispatcher
+
+    def _dispatch(self, dispatcher_map: dict, expression: Expression, handle_other: bool) -> Union[list[Any],Any]:
         """
         Dispatch the expression to the dispatcher map.
 
@@ -109,7 +119,7 @@ class TrlcAstWalker():
             handle_other (bool): If True, the other dispatcher is called when no dispatcher is found.
 
         Returns:
-            Union[list[str],str]: The result of the dispatcher.
+            Union[list[Any],Any]: The result of the dispatcher.
         """
         result = ""
 
@@ -122,7 +132,7 @@ class TrlcAstWalker():
 
         return result
 
-    def _on_array_aggregate(self, array_aggregate: Array_Aggregate) -> list[str]:
+    def _on_array_aggregate(self, array_aggregate: Array_Aggregate) -> list[Any]:
         """
         Handle the Array_Aggregate node.
 
@@ -130,7 +140,7 @@ class TrlcAstWalker():
             array_aggregate (Array_Aggregate): The AST node.
 
         Returns:
-            list[str]: The result of the handling.
+            list[Any]: The result of the handling.
         """
         result = []
 
@@ -138,6 +148,9 @@ class TrlcAstWalker():
 
         for expression in array_aggregate.value:
             value_result = self._dispatch(self._dispatcher_map_process, expression, True)
+
+            if self._list_item_dispatcher is not None:
+                value_result = self._list_item_dispatcher(expression, value_result)
 
             if isinstance(value_result, list):
                 result.extend(value_result)
@@ -148,7 +161,7 @@ class TrlcAstWalker():
 
         return result
 
-    def _on_general(self, expression: Expression) -> Union[list[str],str]:
+    def _on_general(self, expression: Expression) -> Union[list[Any],Any]:
         """
         Handle the general case.
 
@@ -164,7 +177,7 @@ class TrlcAstWalker():
 
         return result
 
-    def _on_other(self, expression: Expression) -> Union[list[str],str]:
+    def _on_other(self, expression: Expression) -> Union[list[Any],str]:
         """
         Handle the other case.
 
@@ -172,7 +185,7 @@ class TrlcAstWalker():
             expression (Expression): The AST node.
 
         Returns:
-            Union[list[str],str]: The result of the handling.
+            Union[list[Any],str]: The result of the handling.
         """
         result = ""
 
@@ -288,6 +301,7 @@ def get_file_dict_from_symbols(symbols):
                 item_list = file_dict[item]
 
             else:
+                assert item_list is not None
                 item_list.append(item)
 
     return file_dict

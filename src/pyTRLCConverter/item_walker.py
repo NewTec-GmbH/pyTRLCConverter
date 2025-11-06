@@ -23,6 +23,7 @@ Author: Norbert Schulz (norbert.schulz@newtec.de)
 # Imports **********************************************************************
 import os
 import traceback
+from typing import Any
 from trlc.ast import Symbol_Table
 
 from pyTRLCConverter.abstract_converter import AbstractConverter
@@ -35,7 +36,8 @@ from pyTRLCConverter.ret import Ret
 # Classes **********************************************************************
 
 
-class ItemWalker:  # pylint: disable=too-few-public-methods
+# pylint: disable-next=too-few-public-methods
+class ItemWalker:
     # lobster-trace: SwRequirements.sw_req_process_trlc_symbols
     """
     A walker that traverses through the TRLC items in the given symbol table.
@@ -45,12 +47,12 @@ class ItemWalker:  # pylint: disable=too-few-public-methods
         _exclude_files (list): List of file paths to exclude from processing.
     """
 
-    def __init__(self, args: any, converter: AbstractConverter) -> None:
+    def __init__(self, args: Any, converter: AbstractConverter) -> None:
         """
         Initializes the TrlcWalker with the given arguments and converter.
 
         Args:
-            args (any): Arguments containing the exclude file paths.
+            args (Any): Arguments containing the exclude file paths.
             converter (AbstractConverter): The converter used for processing items.
         """
         self._converter = converter
@@ -101,13 +103,13 @@ class ItemWalker:  # pylint: disable=too-few-public-methods
 
         return result
 
-    def _walk_file(self, file_name: str, item_list: any) -> Ret:
+    def _walk_file(self, file_name: str, item_list: Any) -> Ret:
         """
         Walks through the items in the given file.
 
         Args:
             file_name (str): The name of the file.
-            item_list (any): The list of trlc items in the file.
+            item_list (Any): The list of trlc items in the file.
 
         Returns:
             Ret: The result of the walk operation.
@@ -151,12 +153,12 @@ class ItemWalker:  # pylint: disable=too-few-public-methods
 
         return result
 
-    def _visit_item(self, item: any) -> Ret:
+    def _visit_item(self, item: Any) -> Ret:
         """
         Visits the given item and processes it based on its type.
 
         Args:
-            item (any): The item to visit.
+            item (Any): The item to visit.
 
         Returns:
             Ret: The result of the visit.

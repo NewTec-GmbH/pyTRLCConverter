@@ -40,12 +40,10 @@ __license__ = "???"
 def resource_path(relative_path):
     # lobster-trace: SwRequirements.sw_req_version
     """ Get the absolute path to the resource, works for dev and for PyInstaller """
-    try:
-        # PyInstaller creates a temp folder and stores path in _MEIPASS
-        # pylint: disable=protected-access
-        # pylint: disable=no-member
-        base_path = sys._MEIPASS
-    except Exception:  # pylint: disable=broad-except
+
+    # Use getattr to avoid static analyzers complaining about sys._MEIPASS
+    base_path = getattr(sys, "_MEIPASS", None)
+    if base_path is None:
         base_path = os.path.abspath(".")
 
     return os.path.join(base_path, relative_path)

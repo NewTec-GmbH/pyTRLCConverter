@@ -34,13 +34,14 @@ SWE_REQ_OUT_FORMAT="rst"
 SWE_REQ_OUT_DIR="./out/sw-requirements/$SWE_REQ_OUT_FORMAT"
 SWE_REQ_CONVERTER=../ProjectConverter/req2rst
 TRANSLATION=../ProjectConverter/translation.json
+RENDERER_CFG=../ProjectConverter/renderCfg.json
 
 if [ ! -d "$SWE_REQ_OUT_DIR" ]; then
     mkdir -p "$SWE_REQ_OUT_DIR"
 fi
 
 echo "Generate software requirements ..."
-pyTRLCConverter --source=../../trlc/swe-req --source=../../trlc/model -o="$SWE_REQ_OUT_DIR" --verbose --project="$SWE_REQ_CONVERTER" --translation="$TRANSLATION" "$SWE_REQ_OUT_FORMAT"
+pyTRLCConverter --source=../../trlc/swe-req --source=../../trlc/model -o="$SWE_REQ_OUT_DIR" --verbose --project="$SWE_REQ_CONVERTER" --translation="$TRANSLATION" --renderCfg="$RENDERER_CFG" "$SWE_REQ_OUT_FORMAT"
 
 if [ $? -ne 0 ]; then
     read -p "Press any key to continue..."

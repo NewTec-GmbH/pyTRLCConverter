@@ -23,7 +23,7 @@ support for the TRLC record types defined in Generic.rsl.
 # If not, see <https://www.gnu.org/licenses/>.
 
 # Imports **********************************************************************
-from typing import Optional
+from typing import Optional, Any
 import docx
 # pylint: disable=import-error
 from pyTRLCConverter.docx_converter import DocxConverter
@@ -41,18 +41,18 @@ class GenericRslDocxConverter(DocxConverter):
     """
     Project specific docx converter subclass for generic.rsl types.
     """
-    def __init__(self, args: any) -> None:
+    def __init__(self, args: Any) -> None:
         """
         Initialize the custom docx converter.
 
         Args:
-            args (any): The parsed program arguments.
+            args (Any): The parsed program arguments.
         """
         super().__init__(args)
 
         self._img_counter = 1
 
-    # pylint: disable=unused-argument
+    # pylint: disable-next=unused-argument
     def _convert_record_object_info(self, record: Record_Object, level: int, translation: Optional[dict]) -> Ret:
         """Convert an information record object to the destination format.
 
@@ -65,9 +65,18 @@ class GenericRslDocxConverter(DocxConverter):
         Returns:
             Ret: Status
         """
-        self._docx.add_paragraph(self._get_attribute(record, "description"))
+        # Its important to set the block item container before rendering,
+        # as the render function uses it to add the content.
+        self._block_item_container = self._docx # type: ignore
+
+        self._render(record.n_package.name,
+                     record.n_typ.name,
+                     "description",
+                     self._get_attribute(record, "description"))
+
         return Ret.OK
 
+    # pylint: disable-next=unused-argument
     def _convert_record_object_plantuml(self, record: Record_Object, level: int, translation: Optional[dict]) -> Ret:
         """Convert a Plantuml diagram record object to the destination format.
 
@@ -94,6 +103,7 @@ class GenericRslDocxConverter(DocxConverter):
 
         return result
 
+    # pylint: disable-next=unused-argument
     def _convert_record_object_image(self, record: Record_Object, level: int, translation: Optional[dict]) -> Ret:
         """Convert a software diagram record object to the destination format.
 
@@ -115,6 +125,7 @@ class GenericRslDocxConverter(DocxConverter):
 
         return result
 
+    # pylint: disable-next=unused-argument
     def _add_image(self, image_file: str, caption: str, level: int) -> None:
         """Add an image to the docx file.
 
@@ -123,6 +134,8 @@ class GenericRslDocxConverter(DocxConverter):
             caption (str): The caption of the image.
             level (int): Current level of the record object
         """
+        assert self._docx is not None
+
         p = self._docx.add_paragraph()
         p.paragraph_format.alignment = docx.enum.text.WD_ALIGN_PARAGRAPH.CENTER
         run = p.add_run()

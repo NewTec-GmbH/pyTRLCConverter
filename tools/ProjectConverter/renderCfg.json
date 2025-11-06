@@ -1,0 +1,8 @@
+{
+    "renderCfg": [{
+        "package": ".*",
+        "type": "Info",
+        "attribute": "description",
+        "format": "md"
+    }]
+}

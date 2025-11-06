@@ -21,6 +21,11 @@ section "SW-Tests" {
             verifies = [SwRequirements.sw_req_translation]
         }
 
+        SwTestCase tc_render_configuration {
+            description = "This test case check whether the render configuration works."
+            verifies = [SwRequirements.sw_req_render_configuration]
+        }
+
         SwTestCase tc_prj_spec {
             description = "This test case check whether a project specific converter can be instantiated."
             verifies = [SwRequirements.sw_req_prj_spec, SwRequirements.sw_req_prj_spec_file, SwRequirements.sw_req_prj_spec_interface]
@@ -43,7 +48,7 @@ section "SW-Tests" {
 
         SwTestCase tc_verbose {
             description = "This test case check whether in verbose mode more information is printed out."
-            verifies = [SwRequirements.sw_req_verbose_mode]
+            verifies = [SwRequirements.sw_req_verbose_mode, SwRequirements.sw_req_cli_verbose]
         }
 
         SwTestCase tc_error {
@@ -174,6 +179,12 @@ section "SW-Tests" {
              whether the top level heading is created when required.'''
             verifies = [SwRequirements.sw_req_markdown_multiple_doc_mode, SwRequirements.sw_req_markdown_md_top_level]
         }
+
+        SwTestCase tc_markdown_render_md {
+            description = '''This test case checks whether Markdown content in requirement attributes is rendered correctly
+             when the render configuration is set to "md".'''
+            verifies = [SwRequirements.sw_req_markdown_render_md]
+        }
     }
 
     section "reStructuredText" {
@@ -257,6 +268,12 @@ section "SW-Tests" {
         SwTestCase tc_rst_multi_doc {
             description = "This test case checks whether the conversion to reStructuredText in multiple document mode convers one output document per TRLC source file."
             verifies = [SwRequirements.sw_req_rst_multiple_doc_mode]
+        }
+
+        SwTestCase tc_rst_render_md {
+            description = '''This test case checks whether Markdown content in requirement attributes is rendered correctly
+             when the render configuration is set to "md".'''
+            verifies = [SwRequirements.sw_req_rst_render_md]
         }
     }
 

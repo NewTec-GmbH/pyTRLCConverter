@@ -60,10 +60,10 @@ def log_verbose(message : str) -> None:
     Args:
         message (str): The message to print.
     """
-    if _VERBOSE_ENABLED:
+    if _VERBOSE_ENABLED is True:
         print(message)
 
-def log_error(message : str, show_timestamp : str = False) -> None:
+def log_error(message : str, show_timestamp : bool = False) -> None:
     # lobster-trace: SwRequirements.sw_req_error
     """Prints an error and optionally a timestamp with it
 
