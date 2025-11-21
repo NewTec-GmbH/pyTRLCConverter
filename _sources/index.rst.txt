@@ -17,8 +17,7 @@ Since the definition of TRLC types is project-specific, the built-in converters 
 
    sw_requirements
    sw_tests
-   sw_req_tracing_report
-   sw_test_tracing_report
+   sw_tracing_report
    coverage_resport
    sw_test_result_report
 

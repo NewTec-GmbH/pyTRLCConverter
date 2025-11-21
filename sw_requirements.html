@@ -40,10 +40,10 @@
 <section id="pytrlcconverter">
 <span id="swe-req-rst-pytrlcconverter"></span><h2>pyTRLCConverter<a class="headerlink" href="#pytrlcconverter" title="Link to this heading">¶</a></h2>
 <p>This file contains the software requirements for the pyTRLCConverter tool.</p>
-<figure class="align-default" id="id1">
+<figure class="align-default" id="id3">
 <img alt="PyTRLCConverter Tool Flow" src="context_diagram.png" />
 <figcaption>
-<p><span class="caption-text">PyTRLCConverter Tool Flow</span><a class="headerlink" href="#id1" title="Link to this image">¶</a></p>
+<p><span class="caption-text">PyTRLCConverter Tool Flow</span><a class="headerlink" href="#id3" title="Link to this image">¶</a></p>
 </figcaption>
 </figure>
 <section id="software-requirements">
@@ -63,7 +63,7 @@
 <td><p>The software shall be a command-line interface (CLI) application.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Valid Status</p></td>
-<td><p>valid</p></td>
+<td><p>VALID_STATUS.valid</p></td>
 </tr>
 <tr class="row-even"><td><p>Note</p></td>
 <td><p>N/A</p></td>
@@ -90,7 +90,7 @@
 <td><p>The software shall support the requirement type attribute name translation via a translation file in JSON format.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Valid Status</p></td>
-<td><p>valid</p></td>
+<td><p>VALID_STATUS.valid</p></td>
 </tr>
 <tr class="row-even"><td><p>Note</p></td>
 <td><p>Some attribute names may contain underscores or other special characters. These shall be translated to a humand readable names.</p></td>
@@ -100,6 +100,33 @@
 </tr>
 <tr class="row-even"><td><p>Verification Criteria</p></td>
 <td><p>Verify by converting one or more TRLC files with a translation file.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-sw-req-render-configuration admonition" id="swe-req-rst-sw-req-render-configuration">
+<p class="admonition-title">sw_req_render_configuration</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>The software shall support to specify the format of a string literal via a render configuration in JSON format.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Valid Status</p></td>
+<td><p>VALID_STATUS.valid</p></td>
+</tr>
+<tr class="row-even"><td><p>Note</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-odd"><td><p>Derived</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-even"><td><p>Verification Criteria</p></td>
+<td><p>Verify by converting one or more TRLC files with a render configuration file.</p></td>
 </tr>
 </tbody>
 </table>
@@ -117,7 +144,7 @@
 <td><p>The software shall support project specific adaptions for the conversion.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Valid Status</p></td>
-<td><p>valid</p></td>
+<td><p>VALID_STATUS.valid</p></td>
 </tr>
 <tr class="row-even"><td><p>Note</p></td>
 <td><p>Every project might have different requirements how the converted output should look like.</p></td>
@@ -144,7 +171,7 @@
 <td><p>The software shall provide a version information in the format ‘&lt;program-name&gt; &lt;major&gt;.&lt;minor&gt;.&lt;patch&gt;’.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Valid Status</p></td>
-<td><p>valid</p></td>
+<td><p>VALID_STATUS.valid</p></td>
 </tr>
 <tr class="row-even"><td><p>Note</p></td>
 <td><p>N/A</p></td>
@@ -171,7 +198,7 @@
 <td><p>The software shall process all TRLC symbols from the TRLC files.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Valid Status</p></td>
-<td><p>valid</p></td>
+<td><p>VALID_STATUS.valid</p></td>
 </tr>
 <tr class="row-even"><td><p>Note</p></td>
 <td><p>N/A</p></td>
@@ -198,7 +225,7 @@
 <td><p>The software shall convert the TRLC files to the required destination format.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Valid Status</p></td>
-<td><p>valid</p></td>
+<td><p>VALID_STATUS.valid</p></td>
 </tr>
 <tr class="row-even"><td><p>Note</p></td>
 <td><p>N/A</p></td>
@@ -225,7 +252,7 @@
 <td><p>The software shall show additional conversion information in verbose mode.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Valid Status</p></td>
-<td><p>valid</p></td>
+<td><p>VALID_STATUS.valid</p></td>
 </tr>
 <tr class="row-even"><td><p>Note</p></td>
 <td><p>N/A</p></td>
@@ -252,7 +279,7 @@
 <td><p>The software shall log any error message on stderr.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Valid Status</p></td>
-<td><p>valid</p></td>
+<td><p>VALID_STATUS.valid</p></td>
 </tr>
 <tr class="row-even"><td><p>Note</p></td>
 <td><p>N/A</p></td>
@@ -282,7 +309,7 @@
 <td><p>The project specific conversion file shall be a Python file.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Valid Status</p></td>
-<td><p>valid</p></td>
+<td><p>VALID_STATUS.valid</p></td>
 </tr>
 <tr class="row-even"><td><p>Note</p></td>
 <td><p>N/A</p></td>
@@ -312,7 +339,7 @@
 <td><p>The project specific conversion interface shall be realized by an abstract interface.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Valid Status</p></td>
-<td><p>valid</p></td>
+<td><p>VALID_STATUS.valid</p></td>
 </tr>
 <tr class="row-even"><td><p>Note</p></td>
 <td><p>N/A</p></td>
@@ -329,6 +356,7 @@
 </section>
 <section id="command-line-arguments">
 <span id="swe-req-rst-command-line-arguments"></span><h4>Command Line Arguments<a class="headerlink" href="#command-line-arguments" title="Link to this heading">¶</a></h4>
+<p>The following requirements describe the general command line arguments supported by the software. They are independent of the destination format.</p>
 <div class="admonition-sw-req-cli-help admonition" id="swe-req-rst-sw-req-cli-help">
 <p class="admonition-title">sw_req_cli_help</p>
 <table class="docutils align-default">
@@ -342,7 +370,7 @@
 <td><p>The software shall support the command line argument ‘-h’ and --help’ to show the help information.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Valid Status</p></td>
-<td><p>valid</p></td>
+<td><p>VALID_STATUS.valid</p></td>
 </tr>
 <tr class="row-even"><td><p>Note</p></td>
 <td><p>N/A</p></td>
@@ -352,6 +380,36 @@
 </tr>
 <tr class="row-even"><td><p>Verification Criteria</p></td>
 <td><p>Verify by calling the software with the argument ‘--help’ and check if the help information is shown.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-sw-req-cli-verbose admonition" id="swe-req-rst-sw-req-cli-verbose">
+<p class="admonition-title">sw_req_cli_verbose</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>The software shall support the command line argument ‘-v’ and ‘--verbose’ to enable verbose mode.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Valid Status</p></td>
+<td><p>VALID_STATUS.valid</p></td>
+</tr>
+<tr class="row-even"><td><p>Note</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-odd"><td><p>Derived</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="#swe-req-rst-sw-req-verbose-mode"><span class="std std-ref">SwRequirements.sw_req_verbose_mode</span></a></p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td><p>Verification Criteria</p></td>
+<td><p>Verify by calling the software with the argument ‘--verbose’ and check if the verbose output is shown.</p></td>
 </tr>
 </tbody>
 </table>
@@ -369,7 +427,7 @@
 <td><p>The software shall support the command line argument ‘--version’ to show the version information.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Valid Status</p></td>
-<td><p>valid</p></td>
+<td><p>VALID_STATUS.valid</p></td>
 </tr>
 <tr class="row-even"><td><p>Note</p></td>
 <td><p>N/A</p></td>
@@ -399,7 +457,7 @@
 <td><p>The software shall support the command line argument ‘-s’ and ‘--source’ multiple times to specify the source file(s) (*.rsl and *.trlc).</p></td>
 </tr>
 <tr class="row-odd"><td><p>Valid Status</p></td>
-<td><p>valid</p></td>
+<td><p>VALID_STATUS.valid</p></td>
 </tr>
 <tr class="row-even"><td><p>Note</p></td>
 <td><p>Source files will be given to TRLC for conversion.</p></td>
@@ -426,7 +484,7 @@
 <td><p>The software shall support the command line argument ‘-i’ and ‘--include’ multiple times to specify the file(s) for automatic inclusion.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Valid Status</p></td>
-<td><p>valid</p></td>
+<td><p>VALID_STATUS.valid</p></td>
 </tr>
 <tr class="row-even"><td><p>Note</p></td>
 <td><p>Its equal to TRLC --include program argument.</p></td>
@@ -453,7 +511,7 @@
 <td><p>The software shall support the command line argument ‘-ex’ and ‘--exclude’ multiple times to specify the file(s) for automatic exclusion.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Valid Status</p></td>
-<td><p>valid</p></td>
+<td><p>VALID_STATUS.valid</p></td>
 </tr>
 <tr class="row-even"><td><p>Note</p></td>
 <td><p>This is necessary in case an defined archtecture element traces to a requirement, but the requirement should not be included in the output.</p></td>
@@ -480,7 +538,7 @@
 <td><p>If no project specific conversion file is provided, the software shall use a default conversion.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Valid Status</p></td>
-<td><p>valid</p></td>
+<td><p>VALID_STATUS.valid</p></td>
 </tr>
 <tr class="row-even"><td><p>Note</p></td>
 <td><p>N/A</p></td>
@@ -507,7 +565,7 @@
 <td><p>The software shall support the command line argument ‘-o’ and ‘--out’ to specify the output directory.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Valid Status</p></td>
-<td><p>valid</p></td>
+<td><p>VALID_STATUS.valid</p></td>
 </tr>
 <tr class="row-even"><td><p>Note</p></td>
 <td><p>N/A</p></td>
@@ -534,7 +592,7 @@
 <td><p>The software shall support the command line argument ‘-tr’ and ‘--translation’ to specify the translation JSON file.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Valid Status</p></td>
-<td><p>valid</p></td>
+<td><p>VALID_STATUS.valid</p></td>
 </tr>
 <tr class="row-even"><td><p>Note</p></td>
 <td><p>N/A</p></td>
@@ -548,9 +606,37 @@
 </tbody>
 </table>
 </div>
+<div class="admonition-sw-req-cli-render-cfg admonition" id="swe-req-rst-sw-req-cli-render-cfg">
+<p class="admonition-title">sw_req_cli_render_cfg</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>The software shall support the command line argument ‘-rc’ and ‘--renderCfg’ to specify the render configuration JSON file.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Valid Status</p></td>
+<td><p>VALID_STATUS.valid</p></td>
+</tr>
+<tr class="row-even"><td><p>Note</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-odd"><td><p>Derived</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-even"><td><p>Verification Criteria</p></td>
+<td><p>Verify by calling the software with the argument ‘--renderCfg’ and check if e.g. Markdown is rendered correctly for string literals.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
 </section>
 <section id="markdown">
 <span id="swe-req-rst-markdown"></span><h4>Markdown<a class="headerlink" href="#markdown" title="Link to this heading">¶</a></h4>
+<p>The following requirements describe the Markdown destination format supported by the software.</p>
 <div class="admonition-sw-req-markdown admonition" id="swe-req-rst-sw-req-markdown">
 <p class="admonition-title">sw_req_markdown</p>
 <table class="docutils align-default">
@@ -564,7 +650,7 @@
 <td><p>The software shall support the conversion into Markdown format.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Valid Status</p></td>
-<td><p>valid</p></td>
+<td><p>VALID_STATUS.valid</p></td>
 </tr>
 <tr class="row-even"><td><p>Note</p></td>
 <td><p>N/A</p></td>
@@ -591,7 +677,7 @@
 <td><p>The Markdown converter shall convert a TRLC section into a Markdown heading by considering the depth level.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Valid Status</p></td>
-<td><p>valid</p></td>
+<td><p>VALID_STATUS.valid</p></td>
 </tr>
 <tr class="row-even"><td><p>Note</p></td>
 <td><p>N/A</p></td>
@@ -618,7 +704,7 @@
 <td><p>The Markdown converter shall convert the attributes of a TRLC record into a Markdown table.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Valid Status</p></td>
-<td><p>valid</p></td>
+<td><p>VALID_STATUS.valid</p></td>
 </tr>
 <tr class="row-even"><td><p>Note</p></td>
 <td><p>N/A</p></td>
@@ -642,10 +728,10 @@
 </thead>
 <tbody>
 <tr class="row-even"><td><p>Description</p></td>
-<td><p>The software shall escape all strings according the Markdown format.</p></td>
+<td><p>The software shall escape strings according the Markdown format.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Valid Status</p></td>
-<td><p>valid</p></td>
+<td><p>VALID_STATUS.valid</p></td>
 </tr>
 <tr class="row-even"><td><p>Note</p></td>
 <td><p>N/A</p></td>
@@ -655,6 +741,33 @@
 </tr>
 <tr class="row-even"><td><p>Verification Criteria</p></td>
 <td><p>Verify by using strings with characters, which needs escaping.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-sw-req-markdown-string-format admonition" id="swe-req-rst-sw-req-markdown-string-format">
+<p class="admonition-title">sw_req_markdown_string_format</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>The software shall not escape strings that are already in Markdown format.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Valid Status</p></td>
+<td><p>VALID_STATUS.valid</p></td>
+</tr>
+<tr class="row-even"><td><p>Note</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-odd"><td><p>Derived</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-even"><td><p>Verification Criteria</p></td>
+<td><p>Verify by using strings in Markdown format, which needs no escaping.</p></td>
 </tr>
 </tbody>
 </table>
@@ -672,7 +785,7 @@
 <td><p>The Markdown converter shall provide a function to create a Markdown heading.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Valid Status</p></td>
-<td><p>valid</p></td>
+<td><p>VALID_STATUS.valid</p></td>
 </tr>
 <tr class="row-even"><td><p>Note</p></td>
 <td><p>N/A</p></td>
@@ -699,7 +812,7 @@
 <td><p>The Markdown converter shall provide the functionality to create a Markdown table.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Valid Status</p></td>
-<td><p>valid</p></td>
+<td><p>VALID_STATUS.valid</p></td>
 </tr>
 <tr class="row-even"><td><p>Note</p></td>
 <td><p>N/A</p></td>
@@ -726,7 +839,7 @@
 <td><p>The Markdown converter shall provide a function to create a Markdown list, as well as a HTML list.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Valid Status</p></td>
-<td><p>valid</p></td>
+<td><p>VALID_STATUS.valid</p></td>
 </tr>
 <tr class="row-even"><td><p>Note</p></td>
 <td><p>N/A</p></td>
@@ -753,7 +866,7 @@
 <td><p>The Markdown converter shall provide a function to create a Markdown link.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Valid Status</p></td>
-<td><p>valid</p></td>
+<td><p>VALID_STATUS.valid</p></td>
 </tr>
 <tr class="row-even"><td><p>Note</p></td>
 <td><p>N/A</p></td>
@@ -780,7 +893,7 @@
 <td><p>The Markdown converter shall provide a function to create a Markdown image to embed images.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Valid Status</p></td>
-<td><p>valid</p></td>
+<td><p>VALID_STATUS.valid</p></td>
 </tr>
 <tr class="row-even"><td><p>Note</p></td>
 <td><p>N/A</p></td>
@@ -807,7 +920,7 @@
 <td><p>The Markdown converter shall provide a function to create colored text in Markdown format.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Valid Status</p></td>
-<td><p>valid</p></td>
+<td><p>VALID_STATUS.valid</p></td>
 </tr>
 <tr class="row-even"><td><p>Note</p></td>
 <td><p>N/A</p></td>
@@ -834,7 +947,7 @@
 <td><p>The Markdown converter shall provide a function to convert a line feed to Markdown soft return.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Valid Status</p></td>
-<td><p>valid</p></td>
+<td><p>VALID_STATUS.valid</p></td>
 </tr>
 <tr class="row-even"><td><p>Note</p></td>
 <td><p>N/A</p></td>
@@ -861,7 +974,7 @@
 <td><p>The Markdown converter shall create the converted files in the specified output folder.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Valid Status</p></td>
-<td><p>valid</p></td>
+<td><p>VALID_STATUS.valid</p></td>
 </tr>
 <tr class="row-even"><td><p>Note</p></td>
 <td><p>N/A</p></td>
@@ -890,7 +1003,7 @@
 <td><p>The software shall create a Markdown file for each TRLC file by default.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Valid Status</p></td>
-<td><p>valid</p></td>
+<td><p>VALID_STATUS.valid</p></td>
 </tr>
 <tr class="row-even"><td><p>Note</p></td>
 <td><p>N/A</p></td>
@@ -917,7 +1030,7 @@
 <td><p>The software shall add a top level heading to the Markdown file if there is no top level section.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Valid Status</p></td>
-<td><p>valid</p></td>
+<td><p>VALID_STATUS.valid</p></td>
 </tr>
 <tr class="row-even"><td><p>Note</p></td>
 <td><p>N/A</p></td>
@@ -947,7 +1060,7 @@
 <td><p>The software shall create a single Markdown file which combines all TRLC files if requested by command line arguments.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Valid Status</p></td>
-<td><p>valid</p></td>
+<td><p>VALID_STATUS.valid</p></td>
 </tr>
 <tr class="row-even"><td><p>Note</p></td>
 <td><p>N/A</p></td>
@@ -974,7 +1087,7 @@
 <td><p>The output file name shall be ‘output.md’ by default.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Valid Status</p></td>
-<td><p>valid</p></td>
+<td><p>VALID_STATUS.valid</p></td>
 </tr>
 <tr class="row-even"><td><p>Note</p></td>
 <td><p>N/A</p></td>
@@ -1001,7 +1114,7 @@
 <td><p>The output file name shall be customizable by command line arguments.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Valid Status</p></td>
-<td><p>valid</p></td>
+<td><p>VALID_STATUS.valid</p></td>
 </tr>
 <tr class="row-even"><td><p>Note</p></td>
 <td><p>N/A</p></td>
@@ -1028,7 +1141,7 @@
 <td><p>The software shall add a top level heading to the Markdown file in single doc mode.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Valid Status</p></td>
-<td><p>valid</p></td>
+<td><p>VALID_STATUS.valid</p></td>
 </tr>
 <tr class="row-even"><td><p>Note</p></td>
 <td><p>N/A</p></td>
@@ -1055,7 +1168,7 @@
 <td><p>The top level heading shall be ‘Specification’ by default.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Valid Status</p></td>
-<td><p>valid</p></td>
+<td><p>VALID_STATUS.valid</p></td>
 </tr>
 <tr class="row-even"><td><p>Note</p></td>
 <td><p>N/A</p></td>
@@ -1082,7 +1195,7 @@
 <td><p>The top level heading shall be customizable by command line arguments.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Valid Status</p></td>
-<td><p>valid</p></td>
+<td><p>VALID_STATUS.valid</p></td>
 </tr>
 <tr class="row-even"><td><p>Note</p></td>
 <td><p>N/A</p></td>
@@ -1097,9 +1210,40 @@
 </table>
 </div>
 </section>
+<section id="markdown-render-configuration">
+<span id="swe-req-rst-markdown-render-configuration"></span><h5>Markdown Render Configuration<a class="headerlink" href="#markdown-render-configuration" title="Link to this heading">¶</a></h5>
+<div class="admonition-sw-req-markdown-render-md admonition" id="swe-req-rst-sw-req-markdown-render-md">
+<p class="admonition-title">sw_req_markdown_render_md</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>The software shall render strings in Markdown format if specified in the render configuration.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Valid Status</p></td>
+<td><p>VALID_STATUS.valid</p></td>
+</tr>
+<tr class="row-even"><td><p>Note</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-odd"><td><p>Derived</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-even"><td><p>Verification Criteria</p></td>
+<td><p>Verify by using strings in Markdown format, which needs no escaping.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
 </section>
 <section id="restructuredtext">
 <span id="swe-req-rst-restructuredtext"></span><h4>reStructuredText<a class="headerlink" href="#restructuredtext" title="Link to this heading">¶</a></h4>
+<p>The following requirements describe the reStructuredText destination format supported by the software.</p>
 <div class="admonition-sw-req-rst admonition" id="swe-req-rst-sw-req-rst">
 <p class="admonition-title">sw_req_rst</p>
 <table class="docutils align-default">
@@ -1113,7 +1257,7 @@
 <td><p>The software shall support the conversion into reStructuredText format.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Valid Status</p></td>
-<td><p>valid</p></td>
+<td><p>VALID_STATUS.valid</p></td>
 </tr>
 <tr class="row-even"><td><p>Note</p></td>
 <td><p>N/A</p></td>
@@ -1140,7 +1284,7 @@
 <td><p>The reStructuredText converter shall convert a TRLC section into a reStructuredText heading by considering the depth level.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Valid Status</p></td>
-<td><p>valid</p></td>
+<td><p>VALID_STATUS.valid</p></td>
 </tr>
 <tr class="row-even"><td><p>Note</p></td>
 <td><p>N/A</p></td>
@@ -1167,7 +1311,7 @@
 <td><p>The reStructuredText converter shall convert the attributes of a TRLC record into a reStructuredText admonition with a table.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Valid Status</p></td>
-<td><p>valid</p></td>
+<td><p>VALID_STATUS.valid</p></td>
 </tr>
 <tr class="row-even"><td><p>Note</p></td>
 <td><p>N/A</p></td>
@@ -1194,7 +1338,7 @@
 <td><p>The software shall escape all strings according the reStructuredText format.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Valid Status</p></td>
-<td><p>valid</p></td>
+<td><p>VALID_STATUS.valid</p></td>
 </tr>
 <tr class="row-even"><td><p>Note</p></td>
 <td><p>N/A</p></td>
@@ -1204,6 +1348,60 @@
 </tr>
 <tr class="row-even"><td><p>Verification Criteria</p></td>
 <td><p>Verify by using strings with characters, which needs escaping.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-sw-req-rst-string-format admonition" id="swe-req-rst-sw-req-rst-string-format">
+<p class="admonition-title">sw_req_rst_string_format</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>The software shall not escape strings that are already in reStructuredText format.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Valid Status</p></td>
+<td><p>VALID_STATUS.valid</p></td>
+</tr>
+<tr class="row-even"><td><p>Note</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-odd"><td><p>Derived</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-even"><td><p>Verification Criteria</p></td>
+<td><p>Verify by using strings in reStructuredText format, which needs no escaping.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-sw-req-rst-string-format-md admonition" id="swe-req-rst-sw-req-rst-string-format-md">
+<p class="admonition-title">sw_req_rst_string_format_md</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>The software shall convert strings in Markdown format to reStructuredText format without escaping.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Valid Status</p></td>
+<td><p>VALID_STATUS.valid</p></td>
+</tr>
+<tr class="row-even"><td><p>Note</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-odd"><td><p>Derived</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-even"><td><p>Verification Criteria</p></td>
+<td><p>Verify by using strings in Markdown format, which are converted and needs no escaping.</p></td>
 </tr>
 </tbody>
 </table>
@@ -1221,7 +1419,7 @@
 <td><p>The reStructuredText converter shall provide a function to create a reStructuredText heading.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Valid Status</p></td>
-<td><p>valid</p></td>
+<td><p>VALID_STATUS.valid</p></td>
 </tr>
 <tr class="row-even"><td><p>Note</p></td>
 <td><p>N/A</p></td>
@@ -1248,7 +1446,7 @@
 <td><p>The reStructuredText converter shall provide a function to create a reStructuredText admonition.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Valid Status</p></td>
-<td><p>valid</p></td>
+<td><p>VALID_STATUS.valid</p></td>
 </tr>
 <tr class="row-even"><td><p>Note</p></td>
 <td><p>N/A</p></td>
@@ -1275,7 +1473,7 @@
 <td><p>The reStructuredText converter shall provide a function to create a reStructuredText table.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Valid Status</p></td>
-<td><p>valid</p></td>
+<td><p>VALID_STATUS.valid</p></td>
 </tr>
 <tr class="row-even"><td><p>Note</p></td>
 <td><p>N/A</p></td>
@@ -1302,7 +1500,7 @@
 <td><p>The reStructuredText converter shall provide a function to create a reStructuredText list.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Valid Status</p></td>
-<td><p>valid</p></td>
+<td><p>VALID_STATUS.valid</p></td>
 </tr>
 <tr class="row-even"><td><p>Note</p></td>
 <td><p>N/A</p></td>
@@ -1329,7 +1527,7 @@
 <td><p>The reStructuredText converter shall provide a function to create a reStructuredText link.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Valid Status</p></td>
-<td><p>valid</p></td>
+<td><p>VALID_STATUS.valid</p></td>
 </tr>
 <tr class="row-even"><td><p>Note</p></td>
 <td><p>N/A</p></td>
@@ -1356,7 +1554,7 @@
 <td><p>The reStructuredText converter shall provide a function to create a reStructuredText image to embed images.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Valid Status</p></td>
-<td><p>valid</p></td>
+<td><p>VALID_STATUS.valid</p></td>
 </tr>
 <tr class="row-even"><td><p>Note</p></td>
 <td><p>N/A</p></td>
@@ -1383,7 +1581,7 @@
 <td><p>The reStructuredText converter shall provide a function to create role text in reStructuredText format.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Valid Status</p></td>
-<td><p>valid</p></td>
+<td><p>VALID_STATUS.valid</p></td>
 </tr>
 <tr class="row-even"><td><p>Note</p></td>
 <td><p>N/A</p></td>
@@ -1410,7 +1608,7 @@
 <td><p>The reStructuredText converter shall create the converted files in the specified output folder.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Valid Status</p></td>
-<td><p>valid</p></td>
+<td><p>VALID_STATUS.valid</p></td>
 </tr>
 <tr class="row-even"><td><p>Note</p></td>
 <td><p>N/A</p></td>
@@ -1424,8 +1622,8 @@
 </tbody>
 </table>
 </div>
-<section id="rest-multiple-documents-mode">
-<span id="swe-req-rst-rest-multiple-documents-mode"></span><h5>ReST Multiple Documents Mode<a class="headerlink" href="#rest-multiple-documents-mode" title="Link to this heading">¶</a></h5>
+<section id="restructuredtext-multiple-documents-mode">
+<span id="swe-req-rst-restructuredtext-multiple-documents-mode"></span><h5>ReStructuredText Multiple Documents Mode<a class="headerlink" href="#restructuredtext-multiple-documents-mode" title="Link to this heading">¶</a></h5>
 <div class="admonition-sw-req-rst-multiple-doc-mode admonition" id="swe-req-rst-sw-req-rst-multiple-doc-mode">
 <p class="admonition-title">sw_req_rst_multiple_doc_mode</p>
 <table class="docutils align-default">
@@ -1439,7 +1637,7 @@
 <td><p>The software shall create a reStructuredText file for each TRLC file by default.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Valid Status</p></td>
-<td><p>valid</p></td>
+<td><p>VALID_STATUS.valid</p></td>
 </tr>
 <tr class="row-even"><td><p>Note</p></td>
 <td><p>N/A</p></td>
@@ -1454,8 +1652,8 @@
 </table>
 </div>
 </section>
-<section id="rest-single-document-mode">
-<span id="swe-req-rst-rest-single-document-mode"></span><h5>ReST Single Document Mode<a class="headerlink" href="#rest-single-document-mode" title="Link to this heading">¶</a></h5>
+<section id="restructuredtext-single-document-mode">
+<span id="swe-req-rst-restructuredtext-single-document-mode"></span><h5>ReStructuredText Single Document Mode<a class="headerlink" href="#restructuredtext-single-document-mode" title="Link to this heading">¶</a></h5>
 <div class="admonition-sw-req-rst-single-doc-mode admonition" id="swe-req-rst-sw-req-rst-single-doc-mode">
 <p class="admonition-title">sw_req_rst_single_doc_mode</p>
 <table class="docutils align-default">
@@ -1469,7 +1667,7 @@
 <td><p>The software shall create a single reStructuredText file which combines all TRLC files if requested by command line arguments.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Valid Status</p></td>
-<td><p>valid</p></td>
+<td><p>VALID_STATUS.valid</p></td>
 </tr>
 <tr class="row-even"><td><p>Note</p></td>
 <td><p>N/A</p></td>
@@ -1496,7 +1694,7 @@
 <td><p>The output file name shall be ‘output.rst’ by default.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Valid Status</p></td>
-<td><p>valid</p></td>
+<td><p>VALID_STATUS.valid</p></td>
 </tr>
 <tr class="row-even"><td><p>Note</p></td>
 <td><p>N/A</p></td>
@@ -1523,7 +1721,7 @@
 <td><p>The output file name shall be customizable by command line arguments.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Valid Status</p></td>
-<td><p>valid</p></td>
+<td><p>VALID_STATUS.valid</p></td>
 </tr>
 <tr class="row-even"><td><p>Note</p></td>
 <td><p>N/A</p></td>
@@ -1550,7 +1748,7 @@
 <td><p>The software shall add a top level heading to the reStructuredText file in single doc mode.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Valid Status</p></td>
-<td><p>valid</p></td>
+<td><p>VALID_STATUS.valid</p></td>
 </tr>
 <tr class="row-even"><td><p>Note</p></td>
 <td><p>N/A</p></td>
@@ -1577,7 +1775,7 @@
 <td><p>The top level heading shall be ‘Specification’ by default.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Valid Status</p></td>
-<td><p>valid</p></td>
+<td><p>VALID_STATUS.valid</p></td>
 </tr>
 <tr class="row-even"><td><p>Note</p></td>
 <td><p>N/A</p></td>
@@ -1604,7 +1802,7 @@
 <td><p>The top level heading shall be customizable by command line arguments.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Valid Status</p></td>
-<td><p>valid</p></td>
+<td><p>VALID_STATUS.valid</p></td>
 </tr>
 <tr class="row-even"><td><p>Note</p></td>
 <td><p>N/A</p></td>
@@ -1619,9 +1817,40 @@
 </table>
 </div>
 </section>
+<section id="restructuredtext-render-configuration">
+<span id="swe-req-rst-restructuredtext-render-configuration"></span><h5>ReStructuredText Render Configuration<a class="headerlink" href="#restructuredtext-render-configuration" title="Link to this heading">¶</a></h5>
+<div class="admonition-sw-req-rst-render-md admonition" id="swe-req-rst-sw-req-rst-render-md">
+<p class="admonition-title">sw_req_rst_render_md</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>The software shall convert strings in Markdown format to reStructuredText format if specified in the render configuration.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Valid Status</p></td>
+<td><p>VALID_STATUS.valid</p></td>
+</tr>
+<tr class="row-even"><td><p>Note</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-odd"><td><p>Derived</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-even"><td><p>Verification Criteria</p></td>
+<td><p>Verify by using strings in Markdown format, that are converted.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
 </section>
 <section id="docx">
 <span id="swe-req-rst-docx"></span><h4>Docx<a class="headerlink" href="#docx" title="Link to this heading">¶</a></h4>
+<p>The following requirements describe the docx destination format supported by the software.</p>
 <div class="admonition-sw-req-docx admonition" id="swe-req-rst-sw-req-docx">
 <p class="admonition-title">sw_req_docx</p>
 <table class="docutils align-default">
@@ -1635,7 +1864,7 @@
 <td><p>The software shall support the conversion into docx format.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Valid Status</p></td>
-<td><p>valid</p></td>
+<td><p>VALID_STATUS.valid</p></td>
 </tr>
 <tr class="row-even"><td><p>Note</p></td>
 <td><p>N/A</p></td>
@@ -1662,7 +1891,7 @@
 <td><p>The software shall support loading a docx template to append docx content to.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Valid Status</p></td>
-<td><p>valid</p></td>
+<td><p>VALID_STATUS.valid</p></td>
 </tr>
 <tr class="row-even"><td><p>Note</p></td>
 <td><p>N/A</p></td>
@@ -1689,7 +1918,7 @@
 <td><p>The software shall create a combined docx file for each TRLC file in file read order as provided by TRLC.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Valid Status</p></td>
-<td><p>valid</p></td>
+<td><p>VALID_STATUS.valid</p></td>
 </tr>
 <tr class="row-even"><td><p>Note</p></td>
 <td><p>N/A</p></td>
@@ -1716,7 +1945,7 @@
 <td><p>If no project specific conversion file is available, a TRLC section shall be converted into a Docx heading by considering the depth level.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Valid Status</p></td>
-<td><p>valid</p></td>
+<td><p>VALID_STATUS.valid</p></td>
 </tr>
 <tr class="row-even"><td><p>Note</p></td>
 <td><p>N/A</p></td>
@@ -1743,7 +1972,7 @@
 <td><p>If no project specific conversion file is available, consecutive TRLC records shall be converted into a docx heading with depth+1 and a table listing the attributes.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Valid Status</p></td>
-<td><p>valid</p></td>
+<td><p>VALID_STATUS.valid</p></td>
 </tr>
 <tr class="row-even"><td><p>Note</p></td>
 <td><p>N/A</p></td>
@@ -1757,9 +1986,40 @@
 </tbody>
 </table>
 </div>
+<section id="id1">
+<span id="id2"></span><h5>ReStructuredText Render Configuration<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h5>
+<div class="admonition-sw-req-docx-render-md admonition" id="swe-req-rst-sw-req-docx-render-md">
+<p class="admonition-title">sw_req_docx_render_md</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>The software shall convert strings in Markdown format to docx format if specified in the render configuration.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Valid Status</p></td>
+<td><p>VALID_STATUS.valid</p></td>
+</tr>
+<tr class="row-even"><td><p>Note</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-odd"><td><p>Derived</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-even"><td><p>Verification Criteria</p></td>
+<td><p>Verify by using strings in Markdown format, that are converted.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
 </section>
 <section id="dump">
 <span id="swe-req-rst-dump"></span><h4>Dump<a class="headerlink" href="#dump" title="Link to this heading">¶</a></h4>
+<p>The following requirements describe the dump destination format supported by the software.</p>
 <div class="admonition-sw-req-ascii-conversion admonition" id="swe-req-rst-sw-req-ascii-conversion">
 <p class="admonition-title">sw_req_ascii_conversion</p>
 <table class="docutils align-default">
@@ -1773,7 +2033,7 @@
 <td><p>The software shall support a simple conversion into text format to console out.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Valid Status</p></td>
-<td><p>valid</p></td>
+<td><p>VALID_STATUS.valid</p></td>
 </tr>
 <tr class="row-even"><td><p>Note</p></td>
 <td><p>N/A</p></td>
@@ -1790,6 +2050,7 @@
 </section>
 <section id="plantuml">
 <span id="swe-req-rst-plantuml"></span><h4>PlantUML<a class="headerlink" href="#plantuml" title="Link to this heading">¶</a></h4>
+<p>The following requirements describe the PlantUML destination format supported by the software.</p>
 <div class="admonition-sw-req-plantuml admonition" id="swe-req-rst-sw-req-plantuml">
 <p class="admonition-title">sw_req_plantuml</p>
 <table class="docutils align-default">
@@ -1803,7 +2064,7 @@
 <td><p>The software shall support the conversion of a PlantUML diagram to a propriate image format.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Valid Status</p></td>
-<td><p>valid</p></td>
+<td><p>VALID_STATUS.valid</p></td>
 </tr>
 <tr class="row-even"><td><p>Note</p></td>
 <td><p>N/A</p></td>
@@ -1834,7 +2095,7 @@
 <td><p>The software shall support the Windows operating system.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Valid Status</p></td>
-<td><p>valid</p></td>
+<td><p>VALID_STATUS.valid</p></td>
 </tr>
 <tr class="row-even"><td><p>Note</p></td>
 <td><p>N/A</p></td>
@@ -1858,7 +2119,7 @@
 <td><p>The software shall support the Linux operating system.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Valid Status</p></td>
-<td><p>valid</p></td>
+<td><p>VALID_STATUS.valid</p></td>
 </tr>
 <tr class="row-even"><td><p>Note</p></td>
 <td><p>N/A</p></td>
@@ -1882,7 +2143,7 @@
 <td><p>The software shall be implemented in the Python programming language v3.12.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Valid Status</p></td>
-<td><p>valid</p></td>
+<td><p>VALID_STATUS.valid</p></td>
 </tr>
 <tr class="row-even"><td><p>Note</p></td>
 <td><p>TRLC as 3rd party library supports only up to Python v3.12.</p></td>
@@ -1906,7 +2167,7 @@
 <td><p>The software shall comply with the PEP8 coding standard.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Valid Status</p></td>
-<td><p>valid</p></td>
+<td><p>VALID_STATUS.valid</p></td>
 </tr>
 <tr class="row-even"><td><p>Note</p></td>
 <td><p>N/A</p></td>
