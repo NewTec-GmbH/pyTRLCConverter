@@ -23,7 +23,7 @@
 from typing import Any
 from pyTRLCConverter.base_converter import RecordsPolicy
 
-# pylint: disable=wrong-import-order
+# pylint: disable-next=wrong-import-order, import-error
 from generic_rsl_markdown_converter import GenericRslMarkdownConverter
 
 # Variables ********************************************************************
