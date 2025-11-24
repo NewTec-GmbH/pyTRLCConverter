@@ -30,7 +30,7 @@ from generic_rsl_markdown_converter import GenericRslMarkdownConverter
 
 # Classes **********************************************************************
 
-
+# pylint: disable-next=too-few-public-methods
 class TestCaseMarkdownConverter(GenericRslMarkdownConverter):
     """Custom Project specific Markdown converter for test cases.
     """
