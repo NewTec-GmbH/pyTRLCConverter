@@ -25,6 +25,7 @@ import os
 import shutil
 import fnmatch
 
+from typing import Any
 from urllib.parse import urlparse
 from sphinx.errors import ConfigError
 
@@ -109,19 +110,19 @@ files_to_copy = [
     }
 ]
 
-def setup(app: any) -> None:
+def setup(app: Any) -> None:
     """Setup sphinx.
 
     Args:
-        app (any): The sphinx application.
+        app (Any): The sphinx application.
     """
     app.connect('builder-inited', copy_files)
 
-def copy_files(app: any) -> None:
+def copy_files(app: Any) -> None:
     """Copy files to the output directory.
 
     Args:
-        app (any): The sphinx application.
+        app (Any): The sphinx application.
     """
     for files in files_to_copy:
         source = os.path.abspath(files['source'])

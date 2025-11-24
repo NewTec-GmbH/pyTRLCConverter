@@ -20,6 +20,7 @@
 # If not, see <https://www.gnu.org/licenses/>.
 
 # Imports **********************************************************************
+from typing import Any
 
 # pylint: disable=import-error
 from generic_rsl_markdown_converter import GenericRslMarkdownConverter
@@ -33,9 +34,12 @@ class ProjectMarkdownConverter(GenericRslMarkdownConverter):
     """Custom Project specific Markdown Converter.
     """
 
-    def __init__(self, args: any) -> None:
+    def __init__(self, args: Any) -> None:
         """
         Initialize the custom markdown converter.
+
+        Args:
+            args: The parsed program arguments.
         """
         super().__init__(args)
 
