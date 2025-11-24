@@ -20,6 +20,7 @@
 # If not, see <https://www.gnu.org/licenses/>.
 
 # Imports **********************************************************************
+from typing import Any
 
 # pylint: disable=import-error
 from generic_rsl_docx_converter import GenericRslDocxConverter
@@ -32,12 +33,12 @@ from generic_rsl_docx_converter import GenericRslDocxConverter
 class ProjectDocxConverter(GenericRslDocxConverter):
     """Custom Project specific Docx format converter.
     """
-    def __init__(self, args: any) -> None:
+    def __init__(self, args: Any) -> None:
         """
         Initialize the custom docx converter.
 
         Args:
-            args (any): The parsed program arguments.
+            args (Any): The parsed program arguments.
         """
         super().__init__(args)
 

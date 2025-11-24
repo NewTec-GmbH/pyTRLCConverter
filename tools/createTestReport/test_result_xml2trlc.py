@@ -88,7 +88,7 @@ def convert_test_report(xml_file: str, output_file: str) -> bool:
             _test_report_write_header(fd)
 
             for testcase in root.iter('testcase'):
-                test_case_name = testcase.get('name')
+                test_case_name = testcase.get('name', '')
                 test_case_result = 'SwTestResult.PASSED'
 
                 if testcase.find('failure') is not None:

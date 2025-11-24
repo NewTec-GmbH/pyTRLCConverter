@@ -52,20 +52,26 @@ class AbstractConverter(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def enter_file(self, file_name : str) -> None:
+    def enter_file(self, file_name : str) -> Ret:
         """Enter a file.
 
         Args:
             file_name (str): File name
+        
+        Returns:
+            Ret: Status
         """
         raise NotImplementedError
 
     @abstractmethod
-    def leave_file(self, file_name : str) -> None:
+    def leave_file(self, file_name : str) -> Ret:
         """Leave a file.
 
         Args:
             file_name (str): File name
+
+        Returns:
+            Ret: Status
         """
         raise NotImplementedError
 
