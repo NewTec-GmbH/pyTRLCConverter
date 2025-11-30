@@ -104,7 +104,7 @@ class CustomMarkdownConverter(MarkdownConverter):
         test_case = test_case_result_attributes["relates"]
         if test_case is None:
             test_case = self.markdown_escape("N/A")
-        elif isinstance(test_case, list) is True:
+        elif isinstance(test_case, list):
             test_case_links = []
             for tc in test_case:
                 anchor_tag = "#" + tc.replace("SwTests.", "").lower()
