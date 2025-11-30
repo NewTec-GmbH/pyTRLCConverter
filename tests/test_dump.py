@@ -103,7 +103,7 @@ def test_tc_ascii_conversion(record_property, capsys, monkeypatch):
     assert lines[42] == "      Field index"
     assert lines[43] == "         Implicit_Null"
     assert lines[44] == "      Field precision"
-    assert lines[45] == "         Decimal Literal 0"  # Current bug in TRLC will incorrectly dump Decimals.
+    assert lines[45] == "         Decimal Literal 1/100"
     assert lines[46] == "      Field valid"
     assert lines[47] == "         Implicit_Null"
     assert lines[48] == "      Section Test section"
