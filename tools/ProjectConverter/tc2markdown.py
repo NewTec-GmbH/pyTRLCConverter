@@ -20,24 +20,26 @@
 # If not, see <https://www.gnu.org/licenses/>.
 
 # Imports **********************************************************************
+from typing import Any
+from pyTRLCConverter.base_converter import RecordsPolicy
 
-# pylint: disable=import-error
+# pylint: disable-next=wrong-import-order, import-error
 from generic_rsl_markdown_converter import GenericRslMarkdownConverter
 
 # Variables ********************************************************************
 
 # Classes **********************************************************************
 
-# pylint: disable=too-few-public-methods
+# pylint: disable-next=too-few-public-methods
 class TestCaseMarkdownConverter(GenericRslMarkdownConverter):
     """Custom Project specific Markdown converter for test cases.
     """
-    def __init__(self, args: any) -> None:
+    def __init__(self, args: Any) -> None:
         """
         Initialize the custom Markdown converter.
 
         Args:
-            args (any): The parsed program arguments.
+            args (Any): The parsed program arguments.
         """
         super().__init__(args)
 
@@ -49,6 +51,7 @@ class TestCaseMarkdownConverter(GenericRslMarkdownConverter):
                 "PlantUML": self._print_plantuml
            }
         )
+        self._record_policy = RecordsPolicy.RECORD_CONVERT_ALL
 
     @staticmethod
     def get_description() -> str:
@@ -58,6 +61,7 @@ class TestCaseMarkdownConverter(GenericRslMarkdownConverter):
             str: Converter description
         """
         return "Convert test case definitions into project extended Markdown format."
+
 
 # Functions ********************************************************************
 

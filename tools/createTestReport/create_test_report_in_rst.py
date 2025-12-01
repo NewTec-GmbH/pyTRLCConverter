@@ -20,7 +20,7 @@
 # If not, see <https://www.gnu.org/licenses/>.
 
 # Imports **********************************************************************
-from typing import Optional
+from typing import Optional, Any
 from pyTRLCConverter.base_converter import RecordsPolicy
 from pyTRLCConverter.ret import Ret
 from pyTRLCConverter.rst_converter import RstConverter
@@ -38,8 +38,11 @@ class CustomRstConverter(RstConverter):
         SW test case results into reStructuredText format.
     """
 
-    def __init__(self, args: any) -> None:
+    def __init__(self, args: Any) -> None:
         """Initializes the converter.
+
+        Args:
+            args (Any): The parsed program arguments.
         """
         super().__init__(args)
 
@@ -126,6 +129,13 @@ class CustomRstConverter(RstConverter):
         test_case = test_case_result_attributes["relates"]
         if test_case is None:
             test_case = self.rst_escape("N/A")
+        elif isinstance(test_case, list):
+            test_case_links = []
+            for tc in test_case:
+                anchor_tag = tc.replace("SwTests.", TEST_CASES_FILE_NAME + "-").lower()
+                test_case_links.append(self.rst_create_link(tc, anchor_tag))
+
+            test_case = ", ".join(test_case_links)
         else:
             anchor_tag = test_case.replace("SwTests.", TEST_CASES_FILE_NAME + "-").lower()
 
@@ -145,6 +155,8 @@ class CustomRstConverter(RstConverter):
     def _print_test_case_results(self) -> None:
         """Prints the software test case results.
         """
+        assert self._fd is not None
+
         column_titles = ["Test Case", "Test Function", "Test Result"]
 
         max_widths = [len(title) for title in column_titles]
@@ -166,6 +178,8 @@ class CustomRstConverter(RstConverter):
             test_case_result (Record_Object): Software test case result to print.
             max_widths (list[int]): Maximum widths of the columns.
         """
+        assert self._fd is not None
+
         row = self._get_table_row(test_case_result)
 
         markdown_table_row = self.rst_append_table_row(row, max_widths, False)

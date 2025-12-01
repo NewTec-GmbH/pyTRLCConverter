@@ -56,8 +56,8 @@ class TrlcAstWalker():
             Array_Aggregate: self._on_array_aggregate
         }
         self._dispatcher_map_finish = {}
-        self._other_dispatcher = None
-        self._list_item_dispatcher = None
+        self._other_dispatcher: Optional[Callable] = None
+        self._list_item_dispatcher: Optional[Callable] = None
 
     def walk(self, expression: Expression) -> Union[list[Any],Any]:
         """

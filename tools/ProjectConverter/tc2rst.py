@@ -20,24 +20,26 @@
 # If not, see <https://www.gnu.org/licenses/>.
 
 # Imports **********************************************************************
+from typing import Any
+from pyTRLCConverter.base_converter import RecordsPolicy
 
-# pylint: disable=import-error
+# pylint: disable-next=wrong-import-order, import-error
 from generic_rsl_rst_converter import GenericRslRstConverter
 
 # Variables ********************************************************************
 
 # Classes **********************************************************************
 
-# pylint: disable=too-few-public-methods
+# pylint: disable-next=too-few-public-methods
 class TestCaseRstConverter(GenericRslRstConverter):
     """Custom Project specific reStructuredText converter for test cases.
     """
-    def __init__(self, args: any) -> None:
+    def __init__(self, args: Any) -> None:
         """
         Initialize the custom reStructuredText converter.
 
         Args:
-            args (any): The parsed program arguments.
+            args (Any): The parsed program arguments.
         """
         super().__init__(args)
 
@@ -49,6 +51,7 @@ class TestCaseRstConverter(GenericRslRstConverter):
                 "PlantUML": self._print_plantuml
            }
         )
+        self._record_policy = RecordsPolicy.RECORD_CONVERT_ALL
 
     @staticmethod
     def get_description() -> str:
@@ -58,6 +61,7 @@ class TestCaseRstConverter(GenericRslRstConverter):
             str: Converter description
         """
         return "Convert test case definitions into project extended reStructuredText format."
+
 
 # Functions ********************************************************************
 
