@@ -12,7 +12,7 @@
             "cwd": "${workspaceFolder}/tools/req2markdown",
             "console": "integratedTerminal",
             "env": {
-                "PLANTUML": "../plantuml/plantuml.jar",
+                "PLANTUML": "../plantUML/plantuml.jar",
             },
             "args": [
                 "--source=../../trlc/swe-req",
@@ -32,7 +32,7 @@
             "cwd": "${workspaceFolder}/tools/req2docx",
             "console": "integratedTerminal",
             "env": {
-                "PLANTUML": "../plantuml/plantuml.jar",
+                "PLANTUML": "../plantUML/plantuml.jar",
             },
             "args": [
                 "--source=../../trlc/swe-req",
@@ -54,7 +54,7 @@
             "cwd": "${workspaceFolder}/tools/req2rst",
             "console": "integratedTerminal",
             "env": {
-                "PLANTUML": "../plantuml/plantuml.jar",
+                "PLANTUML": "../plantUML/plantuml.jar",
             },
             "args": [
                 "--source=../../trlc/swe-req",

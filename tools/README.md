@@ -31,7 +31,7 @@ Used to create the traceability report on code and requirements base.
 
 Used to download on demand the PlantUML java jar file, which is required by other tooling.
 
-[Details](./plantuml/README.md)
+[Details](./plantUML/README.md)
 
 ## req2docx
 

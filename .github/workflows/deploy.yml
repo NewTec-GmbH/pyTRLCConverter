@@ -53,7 +53,7 @@ jobs:
 
       - name: Setup PlantUML
         run: |
-          cd ./tools/plantuml
+          cd ./tools/plantUML
           chmod +x get_plantuml.sh
           . ./get_plantuml.sh
           echo "PLANTUML=$PLANTUML" >> $GITHUB_ENV
