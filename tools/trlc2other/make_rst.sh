@@ -16,28 +16,34 @@
 # You should have received a copy of the GNU General Public License along with pyTRLCConverter.
 # If not, see <https://www.gnu.org/licenses/>.
 
-cd ../plantuml
+pushd ../plantUML
 chmod +x get_plantuml.sh
 . ./get_plantuml.sh
-cd ../tc2rst
+popd
 
-if [ ! -d "out" ]; then
-    mkdir out
+TRLC_CONVERTER=pyTRLCConverter
+OUTPUT_DIR=out
+CONVERTER=converter/req2rst.py
+TRANSLATION=converter/translation.json
+OUT_FORMAT=rst
+RENDERER_CFG=converter/renderCfg.json
+
+if [ ! -d "$OUTPUT_DIR" ]; then
+    mkdir $OUTPUT_DIR
 else
-    rm -rf "out"/*
+    rm -rf "$OUTPUT_DIR"/*
 fi
 
-# ****************************************************************************************************
-# Software Tests
-# ****************************************************************************************************
-SW_TEST_OUT_FORMAT="rst"
-SW_TEST_OUT_DIR="./out/sw-tests/$SW_TEST_OUT_FORMAT"
-SW_TEST_CONVERTER="../ProjectConverter/tc2rst"
-TRANSLATION=../ProjectConverter/translation.json
+$TRLC_CONVERTER --source=../../trlc/swe-req --include=../../trlc/model --verbose --out="$OUTPUT_DIR" --project="$CONVERTER" --translation="$TRANSLATION" --renderCfg="$RENDERER_CFG" "$OUT_FORMAT"
 
-if [ ! -d "$SW_TEST_OUT_DIR" ]; then
-    mkdir -p "$SW_TEST_OUT_DIR"
+if [ $? -ne 0 ]; then
+    exit 1
 fi
 
-echo "Generate software test cases ..."
-pyTRLCConverter --source=../../trlc/swe-req --source=../../trlc/swe-test --exclude=../../trlc/swe-req --source=../../trlc/model -o="$SW_TEST_OUT_DIR" --verbose --project="$SW_TEST_CONVERTER" --translation="$TRANSLATION" "$SW_TEST_OUT_FORMAT"
+CONVERTER=converter/tc2rst.py
+
+$TRLC_CONVERTER --source=../../trlc/swe-test --include=../../trlc/model --include=../../trlc/swe-req --exclude=../../trlc/swe-req --verbose --out="$OUTPUT_DIR" --project="$CONVERTER" --translation="$TRANSLATION" "$OUT_FORMAT"
+
+if [ $? -ne 0 ]; then
+    exit 1
+fi
