@@ -13,4 +13,4 @@ include dependencies:
 
 This diagrams shows the relations between the converter classes:
 
-![context](https://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/NewTec-GmbH/pyTRLCConverter/refs/heads/main/tools/ProjectConverter/project_converter_class_diagram.puml)
+![context](https://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/NewTec-GmbH/pyTRLCConverter/refs/heads/main/tools/trlc2other/converter/project_converter_class_diagram.puml)
