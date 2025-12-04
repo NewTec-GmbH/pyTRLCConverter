@@ -16,33 +16,34 @@
 # You should have received a copy of the GNU General Public License along with pyTRLCConverter.
 # If not, see <https://www.gnu.org/licenses/>.
 
-cd ../plantuml
+pushd ../plantUML
 chmod +x get_plantuml.sh
 . ./get_plantuml.sh
-cd ../req2markdown
+popd
 
-if [ ! -d "out" ]; then
-    mkdir out
+TRLC_CONVERTER=pyTRLCConverter
+OUTPUT_DIR=out
+CONVERTER=converter/req2markdown.py
+TRANSLATION=converter/translation.json
+OUT_FORMAT=markdown
+RENDERER_CFG=converter/renderCfg.json
+
+if [ ! -d "$OUTPUT_DIR" ]; then
+    mkdir $OUTPUT_DIR
 else
-    rm -rf "out"/*
+    rm -rf "$OUTPUT_DIR"/*
 fi
 
-# ****************************************************************************************************
-# Software Requirements
-# ****************************************************************************************************
-SWE_REQ_OUT_FORMAT="markdown"
-SWE_REQ_OUT_DIR="./out/sw-requirements/$SWE_REQ_OUT_FORMAT"
-SWE_REQ_CONVERTER=../ProjectConverter/req2markdown
-TRANSLATION=../ProjectConverter/translation.json
-RENDERER_CFG=../ProjectConverter/renderCfg.json
-
-if [ ! -d "$SWE_REQ_OUT_DIR" ]; then
-    mkdir -p "$SWE_REQ_OUT_DIR"
-fi
-
-echo "Generate software requirements ..."
-pyTRLCConverter --source=../../trlc/swe-req --source=../../trlc/model -o="$SWE_REQ_OUT_DIR" --verbose --project="$SWE_REQ_CONVERTER" --translation="$TRANSLATION" --renderCfg="$RENDERER_CFG" "$SWE_REQ_OUT_FORMAT"
+$TRLC_CONVERTER  --source=../../trlc/swe-req --include=../../trlc/model --verbose --out="$OUTPUT_DIR" --project="$CONVERTER" --translation="$TRANSLATION" --renderCfg="$RENDERER_CFG" "$OUT_FORMAT"
 
 if [ $? -ne 0 ]; then
-    read -p "Press any key to continue..."
+    exit 1
+fi
+
+CONVERTER=converter/tc2markdown.py
+
+$TRLC_CONVERTER --source=../../trlc/swe-test --include=../../trlc/model --include=../../trlc/swe-req --exclude=../../trlc/swe-req --verbose --out="$OUTPUT_DIR" --project="$CONVERTER" --translation="$TRANSLATION" "$OUT_FORMAT"
+
+if [ $? -ne 0 ]; then
+    exit 1
 fi

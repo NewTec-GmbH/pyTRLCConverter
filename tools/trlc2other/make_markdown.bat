@@ -15,33 +15,49 @@ rem FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for mor
 rem
 rem You should have received a copy of the GNU General Public License along with pyTRLCConverter.
 rem If not, see <https://www.gnu.org/licenses/>.
+pushd %~dp0
 
-cd ..\plantuml
+pushd ..\plantUML
 call get_plantuml.bat
-cd ..\req2markdown
+popd
 
-if not exist "out" (
-    md out
+rem Keep all environment variables local to this script.
+setlocal
+
+set TRLC_CONVERTER=pyTRLCConverter
+set OUTPUT_DIR=out
+set CONVERTER=converter/req2markdown.py
+set TRANSLATION=converter/translation.json
+set OUT_FORMAT=markdown
+set RENDERER_CFG=converter/renderCfg.json
+
+if not exist "%OUTPUT_DIR%" (
+    md %OUTPUT_DIR%
 ) else (
-    del /q /s "out\*" 
+    del /q /s "%OUTPUT_DIR%\*" >nul
 )
 
-rem ****************************************************************************************************
-rem Software Requirements
-rem ****************************************************************************************************
-set SWE_REQ_OUT_FORMAT=markdown
-set SWE_REQ_OUT_DIR=.\out\sw-requirements\%SWE_REQ_OUT_FORMAT%
-set SWE_REQ_CONVERTER=..\ProjectConverter\req2markdown
-set TRANSLATION=..\ProjectConverter\translation.json
-set RENDERER_CFG=..\ProjectConverter\renderCfg.json
-
-if not exist %SWE_REQ_OUT_DIR% (
-    md %SWE_REQ_OUT_DIR%
-)
-
-echo Generate software requirements ...
-pyTRLCConverter --source=..\..\trlc\swe-req --source=..\..\trlc\model -o=%SWE_REQ_OUT_DIR% --verbose --project=%SWE_REQ_CONVERTER% --translation=%TRANSLATION% --renderCfg=%RENDERER_CFG% %SWE_REQ_OUT_FORMAT%
+%TRLC_CONVERTER% --source=..\..\trlc\swe-req --include=..\..\trlc\model --verbose --out=%OUTPUT_DIR% --project=%CONVERTER% --translation=%TRANSLATION% --renderCfg=%RENDERER_CFG% %OUT_FORMAT%
 
 if errorlevel 1 (
-    pause
+    goto error
 )
+
+set CONVERTER=converter/tc2markdown.py
+
+%TRLC_CONVERTER%  --source=..\..\trlc\swe-test --include=..\..\trlc\model --include=..\..\trlc\swe-req --exclude=..\..\trlc\swe-req --verbose --out=%OUTPUT_DIR% --project=%CONVERTER% --translation=%TRANSLATION% %OUT_FORMAT%
+
+if errorlevel 1 (
+    goto error
+)
+
+goto finished
+
+:error
+
+:finished
+
+endlocal
+rem Restore the previous directory from the stack.
+rem This allows the script to return to the original working directory.
+popd
