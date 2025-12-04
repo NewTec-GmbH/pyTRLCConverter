@@ -21,12 +21,6 @@ chmod +x get_plantuml.sh
 . ./get_plantuml.sh
 popd
 
-SWE_REQ_OUT_FORMAT="docx"
-SWE_REQ_OUT_DIR="./out/sw-requirements/$SWE_REQ_OUT_FORMAT"
-SWE_REQ_CONVERTER="../ProjectConverter/req2docx"
-TRANSLATION=../ProjectConverter/translation.json
-RENDER_CFG=../ProjectConverter/renderCfg.json
-
 TRLC_CONVERTER=pyTRLCConverter
 OUTPUT_DIR=out
 CONVERTER=converter/req2docx.py
@@ -42,7 +36,7 @@ else
 fi
 
 echo "Generate software requirements ..."
-$TRLC_CONVERTER --source=../../trlc/swe-req --include=../../trlc/model --verbose --out="$OUTPUT_DIR" --project="$CONVERTER" --translation="$TRANSLATION" --renderCfg="$RENDER_CFG" --template="$TEMPLATE" "$OUT_FORMAT"
+$TRLC_CONVERTER --source=../../trlc/swe-req --include=../../trlc/model --verbose --out="$OUTPUT_DIR" --project="$CONVERTER" --translation="$TRANSLATION" --renderCfg="$RENDER_CFG" "$OUT_FORMAT" --template="$TEMPLATE"
 
 if [ $? -ne 0 ]; then
     exit 1

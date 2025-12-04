@@ -26,7 +26,7 @@ setlocal
 
 set TRLC_CONVERTER=pyTRLCConverter
 set OUTPUT_DIR=out
-set SWE_REQ_CONVERTER=converter/req2docx.py
+set CONVERTER=converter/req2docx.py
 set TRANSLATION=converter/translation.json
 set OUT_FORMAT=docx
 set RENDER_CFG=converter/renderCfg.json
@@ -38,7 +38,7 @@ if not exist "%OUTPUT_DIR%" (
     del /q /s "%OUTPUT_DIR%\*" >nul
 )
 
-%TRLC_CONVERTER% --source=..\..\trlc\swe-req --include=..\..\trlc\model --verbose --out=%OUTPUT_DIR% --project=%CONVERTER% --translation=%TRANSLATION% --renderCfg=%RENDER_CFG% --template %TEMPLATE% %OUT_FORMAT%
+%TRLC_CONVERTER% --source=..\..\trlc\swe-req --include=..\..\trlc\model --verbose --out=%OUTPUT_DIR% --project=%CONVERTER% --translation=%TRANSLATION% --renderCfg=%RENDER_CFG% %OUT_FORMAT% --template=%TEMPLATE%
 
 if errorlevel 1 (
     goto error
