@@ -16,33 +16,34 @@
 # You should have received a copy of the GNU General Public License along with pyTRLCConverter.
 # If not, see <https://www.gnu.org/licenses/>.
 
-cd ../plantuml
+pushd ../plantUML
 chmod +x get_plantuml.sh
 . ./get_plantuml.sh
-cd ../req2docx
+popd
 
-if [ ! -d "out" ]; then
-    mkdir out
-else
-    rm -rf "out"/*
-fi
-
-# ****************************************************************************************************
-# Software Requirements
-# ****************************************************************************************************
 SWE_REQ_OUT_FORMAT="docx"
 SWE_REQ_OUT_DIR="./out/sw-requirements/$SWE_REQ_OUT_FORMAT"
 SWE_REQ_CONVERTER="../ProjectConverter/req2docx"
 TRANSLATION=../ProjectConverter/translation.json
 RENDER_CFG=../ProjectConverter/renderCfg.json
 
-if [ ! -d "$SWE_REQ_OUT_DIR" ]; then
-    mkdir -p "$SWE_REQ_OUT_DIR"
+TRLC_CONVERTER=pyTRLCConverter
+OUTPUT_DIR=out
+CONVERTER=converter/req2docx.py
+TRANSLATION=converter/translation.json
+RENDER_CFG=converter/renderCfg.json
+TEMPLATE=converter/template.docx
+OUT_FORMAT=docx
+
+if [ ! -d "$OUTPUT_DIR" ]; then
+    mkdir $OUTPUT_DIR
+else
+    rm -rf "$OUTPUT_DIR"/*
 fi
 
 echo "Generate software requirements ..."
-pyTRLCConverter --source=../../trlc/swe-req --source=../../trlc/model --verbose -o="$SWE_REQ_OUT_DIR" --project="$SWE_REQ_CONVERTER" --translation="$TRANSLATION" --renderCfg="$RENDER_CFG" "$SWE_REQ_OUT_FORMAT" --template template.docx
+$TRLC_CONVERTER --source=../../trlc/swe-req --include=../../trlc/model --verbose --out="$OUTPUT_DIR" --project="$CONVERTER" --translation="$TRANSLATION" --renderCfg="$RENDER_CFG" --template="$TEMPLATE" "$OUT_FORMAT"
 
 if [ $? -ne 0 ]; then
-    read -p "Press any key to continue..."
+    exit 1
 fi
