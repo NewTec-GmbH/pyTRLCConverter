@@ -181,7 +181,5 @@ examples/simple_req_multi/out/
 examples/simple_req_multi_single_out/out/
 examples/simple_req_proj_spec/out/
 examples/simple_req_translation/out/
-tools/createTestReport/out/
-tools/lobster/out/
 tools/plantUML/plantuml.jar
 tools/*/out/

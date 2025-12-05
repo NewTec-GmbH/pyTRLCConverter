@@ -4,7 +4,7 @@
 
 The overview shows in general which tools are involved to generate tracing reports.
 
-![tracing_toolchain](https://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/NewTec-GmbH/pyTRLCConverter/refs/heads/main/tools/lobster/tracing_toolchain.puml)
+![tracing_toolchain](https://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/NewTec-GmbH/pyTRLCConverter/refs/heads/main/tools/traceReport/tracing_toolchain.puml)
 
 The shown tool call chains are hidden in two scripts:
 * ```create_tracing_report.[bat|sh]```
