@@ -94,17 +94,12 @@ plantuml = []
 # The destination is relative to the output directory.
 files_to_copy = [
     {
-        'source': '../createTestReport/out/coverage',
+        'source': '../testReport/out/coverage',
         'destination': 'coverage',
         'exclude': []
     },
     {
-        'source': '../req2rst/out/sw-requirements/rst',
-        'destination': '.',
-        'exclude': ['*.rst']
-    },
-    {
-        'source': '../tc2rst/out/sw-tests/rst',
+        'source': '../trlc2other/out',
         'destination': '.',
         'exclude': ['*.rst']
     }
