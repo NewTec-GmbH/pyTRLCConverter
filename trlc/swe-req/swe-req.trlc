@@ -489,7 +489,7 @@ section "pyTRLCConverter" {
                 valid_status = AbstractRequirements.VALID_STATUS.valid
             }
 
-            section "ReStructuredText Render Configuration" {
+            section "Docx Render Configuration" {
 
                 SwReq sw_req_docx_render_md {
                     description = "The software shall convert strings in Markdown format to docx format if specified in the render configuration."
