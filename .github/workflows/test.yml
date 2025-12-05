@@ -45,18 +45,25 @@ jobs:
         run: |
           trlc ./trlc/model ./trlc/swe-req ./trlc/swe-test
 
+      - name: Prepare test report
+        run: |
+          cd ./tools/testReport
+          chmod +x make_rst.sh
+          ./make_rst.sh
+          cd ../..
+
       - name: Build tracing report
         run: |
-            cd ./tools/lobster
-            chmod +x create_tracing_online_report.sh
-            ./create_tracing_online_report.sh
+            cd ./tools/traceReport
+            chmod +x make.sh
+            ./make.sh online
             rm -f ./out/*-lobster.json
             cd ../..
   
       - name: Upload tracing report
         uses: actions/upload-artifact@v4
         with:
-          path: ./tools/lobster/out/*.html
+          path: ./tools/traceReport/out/*.html
 
   lint:
     # The type of runner that the job will run on.

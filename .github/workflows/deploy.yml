@@ -51,48 +51,12 @@ jobs:
           pip install -r requirements-dev.txt
           pip install .
 
-      - name: Setup PlantUML
+      - name: Run tools workflow
         run: |
-          cd ./tools/plantuml
-          chmod +x get_plantuml.sh
-          . ./get_plantuml.sh
-          echo "PLANTUML=$PLANTUML" >> $GITHUB_ENV
-          cd ../..
-
-      - name: Generate requirements in reStructuredText
-        run: |
-          cd ./tools/req2rst
-          chmod +x req2rst.sh
-          ./req2rst.sh
-          cd ../..
-
-      - name: Generate test cases in reStructuredText
-        run: |
-          cd ./tools/tc2rst
-          chmod +x tc2rst.sh
-          ./tc2rst.sh
-          cd ../..
-
-      - name: Create test report
-        run: |
-          cd ./tools/createTestReport
-          chmod +x create_test_report.sh
-          ./create_test_report.sh
-          rm -f ./out/coverage/.gitignore
-          cd ../..
-
-      - name: Build tracing report
-        run: |
-            cd ./tools/lobster
-            chmod +x create_tracing_online_report.sh
-            ./create_tracing_online_report.sh
-            rm -f ./out/*-lobster.json
-            cd ../..
-
-      - name: Build sphinx webpages
-        run: |
-          cd ./tools/sphinx
-          make html
+          cd ./tools
+          chmod +x make_html.sh
+          ./make_html.sh
+          cd ..
 
       - name: Upload static files as artifacts
         id: deployment
@@ -100,4 +64,4 @@ jobs:
         with:
           publish_branch: gh-pages
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./tools/sphinx/build/html
+          publish_dir: ./tools/deployDoc/build/html

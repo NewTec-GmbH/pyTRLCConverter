@@ -9,18 +9,18 @@
             "type": "debugpy",
             "request": "launch",
             "program": "${workspaceFolder}/src/pyTRLCConverter/__main__.py",
-            "cwd": "${workspaceFolder}/tools/req2markdown",
+            "cwd": "${workspaceFolder}/tools/trlc2other",
             "console": "integratedTerminal",
             "env": {
-                "PLANTUML": "../plantuml/plantuml.jar",
+                "PLANTUML": "../plantUML/plantuml.jar",
             },
             "args": [
                 "--source=../../trlc/swe-req",
                 "--source=../../trlc/model",
-                "-o=./out/sw-requirements/markdown",
+                "-o=./out/",
                 "--verbose",
-                "--project=../ProjectConverter/req2markdown",
-                "--renderCfg=../ProjectConverter/renderCfg.json",
+                "--project=converter/req2markdown",
+                "--renderCfg=converter/renderCfg.json",
                 "markdown",
             ]
         },
@@ -29,20 +29,20 @@
             "type": "debugpy",
             "request": "launch",
             "program": "${workspaceFolder}/src/pyTRLCConverter/__main__.py",
-            "cwd": "${workspaceFolder}/tools/req2docx",
+            "cwd": "${workspaceFolder}/tools/trlc2other",
             "console": "integratedTerminal",
             "env": {
-                "PLANTUML": "../plantuml/plantuml.jar",
+                "PLANTUML": "../plantUML/plantuml.jar",
             },
             "args": [
                 "--source=../../trlc/swe-req",
                 "--source=../../trlc/model",
-                "-o=./out/sw-requirements/docx",
+                "-o=./out/",
                 "--verbose",
-                "--project=../ProjectConverter/req2docx",
-                "--renderCfg=../ProjectConverter/renderCfg.json",
+                "--project=converter/req2docx",
+                "--renderCfg=converter/renderCfg.json",
                 "docx",
-                "--template=template.docx"
+                "--template=converter/template.docx"
             ]
             
         },
@@ -51,18 +51,18 @@
             "type": "debugpy",
             "request": "launch",
             "program": "${workspaceFolder}/src/pyTRLCConverter/__main__.py",
-            "cwd": "${workspaceFolder}/tools/req2rst",
+            "cwd": "${workspaceFolder}/tools/trlc2other",
             "console": "integratedTerminal",
             "env": {
-                "PLANTUML": "../plantuml/plantuml.jar",
+                "PLANTUML": "../plantUML/plantuml.jar",
             },
             "args": [
                 "--source=../../trlc/swe-req",
                 "--source=../../trlc/model",
-                "-o=./out/sw-requirements/rst",
+                "-o=./out/",
                 "--verbose",
-                "--project=../ProjectConverter/req2rst",
-                "--renderCfg=../ProjectConverter/renderCfg.json",
+                "--project=converter/req2rst",
+                "--renderCfg=converter/renderCfg.json",
                 "rst",
             ]
         },
