@@ -16,14 +16,14 @@ rem
 rem You should have received a copy of the GNU General Public License along with pyTRLCConverter.
 rem If not, see <https://www.gnu.org/licenses/>.
 
-REM ********** Argument validation **********
-REM Enable online report generation only if "online" argument is provided.
-REM If no argument is provided, only local file paths are used.
-REM If any other argument is provided, an error is raised.
+rem ********** Argument validation **********
+rem Enable online report generation only if "online" argument is provided.
+rem If no argument is provided, only local file paths are used.
+rem If any other argument is provided, an error is raised.
 
 set LOBSTER_ONLINE_REPORT_ENABLE=0
 if "%~1"=="" (
-    REM No arguments provided, proceed normally.
+    rem No arguments provided, proceed normally.
 ) else if "%~1"=="online" (
     set LOBSTER_ONLINE_REPORT_ENABLE=1
 ) else (
@@ -31,7 +31,7 @@ if "%~1"=="" (
     exit /b 1
 )
 
-REM Keep all environment variables local to this script.
+rem Keep all environment variables local to this script.
 setlocal
 
 pushd %~dp0
@@ -71,49 +71,49 @@ if not exist "%OUTPUT_DIR%" (
     del /q /s "%OUTPUT_DIR%\*" >nul
 )
 
-REM ********** SW-Requirements **********
+rem ********** SW-Requirements **********
 %LOBSTER_TRLC% --config %SW_REQ_LOBSTER_CONF% --out %SW_REQ_LOBSTER_OUT%
 
 if errorlevel 1 (
     goto error
 )
 
-REM ********** SW-Test **********
+rem ********** SW-Test **********
 %LOBSTER_TRLC% --config %SW_TEST_LOBSTER_CONF% --out %SW_TEST_LOBSTER_OUT%
 
 if errorlevel 1 (
     goto error
 )
 
-REM ********** SW-Test Result **********
+rem ********** SW-Test Result **********
 %LOBSTER_TRLC% --config %SW_TESTRESULT_LOBSTER_CONF% --out %SW_TESTRESULT_LOBSTER_OUT%
 
 if errorlevel 1 (
     goto error
 )
 
-REM ********** SW-Code **********
+rem ********** SW-Code **********
 %LOBSTER_PYTHON% --out %SW_CODE_LOBSTER_OUT% %SW_CODE_SOURCES%
 
 if errorlevel 1 (
     goto error
 )
 
-REM ********** SW-Test Code **********
+rem ********** SW-Test Code **********
 %LOBSTER_PYTHON% --out %SW_TEST_CODE_LOBSTER_OUT% %SW_TEST_CODE_SOURCES%
 
 if errorlevel 1 (
     goto error
 )
 
-REM ********** Combine all lobster intermediate files **********
+rem ********** Combine all lobster intermediate files **********
 %LOBSTER_REPORT% --lobster-config %SW_REQ_LOBSTER_REPORT_CONF% --out %SW_REQ_LOBSTER_REPORT_OUT%
 
 if errorlevel 1 (
     goto error
 )
 
-REM ********** LOBSTER Report conversion from local files to GIT URLS **********
+rem ********** LOBSTER Report conversion from local files to GIT URLS **********
 if not %LOBSTER_ONLINE_REPORT_ENABLE% ==1 goto skip_online
 
     for /f "delims=" %%i in ('git rev-parse HEAD') do set COMMIT_ID=%%i
@@ -124,9 +124,9 @@ if not %LOBSTER_ONLINE_REPORT_ENABLE% ==1 goto skip_online
     echo base_url: '%BASE_URL%' >> %SW_REQ_LOBSTER_ONLINE_REPORT_CONF%
     type "%SW_REQ_LOBSTER_ONLINE_REPORT_CONF%"
 
-    REM lobster-online-report v1.0.1 failes to patch the input file without --out option.
-    REM Create temporary one with ".online" extension and replace it with the input aftewards.
-    REM
+    rem lobster-online-report v1.0.1 failes to patch the input file without --out option.
+    rem Create temporary one with ".online" extension and replace it with the input aftewards.
+    rem
     %LOBSTER_ONLINE_REPORT% --config "%SW_REQ_LOBSTER_ONLINE_REPORT_CONF%" --out "%SW_REQ_LOBSTER_REPORT_OUT%.online"
     move /Y "%SW_REQ_LOBSTER_REPORT_OUT%.online" "%SW_REQ_LOBSTER_REPORT_OUT%"
 
@@ -136,7 +136,7 @@ if not %LOBSTER_ONLINE_REPORT_ENABLE% ==1 goto skip_online
 
 :skip_online
 
-REM ********** Create trace report **********
+rem ********** Create trace report **********
 %LOBSTER_RENDERER% --out %SW_REQ_LOBSTER_HTML_OUT% %SW_REQ_LOBSTER_REPORT_OUT%
 
 if errorlevel 1 (

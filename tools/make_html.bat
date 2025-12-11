@@ -21,7 +21,7 @@ setlocal
 set ONLINE_REPORT_OPTION=""
 
 if "%~1"=="" (
-    REM No arguments provided, proceed normally.
+    rem No arguments provided, proceed normally.
 ) else if "%~1"=="online" (
     set ONLINE_REPORT_OPTION="online"
 ) else (
@@ -29,16 +29,16 @@ if "%~1"=="" (
     exit /b 1
 )
 
-REM Create reStructured Text documentation from TRLC models and files.
+rem Create reStructured Text documentation from TRLC models and files.
 call trlc2other/make_rst
 
-REM Create unit test reports
+rem Create unit test reports
 call testReport/make_rst 
 
-REM Create tracing report from TRLC and source files.
+rem Create tracing report from TRLC and source files.
 call traceReport/make %ONLINE_REPORT_OPTION%
 
-REM Create HTML documentation.
+rem Create HTML documentation.
 call deployDoc/make html
 
 endlocal
