@@ -53,10 +53,10 @@ jobs:
 
       - name: Run tools workflow
         run: |
-          cd ./tools
+          pushd ./tools
           chmod +x make_html.sh
           ./make_html.sh
-          cd ..
+          popd
 
       - name: Upload static files as artifacts
         id: deployment
