@@ -33,6 +33,7 @@ elif [ "$#" -eq 1 ]; then
     fi
 fi
 
+set -e
 
 LOBSTER_TRLC=lobster-trlc
 LOBSTER_PYTHON=lobster-python
@@ -73,44 +74,20 @@ fi
 # ********** SW-Requirements **********
 $LOBSTER_TRLC --config "$SW_REQ_LOBSTER_CONF" --out "$SW_REQ_LOBSTER_OUT"
 
-if [ $? -ne 0 ]; then
-    exit 1
-fi
-
 # ********** SW-Test **********
 $LOBSTER_TRLC --config "$SW_TEST_LOBSTER_CONF" --out "$SW_TEST_LOBSTER_OUT"
-
-if [ $? -ne 0 ]; then
-    exit 1
-fi
 
 # ********** SW-Test Result **********
 $LOBSTER_TRLC --config $SW_TESTRESULT_LOBSTER_CONF --out $SW_TESTRESULT_LOBSTER_OUT
 
-if [ $? -ne 0 ]; then
-    exit 1
-fi
-
 # ********** SW-Code **********
 $LOBSTER_PYTHON --out "$SW_CODE_LOBSTER_OUT" "$SW_CODE_SOURCES"
-
-if [ $? -ne 0 ]; then
-    exit 1
-fi
 
 # ********** SW-Test Code **********
 $LOBSTER_PYTHON --out $SW_TEST_CODE_LOBSTER_OUT $SW_TEST_CODE_SOURCES
 
-if [ $? -ne 0 ]; then
-    exit 1
-fi
-
 # ********** Combine all lobster intermediate files **********
 $LOBSTER_REPORT --lobster-config "$SW_REQ_LOBSTER_REPORT_CONF" --out "$SW_REQ_LOBSTER_REPORT_OUT"
-
-if [ $? -ne 0 ]; then
-    exit 1
-fi
 
 # ********** LOBSTER Report conversion from local files to GIT URLS **********
 if [ "$LOBSTER_ONLINE_REPORT_ENABLE" -eq "1" ]; then
@@ -126,15 +103,9 @@ if [ "$LOBSTER_ONLINE_REPORT_ENABLE" -eq "1" ]; then
     # Create temporary one with ".online" extension and replace it with the input aftewards.
     #
     $LOBSTER_ONLINE_REPORT --config "$SW_REQ_LOBSTER_ONLINE_REPORT_CONF" --out "$SW_REQ_LOBSTER_REPORT_OUT.online"
-        if [ $? -ne 0 ]; then
-        exit 1
-    fi
+
     mv "$SW_REQ_LOBSTER_REPORT_OUT.online" "$SW_REQ_LOBSTER_REPORT_OUT"
 fi
 
 # ********** Create trace report **********
 $LOBSTER_RENDERER --out "$SW_REQ_LOBSTER_HTML_OUT" "$SW_REQ_LOBSTER_REPORT_OUT"
-
-if [ $? -ne 0 ]; then
-    exit 1
-fi

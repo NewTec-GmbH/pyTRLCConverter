@@ -16,6 +16,8 @@
 # You should have received a copy of the GNU General Public License along with pyTRLCConverter.
 # If not, see <https://www.gnu.org/licenses/>.
 
+set -e
+
 pushd ../plantUML
 chmod +x get_plantuml.sh
 . ./get_plantuml.sh
@@ -37,7 +39,3 @@ fi
 
 echo "Generate software requirements ..."
 $TRLC_CONVERTER --source=../../trlc/swe-req --include=../../trlc/model --verbose --out="$OUTPUT_DIR" --project="$CONVERTER" --translation="$TRANSLATION" --renderCfg="$RENDER_CFG" "$OUT_FORMAT" --template="$TEMPLATE"
-
-if [ $? -ne 0 ]; then
-    exit 1
-fi

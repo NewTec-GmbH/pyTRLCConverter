@@ -16,6 +16,8 @@
 # You should have received a copy of the GNU General Public License along with pyTRLCConverter.
 # If not, see <https://www.gnu.org/licenses/>.
 
+set -e
+
 pushd ../plantUML
 chmod +x get_plantuml.sh
 . ./get_plantuml.sh
@@ -44,20 +46,8 @@ pushd ../..
 pytest $TESTS_PATH -v --cov=$SRC_PATH --cov-report=term-missing --cov-report=html:$REPORT_TOOL_PATH/$OUTPUT_DIR/$COVERAGE_REPORT -o junit_family=xunit1 --junitxml=$REPORT_TOOL_PATH/$OUTPUT_DIR/$TEST_RESULT_REPORT_XML
 popd
 
-if [ $? -ne 0 ]; then
-    exit 1
-fi
-
 # Convert XML test report to TRLC.
 python test_result_xml2trlc.py ./$OUTPUT_DIR/$TEST_RESULT_REPORT_XML ./$OUTPUT_DIR/$TEST_RESULT_REPORT_TRLC
 
-if [ $? -ne 0 ]; then
-    exit 1
-fi
-
 # Convert TRLC test report to reStructuredText.
 $TRLC_CONVERTER --source=../../trlc/swe-req --source=../../trlc/swe-test --source=../../trlc/model --exclude=../../trlc/swe-req --exclude=../../trlc/swe-test --source=$OUTPUT_DIR/$TEST_RESULT_REPORT_TRLC -o=$OUTPUT_DIR --project=$CONVERTER --verbose $OUT_FORMAT
-
-if [ $? -ne 0 ]; then
-    exit 1
-fi
