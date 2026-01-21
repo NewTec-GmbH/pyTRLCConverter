@@ -43,6 +43,7 @@ from pyTRLCConverter.plantuml import PlantUML
 
 @pytest.fixture
 def plantuml_instance():
+    # lobster-exclude: Utility fixture for other test cases.
     """
     Create an instance of PlantUML with a server URL.
 

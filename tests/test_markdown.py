@@ -32,6 +32,7 @@ from pyTRLCConverter.markdown_converter import MarkdownConverter
 # Functions ********************************************************************
 
 def _assert_heading(lines: list[str], level: int, text: str) -> int:
+    # lobster-exclude: Utility function for other test code.
     """Helper function to assert a Markdown heading line.
 
     Args:
@@ -47,6 +48,7 @@ def _assert_heading(lines: list[str], level: int, text: str) -> int:
     return 1
 
 def _assert_empty_line(lines: list[str]) -> int:
+    # lobster-exclude: Utility function for other test code.
     """Helper function to assert an empty line.
 
     Args:
@@ -61,6 +63,7 @@ def _assert_empty_line(lines: list[str]) -> int:
 def _assert_table(lines: list[str],
                   expected_headers: list[list[str]],
                   expected_rows: list[list[str]]) -> int:
+    # lobster-exclude: Utility function for other test code.
     """Helper function to assert a Markdown table.
 
     Args:
