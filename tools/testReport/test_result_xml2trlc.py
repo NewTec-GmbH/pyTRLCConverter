@@ -22,7 +22,7 @@
 # Imports **********************************************************************
 import sys
 import xml.etree.ElementTree as ET
-from typing import IO, Optional
+from typing import IO
 
 # Variables ********************************************************************
 
@@ -48,22 +48,22 @@ def _test_report_write_footer(fd: IO) -> None:
     fd.write('}\n')
 
 # pylint: disable=line-too-long
-def _test_report_write_test_case_result(fd: IO, test_case_name: str, test_case_result: str, lobster_trace: Optional[str]) -> None:
+def _test_report_write_test_case_result(fd: IO, test_case_name: str, test_case_result: str, lobster_traces: list[str]) -> None:
     """Write test case result to test report.
 
     Args:
         fd (IO): File descriptor
         test_case_name (str): Name of the test case.
         test_case_result (str): Result of the test case (passed/failed).
-        lobster_trace (Optional[str]): Test case id which is relates to the result.
+        lobster_traces ([str]): Test case ids which are related to the result.
     """
     test_case_id = test_case_name + "_result"
     fd.write(f'    SwTestCaseResult {test_case_id} {{\n')
     fd.write(f'        name = "{test_case_name}"\n')
     fd.write(f'        result = {test_case_result}\n')
 
-    if lobster_trace is not None:
-        fd.write(f'        relates = {lobster_trace}\n')
+    if lobster_traces:
+        fd.write(f'        relates = [{", ".join(lobster_traces)}]\n')
 
     fd.write('    }\n\n')
 
@@ -94,12 +94,12 @@ def convert_test_report(xml_file: str, output_file: str) -> bool:
                 if testcase.find('failure') is not None:
                     test_case_result = 'SwTestResult.FAILED'
 
-                lobster_trace = None
+                lobster_trace = []
                 properties = testcase.find('properties')
                 if properties is not None:
                     for prop in properties.findall('property'):
                         if prop.get('name') == 'lobster-trace':
-                            lobster_trace = prop.get('value')
+                            lobster_trace.append(prop.get('value'))
 
                 _test_report_write_test_case_result(fd, test_case_name, test_case_result, lobster_trace)
 
