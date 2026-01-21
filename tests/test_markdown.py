@@ -662,7 +662,7 @@ def test_tc_markdown_render_md(record_property, capsys, monkeypatch, tmp_path):
         monkeypatch (Any): Used to mock program arguments.
         tmp_path (Path): Used to create a temporary output directory.
     """
-    record_property("lobster-trace", "SwTests.tc_cli_exclude")
+    record_property("lobster-trace", "SwTests.tc_markdown_render_md")
 
     # Mock program arguments to specify an output folder.
     output_file_name = "myReq.md"
