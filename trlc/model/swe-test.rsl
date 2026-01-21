@@ -15,7 +15,7 @@ enum SwTestResult {
 
 // The software test case result contains the result of a test case test.
 type SwTestCaseResult {
-    name    String
-    result  SwTestResult
-    relates SwTestCase
+    name                    String
+    result                  SwTestResult
+    relates     optional    SwTestCase [1 .. *]
 }
