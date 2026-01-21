@@ -224,19 +224,19 @@ class PlantUML():
                 output = subprocess.run(plantuml_cmd, capture_output=True, text=True, check=False)
             except FileNotFoundError as exc:
                 # Subprocess run() raising a FileNotFoundError is indicating that the java command could not be found.
-                raise FileNotFoundError(f"Java is not installed on this machine or not on PATH. Please check your java install to render plantUML locally.") from exc
-            
+                raise FileNotFoundError("Java is not installed on this machine or not on PATH."\
+                                         " Please check your java install to render plantUML locally.") from exc
+
             if output.stderr:
                 log_error(output.stderr, True)
             if 0 != output.returncode:
                 # An error in the subprocess indicates that the java command was found but did not complete sucessfully.
                 if not os.path.isfile(self._plantuml_jar):
                     raise FileNotFoundError(f"plantuml.jar at {self._plantuml_jar} not found.")
-                elif not os.path.isfile(diagram_path):
+                if not os.path.isfile(diagram_path):
                     raise FileNotFoundError(f"Diagram at {diagram_path} not found.")
-                else:
-                    # Raise the error from the CompletedProcess.
-                    output.check_returncode()
+                # Raise the error from the CompletedProcess.
+                output.check_returncode()
             print(output.stdout)
         else:
             raise FileNotFoundError("plantuml.jar not found, set PLANTUML environment variable.")
