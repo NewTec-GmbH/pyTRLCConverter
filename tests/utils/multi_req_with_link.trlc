@@ -1,0 +1,13 @@
+package Requirements
+
+Requirement req_id_5 {
+    description = "Test description 1"
+    link        = req_id_6
+    valid       = false
+}
+
+Requirement req_id_6 {
+    description = "Test description 2"
+    link        = req_id_5
+    valid       = true
+}

@@ -495,6 +495,7 @@ def test_tc_markdown_single_doc_exclude(record_property, capsys, monkeypatch, tm
         "--exclude", "./tests/utils/single_req_no_section.trlc",
         "--exclude", "./tests/utils/single_req_with_section.trlc",
         "--exclude", "./tests/utils/single_req_description_md.trlc",
+        "--exclude", "./tests/utils/multi_req_with_link.trlc",
         "--out", str(tmp_path),
         "markdown",
         "--single-document",

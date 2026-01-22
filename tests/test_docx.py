@@ -73,6 +73,50 @@ def test_tc_docx(record_property, capsys, monkeypatch, tmp_path):
     assert created_docx.tables[0].cell(1, 0).text == "description"
     assert created_docx.tables[0].cell(1, 1).text == "Test description"
 
+def test_tc_docx_multiple(record_property, capsys, monkeypatch, tmp_path):
+    # lobster-trace: SwTests.tc_docx_multiple
+    """
+    The software shall support conversion of multiple TRLC records containing references to docx format.
+
+    Args:
+        record_property (Any): Used to inject the test case reference into the test results.
+        capsys (Any): Used to capture stdout and stderr.
+        monkeypatch (Any): Used to mock program arguments.
+        tmp_path (Path): Used to create a temporary output directory.
+    """
+    record_property("lobster-trace", "SwTests.tc_docx_multiple")
+
+    # Mock program arguments to simulate running the script with inbuild Markdown converter.
+    monkeypatch.setattr("sys.argv", [
+        "pyTRLCConverter",
+        "--source", "./tests/utils/req.rsl",
+        "--source", "./tests/utils/multi_req_with_link.trlc",
+        "--out", str(tmp_path),
+        "docx",
+    ])
+
+    # Expect the program to run without any exceptions.
+    main()
+
+    # Capture stdout and stderr.
+    captured = capsys.readouterr()
+    # Check that no errors were reported.
+    assert captured.err == ""
+
+    # Check that the output file was created.
+    created_docx = docx.Document(docx=str(tmp_path / DocxConverter.OUTPUT_FILE_NAME_DEFAULT))
+
+    # Check the link text in the created tables for the requirements.
+    assert len(created_docx.tables) == 2
+    assert created_docx.tables[0].cell(2, 0).text == "link"
+    assert created_docx.tables[0].cell(2, 1).text == "Requirements.req_id_6"
+    assert created_docx.tables[1].cell(2, 0).text == "link"
+    assert created_docx.tables[1].cell(2, 1).text == "Requirements.req_id_5"
+
+    # Check that the hyperlink anchors were correctly set. Cells paragraph needs to hold a hyperlink with orrect anchor.
+    assert created_docx.tables[0].cell(2, 1).paragraphs[0]._p.hyperlink_lst[0].anchor == "req_id_6"
+    assert created_docx.tables[1].cell(2, 1).paragraphs[0]._p.hyperlink_lst[0].anchor == "req_id_5"
+
 def test_tc_docx_section(record_property, capsys, monkeypatch, tmp_path):
     # lobster-trace: SwTests.tc_docx_section
     """

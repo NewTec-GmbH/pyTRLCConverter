@@ -193,12 +193,12 @@ section "SW-Tests" {
             description = "This test case checks whether the conversion to reStructuredText format works."
             verifies = [
                 SwRequirements.sw_req_rst,
-                SwRequirements.sw_req_rst_record, 
-                SwRequirements.sw_req_no_prj_spec, 
-                SwRequirements.sw_req_cli_out, 
-                SwRequirements.sw_req_rst_single_doc_mode, 
-                SwRequirements.sw_req_rst_out_file_name_default, 
-                SwRequirements.sw_req_rst_sd_top_level, 
+                SwRequirements.sw_req_rst_record,
+                SwRequirements.sw_req_no_prj_spec,
+                SwRequirements.sw_req_cli_out,
+                SwRequirements.sw_req_rst_single_doc_mode,
+                SwRequirements.sw_req_rst_out_file_name_default,
+                SwRequirements.sw_req_rst_sd_top_level,
                 SwRequirements.sw_req_rst_sd_top_level_default]
         }
 
@@ -282,6 +282,11 @@ section "SW-Tests" {
         SwTestCase tc_docx {
             description = "This test case checks whether the conversion to docx format works."
             verifies = [SwRequirements.sw_req_docx, SwRequirements.sw_req_docx_record]
+        }
+
+        SwTestCase tc_docx_multiple {
+            description = "This test case checks whether the conversion of multiple records containing record_references to docx format works."
+            verifies = [SwRequirements.sw_req_docx_record, SwRequirements.sw_req_docx_reference]
         }
 
         SwTestCase tc_docx_section {

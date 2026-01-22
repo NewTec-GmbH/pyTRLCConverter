@@ -484,8 +484,14 @@ section "pyTRLCConverter" {
             }
 
             SwReq sw_req_docx_record {
-                description = "If no project specific conversion file is available, consecutive TRLC records shall be converted into a docx heading with depth+1 and a table listing the attributes."
+                description = "If no project specific conversion file is available, consecutive TRLC records shall be converted into a docx heading with depth+1, a bookmark and a table listing the attributes."
                 verification_criteria = "Verify by converting consecutive TRLC records into a docx file."
+                valid_status = AbstractRequirements.VALID_STATUS.valid
+            }
+
+            SwReq sw_req_docx_reference {
+                description = "If a record attribute of the type 'Record_Reference' is processed, the attribute shall be converted into a hyperlink to the corresponding reference bookmark."
+                verification_criteria = "Verify by converting a TRLC record containing a reference to another TRLC record into a docx file."
                 valid_status = AbstractRequirements.VALID_STATUS.valid
             }
 
@@ -527,12 +533,12 @@ section "pyTRLCConverter" {
     }
 
     section "Software Constraints" {
-        
+
         SwConstraint sw_constraint_os_win {
             description = "The software shall support the Windows operating system."
             valid_status = AbstractRequirements.VALID_STATUS.valid
         }
-        
+
         SwConstraint sw_constraint_os_linux {
             description = "The software shall support the Linux operating system."
             valid_status = AbstractRequirements.VALID_STATUS.valid
