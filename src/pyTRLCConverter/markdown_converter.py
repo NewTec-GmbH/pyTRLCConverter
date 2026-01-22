@@ -483,6 +483,7 @@ class MarkdownConverter(BaseConverter):
         return MarkdownConverter.markdown_create_link(str(record_reference.to_python_object()), anchor_tag)
 
     def _other_dispatcher(self, expression: Expression) -> str:
+        # lobster-exclude: Other dispatcher only handles types for which no requiremens exist.
         """
         Dispatcher for all other expressions.
 

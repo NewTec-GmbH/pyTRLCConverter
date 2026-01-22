@@ -401,7 +401,7 @@ class RstConverter(BaseConverter):
         return self._create_rst_link_from_record_object_reference(record_reference)
 
     def _on_string_literal(self, string_literal: String_Literal) -> str:
-        # lobster-trace: SwReq sw_req_rst_string_format
+        # lobster-trace: SwRequirements.sw_req_rst_string_format
         # lobster-trace: SwRequirements.sw_req_rst_render_md
         """
         Process the given string literal value.
@@ -462,6 +462,7 @@ class RstConverter(BaseConverter):
         return RstConverter.rst_create_link(str(record_reference.to_python_object()), target_id)
 
     def _other_dispatcher(self, expression: Expression) -> str:
+        # lobster-exclude: Other dispatcher only handles types for which no requiremens exist.
         """
         Dispatcher for all other expressions.
 
@@ -476,7 +477,7 @@ class RstConverter(BaseConverter):
     def _get_trlc_ast_walker(self) -> TrlcAstWalker:
         # lobster-trace: SwRequirements.sw_req_rst_record
         # lobster-trace: SwRequirements.sw_req_rst_escape
-        # lobster-trace: SwReq sw_req_rst_string_format
+        # lobster-trace: SwRequirements.sw_req_rst_string_format
         """
         If a record object contains a record reference, the record reference will be converted to
         a Markdown link.

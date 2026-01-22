@@ -290,6 +290,7 @@ class DocxConverter(BaseConverter):
         self._list_item_indent_level -= 1
 
     def _other_dispatcher(self, expression: Expression) -> None:
+        # lobster-exclude: Other dispatcher only handles types for which no requiremens exist.
         """
         Dispatcher for all other expressions.
 
