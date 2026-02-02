@@ -96,6 +96,11 @@ section "SW-Tests" {
             description = "This test case checks whether a translation file can be configured via the command line."
             verifies = [SwRequirements.sw_req_cli_translation]
         }
+
+        SwTestCase tc_cli_render_cfg {
+            description = "This test case checks whether a render configuration file can be configured via the command line."
+            verifies = [SwRequirements.sw_req_cli_render_cfg]
+        }
     }
 
     section "Markdown" {
