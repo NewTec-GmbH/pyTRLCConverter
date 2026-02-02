@@ -343,12 +343,6 @@ section "pyTRLCConverter" {
                 valid_status = AbstractRequirements.VALID_STATUS.valid
             }
 
-            SwReq sw_req_rst_string_format_md {
-                description = "The software shall convert strings in Markdown format to reStructuredText format without escaping."
-                verification_criteria = "Verify by using strings in Markdown format, which are converted and needs no escaping."
-                valid_status = AbstractRequirements.VALID_STATUS.valid
-            }
-
             SwReq sw_req_rst_heading {
                 description = "The reStructuredText converter shall provide a function to create a reStructuredText heading."
                 verification_criteria = "Verify by creating a reStructuredText heading."
