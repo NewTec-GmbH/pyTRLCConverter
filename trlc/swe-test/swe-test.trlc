@@ -188,7 +188,7 @@ section "SW-Tests" {
         SwTestCase tc_markdown_render_md {
             description = '''This test case checks whether Markdown content in requirement attributes is rendered correctly
              when the render configuration is set to "md".'''
-            verifies = [SwRequirements.sw_req_markdown_render_md]
+            verifies = [SwRequirements.sw_req_markdown_render_md, SwRequirements.sw_req_markdown_string_format]
         }
     }
 
