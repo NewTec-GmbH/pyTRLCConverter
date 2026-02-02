@@ -263,9 +263,8 @@ def _get_project_converter() -> Optional[AbstractConverter]:
         classes = {name: cls for name, cls in classes if cls.__module__ == project_module_name_basename}
 
         # lobster-trace: SwRequirements.sw_req_prj_spec_interface
-        for class_name, class_def in classes.items():
+        for _, class_def in classes.items():
             if issubclass(class_def, AbstractConverter):
-                log_verbose(f"Found project specific converter type: {class_name}")
                 return class_def
 
         raise ValueError(f"No AbstractConverter derived class found in {project_module_name_basename}")
