@@ -275,6 +275,11 @@ section "SW-Tests" {
             verifies = [SwRequirements.sw_req_rst_multiple_doc_mode]
         }
 
+        SwTestCase tc_rst_string_format {
+            description = "This test case checks that strings already in reStructuredText format are not escaped."
+            verifies = [SwRequirements.sw_req_rst_string_format]
+        }
+
         SwTestCase tc_rst_render_md {
             description = '''This test case checks whether Markdown content in requirement attributes is rendered correctly
              when the render configuration is set to "md".'''
@@ -307,6 +312,11 @@ section "SW-Tests" {
         SwTestCase tc_docx_template {
             description = "This test case checks whether the conversion using a template works correctly."
             verifies = [SwRequirements.sw_req_docx_template]
+        }
+
+        SwTestCase tc_docx_render_md {
+            description = "this test case checks whether the conversion from markdown strings to docx works correctly."
+            verifies = [SwRequirements.sw_req_docx_render_md]
         }
 
     }

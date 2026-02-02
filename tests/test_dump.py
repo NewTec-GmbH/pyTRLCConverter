@@ -44,6 +44,7 @@ def test_tc_ascii_conversion(record_property, capsys, monkeypatch):
         "pyTRLCConverter",
         "--source", "./tests/utils",
         "--exclude", "./tests/utils/single_req_description_md.trlc",
+        "--exclude", "./tests/utils/single_req_description_rst.trlc",
         "--exclude", "./tests/utils/multi_req_with_link.trlc",
         "dump"
     ])

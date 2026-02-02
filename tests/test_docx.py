@@ -236,3 +236,72 @@ def test_tc_docx_template(record_property, capsys, monkeypatch, tmp_path):
 
     # Check that the requirement is present.
     assert created_docx.paragraphs[1].text == "req_id_1 (Requirement)"
+
+def test_tc_docx_render_md(record_property, capsys, monkeypatch, tmp_path):
+    # lobster-trace: SwTests.tc_docx_render_md
+    """
+    The test case checks whether strings in Markdown are correctly converted to docx.
+
+    Args:
+        record_property (Any): Used to inject the test case reference into the test results.
+        capsys (Any): Used to capture stdout and stderr.
+        monkeypatch (Any): Used to mock program arguments.
+        tmp_path (Path): Used to create a temporary output directory.
+    """
+    record_property("lobster-trace", "SwTests.tc_docx_render_md")
+
+    # Mock program arguments to simulate running the script with inbuild Markdown converter.
+    monkeypatch.setattr("sys.argv", [
+        "pyTRLCConverter",
+        "--source", "./tests/utils/req.rsl",
+        "--source", "./tests/utils/single_req_description_md.trlc",
+        "--out", str(tmp_path),
+        "docx",
+        "--template", "./tests/utils/template.docx",
+    ])
+
+    # Expect the program to run without any exceptions.
+    main()
+
+    # Capture stdout and stderr.
+    captured = capsys.readouterr()
+    # Check that no errors were reported.
+    assert captured.err == ""
+
+    # Check that the output file was created.
+    created_docx = docx.Document(docx=str(tmp_path / DocxConverter.OUTPUT_FILE_NAME_DEFAULT))
+
+    # Check that the requirement is present.
+    assert created_docx.paragraphs[1].text == "req_id_4 (Requirement)"
+
+    # Check that the description was converted.
+    assert created_docx.tables[0].cell(1, 0).text == "description"
+    split_description = created_docx.tables[0].cell(1, 1).text.splitlines()
+    assert split_description == [
+        r'# Heading 1',
+        r'',
+        r'## Heading 2',
+        r'',
+        r'- Bullet point 1',
+        r'- Bullet point 2',
+        r'    - Sub bullet point 1',
+        r'    - Sub bullet point 2',
+        r'',
+        r'1. Numbered point 1',
+        r'2. Numbered point 2',
+        r'    1. Sub numbered point 1',
+        r'    2. Sub numbered point 2',
+        r'',
+        r'**Bold text**, *italic text* and __underlined text__.',
+        r'',
+        r'```',
+        r'Code block example',
+        r'```',
+        r'',
+        r'--- Divider ---',
+        r'',
+        r'> Blockquote example',
+        r'',
+        r'[Link to pyTRLCConverter](https://github.com/NewTec-GmbH/pyTRLCConverter)',
+  ]
+    
