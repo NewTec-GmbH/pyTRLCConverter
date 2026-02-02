@@ -195,6 +195,7 @@ def _setup_converters(args_sub_parser: argparse._SubParsersAction) -> Ret:
     return ret_status
 
 def _show_program_arguments(args: argparse.Namespace) -> None:
+    # lobster-trace: SwRequirements.sw_req_verbose_mode
     """Show program arguments in verbose mode to the user.
 
     Args:
@@ -208,6 +209,7 @@ def _show_program_arguments(args: argparse.Namespace) -> None:
         log_verbose("\n")
 
 def _setup_render_configuration(file_name: Optional[str]) -> Optional[RenderConfig]:
+    # lobster-trace: SwRequirements.sw_req_render_configuration
     """Setup render configuration.
 
     Args:
@@ -313,7 +315,6 @@ def main() -> int:
             enable_verbose(args.verbose)
             _show_program_arguments(args)
 
-            # lobster-trace: SwRequirements.sw_req_trlc_type_attr_md
             render_cfg = _setup_render_configuration(args.renderCfg)
 
             # lobster-trace: SwRequirements.sw_req_process_trlc_symbols

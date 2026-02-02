@@ -203,7 +203,7 @@ class DocxConverter(BaseConverter):
 
     def _on_record_reference(self, record_reference: Record_Reference) -> None:
         # lobster-trace: SwRequirements.sw_req_docx_record
-        # lobster-trace: SwRequirements.sw_req_doxc_reference
+        # lobster-trace: SwRequirements.sw_req_docx_reference
         """
         Process the given record reference value and return a hyperlink paragraph.
 
@@ -220,7 +220,6 @@ class DocxConverter(BaseConverter):
                                                 f"{record_reference.package.name}.{record_reference.target.name}")
 
     def _on_string_literal(self, string_literal: String_Literal) -> None:
-        # lobster-trace: SwRequirements.sw_req_docx_string_format
         # lobster-trace: SwRequirements.sw_req_docx_render_md
         """
         Process the given string literal value.
@@ -245,6 +244,7 @@ class DocxConverter(BaseConverter):
 
     # pylint: disable-next=unused-argument
     def _on_array_aggregate_begin(self, array_aggregate: Array_Aggregate) -> None:
+        # lobster-trace: SwRequirements.sw_req_docx_record
         """
         Handle the beginning of a list.
 
@@ -282,6 +282,7 @@ class DocxConverter(BaseConverter):
 
     # pylint: disable-next=unused-argument
     def _on_array_aggregate_finish(self, array_aggregate: Array_Aggregate) -> None:
+        # lobster-trace: SwRequirements.sw_req_docx_record
         """
         Handle the end of a list.
 
