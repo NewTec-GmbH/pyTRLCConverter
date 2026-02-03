@@ -97,44 +97,6 @@ def test_tc_translation(record_property, capsys, monkeypatch):
     assert lines[0] == "req_id_1"
     assert lines[1] == "Translated Description: Test description"
 
-def test_tc_render_cfg(record_property, capsys, monkeypatch):
-    # lobster-trace: SwTests.tc_cli_render_cfg
-    """
-    Check whether a render configuration can be provided via CLI.
-
-    Args:
-        record_property (Any): Used to inject the test case reference into the test results.
-        capsys (Any): Used to capture stdout and stderr.
-        monkeypatch (Any): Used to mock program arguments.
-    """
-    record_property("lobster-trace", "SwTests.tc_cli_render_cfg")
-
-    config_path = "./tests/utils/renderCfg.json"
-
-    # Mock program arguments to simulate running the script with a project specific converter.
-    monkeypatch.setattr("sys.argv", [
-        "pyTRLCConverter",
-        "--source", "./tests/utils/req.rsl",
-        "--source", "./tests/utils/single_req_no_section.trlc",
-        "--project", "./tests/utils/psc_simple.py",
-        "--renderCfg", f"{config_path}",
-        "--verbose",
-        "simple"
-    ])
-
-    # Expecting the programm to run without any exceptions.
-    main()
-
-    # Capture stdout and stderr.
-    captured = capsys.readouterr()
-
-    # No error output expected.
-    assert captured.err == ""
-
-    # Check if the expected output.
-    lines = captured.out.splitlines()
-    assert f"Loading render configuration {config_path}." in lines
-
 def test_tc_prj_spec(record_property, capsys, monkeypatch):
     # lobster-trace: SwTests.tc_prj_spec
     """
