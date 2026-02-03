@@ -462,7 +462,8 @@ class RstConverter(BaseConverter):
         return RstConverter.rst_create_link(str(record_reference.to_python_object()), target_id)
 
     def _other_dispatcher(self, expression: Expression) -> str:
-        # lobster-exclude: Other dispatcher only handles types for which no requiremens exist.
+        # lobster-trace: SwRequirements.sw_req_rst_record
+        # lobster-trace: SwRequirements.sw_req_rst_escape
         """
         Dispatcher for all other expressions.
 
