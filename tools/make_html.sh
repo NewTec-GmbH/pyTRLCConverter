@@ -43,4 +43,4 @@ fi
 (cd traceReport; ./make.sh $ONLINE_REPORT_OPTION)
 
 #Create HTML documentation.
-(cd plantUML; . ./get_plantuml.sh; cd ..;cd deployDoc; make html)
+(cd plantUML; . ./get_plantuml.sh; cd ..;cd deployDoc; make clean; make html)

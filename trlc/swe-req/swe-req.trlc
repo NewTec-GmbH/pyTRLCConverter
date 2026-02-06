@@ -241,7 +241,7 @@ section "pyTRLCConverter" {
 
             SwReq sw_req_markdown_out_folder {
                 description = "The Markdown converter shall create the converted files in the specified output folder."
-                verification_criteria = "Verify by specifing an output folder, that doesn't exist. It must exist after the conversion."
+                verification_criteria = "Verify by specifying an output folder, that doesn't exist. It must exist after the conversion."
                 valid_status = AbstractRequirements.VALID_STATUS.valid
             }
 

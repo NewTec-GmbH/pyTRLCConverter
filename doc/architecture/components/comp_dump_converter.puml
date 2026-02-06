@@ -1,0 +1,24 @@
+@startuml
+
+
+class BaseConverter {
+}
+
+class DumpConverter extends BaseConverter {
+    +get_subcommand() : str
+    +get_description() : str
+    +enter_file(file_name: str) : Ret
+    +leave_file(file_name: str) : Ret
+    +convert_section(section: str, level: int) : Ret
+    +convert_record_object_generic(record: Record_Object, level: int, translation: Optional[dict]) : Ret
+    +finish() : Ret
+}
+
+class Record_Object {
+    + name : str
+    + dump(indent: int) : str
+}
+
+DumpConverter ..> Record_Object
+
+@enduml

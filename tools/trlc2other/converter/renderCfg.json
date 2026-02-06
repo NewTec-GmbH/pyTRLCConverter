@@ -1,8 +1,17 @@
 {
-    "renderCfg": [{
-        "package": ".*",
-        "type": "Info",
-        "attribute": "description",
-        "format": "md"
-    }]
+    "renderCfg": 
+    [
+        {
+            "package": ".*",
+            "type": "Info",
+            "attribute": "description",
+            "format": "md"
+        },
+        {
+            "package": ".*",
+            "type": "SwArchSpec",
+            "attribute": "description",
+            "format": "md"
+        }
+    ]   
 }

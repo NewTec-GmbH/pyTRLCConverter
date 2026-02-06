@@ -1,0 +1,20 @@
+@startuml
+
+class PlantUML {
+    +__init__() : None
+    +set_server_url(url: str) : None
+    +generate_image(source: str, output_path: str) : None
+}
+
+
+' Define external dependencies
+package "Dependencies" {
+    class requests <<(M ,lightblue) module>> {}
+    class subprocess <<(M ,lightblue) module>> {}
+}
+
+' Relationships
+PlantUML ..> requests
+PlantUML ..> subprocess
+
+@enduml

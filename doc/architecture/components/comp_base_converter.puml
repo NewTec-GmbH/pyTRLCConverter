@@ -1,0 +1,54 @@
+@startuml
+
+' Title of the diagram
+title Class Diagram for BaseConverter
+
+' Define the package for BaseConverter
+    ' Abstract base class for converters
+    abstract class AbstractConverter {
+    }
+
+    ' BaseConverter class
+    class BaseConverter extends AbstractConverter {
+        +__init__(args: Any)
+        +register(args_parser: Any) : None
+        +set_render_cfg(render_cfg: RenderConfig) : None
+        +begin() : Ret
+        +enter_file(file_name: str) : Ret
+        +leave_file(file_name: str) : Ret
+        +convert_section(section: str, level: int) : Ret
+        +convert_record_object(record: Record_Object, level: int) : Ret
+        +finish() : Ret
+        +convert_record_object_generic(record: Record_Object, level: int, translation: Optional[dict]) : Ret
+    }
+
+    ' RecordsPolicy enum
+    enum RecordsPolicy {
+        RECORD_CONVERT_ALL
+        RECORD_SKIP_UNDEFINED
+    }
+
+
+' Define external dependencies
+package "Dependencies" {
+    class argparse {
+    }
+
+    class Record_Object {
+    }
+
+    class Translator {
+
+    }
+
+    class RenderConfig {
+    }
+}
+
+' Relationships
+BaseConverter ..d.> RecordsPolicy
+BaseConverter ..d.> Translator
+BaseConverter ..d.> RenderConfig
+BaseConverter ..d.> Record_Object
+
+@enduml

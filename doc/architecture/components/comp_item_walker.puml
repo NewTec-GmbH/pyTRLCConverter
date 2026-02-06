@@ -1,0 +1,33 @@
+@startuml
+
+' Title of the diagram
+title Class Diagram for ItemWalker
+
+    ' ItemWalker class
+    class ItemWalker {
+        +__init__(args: Any, converter: AbstractConverter) : None
+        +walk_symbols(symbol_table: Symbol_Table) : Ret
+        -_walk_file(file_name: str, item_list: Any) : Ret
+        -_walk_items(item_list: list) : Ret
+        -_visit_item(item: Any) : Ret
+    }
+
+
+' Define external dependencies
+package "Dependencies" {
+    class trlc <<(M ,lightblue) module>> {
+    }
+
+    abstract AbstractConverter {
+    }   
+
+    note left of trlc
+        Module for obtaining 
+        the TRLC symbol table.
+    end note
+    }
+
+ItemWalker ..> AbstractConverter
+ItemWalker ..> trlc
+
+@enduml

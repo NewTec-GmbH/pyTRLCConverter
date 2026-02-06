@@ -1,0 +1,18 @@
+@startuml
+
+class Logger {
+    +is_verbose_enabled() : bool
+    +enable_verbose(enable: bool) : None
+    +log_verbose(message: str) : None
+    +log_error(message: str) : None
+}
+
+' Define external dependencies
+package "Dependencies" {
+    class logging <<(M ,lightblue) module>> {}
+}
+
+' Relationships
+Logger ..> logging  
+
+@enduml

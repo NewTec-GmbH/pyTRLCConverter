@@ -70,10 +70,12 @@ Note:
 
 ### Tool Installation
 
-The *developers* might like to install it in editable mode.
+The *developers* might like to install it in editable mode together with additional needed
+development tools like `pytest`.
 
 ```bash
 pip install -e .
+pip install -r requirements-dev.txt
 ```
 
 The *users* of the tool install it as usual.

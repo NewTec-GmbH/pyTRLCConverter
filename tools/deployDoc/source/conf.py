@@ -46,7 +46,7 @@ author = 'NewTec GmbH'
 extensions = [
     # https://www.sphinx-doc.org/en/master/usage/markdown.html
     'myst_parser',
-
+    'sphinx_rtd_theme',
     # https://github.com/sphinx-contrib/plantuml
     'sphinxcontrib.plantuml'
 ]
@@ -70,9 +70,9 @@ myst_heading_anchors = 6
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-html_theme = 'haiku'
+html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
-html_style = 'custom.css'
+html_css_files = ['custom.css']
 
 # Copy favorite icon to static path.
 html_favicon = '../../../doc/images/favicon.ico'

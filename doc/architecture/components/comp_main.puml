@@ -1,0 +1,50 @@
+@startuml
+
+ class _create_args_parser << (F,orchid) func>> {
+     + Creates a parser for\ncommand-line arguments.
+ }
+class _setup_converters << (F,orchid) func>> {
+     + Sets up converters for the CLI.
+ }
+class _show_program_arguments << (F,orchid) func>> {
+     + Displays program arguments\nin verbose mode.
+ }
+class _setup_render_configuration << (F,orchid) func>> {
+     + Sets up the render configuration.
+ }
+class _get_project_converter << (F,orchid) func>> {
+     + Retrieves the\nproject-specific converter.
+ }
+class _create_out_folder << (F,orchid) func>> {
+     + Creates the output folder\nif it doesn't exist.
+ }
+
+class main << (F,orchid) func>> >> {
+     + Main program \nentry point.
+ }
+
+' Define external dependencies
+package "Dependencies" {
+    class argparse <<(M ,lightblue) module>>{
+    }
+
+    class RenderConfig  {
+    }
+
+    class ItemWalker {
+     + Traverses the TRLC items\nand calls the converter.
+    }
+ }
+
+' Relationships
+_create_args_parser ..> argparse
+_show_program_arguments ..> argparse
+_setup_render_configuration ..> RenderConfig
+main ..> _create_args_parser
+main ..> _setup_converters
+main ..> _show_program_arguments
+main ..> _setup_render_configuration
+main ..> _create_out_folder
+main ...> ItemWalker
+_setup_converters --> _get_project_converter
+@enduml
