@@ -47,6 +47,12 @@ set OUTPUT_DIR=out
 set SW_REQ_LOBSTER_CONF=.\lobster-trlc-sw-req.yaml
 set SW_REQ_LOBSTER_OUT=%OUTPUT_DIR%\sw_req-lobster.json
 
+set SW_CONSTRAINT_LOBSTER_CONF=.\lobster-trlc-sw-constraint.yaml
+set SW_CONSTRAINT_LOBSTER_OUT=%OUTPUT_DIR%\sw_constraint-lobster.json
+
+set SW_ARCH_LOBSTER_CONF=.\lobster-trlc-sw-arch.yaml
+set SW_ARCH_LOBSTER_OUT=%OUTPUT_DIR%\sw_arch-lobster.json
+
 set SW_TEST_LOBSTER_CONF=.\lobster-trlc-sw-test.yaml
 set SW_TEST_LOBSTER_OUT=%OUTPUT_DIR%\sw_test-lobster.json
 
@@ -73,6 +79,20 @@ if not exist "%OUTPUT_DIR%" (
 
 rem ********** SW-Requirements **********
 %LOBSTER_TRLC% --config %SW_REQ_LOBSTER_CONF% --out %SW_REQ_LOBSTER_OUT%
+
+if errorlevel 1 (
+    goto error
+)
+
+rem ********** SW-Constraints **********
+%LOBSTER_TRLC% --config %SW_CONSTRAINT_LOBSTER_CONF% --out %SW_CONSTRAINT_LOBSTER_OUT%
+
+if errorlevel 1 (
+    goto error
+)
+
+rem ********** SW-Arch **********
+%LOBSTER_TRLC% --config %SW_ARCH_LOBSTER_CONF% --out %SW_ARCH_LOBSTER_OUT%
 
 if errorlevel 1 (
     goto error

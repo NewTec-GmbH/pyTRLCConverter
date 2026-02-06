@@ -1,0 +1,38 @@
+@startuml
+
+class BaseConverter {
+}
+class DocxConverter extends BaseConverter {
+    +get_subcommand() : str
+    +get_description() : str
+    +register(args_parser: Any) : None
+    +convert_section(section: str, level: int) : Ret
+    +convert_record_object_generic(record: Record_Object, level: int, translation: Optional[dict]) : Ret
+    +finish() : Ret
+}
+
+package "Dependencies" {
+
+    class Record_Object {
+        + name : str
+        + dump(indent: int) : str
+    }
+
+
+    class docx <<(M ,lightblue) module>>{
+    }
+
+    class DocxRenderer {
+        + render(ast: Any) : str
+    }
+
+    class marko <<(M ,lightblue) module>> {
+    }
+}
+
+DocxConverter ..> Record_Object
+DocxConverter ..> docx
+DocxConverter ..> DocxRenderer
+DocxConverter ..> marko
+
+@enduml

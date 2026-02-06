@@ -39,6 +39,7 @@ rem Create tracing report from TRLC and source files.
 call traceReport/make %ONLINE_REPORT_OPTION%
 
 rem Create HTML documentation.
+call deployDoc/make clean
 call deployDoc/make html
 
 endlocal

@@ -43,6 +43,12 @@ if errorlevel 1 (
     goto error
 )
 
+%TRLC_CONVERTER% --source=..\..\trlc\swe-arch --include=..\..\trlc\model --include=..\..\trlc\swe-req --exclude=..\..\trlc\swe-req --verbose --out=%OUTPUT_DIR% --project=%CONVERTER% --translation=%TRANSLATION% %OUT_FORMAT%
+
+if errorlevel 1 (
+    goto error
+)
+
 set CONVERTER=converter/tc2markdown.py
 
 %TRLC_CONVERTER%  --source=..\..\trlc\swe-test --include=..\..\trlc\model --include=..\..\trlc\swe-req --exclude=..\..\trlc\swe-req --verbose --out=%OUTPUT_DIR% --project=%CONVERTER% --translation=%TRANSLATION% %OUT_FORMAT%
