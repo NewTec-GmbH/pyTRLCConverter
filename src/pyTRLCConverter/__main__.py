@@ -195,6 +195,7 @@ def _setup_converters(args_sub_parser: argparse._SubParsersAction) -> Ret:
     return ret_status
 
 def _show_program_arguments(args: argparse.Namespace) -> None:
+    # lobster-trace: SwRequirements.sw_req_verbose_mode
     """Show program arguments in verbose mode to the user.
 
     Args:
@@ -208,6 +209,7 @@ def _show_program_arguments(args: argparse.Namespace) -> None:
         log_verbose("\n")
 
 def _setup_render_configuration(file_name: Optional[str]) -> Optional[RenderConfig]:
+    # lobster-trace: SwRequirements.sw_req_render_configuration
     """Setup render configuration.
 
     Args:
@@ -263,9 +265,8 @@ def _get_project_converter() -> Optional[AbstractConverter]:
         classes = {name: cls for name, cls in classes if cls.__module__ == project_module_name_basename}
 
         # lobster-trace: SwRequirements.sw_req_prj_spec_interface
-        for class_name, class_def in classes.items():
+        for _, class_def in classes.items():
             if issubclass(class_def, AbstractConverter):
-                log_verbose(f"Found project specific converter type: {class_name}")
                 return class_def
 
         raise ValueError(f"No AbstractConverter derived class found in {project_module_name_basename}")
@@ -314,7 +315,6 @@ def main() -> int:
             enable_verbose(args.verbose)
             _show_program_arguments(args)
 
-            # lobster-trace: SwRequirements.sw_req_trlc_type_attr_md
             render_cfg = _setup_render_configuration(args.renderCfg)
 
             # lobster-trace: SwRequirements.sw_req_process_trlc_symbols

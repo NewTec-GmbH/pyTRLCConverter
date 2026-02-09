@@ -467,6 +467,8 @@ def test_tc_rst_single_doc_exclude(record_property, capsys, monkeypatch, tmp_pat
         "--exclude", "./tests/utils/single_req_no_section.trlc",
         "--exclude", "./tests/utils/single_req_with_section.trlc",
         "--exclude", "./tests/utils/single_req_description_md.trlc",
+        "--exclude", "./tests/utils/single_req_description_rst.trlc",
+        "--exclude", "./tests/utils/multi_req_with_link.trlc",
         "--out", str(tmp_path),
         "rst",
         "--single-document",
@@ -593,6 +595,54 @@ def test_tc_rst_multi_doc(record_property, capsys, monkeypatch, tmp_path):
         assert lines[14] == "    | link           | N/A              |\n"
         assert lines[15] == "    +----------------+------------------+\n"
 
+def test_tc_rst_string_format(record_property, capsys, monkeypatch, tmp_path):
+    # lobster-trace: SwTests.tc_rst_string_format
+    """
+    The forstare shall not escape stings that are already in reStructuredText format.
+
+    Args:
+        record_property (Any): Used to inject the test case reference into the test results.
+        capsys (Any): Used to capture stdout and stderr.
+        monkeypatch (Any): Used to mock program arguments.
+        tmp_path (Path): Used to create a temporary output directory.
+    """
+    record_property("lobster-trace", "SwTests.tc_rst_string_format")
+
+    # Mock program arguments to specify an output folder.
+    output_file_name = "myReq.rst"
+    monkeypatch.setattr("sys.argv", [
+        "pyTRLCConverter",
+        "--source", "./tests/utils/req.rsl",
+        "--source", "./tests/utils/single_req_description_rst.trlc",
+        "--out", str(tmp_path),
+        "--renderCfg", "./tests/utils/renderCfgRst.json",
+        "rst",
+        "--single-document",
+        "--name", output_file_name
+    ])
+
+    # Expect the program to run without any exceptions.
+    main()
+
+    # Capture stdout and stderr.
+    captured = capsys.readouterr()
+    # Check that no errors were reported.
+    assert captured.err == ""
+
+    # Verify
+    with open(os.path.join(tmp_path, output_file_name), "r", encoding='utf-8') as generated_md:
+        lines = generated_md.readlines()
+        assert "| description    | Heading 1           " in lines[12]
+        assert "|                | =========           " in lines[13]
+        assert "|                |                     " in lines[14]
+        assert "|                | Heading 2           " in lines[15]
+        assert "|                | ---------           " in lines[16]
+        assert "|                |                     " in lines[17]
+        assert "|                | - Bullet point 1    " in lines[18]
+        assert "|                | - Bullet point 2    " in lines[19]
+        assert "|                |   - Sub bullet point" in lines[20]
+                              
+
 def test_tc_rst_render_md(record_property, capsys, monkeypatch, tmp_path):
     # lobster-trace: SwTests.tc_rst_render_md
     """
@@ -604,7 +654,7 @@ def test_tc_rst_render_md(record_property, capsys, monkeypatch, tmp_path):
         monkeypatch (Any): Used to mock program arguments.
         tmp_path (Path): Used to create a temporary output directory.
     """
-    record_property("lobster-trace", "SwTests.tc_cli_exclude")
+    record_property("lobster-trace", "SwTests.tc_rst_render_md")
 
     # Mock program arguments to specify an output folder.
     output_file_name = "myReq.rst"

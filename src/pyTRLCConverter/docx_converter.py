@@ -203,6 +203,7 @@ class DocxConverter(BaseConverter):
 
     def _on_record_reference(self, record_reference: Record_Reference) -> None:
         # lobster-trace: SwRequirements.sw_req_docx_record
+        # lobster-trace: SwRequirements.sw_req_docx_reference
         """
         Process the given record reference value and return a hyperlink paragraph.
 
@@ -219,7 +220,6 @@ class DocxConverter(BaseConverter):
                                                 f"{record_reference.package.name}.{record_reference.target.name}")
 
     def _on_string_literal(self, string_literal: String_Literal) -> None:
-        # lobster-trace: SwRequirements.sw_req_docx_string_format
         # lobster-trace: SwRequirements.sw_req_docx_render_md
         """
         Process the given string literal value.
@@ -244,6 +244,7 @@ class DocxConverter(BaseConverter):
 
     # pylint: disable-next=unused-argument
     def _on_array_aggregate_begin(self, array_aggregate: Array_Aggregate) -> None:
+        # lobster-trace: SwRequirements.sw_req_docx_record
         """
         Handle the beginning of a list.
 
@@ -281,6 +282,7 @@ class DocxConverter(BaseConverter):
 
     # pylint: disable-next=unused-argument
     def _on_array_aggregate_finish(self, array_aggregate: Array_Aggregate) -> None:
+        # lobster-trace: SwRequirements.sw_req_docx_record
         """
         Handle the end of a list.
 
@@ -290,6 +292,7 @@ class DocxConverter(BaseConverter):
         self._list_item_indent_level -= 1
 
     def _other_dispatcher(self, expression: Expression) -> None:
+        # lobster-trace: SwRequirements.sw_req_docx_record
         """
         Dispatcher for all other expressions.
 
@@ -301,7 +304,6 @@ class DocxConverter(BaseConverter):
 
     def _get_trlc_ast_walker(self) -> TrlcAstWalker:
         # lobster-trace: SwRequirements.sw_req_docx_record
-        # lobster-trace: SwRequirements.sw_req_docx_string_format
         """
         If a record object contains a record reference, the record reference will be converted to
         a hyperlink.
@@ -343,7 +345,6 @@ class DocxConverter(BaseConverter):
         return trlc_ast_walker
 
     def _render(self, package_name: str, type_name: str, attribute_name: str, attribute_value: str) -> None:
-        # lobster-trace: SwRequirements.sw_req_rst_string_format
         # lobster-trace: SwRequirements.sw_req_docx_render_md
         """Render the attribute value depened on its format.
 
@@ -425,6 +426,7 @@ class DocxConverter(BaseConverter):
 
     @staticmethod
     def docx_add_bookmark(paragraph: Paragraph, bookmark_name: str) -> None:
+        # lobster-trace: SwRequirements.sw_req_docx_record
         """
         Adds a bookmark to a paragraph.
 
@@ -449,6 +451,7 @@ class DocxConverter(BaseConverter):
 
     @staticmethod
     def docx_add_link_to_bookmark(paragraph: Paragraph, bookmark_name: str, link_text: str) -> None:
+        # lobster-trace: SwRequirements.sw_req_docx_reference
         """
         Add a hyperlink to a bookmark in a paragraph.
 

@@ -8,3 +8,4 @@ conversion-rules:
       namespace: req
       description-fields:
         - description
+        - valid_status

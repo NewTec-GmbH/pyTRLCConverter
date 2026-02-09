@@ -32,6 +32,7 @@ from pyTRLCConverter.base_converter import BaseConverter
 
 
 class SimpleConverter(BaseConverter):
+    # lobster-exclude: Simple test utility that does not directly test any requirements.
     """
     Custom project specific converter for testing purposes only.
     

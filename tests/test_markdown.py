@@ -32,6 +32,7 @@ from pyTRLCConverter.markdown_converter import MarkdownConverter
 # Functions ********************************************************************
 
 def _assert_heading(lines: list[str], level: int, text: str) -> int:
+    # lobster-exclude: Utility function for other test code.
     """Helper function to assert a Markdown heading line.
 
     Args:
@@ -47,6 +48,7 @@ def _assert_heading(lines: list[str], level: int, text: str) -> int:
     return 1
 
 def _assert_empty_line(lines: list[str]) -> int:
+    # lobster-exclude: Utility function for other test code.
     """Helper function to assert an empty line.
 
     Args:
@@ -61,6 +63,7 @@ def _assert_empty_line(lines: list[str]) -> int:
 def _assert_table(lines: list[str],
                   expected_headers: list[list[str]],
                   expected_rows: list[list[str]]) -> int:
+    # lobster-exclude: Utility function for other test code.
     """Helper function to assert a Markdown table.
 
     Args:
@@ -492,6 +495,8 @@ def test_tc_markdown_single_doc_exclude(record_property, capsys, monkeypatch, tm
         "--exclude", "./tests/utils/single_req_no_section.trlc",
         "--exclude", "./tests/utils/single_req_with_section.trlc",
         "--exclude", "./tests/utils/single_req_description_md.trlc",
+        "--exclude", "./tests/utils/single_req_description_rst.trlc",
+        "--exclude", "./tests/utils/multi_req_with_link.trlc",
         "--out", str(tmp_path),
         "markdown",
         "--single-document",
@@ -659,7 +664,7 @@ def test_tc_markdown_render_md(record_property, capsys, monkeypatch, tmp_path):
         monkeypatch (Any): Used to mock program arguments.
         tmp_path (Path): Used to create a temporary output directory.
     """
-    record_property("lobster-trace", "SwTests.tc_cli_exclude")
+    record_property("lobster-trace", "SwTests.tc_markdown_render_md")
 
     # Mock program arguments to specify an output folder.
     output_file_name = "myReq.md"

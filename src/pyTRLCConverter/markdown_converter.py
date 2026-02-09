@@ -483,6 +483,8 @@ class MarkdownConverter(BaseConverter):
         return MarkdownConverter.markdown_create_link(str(record_reference.to_python_object()), anchor_tag)
 
     def _other_dispatcher(self, expression: Expression) -> str:
+        # lobster-trace: SwRequirements.sw_req_markdown_record
+        # lobster-trace: SwRequirements.sw_req_markdown_escape
         """
         Dispatcher for all other expressions.
 

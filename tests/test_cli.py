@@ -109,6 +109,8 @@ def test_tc_cli_exclude(record_property, capsys, monkeypatch):
         "--source", "./tests/utils",
         "--exclude", "./tests/utils/single_req_with_link.trlc",
         "--exclude", "./tests/utils/single_req_description_md.trlc",
+        "--exclude", "./tests/utils/single_req_description_rst.trlc",
+        "--exclude", "./tests/utils/multi_req_with_link.trlc",
         "--project", "./tests/utils/psc_simple",
         "simple"
     ])
@@ -150,6 +152,8 @@ def test_tc_cli_include(record_property, capsys, monkeypatch):
         "--source", "./tests/utils/req.rsl",
         "--source", "./tests/utils/single_req_with_link.trlc",  # Linking to req_2 in single_req_with_section.trlc
         "--exclude", "./tests/utils/single_req_description_md.trlc",
+        "--exclude", "./tests/utils/single_req_description_rst.trlc",
+        "--exclude", "./tests/utils/multi_req_with_link.trlc",
         "--include", "./tests/utils",
         "--project", "./tests/utils/psc_simple",
         "simple"
@@ -170,6 +174,44 @@ def test_tc_cli_include(record_property, capsys, monkeypatch):
     assert "req_id_1" in lines
     assert "req_id_2" in lines
     assert "req_id_3" in lines
+
+def test_tc_cli_render_cfg(record_property, capsys, monkeypatch):
+    # lobster-trace: SwTests.tc_cli_render_cfg
+    """
+    Check whether a render configuration can be provided via CLI.
+
+    Args:
+        record_property (Any): Used to inject the test case reference into the test results.
+        capsys (Any): Used to capture stdout and stderr.
+        monkeypatch (Any): Used to mock program arguments.
+    """
+    record_property("lobster-trace", "SwTests.tc_cli_render_cfg")
+
+    config_path = "./tests/utils/renderCfg.json"
+
+    # Mock program arguments to simulate running the script with a project specific converter.
+    monkeypatch.setattr("sys.argv", [
+        "pyTRLCConverter",
+        "--source", "./tests/utils/req.rsl",
+        "--source", "./tests/utils/single_req_no_section.trlc",
+        "--project", "./tests/utils/psc_simple.py",
+        "--renderCfg", f"{config_path}",
+        "--verbose",
+        "simple"
+    ])
+
+    # Expecting the programm to run without any exceptions.
+    main()
+
+    # Capture stdout and stderr.
+    captured = capsys.readouterr()
+
+    # No error output expected.
+    assert captured.err == ""
+
+    # Check if the expected output.
+    lines = captured.out.splitlines()
+    assert f"Loading render configuration {config_path}." in lines
 
 
 # Main *************************************************************************
