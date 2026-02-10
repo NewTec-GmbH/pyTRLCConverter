@@ -20,8 +20,8 @@
   - [Dump TRLC item list to console UC4](#24-Dump-TRLC-item-list-to-console-UC4)
   - [Apply attribute name translation UC5](#25-Apply-attribute-name-translation-UC5)
 - [Summary](#3-summary)
-  - [Summary: Generate Lobster File from Doxygen XML Files for **non-safety-relevant** Requirements](31-generate-lobster-file-from-doxygen-xml-files-for-non-safety-relevant-requirements)
-  - [Summary: Generate Lobster File from Doxygen XML Files for **safety-relevant** Requirements](32-generate-lobster-file-from-doxygen-xml-files-for-safety-relevant-requirements)
+  - [Summary for using the pyTRLCConverter python tool for non-safety-relevant Requirements](31-Summary-for-using-the-pyTRLCConverter-python-tool-for-non-safety-relevant-Requirements)
+  - [Summary for using the pyTRLCConverter python tool for safety-relevant Requirements](32-Summary-for-using-the-pyTRLCConverter-python-tool-for-safety-relevant-Requirements)
   
 ## 1 Introduction
 
@@ -66,7 +66,6 @@ The TCL result depends on the use cases to convert TRLC (Treat Requirements Like
 - UC3) Conversion TRLC  files to reStructuredText format
 - UC4) Dump TRLC item list to console
 - UC5) Apply attribute name translation 
-
 
 ### 1.5.2 Tool Impact TI of potential violations
 The primary purpose of classification is to identify the extent to which errors resulting from the ***pyTRLCConverter*** tool can cause violations of a safety goal. 
