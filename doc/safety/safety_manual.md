@@ -1,27 +1,27 @@
 
 # Safety Manual <!-- omit in toc -->
 
-- [Introduction](#1-introduction)
-  - [Purpose of this Document](#11-purpose-of-this-document)
-  - [Product Identification](#12-product-identification)
-  - [Product Goals and Usage](#13-product-goals-and-usage)
-  - [Tool Usage according to ISO 26262](#14-tool-usage-according-to-iso-26262)
-  - [Classification Hints](#15-classification-hints)
-    - [Use Cases of the tool pyTRLCConverter](#151-Use-Cases-of-the-tool-pyTRLCConverter)
-    - [Tool Impact TI of potential violations](#152-Tool-Impact-TI-of-potential-violations)
-    - [Tool error detection](#153-Tool-error-detection)
-    - [Tool Confidence Level TCL](#154-Tool-Confidence-Level-TCL) 
-  - [Qualification Hints](#16-qualification-hints)
-  - [Validation of the Software Tool](#17-validation-of-the-software-tool)
-- [Example Use Cases](#2-example-use-cases)
-  - [Conversion TRLC files to Markdown format UC1](#21-Conversion-TRLC-files-to-Markdown-format-UC1)
-  - [Conversion TRLC files to docx format using a stored userdefined document template UC2](#22-Conversion-TRLC-files-to-docx-format-using-a-stored-userdefined-document-template-UC2)
-  - [Conversion TRLC files to reStructuredText format UC3](#23-Conversion-TRLC-files-to-reStructuredText-format-UC3)
-  - [Dump TRLC item list to console UC4](#24-Dump-TRLC-item-list-to-console-UC4)
-  - [Apply attribute name translation UC5](#25-Apply-attribute-name-translation-UC5)
-- [Summary](#3-summary)
-  - [Summary for using the pyTRLCConverter python tool for non-safety-relevant Requirements](31-Summary-for-using-the-pyTRLCConverter-python-tool-for-non-safety-relevant-Requirements)
-  - [Summary for using the pyTRLCConverter python tool for safety-relevant Requirements](32-Summary-for-using-the-pyTRLCConverter-python-tool-for-safety-relevant-Requirements)
+- [1 Introduction](#1-introduction)
+  - [1.1 Purpose of this Document](#11-purpose-of-this-document)
+  - [1.2 Product Identification](#12-product-identification)
+  - [1.3 Product Goals and Usage](#13-product-goals-and-usage)
+  - [1.4 Tool Usage according to ISO 26262](#14-tool-usage-according-to-iso-26262)
+  - [1.5 Classification Hints](#15-classification-hints)
+  - [1.5.1 Use Cases of the tool pyTRLCConverter](#151-use-cases-of-the-tool-pytrlcconverter)
+  - [1.5.2 Tool Impact TI of potential violations](#152-tool-impact-ti-of-potential-violations)
+  - [1.5.3 Tool error detection](#153-tool-error-detection)
+  - [1.5.4 Tool Confidence Level TCL](#154-tool-confidence-level-tcl)
+  - [1.6 Qualification Hints](#16-qualification-hints)
+  - [1.7 Validation of the Software Tool](#17-validation-of-the-software-tool)
+- [2 Example Use Cases](#2-example-use-cases)
+  - [2.1 Conversion TRLC files to Markdown format UC1](#21-conversion-trlc-files-to-markdown-format-uc1)
+  - [2.2 Conversion TRLC files to docx format using a stored user defined document template UC2](#22-conversion-trlc-files-to-docx-format-using-a-stored-user-defined-document-template-uc2)
+  - [2.3 Conversion TRLC files to reStructuredText format UC3](#23-conversion-trlc-files-to-restructuredtext-format-uc3)
+  - [2.4 Dump TRLC item list to console UC4](#24-dump-trlc-item-list-to-console-uc4)
+  - [2.5 Apply attribute name translation UC5](#25-apply-attribute-name-translation-uc5)
+- [3 Summary](#3-summary)
+  - [3.1 Summary for using the pyTRLCConverter python tool for non-safety-relevant Requirements](#31-summary-for-using-the-pytrlcconverter-python-tool-for-non-safety-relevant-requirements)
+  - [3.2 Summary for using the pyTRLCConverter python tool for safety-relevant Requirements](#32-summary-for-using-the-pytrlcconverter-python-tool-for-safety-relevant-requirements)
   
 ## 1 Introduction
 
@@ -62,7 +62,7 @@ Example use cases and their corresponding hints for classification and qualifica
 For every planned use case of the tool, the tool confidence level TCL needs to be assessed according to ISO ISO 26262-8:2018 table 3.
 The TCL result depends on the use cases to convert TRLC (Treat Requirements Like Code) files to different output formats.
 - UC1) Conversion TRLC files to Markdown format
-- UC2) Conversion TRLC files to docx format using a stored userdefined document template.
+- UC2) Conversion TRLC files to docx format using a stored user defined document template.
 - UC3) Conversion TRLC  files to reStructuredText format
 - UC4) Dump TRLC item list to console
 - UC5) Apply attribute name translation 
@@ -74,16 +74,16 @@ In the case of the ***pyTRLCConverter*** tool and in a typical use case, errors 
 - b) requirements or parts of it are corrupted 
 - c) arguments of the requirements are lost or corrupted 
 - d) implementation reference to another requirement is corrupted
-- e) with the possibliity to convert reuqirements to a format with using a project specific conversion files (.json and .py files). The requirment content may be deleted or corrupted.
-- f) using a corrupted docx ducument template to export to the format docx, requirements or parts of it are lost or corrupted. 
+- e) with the possibility to convert requirements to a format with using a project specific conversion files (.json and .py files). The requirements content may be deleted or corrupted.
+- f) using a corrupted docx document template to export to the format docx, requirements or parts of it are lost or corrupted. 
 
 It is considered likely that an error in the ***pyTRLCConverter*** tool could cause an undetected error in the requirements with an high Impact on safety or safety goal. So the Tool Impact can be considered as **TI2**. 
 
 ### 1.5.3 Tool error detection 
 For all these potential violations a, b, c and d it is not possible for the user of the tool to detect these errors upon reviewing of the converted requirement because the review process of writing requirements is already finished. 
 It would be necessary for the user of the software tool ***pyTRLCConverter*** to review the converted requirement document against the origin TRLC requirements. 
-For all these potential violations e and f it would be necessary to  detect errors to review the project specific confersion .JSON and .py files and to review the project specific document templates (docx template).
-The user has only low possibility to dected a tool error so the Tool Error Detetion is very low **TD3**.
+For all these potential violations e and f it would be necessary to  detect errors to review the project specific conversion .JSON and .py files and to review the project specific document templates (docx template).
+The user has only low possibility to detect a tool error so the Tool Error Detetion is very low **TD3**.
 
 ### 1.5.4 Tool Confidence Level TCL
 The tool error detection is very low (Tool error detection = TD3) and all these errors may result in a violation of a safety goal.
@@ -122,7 +122,7 @@ Another good practice is to stimulate an error and check whether the tool can de
 
 The validation of the software tool shall meet the following criteria: 
 - the validation measures shall demonstrate that the software tool complies with its specified requirements 
-- the malfunctions and their corresponding erroneous outputs of the software tool occurring during validation shall be analysed together with information on their possible consequences and with measures to avoid or detect them, and
+- the malfunctions and their corresponding erroneous outputs of the software tool occurring during validation shall be analyzed together with information on their possible consequences and with measures to avoid or detect them, and
 - the reaction of the software tool to anomalous operating conditions shall be examined. 
 
 
@@ -143,15 +143,15 @@ The following tables are an example of use cases where the ***pyTRLCConverter***
 |**Tool Confidence Level**|**TCL3**|
 |**Recommended Method of Qualification**|Validation of the software tool|
 
-### 2.2 Conversion TRLC files to docx format using a stored userdefined document template UC2
+### 2.2 Conversion TRLC files to docx format using a stored user defined document template UC2
 |||
 |---|---|
-|**Intended Purpose**|Convert a ***TRLC file to docx format*** using a stored userdefined document template. The tool requires two kinds of TRLC input sources for the conversion. These are the requirements (*.trlc) files and the model (*.tls) files.  Also a document template .docx musst be stored for the conversion process. The tool will create requirement output docx file with the same name as the requirements file (*.trlc) in the current directory, but with the docx extension (.docx).|
+|**Intended Purpose**|Convert a ***TRLC file to docx format*** using a stored user defined document template. The tool requires two kinds of TRLC input sources for the conversion. These are the requirements (*.trlc) files and the model (*.tls) files.  Also a document template .docx must be stored for the conversion process. The tool will create requirement output docx file with the same name as the requirements file (*.trlc) in the current directory, but with the docx extension (.docx).|
 |**Environmental, Functional and Process Constraints**|Operating system: Windows 10 (version 20H2, 64bit)<br>***pyTRLCConverter*** GPL-3.0. <br>|
 |**Description**|Run the ***pyTRLCConverter*** python tool, using the paths of the input requirements (*.trlc) files and the model (*.tls) files. Also store a docx template.|
 |**Output**| Requirement document in the docx format based on the document template including the converted safety-relevant source requirements.|
 |**Tool Impact**|**TI2 (Possibility of impact on a safety requirement)**<br>Rationale:<br><ul><li>Since the requirement which are converted to a docx file are safety-relevant, it is possible that ***pyTRLCConverter*** may delete or corrupt requirements or part of them and thereby lead to the violation of a safety goal.</li></ul>|
-|**Tool Error Detection**|**TD3 (low degree of confidence of prevention or detection)**<br>Rationale:<br><ul><li>It is not possible to detect a deleted or corrupt requirement, since the review process for the requirements is already finished. But its recomented to review the document template .docx du avoid corrupted document output files.</li></ul>|
+|**Tool Error Detection**|**TD3 (low degree of confidence of prevention or detection)**<br>Rationale:<br><ul><li>It is not possible to detect a deleted or corrupt requirement, since the review process for the requirements is already finished. But its recommended to review the document template .docx du avoid corrupted document output files.</li></ul>|
 |**Tool Confidence Level**|**TCL3**|
 |**Recommended Method of Qualification**|Validation of the software tool|
 
@@ -170,10 +170,10 @@ The following tables are an example of use cases where the ***pyTRLCConverter***
 ### 2.4 Dump TRLC item list to console UC4
 |||
 |---|---|
-|**Intended Purpose**| ***Dump TRLC item list to console*** output. The tool dumpts the complete TRLC item lists to the console. The tool requires two kinds of TRLC input sources for the conversion. These are the requirements (*.trlc) files and the model (*.tls) files. It will dump all requirments directly into console output.|
+|**Intended Purpose**| ***Dump TRLC item list to console*** output. The tool dumps the complete TRLC item lists to the console. The tool requires two kinds of TRLC input sources for the conversion. These are the requirements (*.trlc) files and the model (*.tls) files. It will dump all requirements directly into console output.|
 |**Environmental, Functional and Process Constraints**|Operating system: Windows 10 (version 20H2, 64bit)<br>***pyTRLCConverter*** GPL-3.0.<br>|
 |**Description**|Run the ***pyTRLCConverter*** python tool, using the paths of the input requirements (*.trlc) files and the model (*.tls) files.|
-|**Output**| The converted safety-relevant source requirements dumpted into output console.|
+|**Output**| The converted safety-relevant source requirements dumped into output console.|
 |**Tool Impact**|**TI2 (Possibility of impact on a safety requirement)**<br>Rationale:<br><ul><li>Since the requirement which are dumped into console output are safety-relevant, it is possible that ***pyTRLCConverter*** may delete or corrupt requirements or part of them and thereby lead to the violation of a safety goal.</li></ul>|
 |**Tool Error Detection**|**TD3 (low degree of confidence of prevention or detection)**<br>Rationale:<br><ul><li>It is not possible to detect a deleted or corrupt requirement, since the review process for the requirement is already finished.</li></ul>|
 |**Tool Confidence Level**|**TCL3**|
@@ -185,16 +185,16 @@ The following tables are an example of use cases where the ***pyTRLCConverter***
 |**Intended Purpose**| ***Apply attribute name translation*** . The tool uses a user defined project specified translation JSON file to make the requirements better readable. The tool requires a translation JSON file to translate the attribute names.|
 |**Environmental, Functional and Process Constraints**|Operating system: Windows 10 (version 20H2, 64bit)<br>***pyTRLCConverter*** GPL-3.0.<br>|
 |**Description**|Run the ***pyTRLCConverter*** python tool, using the translation JSON file. Use the --translation argument to specify the translation file.|
-|**Output**| Requirement document includs the attribute better readably attribute names with the safety-relevant source requirements.|
-|**Tool Impact**|**TI2 (Possibility of impact on a safety requirement)**<br>Rationale:<br><ul><li>Since the requirement which are converted into a better readble text, it is possible that ***pyTRLCConverter*** may delete or corrupt requirements or part of them and thereby lead to the violation of a safety goal.</li></ul>|
+|**Output**| Requirement document includes the attribute better readably attribute names with the safety-relevant source requirements.|
+|**Tool Impact**|**TI2 (Possibility of impact on a safety requirement)**<br>Rationale:<br><ul><li>Since the requirement which are converted into a better readable text, it is possible that ***pyTRLCConverter*** may delete or corrupt requirements or part of them and thereby lead to the violation of a safety goal.</li></ul>|
 |**Tool Error Detection**|**TD3 (low degree of confidence of prevention or detection)**<br>Rationale:<br><ul><li>It is not possible to detect a deleted or corrupt requirement, since the review process for the requirement is already finished.</li></ul>|
 |**Tool Confidence Level**|**TCL3**|
 |**Recommended Method of Qualification**|Validation of the software tool|
 
 ## 3 Summary
 
-The user of the software tool may used the valdidated tool within its requirments, design, implementation and test cases to get the validated software tool: ***pyTRLCConverter***. 
-Butif there are any tool changes or adaptions during deveopment in code the the all process relevant documents must be adapted and test cases may be reworked and reexecuted. 
+The user of the software tool may used the validated tool within its requirements, design, implementation and test cases to get the validated software tool: ***pyTRLCConverter***. 
+But if there are any tool changes or adaptions during development in code the the all process relevant documents must be adapted and test cases may be reworked and executed again. 
 The user must determine the appropriate tool classification for their own use case and the appropriate qualification method. The use case upon are only examples.
 
 ### 3.1 Summary for using the pyTRLCConverter python tool for non-safety-relevant Requirements
