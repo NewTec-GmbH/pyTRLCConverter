@@ -204,3 +204,4 @@ If the ***pyTRLCConverter*** tool is used solely for conversion of non-safety-re
 ### 3.2 Summary for using the pyTRLCConverter python tool for safety-relevant Requirements
 
 If the ***pyTRLCConverter*** tool is used for conversion of safety-relevant requirements, the user of the software tool must determine the increased tool confidence level (suggested tcl3) and perform qualification via validation of the software tool.
+
