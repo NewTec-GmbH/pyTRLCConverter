@@ -246,7 +246,7 @@ section "pyTRLCConverter SW Architecture" {
                     * Attribute translations
                     * Generic record conversion
                     """
-                verification_criteria = "Call the tool using the `pyTRLCConverter` with Dump Converter and both render and translation configurations ."
+                verification_criteria = "Call the tool using the `pyTRLCConverter` with Dump Converter and both render and translation configurations."
                 satisfies = [
                     SwRequirements.sw_req_translation,
                     SwRequirements.sw_req_rst_render_md,

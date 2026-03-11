@@ -29,7 +29,7 @@ package "pyTRLCConverter Dependencies" as pytrlc_deps {
 
     class argparse <<(M ,lightblue) module>>{
     }
- }
+}
 
 package "Project Dependencies" as proj_deps {
 
@@ -57,4 +57,5 @@ main ..> RenderConfig
 main ..> argparse
 main ..> int_converters
 main ..-> proj_deps: <<load>>
+
 @enduml
