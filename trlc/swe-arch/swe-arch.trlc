@@ -6,17 +6,17 @@ import SwRequirements
 section "pyTRLCConverter SW Architecture" {
 
     Generic.Info sw_arch_info_about {
-        description = 
+        description =
             """
             This file contains the software architecture for the pyTRLCConverter tool.
 
             pyTRLCConverter is a command-line tool to convert TRLC files to different output formats, e.g. Markdown, reStructuredText or docx.
-            
+
             A main challenge for pyTRLCConverter is the conversion of project-specific TRLC types. TRLC is a framework that gets adapted to
             project needs using "rsl" files. These files define TRLC types through derivations similar to classes in OOP.
-            PyTRLCConverter uses built-in converters classes that convert to destination formats using a generic `attribute:value` style
+            PyTRLCConverter uses built-in converter classes that convert to destination formats using a generic `attribute:value` style
             result.  These built-in converter can be extended in an object-oriented manner to understand user defined types.
-            
+
             The following picture shows the overall tool flow:
             """
     }
@@ -24,34 +24,34 @@ section "pyTRLCConverter SW Architecture" {
     Generic.PlantUML sw_arch_flow_diagram {
         caption = "PyTRLCConverter Tool Flow"
         file_path ="../../doc/architecture/context_diagram.puml"
-        }
+    }
 
     section "General" {
         SwArchSpec sw_arch_python_python {
-            description = "The pyTRLCConverter tool is implemented using Python 3.12 and additional PyPI libraries available for Windows and Linux operating systems."
+            description = "The pyTRLCConverter tool is implemented using Python v3.10 or higher and additional libraries available for Windows and Linux operating systems."
             verification_criteria = "CI testing on Linux and Windows hosts."
             satisfies = [
-                SwRequirements.sw_constraint_os_win, 
+                SwRequirements.sw_constraint_os_win,
                 SwRequirements.sw_constraint_os_linux,
                 SwRequirements.sw_constraint_prg_lang,
             ]
         }
 
         SwArchSpec sw_arch_python_style {
-            description = "The pyTRLCConverter Python implementation files follows PEP8 coding standard. A compliant formatter and linter like `ruff` or `black` is used in development and CI."
-            verification_criteria = "CI testing on Linux and Windows hosts."
+            description = "The pyTRLCConverter Python implementation files follow the PEP8 coding standard. Check code using `pylint` in development and CI."
+            verification_criteria = "CI check using pylint on Linux and Windows hosts."
             satisfies = [
                 SwRequirements.sw_constraint_pep8
             ]
         }
 
         SwArchSpec sw_arch_cli_tool {
-            description = "The pyTRLCConverter tool is a command line application driven by arguments. It writes messages to stdout and stderr."
+            description = "The pyTRLCConverter tool is a command line application driven by arguments."
             verification_criteria = "Call the tool using the `pyTRLCConverter` frontend. Check console output."
             satisfies = [SwRequirements.sw_req_cli]
         }
 
-        SwArchSpec sw_arch_error_msgs{
+        SwArchSpec sw_arch_error_msgs {
             description = "The pyTRLCConverter tool writes informal messages to stdout and error messages to stderr."
             verification_criteria = "Call the tool using the `pyTRLCConverter` frontend with legal and wrong arguments. Check console output."
             satisfies = [SwRequirements.sw_req_error]
@@ -70,20 +70,20 @@ section "pyTRLCConverter SW Architecture" {
 
         section "Dynamic View" {
             Generic.Info sw_arch_info_dynamic {
-                description = 
+                description =
                 """
                 The following diagram shows the pyTRLCConverter runtime view using a sequence_diagram.
                 There are 4 main phases:
 
-                * Processing of commandline arguments.
+                * Processing of command-line arguments.
                 * Loading of converter classes.
                 * Loading of all TRLC files.
-                * Traverse and convert of TRLC sections and records.
+                * Traversing and conversion of TRLC sections and records.
                 """
             }
 
             Generic.PlantUML sw_arch_sequence_diagram {
-                caption = "Dynamic Architecture view"
+                caption = "Dynamic Architecture View"
                 file_path ="../../doc/architecture/sequence_diagram.puml"
             }
         }
@@ -91,15 +91,15 @@ section "pyTRLCConverter SW Architecture" {
 
     section "Concepts" {
         Generic.Info sw_arch_concept_section {
-                description = 
+                description =
                 """
                 This sections explains the major concepts used in pyTRLCConverter.
                 """
         }
-        
+
         section "Converter Derivation Concept" {
             Generic.Info sw_arch_concept_converter_generic {
-                description = 
+                description =
                 """
                 pyTRLCConverter uses a multilevel class hierarchy for providing different
                 output formats and user defined type conversions. Only the ProjectConverter
@@ -115,14 +115,15 @@ section "pyTRLCConverter SW Architecture" {
 
          section "Text Formatting" {
             Generic.Info sw_arch_concept_text_formatting {
-                description = 
+                description =
                 """
-                **Attribute translation**
+                **Attribute Translation**
 
-                TRLC attribute names are keys values inside a TRLC type, but not necessarily nice for
+                TRLC attributes are key/value pairs inside a TRLC type, but not necessarily nice for
                 documentation. The pyTRLCConverter converters provide a translation concept to map
-                attributes names by reading a json file. It is a dictionary of type names. Each entry
-                is another dictionary to map the attribute names.
+                attribute names defined in a json translation file. It is a dictionary of type names.
+                Each entry is another dictionary to map the attribute names of this type to the
+                displayed text.
 
                 Example for a type "SwReg":
 
@@ -133,21 +134,22 @@ section "pyTRLCConverter SW Architecture" {
                         "valid_status": "Valid Status",
                         "verification_criteria": "Verification Criteria",
                     }
-    
+
                 }
                 ```
 
                 **Text Rendering**
- 
+
                 pyTRLCConverter can render text attributes from Markdown into the destination format.
                 A render configuration file is used to define which attributes contain Markdown formatting.
-                This is another json file. The matching is done using regular expressions.
+                This is another json file. The matching is done using regular expressions. The first matching
+                entry in the render configuration list is used.
 
                 Example: Define the attribute description for type SwArchSpec in any package to be in Markdown.
 
                 ```
                 {
-                   "renderCfg": 
+                   "renderCfg":
                    [
                        {
                            "package": ".*",
@@ -155,9 +157,9 @@ section "pyTRLCConverter SW Architecture" {
                            "attribute": "description",
                            "format": "md"
                        }
-                   ]   
-                } 
-                ```              
+                   ]
+                }
+                ```
                 """
             }
         }
@@ -166,7 +168,7 @@ section "pyTRLCConverter SW Architecture" {
 
     section "Components" {
         Generic.Info sw_arch_comp_section {
-                description = 
+                description =
                 """
                 This sections shows details of the major components of pyTRLCConverter.
                 """
@@ -177,15 +179,15 @@ section "pyTRLCConverter SW Architecture" {
                     file_path ="../../doc/architecture/components/comp_main.puml"
             }
             SwArchSpec sw_arch_component_main {
-                description = 
+                description =
                     """
-                    The **main** component is the application entry point. It handles argument handling, 
-                    help printing, usage error handling and version printing. 
-                    
+                    The **main** component is the application entry point. It handles argument handling,
+                    help printing, usage error handling and version printing.
+
                     Embedded Blocks:
 
                     * main entry point
-                    * command line argument processing
+                    * command-line argument processing
                     * rendering configuration
                     * converter loading
                     """
@@ -213,17 +215,17 @@ section "pyTRLCConverter SW Architecture" {
                     file_path ="../../doc/architecture/components/comp_item_walker.puml"
             }
             SwArchSpec sw_arch_component_itemwalker {
-                description = 
+                description =
                     """
-                    The ItemWalker class is responsible for traversing the TRLC symbol table, 
-                    which holds all TRLC elements. The selected converter is then applies to
+                    The ItemWalker class is responsible for traversing the TRLC symbol table,
+                    which holds all TRLC elements. The selected converter is then applied to
                     all of the elements.
-                    
+
                     * Get TRLC symbol table
                     * Traverse the symbol table
                     * Call converter for each TRLC element
                     """
-                verification_criteria = "Call the tool using the `pyTRLCConverter` frontend with dump converter and compare against a reference.."
+                verification_criteria = "Call the tool using the `pyTRLCConverter` frontend with dump converter and compare against a reference."
                 satisfies = [
                     SwRequirements.sw_req_process_trlc_symbols,
                 ]
@@ -235,10 +237,10 @@ section "pyTRLCConverter SW Architecture" {
                     file_path ="../../doc/architecture/components/comp_base_converter.puml"
             }
             SwArchSpec sw_arch_component_base_converter {
-                description = 
+                description =
                     """
-                    The base converter implements the abstract converter API and implements
-                    logic that is common between all format specific converter implementations. 
+                    The base converter implements the abstract converter API with logic
+                    that is common between all format specific converter implementations.
 
                     * Render configuration handling
                     * Attribute translations
@@ -258,11 +260,11 @@ section "pyTRLCConverter SW Architecture" {
                     file_path ="../../doc/architecture/components/comp_dump_converter.puml"
             }
             SwArchSpec sw_arch_component_dump_converter {
-                description = 
+                description =
                     """
                     The Dump Converter implements the Text output conversion.
 
-                    * Registers the `dump` output format and options.
+                    * Registers the `dump` output format and options
                     * Prints sections and records to console
                     """
                 verification_criteria = "Call the tool using the `pyTRLCConverter` frontend with dump output format."
@@ -279,11 +281,11 @@ section "pyTRLCConverter SW Architecture" {
                     file_path ="../../doc/architecture/components/comp_markdown_converter.puml"
             }
             SwArchSpec sw_arch_component_markdown_converter {
-                description = 
+                description =
                     """
                     The Markdown Converter implements the Markdown output format conversion.
 
-                    * Registers the `markdown` output format and options.
+                    * Registers the `markdown` output format and options
                     * Prints sections and records in markdown
                     """
                 verification_criteria = "Call the tool using the `pyTRLCConverter` frontend with markdown output format."
@@ -320,11 +322,11 @@ section "pyTRLCConverter SW Architecture" {
                     file_path ="../../doc/architecture/components/comp_rst_converter.puml"
             }
             SwArchSpec sw_arch_component_rst_converter {
-                description = 
+                description =
                     """
                     The ReStructuredText Converter implements the ReStructuredText format output conversion.
 
-                    * Registers the `rst` output format and options.
+                    * Registers the `rst` output format and options
                     * Prints sections and records in ReStructuredText
                     """
                 verification_criteria = "Call the tool using the `pyTRLCConverter` frontend with rst output format."
@@ -360,7 +362,7 @@ section "pyTRLCConverter SW Architecture" {
                     file_path ="../../doc/architecture/components/comp_docx_converter.puml"
             }
             SwArchSpec sw_arch_component_docx_converter {
-                description = 
+                description =
                     """
                     The DocX Converter implements the DocX format output conversion.
 
@@ -387,7 +389,7 @@ section "pyTRLCConverter SW Architecture" {
                     file_path ="../../doc/architecture/components/comp_version.puml"
             }
             SwArchSpec sw_arch_component_version {
-                description = 
+                description =
                     """
                     The version component handles version and other program attributes.
                     """
@@ -405,7 +407,7 @@ section "pyTRLCConverter SW Architecture" {
                     file_path ="../../doc/architecture/components/comp_logger.puml"
             }
             SwArchSpec sw_arch_component_logging {
-                description = 
+                description =
                     """
                     The Logger component provides a wrapper for Python logging to handle verbose and normal logging.
                     """
@@ -422,11 +424,11 @@ section "pyTRLCConverter SW Architecture" {
                     file_path ="../../doc/architecture/components/comp_plantuml.puml"
             }
             SwArchSpec sw_arch_component_plantuml {
-                description = 
+                description =
                     """
                     The PlantIML component provides diagram image generation based on PlantUML files.
                     """
-                verification_criteria = "Convert TRLC files with PlantUML items to markdown, rst and DocX."
+                verification_criteria = "Convert TRLC files with PlantUML items to markdown, rst and docx."
                 satisfies = [
                     SwRequirements.sw_req_plantuml
                 ]

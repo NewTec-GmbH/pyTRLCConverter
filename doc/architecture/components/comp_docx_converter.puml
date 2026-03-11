@@ -2,6 +2,7 @@
 
 class BaseConverter {
 }
+
 class DocxConverter extends BaseConverter {
     +get_subcommand() : str
     +get_description() : str
@@ -13,14 +14,24 @@ class DocxConverter extends BaseConverter {
 
 package "Dependencies" {
 
-    class Record_Object {
-        + name : str
-        + dump(indent: int) : str
+    class trlc <<(M ,lightblue) module>>{
     }
+
+    note bottom of trlc
+        Use TRLC ast items:
+        * Implicit_Null
+        * Record_Object
+        * Record_Reference
+        * String_Literal
+        * Expression
+    end note
 
 
     class docx <<(M ,lightblue) module>>{
     }
+    note bottom of docx
+        Library for generating .docx files
+    end note
 
     class DocxRenderer {
         + render(ast: Any) : str
@@ -28,9 +39,12 @@ package "Dependencies" {
 
     class marko <<(M ,lightblue) module>> {
     }
+    note bottom of marko
+        Markdown Parser
+    end note
 }
 
-DocxConverter ..> Record_Object
+DocxConverter ..> trlc
 DocxConverter ..> docx
 DocxConverter ..> DocxRenderer
 DocxConverter ..> marko

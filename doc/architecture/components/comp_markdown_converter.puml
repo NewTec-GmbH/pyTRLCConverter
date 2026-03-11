@@ -16,14 +16,23 @@ class MarkdownConverter extends BaseConverter {
 
 package "Dependencies" {
 
-    class Record_Object {
+    class "trlc" <<(M ,lightblue) module>>{
     }
+
+    note right of "trlc"
+        Use TRLC ast items:
+        * Implicit_Null
+        * Record_Object
+        * Record_Reference
+        * String_Literal
+        * Expression
+    end note
 
     class TrlcAstWalker {
     }
 }
 
-MarkdownConverter ..> Record_Object
+MarkdownConverter ..> "trlc"
 MarkdownConverter ..> TrlcAstWalker
 
 @enduml

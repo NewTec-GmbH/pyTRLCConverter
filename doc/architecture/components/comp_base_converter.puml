@@ -22,7 +22,7 @@ enum RecordsPolicy {
 }
 
 package "Dependencies" {
-    class argparse {
+    class argparse  <<(M ,lightblue) module>> {
     }
 
     class Record_Object {
@@ -41,5 +41,6 @@ BaseConverter ..d.> RecordsPolicy
 BaseConverter ..d.> Translator
 BaseConverter ..d.> RenderConfig
 BaseConverter ..d.> Record_Object
+BaseConverter ..d.> argparse
 
 @enduml

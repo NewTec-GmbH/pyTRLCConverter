@@ -2,6 +2,6 @@ package AbstractSwArch
 
 // Abstract design item which contains the generic attributes for all Design types.
 abstract type SwArchItem {
-    description 			String
-    note 		optional	String
+    description           String
+    note         optional String
 }

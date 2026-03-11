@@ -1,16 +1,16 @@
 @startuml
 
-package pyTrlcConverter {
+package pyTRLCConverter {
     abstract class AbstractConverter {
     }
 
     note right of AbstractConverter
-       Defines the interface for all
-       converters used pyTrlcConverter. 
+       Defines the interface for all converters
+       used by pyTRLCConverter.
     end note
 
     ' BaseConverter class
-    class BaseConverter extends AbstractConverter {
+    class BaseConverter implements AbstractConverter {
         -_translator
         -_render_cfg
         -_records_policy
@@ -18,11 +18,11 @@ package pyTrlcConverter {
         +set_render_cfg()
         +convert_section()
         +convert_record_object()
-        +convert_record_object_generic
+        +convert_record_object_generic()
         -_set_project_record_handlers()
     }
     note right of BaseConverter
-        Provides 
+        Provides
         * empty section conversion
         * empty record object conversion
         * map record type to handler function
@@ -44,7 +44,7 @@ package pyTrlcConverter {
     end note
 }
 
-class ProjectConverter extends pyTrlcConverter.FormatConverter {
+class ProjectConverter extends pyTRLCConverter.FormatConverter {
     +prjtype_x_records_handler()
     +prjtype_y_records_handler()
     + ...()

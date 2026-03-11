@@ -16,10 +16,17 @@ class RstConverter extends BaseConverter {
 ' Define external dependencies
 package "Dependencies" {
 
-    class Record_Object {
-        + name : str
-        + dump(indent: int) : str
+    class trlc <<(M ,lightblue) module>>{
     }
+
+    note bottom of trlc
+        Use TRLC ast items:
+        * Implicit_Null
+        * Record_Object
+        * Record_Reference
+        * String_Literal
+        * Expression
+    end note
 
     class TrlcAstWalker {
         + walk(ast: Any) : None
@@ -31,11 +38,15 @@ package "Dependencies" {
 
     class marko <<(M ,lightblue) module>> {
     }
+    note bottom of marko
+        Markdown Parser
+    end note
 }
 
 ' Relationships
-RstConverter ..> Record_Object
+RstConverter ..> trlc
 RstConverter ..> TrlcAstWalker
 RstConverter ..> RSTRenderer
 RstConverter ..> marko
+
 @enduml

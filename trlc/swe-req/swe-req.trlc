@@ -545,9 +545,9 @@ section "pyTRLCConverter" {
         }
 
         SwConstraint sw_constraint_prg_lang {
-            description = "The software shall be implemented in the Python programming language v3.12."
+            description = "The software shall be implemented in the Python programming language >= v3.10."
             valid_status = AbstractRequirements.VALID_STATUS.valid
-            note = "TRLC as 3rd party library supports only up to Python v3.12."
+            note = "TRLC as 3rd party library may imply additional restrictions on supported versions."
         }
 
         SwConstraint sw_constraint_pep8 {

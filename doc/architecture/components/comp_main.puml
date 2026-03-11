@@ -1,32 +1,17 @@
 @startuml
 
- class _create_args_parser << (F,orchid) func>> {
-     + Creates a parser for\ncommand-line arguments.
- }
-class _setup_converters << (F,orchid) func>> {
-     + Sets up converters for the CLI.
- }
-class _show_program_arguments << (F,orchid) func>> {
-     + Displays program arguments\nin verbose mode.
- }
-class _setup_render_configuration << (F,orchid) func>> {
-     + Sets up the render configuration.
- }
-class _get_project_converter << (F,orchid) func>> {
-     + Retrieves the\nproject-specific converter.
- }
-class _create_out_folder << (F,orchid) func>> {
-     + Creates the output folder\nif it doesn't exist.
- }
+package "pyTRLCConverter Dependencies" as pytrlc_deps {
+    class main << (F,orchid) func>> >> {
+     }
 
-class main << (F,orchid) func>> >> {
-     + Main program \nentry point.
- }
+    note right of main
+        The main function is responsible for:
+        * Parsing command-line arguments
+        * Loading of configuration files
+        * Initializing the appropriate converter
+        * Processing of TRLC files
 
-' Define external dependencies
-package "Dependencies" {
-    class argparse <<(M ,lightblue) module>>{
-    }
+    end note
 
     class RenderConfig  {
     }
@@ -34,17 +19,42 @@ package "Dependencies" {
     class ItemWalker {
      + Traverses the TRLC items\nand calls the converter.
     }
+
+    class Translator {
+
+    }
+    package "Built-in Converters" as int_converters {
+
+    }
+
+    class argparse <<(M ,lightblue) module>>{
+    }
  }
 
-' Relationships
-_create_args_parser ..> argparse
-_show_program_arguments ..> argparse
-_setup_render_configuration ..> RenderConfig
-main ..> _create_args_parser
-main ..> _setup_converters
-main ..> _show_program_arguments
-main ..> _setup_render_configuration
-main ..> _create_out_folder
-main ...> ItemWalker
-_setup_converters --> _get_project_converter
+package "Project Dependencies" as proj_deps {
+
+
+    class ProjectConverter {
+    }
+
+    file "renderconfig" <<json>> {
+    }
+
+    file "translations" <<json>> {
+    }
+
+    file "trlc files" {
+
+    }
+}
+
+'proj_deps .u[hidden]. pytrlc_deps
+ProjectConverter --|> int_converters
+
+main ..> ItemWalker
+main ..> Translator
+main ..> RenderConfig
+main ..> argparse
+main ..> int_converters
+main ..-> proj_deps: <<load>>
 @enduml

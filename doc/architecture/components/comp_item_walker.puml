@@ -12,14 +12,15 @@ package "Dependencies" {
     class trlc <<(M ,lightblue) module>> {
     }
 
-    abstract AbstractConverter {
-    }   
-
     note left of trlc
-        Module for obtaining 
+        Module for obtaining
         the TRLC symbol table.
     end note
+
+    abstract AbstractConverter {
     }
+
+}
 
 ItemWalker ..> AbstractConverter
 ItemWalker ..> trlc
