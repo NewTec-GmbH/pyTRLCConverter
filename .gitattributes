@@ -27,3 +27,4 @@
 *.png           binary
 *.jpg           binary
 *.jepg          binary
+*.svg           binary
