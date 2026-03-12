@@ -62,7 +62,7 @@ BUILD_IN_CONVERTER_LIST = [
 
 def _create_args_parser() -> argparse.ArgumentParser:
     # lobster-trace: SwRequirements.sw_req_cli_help
-    """ Creater parser for command line arguments.
+    """ Creates parser for command line arguments.
 
     Returns:
         argparse.ArgumentParser:  The parser object for command line arguments.
@@ -146,7 +146,7 @@ def _create_args_parser() -> argparse.ArgumentParser:
         type=str,
         default=None,
         required=False,
-        help="Render configuriation JSON file."
+        help="Render configuration JSON file."
     )
 
     # lobster-trace: SwRequirements.sw_req_cli_translation
