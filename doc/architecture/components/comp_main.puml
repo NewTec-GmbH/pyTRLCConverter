@@ -1,0 +1,61 @@
+@startuml
+
+package "pyTRLCConverter Dependencies" as pytrlc_deps {
+    class main << (F,orchid) func>> >> {
+     }
+
+    note right of main
+        The main function is responsible for:
+        * Parsing command-line arguments
+        * Loading of configuration files
+        * Initializing the appropriate converter
+        * Processing of TRLC files
+
+    end note
+
+    class RenderConfig  {
+    }
+
+    class ItemWalker {
+     + Traverses the TRLC items\nand calls the converter.
+    }
+
+    class Translator {
+
+    }
+    package "Built-in Converters" as int_converters {
+
+    }
+
+    class argparse <<(M ,lightblue) module>>{
+    }
+}
+
+package "Project Dependencies" as proj_deps {
+
+
+    class ProjectConverter {
+    }
+
+    file "renderconfig" <<json>> {
+    }
+
+    file "translations" <<json>> {
+    }
+
+    file "trlc files" {
+
+    }
+}
+
+'proj_deps .u[hidden]. pytrlc_deps
+ProjectConverter --|> int_converters
+
+main ..> ItemWalker
+main ..> Translator
+main ..> RenderConfig
+main ..> argparse
+main ..> int_converters
+main ..-> proj_deps: <<load>>
+
+@enduml

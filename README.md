@@ -3,7 +3,7 @@
 [![License](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://github.com/NewTec-GmbH/pyTRLCConverter/blob/main/LICENSE) [![Repo Status](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip) [![CI](https://github.com/NewTec-GmbH/pyTRLCConverter/actions/workflows/test.yml/badge.svg)](https://github.com/NewTec-GmbH/pyTRLCConverter/actions/workflows/test.yml)
 [![Repo Status](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 
-pyTRLCConverter is a command-line tool to convert [TRLC (Treat Requiremnts Like Code)](https://github.com/bmw-software-engineering/trlc) files to different output formats. Since the definition of TRLC types is project-specific, the built-in converters can be extended in an object-oriented manner.
+pyTRLCConverter is a command-line tool to convert [TRLC (Treat Requirements Like Code)](https://github.com/bmw-software-engineering/trlc) files to different output formats. Since the definition of TRLC types is project-specific, the built-in converters can be extended in an object-oriented manner.
 
 Currently out of the box supported formats:
 
@@ -70,10 +70,12 @@ Note:
 
 ### Tool Installation
 
-The *developers* might like to install it in editable mode.
+The *developers* might like to install it in editable mode together with additional needed
+development tools like `pytest`.
 
 ```bash
 pip install -e .
+pip install -r requirements-dev.txt
 ```
 
 The *users* of the tool install it as usual.

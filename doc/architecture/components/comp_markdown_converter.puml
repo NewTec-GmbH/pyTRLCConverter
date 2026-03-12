@@ -1,0 +1,38 @@
+@startuml
+
+class BaseConverter {
+}
+class MarkdownConverter extends BaseConverter {
+    +get_subcommand() : str
+    +get_description() : str
+    +register(args_parser: Any) : None
+    +begin() : Ret
+    +enter_file(file_name: str) : Ret
+    +leave_file(file_name: str) : Ret
+    +convert_section(section: str, level: int) : Ret
+    +convert_record_object_generic(record: Record_Object, level: int, translation: Optional[dict]) : Ret
+}
+
+
+package "Dependencies" {
+
+    class "trlc" <<(M ,lightblue) module>>{
+    }
+
+    note right of "trlc"
+        Use TRLC ast items:
+        * Implicit_Null
+        * Record_Object
+        * Record_Reference
+        * String_Literal
+        * Expression
+    end note
+
+    class TrlcAstWalker {
+    }
+}
+
+MarkdownConverter ..> "trlc"
+MarkdownConverter ..> TrlcAstWalker
+
+@enduml

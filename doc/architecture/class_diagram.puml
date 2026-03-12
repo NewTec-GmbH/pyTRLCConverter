@@ -1,14 +1,13 @@
 @startuml class_diagram
 
 interface "AbstractConverter" as abstractConverter <<abstract>> {
-    + {abstract} register(args_parser)
+    + {static} register(args_parser)
     + {abstract} convert_section()
-    + {abstract} convert_record()
+    + {abstract} convert_record_object()
     + {abstract} enter_file()
     + {abstract} leave_file()
     + {abstract} begin()
     + {abstract} finish()
-
 }
 
 note top of abstractConverter
@@ -19,7 +18,7 @@ end note
 class "BaseConverter" as baseConverter <<abstract>> {
 }
 
-rectangle "Built-in Converter" {
+package "Built-in Converters" {
 
     class "MarkdownConverter" as markdownConverter {
     }
@@ -80,14 +79,13 @@ rectangle Utilities {
 }
 
 class "main" as main <<module>> {
-    - _table: []
     + main() : int
 }
 
 class "ItemWalker" as itemWalker
 
 note top of itemWalker
-    TRLC item list traverse logic 
+    TRLC item list traverse logic
 end note
 
 

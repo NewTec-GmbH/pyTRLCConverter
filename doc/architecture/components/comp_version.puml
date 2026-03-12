@@ -1,0 +1,22 @@
+@startuml
+
+class Version {
+    +__version__ : str
+    +__author__ : str
+    +__email__ : str
+    +__repository__ : str
+    +__license__ : str
+    +resource_path(relative_path: str) : str
+}
+
+package "Dependencies" {
+    class sys <<(M ,lightblue) module>> {}
+    class os <<(M ,lightblue) module>> {}
+    class toml <<(M ,lightblue) module>> {}
+}
+
+Version ..> toml
+Version ..> sys
+Version ..> os
+
+@enduml

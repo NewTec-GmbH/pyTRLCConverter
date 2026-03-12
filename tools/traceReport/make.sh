@@ -46,6 +46,12 @@ OUTPUT_DIR=out
 SW_REQ_LOBSTER_CONF=./lobster-trlc-sw-req.yaml
 SW_REQ_LOBSTER_OUT=$OUTPUT_DIR/sw_req-lobster.json
 
+SW_CONSTRAINT_LOBSTER_CONF=./lobster-trlc-sw-constraint.yaml
+SW_CONSTRAINT_LOBSTER_OUT=$OUTPUT_DIR/sw_constraint-lobster.json
+
+SW_ARCH_LOBSTER_CONF=./lobster-trlc-sw-arch.yaml
+SW_ARCH_LOBSTER_OUT=$OUTPUT_DIR/sw_arch-lobster.json
+
 SW_TEST_LOBSTER_CONF=./lobster-trlc-sw-test.yaml
 SW_TEST_LOBSTER_OUT=$OUTPUT_DIR/sw_test-lobster.json
 
@@ -73,6 +79,12 @@ fi
 
 # ********** SW-Requirements **********
 $LOBSTER_TRLC --config "$SW_REQ_LOBSTER_CONF" --out "$SW_REQ_LOBSTER_OUT"
+
+# ********** SW-Constraints **********
+$LOBSTER_TRLC --config "$SW_CONSTRAINT_LOBSTER_CONF" --out "$SW_CONSTRAINT_LOBSTER_OUT"
+
+# ********** SW-Arch **********
+$LOBSTER_TRLC --config "$SW_ARCH_LOBSTER_CONF" --out "$SW_ARCH_LOBSTER_OUT"
 
 # ********** SW-Test **********
 $LOBSTER_TRLC --config "$SW_TEST_LOBSTER_CONF" --out "$SW_TEST_LOBSTER_OUT"

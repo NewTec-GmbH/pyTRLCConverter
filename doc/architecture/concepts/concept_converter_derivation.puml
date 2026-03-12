@@ -1,0 +1,60 @@
+@startuml
+
+package pyTRLCConverter {
+    abstract class AbstractConverter {
+    }
+
+    note right of AbstractConverter
+       Defines the interface for all converters
+       used by pyTRLCConverter.
+    end note
+
+    ' BaseConverter class
+    class BaseConverter implements AbstractConverter {
+        -_translator
+        -_render_cfg
+        -_records_policy
+        - _record_handler_dict
+        +set_render_cfg()
+        +convert_section()
+        +convert_record_object()
+        +convert_record_object_generic()
+        -_set_project_record_handlers()
+    }
+    note right of BaseConverter
+        Provides
+        * empty section conversion
+        * empty record object conversion
+        * map record type to handler function
+        * policy for handling undefined record types
+        * text conversion tools
+            * attribute translation
+            * rendering into markdown or rst
+    end note
+
+    class FormatConverter extends BaseConverter {
+        +convert_section()
+        +convert_record_object_generic()
+    }
+    note right of FormatConverter
+        Implements the conversion into a specific format.
+        * Markdown, Restructured Text, docx
+        * overwrite convert_section()
+        * overwrite convert_record_object_generic()
+    end note
+}
+
+class ProjectConverter extends pyTRLCConverter.FormatConverter {
+    +prjtype_x_records_handler()
+    +prjtype_y_records_handler()
+    + ...()
+}
+
+note right of ProjectConverter
+    Project specific converter responsible for
+    handling RSL defined records types.
+    * provide project-specific record handlers
+    * register handler in BaseConverter
+end note
+
+@enduml

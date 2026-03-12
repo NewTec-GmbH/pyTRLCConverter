@@ -25,7 +25,7 @@ p.admonition-title {
     color: green;
 }
 
-span.caption-text {
-    display: block;
-    text-align: center;
+/* Use available width for navigation content (read the docs theme). */
+.wy-nav-content {
+    max-width: none;
 }
