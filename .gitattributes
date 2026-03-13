@@ -26,4 +26,5 @@
 # Images should be treated as binary
 *.png           binary
 *.jpg           binary
-*.jepg          binary
+*.jpeg          binary
+*.svg           binary

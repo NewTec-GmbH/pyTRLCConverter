@@ -41,15 +41,15 @@ def convert_plantuml_to_image(plantuml_file: str, dest_dir: str, directories: Li
     file_path = locate_file(plantuml_file, directories)
     if file_path is not None:
         puml = PlantUML()
-        puml.generate("png", file_path, dest_dir)
+        puml.generate("svg", file_path, dest_dir)
 
         file_dst_path = os.path.basename(file_path)
         file_dst_path = os.path.splitext(file_dst_path)[0]
-        file_dst_path += ".png"
+        file_dst_path += ".svg"
 
         # PlantUML uses as output filename the diagram name if available.
         # The diagram name may differ from the filename.
-        # To aovid that a invalid reference
+        # To avoid that a invalid reference
         # ensure that the generated filename is as expected.
         expected_dst_path = os.path.join(dest_dir, file_dst_path)
         if os.path.isfile(expected_dst_path) is False:
