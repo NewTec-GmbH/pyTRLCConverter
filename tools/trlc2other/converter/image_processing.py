@@ -49,7 +49,7 @@ def convert_plantuml_to_image(plantuml_file: str, dest_dir: str, directories: Li
 
         # PlantUML uses as output filename the diagram name if available.
         # The diagram name may differ from the filename.
-        # To aovid that a invalid reference
+        # To avoid that a invalid reference
         # ensure that the generated filename is as expected.
         expected_dst_path = os.path.join(dest_dir, file_dst_path)
         if os.path.isfile(expected_dst_path) is False:
