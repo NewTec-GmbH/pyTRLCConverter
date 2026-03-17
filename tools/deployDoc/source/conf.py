@@ -36,7 +36,7 @@ from sphinx.errors import ConfigError
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'pyTRLCConverter'
+project = 'NewTec pyTRLCConverter'
 copyright = '2025, NewTec GmbH'
 author = 'NewTec GmbH'
 
@@ -72,13 +72,35 @@ myst_heading_anchors = 6
 
 html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
-html_css_files = ['custom.css']
+html_css_files = [
+    "css/svg.css",
+    "css/width.css",
+    "css/custom.css",
+]
+
 
 # Copy favorite icon to static path.
 html_favicon = '../../../doc/images/favicon.ico'
 
 # Copy logo to static path.
 html_logo = '../../../doc/images/NewTec_Logo.png'
+
+# set html_logo to None to show only the project name in the header, or set it to the path of the logo image to show both the logo and project name.
+html_theme_options = {
+    'style_external_links': True,               # Open external links in a new tab
+    'logo_only': False,                         # Display the logo in the header (set to True to show only the logo without project name)
+    'style_nav_header_background': '#0C2C40',   # Set the navigation header background color to NewTec black  #0C2C40
+}
+
+# Add favicon
+favicons = [
+    {
+        "rel": "icon",
+        "static-file": "favicon.ico",
+        "type": "image/svg+xml",
+    }
+]
+
 
 # PlantUML is called OS depended and the java jar file is provided by environment variable.
 plantuml_env = os.getenv('PLANTUML')

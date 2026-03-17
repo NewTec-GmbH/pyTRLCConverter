@@ -22,7 +22,8 @@ table.align-default {
 }
 
 div.admonition {
-    background-color: #f7f2f3;
+    /*  background-color: #f7f2f3;*/
+    background-color: #0C2C40 ;
 }
 
 p.admonition-title {
@@ -37,7 +38,16 @@ p.admonition-title {
     color: green;
 }
 
-/* Use available width for navigation content (read the docs theme). */
+p.admonition-title {
+    span.caption-text {
+        display: block;
+        text-align: center;
+    }
+}
+
 .wy-nav-content {
     max-width: none;
 }
+
+
+

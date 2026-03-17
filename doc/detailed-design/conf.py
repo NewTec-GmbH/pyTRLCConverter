@@ -30,7 +30,7 @@ update_doc.update_pylint()
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'template_python'
+project = 'NewTec pyTRLCConverter'
 copyright = '%Y, NewTec GmbH'
 author = '???Author???'
 release = 'V0.???'
@@ -54,7 +54,10 @@ source_suffix = {
 
 # Add path to your local plantuml jar file here. Latest Version can be downloaded here:
 # https://plantuml.com/de/download
-plantuml = ['java', '-jar', 'C:/Program Files/doxygen/bin/plantuml.jar']
+#plantuml = ['java', '-jar', 'C:/Program Files/doxygen/bin/plantuml.jar']
+plantuml = 'https://www.plantuml.com'
+#plantuml = ['java', '-jar', "C:\!!_PROJEKTE\GIT\pyTRLCConverter\pyTRLCConverter_NEU\pyTRLCConverter\tools\plantUML\plantuml.jar"]
+
 
 # myst settings
 myst_heading_anchors = 3
@@ -72,11 +75,18 @@ napoleon_google_docstring = True
 
 html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
+html_css_files = [
+    "css/svg.css",
+    "css/width.css",
+    "css/custom.css",
+]
+
 html_logo = "_static/NewTec_Logo.png"
 
 html_theme_options = {
-    'logo_only': False,
-    'style_nav_header_background': '#0C2C40'
+    'style_external_links': True,               # Open external links in a new tab
+    'logo_only': False,                         # Display the logo in the header (set to True to show only the logo without project name)
+    'style_nav_header_background': '#0C2C40',   # Set the navigation header background color to NewTec black  #0C2C40
 }
 
 # Add favicon
