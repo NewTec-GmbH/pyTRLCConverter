@@ -21,5 +21,5 @@ set PLANTUML=%LOCAL_DIR%plantuml.jar
 
 if not exist "%PLANTUML%" (
     echo Download PlantUML java program...
-    powershell -Command "Invoke-WebRequest https://github.com/plantuml/plantuml/releases/download/v1.2024.8/plantuml-1.2024.8.jar -OutFile %PLANTUML%"
+    powershell -Command "Invoke-WebRequest https://github.com/plantuml/plantuml/releases/download/v1.2026.2/plantuml-1.2026.2.jar -OutFile %PLANTUML%"
 )
