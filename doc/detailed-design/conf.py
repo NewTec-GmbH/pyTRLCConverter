@@ -30,7 +30,7 @@ update_doc.update_pylint()
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'NewTec pyTRLCConverter'
+project = 'pyTRLCConverter'
 copyright = '%Y, NewTec GmbH'
 author = '???Author???'
 release = 'V0.???'
@@ -54,9 +54,7 @@ source_suffix = {
 
 # Add path to your local plantuml jar file here. Latest Version can be downloaded here:
 # https://plantuml.com/de/download
-#plantuml = ['java', '-jar', 'C:/Program Files/doxygen/bin/plantuml.jar']
-plantuml = 'https://www.plantuml.com'
-#plantuml = ['java', '-jar', "C:\!!_PROJEKTE\GIT\pyTRLCConverter\pyTRLCConverter_NEU\pyTRLCConverter\tools\plantUML\plantuml.jar"]
+plantuml = ['java', '-jar', 'C:/Program Files/doxygen/bin/plantuml.jar']
 
 
 # myst settings
@@ -76,8 +74,6 @@ napoleon_google_docstring = True
 html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
 html_css_files = [
-    "css/svg.css",
-    "css/width.css",
     "css/custom.css",
 ]
 
