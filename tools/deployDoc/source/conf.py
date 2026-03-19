@@ -36,7 +36,7 @@ from sphinx.errors import ConfigError
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'NewTec pyTRLCConverter'
+project = 'pyTRLCConverter'
 copyright = '2025, NewTec GmbH'
 author = 'NewTec GmbH'
 
@@ -73,8 +73,6 @@ myst_heading_anchors = 6
 html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
 html_css_files = [
-    "css/svg.css",
-    "css/width.css",
     "css/custom.css",
 ]
 
