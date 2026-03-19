@@ -1,10 +1,23 @@
 # Deploy documentation on Github Pages.
+#
+# Folder structure on gh-pages branch:
+# index.html (routes always to the latest stable version)
+# /stable (alias for the latest stable version in the main branch)
+# /unstable (alias for the latest development version in the develop branch)
+# /v1.0.0 (example release tag)
+# /v1.1.0 (example release tag)
+# /versions/version_selector_data.js (shared version selector data for all versions)
 name: Deploy Github Pages
 
 on:
   release:
     # A release, pre-release, or draft of a release is published.
     types: [published]
+  # Deploy documentation when changes are merged/pushed to main development branches.
+  push:
+    branches:
+      - main
+      - develop
   # Allows you to run this workflow manually from the Actions tab.
   workflow_dispatch:
 
@@ -25,6 +38,8 @@ jobs:
     runs-on: ubuntu-latest
     env:
       PLANTUML_VARIABLE: ""
+      DOCS_VERSION: ${{ github.event_name == 'release' && github.event.release.tag_name || github.ref_name == 'main' && 'latest' || github.ref_name == 'develop' && 'unstable' || github.ref_name }}
+      DOCS_VERSIONS: latest,unstable
     # Steps represent a sequence of tasks that will be executed as part of the job.
     steps:
       - name: Setup cache
@@ -58,10 +73,22 @@ jobs:
           ./make_html.sh
           popd
 
-      - name: Upload static files as artifacts
-        id: deployment
+      - name: Deploy static files to GitHub Pages
+        id: deploy_docs
         uses: peaceiris/actions-gh-pages@v4
         with:
           publish_branch: gh-pages
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./tools/deployDoc/build/html
+          # main -> latest, develop -> unstable, release tag -> tag name, otherwise branch name
+          destination_dir: ${{ github.event_name == 'release' && github.event.release.tag_name || github.ref_name == 'main' && 'latest' || github.ref_name == 'develop' && 'unstable' || github.ref_name }}
+
+      - name: Deploy version selector data (only for releases) to GitHub Pages
+        if: ${{ github.event_name == 'release' }}
+        id: deploy_version_selector_data
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          publish_branch: gh-pages
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./tools/deployDoc/build/html/_static/version_selector_data.js
+          destination_dir: ./versions
