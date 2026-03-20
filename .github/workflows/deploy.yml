@@ -39,7 +39,6 @@ jobs:
     # The type of runner that the job will run on.
     runs-on: ubuntu-latest
     env:
-      PLANTUML_VARIABLE: ""
       DOCS_VERSION: ${{ github.event_name == 'release' && github.event.release.tag_name || github.ref_name == 'main' && 'latest' || github.ref_name == 'develop' && 'unstable' || github.ref_name }}
       DOCS_VERSIONS: unstable
 
@@ -90,6 +89,7 @@ jobs:
           pushd ./tools
           chmod +x make_html.sh
           ./make_html.sh online
+          rm -f ./deployDoc/build/html/coverage/.gitignore
           popd
 
       # Debug step to show the generated documentation files in the workflow logs.
