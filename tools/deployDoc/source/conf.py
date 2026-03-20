@@ -90,9 +90,11 @@ plantuml = []
 def _build_version_links() -> tuple[str, list[tuple[str, str]]]:
     """Build documentation version selector entries for the RTD theme.
 
+    It divides between local and deployed documentation based on the presence of environment variables.
+
     Environment parameters:
         DOCS_VERSION: Current docs version shown as active entry.
-            Falls back to GITHUB_REF_NAME and finally ``local``.
+            Falls back to ``local`` if not set.
         DOCS_VERSIONS: Comma-separated list of versions shown in the selector.
             Defaults to ``latest,unstable``.
         DOCS_LATEST_TARGET: Version folder used for the ``latest`` selector entry.
@@ -104,34 +106,41 @@ def _build_version_links() -> tuple[str, list[tuple[str, str]]]:
         tuple[str, list[tuple[str, str]]]:
             Current version and a list of ``(label, url)`` selector entries.
     """
-    current_version = os.getenv('DOCS_VERSION') or os.getenv('GITHUB_REF_NAME') or 'local'
-    configured_versions = os.getenv('DOCS_VERSIONS', 'unstable')
-    latest_target = os.getenv('DOCS_LATEST_TARGET', 'latest').strip() or 'latest'
-    versions = [version.strip() for version in configured_versions.split(',') if version.strip()]
-
-    if current_version not in versions:
-        versions.insert(0, current_version)
-
-    docs_base_path = os.getenv('DOCS_BASE_PATH', '')
-    if not docs_base_path:
-        repository = os.getenv('GITHUB_REPOSITORY', '')
-        if '/' in repository:
-            docs_base_path = f"/{repository.split('/', maxsplit=1)[1]}"
-
-    docs_base_path = docs_base_path.rstrip('/')
+    current_version = os.getenv('DOCS_VERSION') or 'local'
     version_links = []
-    for version in versions:
-        if docs_base_path:
-            version_links.append((version, f"{docs_base_path}/{version}/"))
-        else:
-            version_links.append((version, f"/{version}/"))
 
-    if docs_base_path:
-        latest_url = f"{docs_base_path}/{latest_target}/"
+    # Local documentation does not have version selector entries, as it is only used for development and testing.
+    if current_version == 'local':
+        version_links.append(('local', '.'))
+
+    # For deployed documentation, build the version selector entries based on environment variables.
     else:
-        latest_url = f"/{latest_target}/"
+        configured_versions = os.getenv('DOCS_VERSIONS', 'unstable')
+        latest_target = os.getenv('DOCS_LATEST_TARGET', 'latest').strip() or 'latest'
+        versions = [version.strip() for version in configured_versions.split(',') if version.strip()]
 
-    version_links.insert(0, ('latest', latest_url))
+        if current_version not in versions:
+            versions.insert(0, current_version)
+
+        docs_base_path = os.getenv('DOCS_BASE_PATH', '')
+        if not docs_base_path:
+            repository = os.getenv('GITHUB_REPOSITORY', '')
+            if '/' in repository:
+                docs_base_path = f"/{repository.split('/', maxsplit=1)[1]}"
+
+        docs_base_path = docs_base_path.rstrip('/')
+        for version in versions:
+            if docs_base_path:
+                version_links.append((version, f"{docs_base_path}/{version}/"))
+            else:
+                version_links.append((version, f"/{version}/"))
+
+        if docs_base_path:
+            latest_url = f"{docs_base_path}/{latest_target}/"
+        else:
+            latest_url = f"/{latest_target}/"
+
+        version_links.insert(0, ('latest', latest_url))
 
     return current_version, version_links
 
