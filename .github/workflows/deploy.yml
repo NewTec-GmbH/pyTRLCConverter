@@ -41,7 +41,7 @@ jobs:
     env:
       PLANTUML_VARIABLE: ""
       DOCS_VERSION: ${{ github.event_name == 'release' && github.event.release.tag_name || github.ref_name == 'main' && 'latest' || github.ref_name == 'develop' && 'unstable' || github.ref_name }}
-      DOCS_VERSIONS: latest,unstable
+      DOCS_VERSIONS: unstable
 
     # Steps represent a sequence of tasks that will be executed as part of the job.
     steps:
