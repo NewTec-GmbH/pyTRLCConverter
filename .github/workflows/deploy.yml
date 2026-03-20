@@ -90,7 +90,13 @@ jobs:
           pushd ./tools
           chmod +x make_html.sh
           ./make_html.sh online
-          find . | sed -e 's/[^-][^\/]*\// |/g' -e 's/|[^ ]*/|--/'
+          popd
+
+      # Debug step to show the generated documentation files in the workflow logs.
+      - name: Show generated documentation files for debugging
+        run: |
+          pushd ./tools
+          find
           popd
 
       # Publish generated HTML documentation to the target version folder on gh-pages.
