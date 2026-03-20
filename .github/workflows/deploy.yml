@@ -89,7 +89,7 @@ jobs:
         run: |
           pushd ./tools
           chmod +x make_html.sh
-          ./make_html.sh
+          ./make_html.sh online
           popd
 
       # Publish generated HTML documentation to the target version folder on gh-pages.
