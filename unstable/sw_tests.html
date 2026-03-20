@@ -1,0 +1,1277 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SW-Test Cases &mdash; pyTRLCConverter  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=e7155383" />
+
+  
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="_static/version_selector.js?v=3d95cf9b"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Software Tracing Report" href="sw_tracing_report.html" />
+    <link rel="prev" title="SW-Architecture" href="sw_architecture.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            pyTRLCConverter
+              <img src="_static/NewTec_Logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="sw_requirements.html">SW-Requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sw_architecture.html">SW-Architecture</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">SW-Test Cases</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#sw-tests">SW-Tests</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#general">General</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#plantuml">PlantUML</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#command-line-arguments">Command Line Arguments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#markdown">Markdown</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#restructuredtext">reStructuredText</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#docx">Docx</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dump">Dump</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sw_tracing_report.html">Software Tracing Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="coverage_resport.html">Coverage Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sw_test_result_report.html">SW Test Result Report</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="license_include.html">License information</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">pyTRLCConverter</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">SW-Test Cases</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/sw_tests.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="sw-test-cases">
+<h1>SW-Test Cases<a class="headerlink" href="#sw-test-cases" title="Link to this heading"></a></h1>
+<section id="sw-tests">
+<span id="swe-test-rst-sw-tests"></span><h2>SW-Tests<a class="headerlink" href="#sw-tests" title="Link to this heading"></a></h2>
+<p>This file contains the software test cases for the pyTRLCConverter tool.</p>
+<section id="general">
+<span id="swe-test-rst-general"></span><h3>General<a class="headerlink" href="#general" title="Link to this heading"></a></h3>
+<div class="admonition-tc-cli admonition" id="swe-test-rst-tc-cli">
+<p class="admonition-title">tc_cli</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether the tool supports the command line arguments.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-cli"><span class="std std-ref">SwRequirements.sw_req_cli</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-translation admonition" id="swe-test-rst-tc-translation">
+<p class="admonition-title">tc_translation</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case check whether the translation of requirement attributes works.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-translation"><span class="std std-ref">SwRequirements.sw_req_translation</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-render-configuration admonition" id="swe-test-rst-tc-render-configuration">
+<p class="admonition-title">tc_render_configuration</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case check whether the render configuration works.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-render-configuration"><span class="std std-ref">SwRequirements.sw_req_render_configuration</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-prj-spec admonition" id="swe-test-rst-tc-prj-spec">
+<p class="admonition-title">tc_prj_spec</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case check whether a project specific converter can be instantiated.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-prj-spec"><span class="std std-ref">SwRequirements.sw_req_prj_spec</span></a></p></li>
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-prj-spec-file"><span class="std std-ref">SwRequirements.sw_req_prj_spec_file</span></a></p></li>
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-prj-spec-interface"><span class="std std-ref">SwRequirements.sw_req_prj_spec_interface</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-version admonition" id="swe-test-rst-tc-version">
+<p class="admonition-title">tc_version</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case check whether ‘--version’ shows the correct version format format &lt;program-name&gt; &lt;major&gt;.&lt;minor&gt;.&lt;patch&gt;.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-version"><span class="std std-ref">SwRequirements.sw_req_version</span></a></p></li>
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-cli-version"><span class="std std-ref">SwRequirements.sw_req_cli_version</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-process-trlc-symbols-one-file-one-req admonition" id="swe-test-rst-tc-process-trlc-symbols-one-file-one-req">
+<p class="admonition-title">tc_process_trlc_symbols_one_file_one_req</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case check whether one single TRLC requirement is printed out of one TRLC file.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-process-trlc-symbols"><span class="std std-ref">SwRequirements.sw_req_process_trlc_symbols</span></a></p></li>
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-destination-format"><span class="std std-ref">SwRequirements.sw_req_destination_format</span></a></p></li>
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-cli-source"><span class="std std-ref">SwRequirements.sw_req_cli_source</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-process-trlc-symbols-two-files-one-req admonition" id="swe-test-rst-tc-process-trlc-symbols-two-files-one-req">
+<p class="admonition-title">tc_process_trlc_symbols_two_files_one_req</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case check whether one single TRLC requirement per TRLC file is printed out of two TRLC files.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-process-trlc-symbols"><span class="std std-ref">SwRequirements.sw_req_process_trlc_symbols</span></a></p></li>
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-destination-format"><span class="std std-ref">SwRequirements.sw_req_destination_format</span></a></p></li>
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-cli-source"><span class="std std-ref">SwRequirements.sw_req_cli_source</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-verbose admonition" id="swe-test-rst-tc-verbose">
+<p class="admonition-title">tc_verbose</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case check whether in verbose mode more information is printed out.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-verbose-mode"><span class="std std-ref">SwRequirements.sw_req_verbose_mode</span></a></p></li>
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-cli-verbose"><span class="std std-ref">SwRequirements.sw_req_cli_verbose</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-error admonition" id="swe-test-rst-tc-error">
+<p class="admonition-title">tc_error</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case check whether error messages are printed to stderr.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-error"><span class="std std-ref">SwRequirements.sw_req_error</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="plantuml">
+<span id="swe-test-rst-plantuml"></span><h3>PlantUML<a class="headerlink" href="#plantuml" title="Link to this heading"></a></h3>
+<div class="admonition-tc-plantuml admonition" id="swe-test-rst-tc-plantuml">
+<p class="admonition-title">tc_plantuml</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks the conversion of a PlantUML diagram into an image.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-plantuml"><span class="std std-ref">SwRequirements.sw_req_plantuml</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="command-line-arguments">
+<span id="swe-test-rst-command-line-arguments"></span><h3>Command Line Arguments<a class="headerlink" href="#command-line-arguments" title="Link to this heading"></a></h3>
+<div class="admonition-tc-help admonition" id="swe-test-rst-tc-help">
+<p class="admonition-title">tc_help</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether the help information is shown with ‘--help’ without project specific converter.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-cli-help"><span class="std std-ref">SwRequirements.sw_req_cli_help</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-help-prj-spec admonition" id="swe-test-rst-tc-help-prj-spec">
+<p class="admonition-title">tc_help_prj_spec</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether the help information is shown with ‘--help’ with project specific converter.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-cli-help"><span class="std std-ref">SwRequirements.sw_req_cli_help</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-cli-exclude admonition" id="swe-test-rst-tc-cli-exclude">
+<p class="admonition-title">tc_cli_exclude</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether a TRLC file can be excluded from the conversion.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-cli-exclude"><span class="std std-ref">SwRequirements.sw_req_cli_exclude</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-cli-include admonition" id="swe-test-rst-tc-cli-include">
+<p class="admonition-title">tc_cli_include</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether a TRLC file can be included as on demand context in the conversion.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-cli-include"><span class="std std-ref">SwRequirements.sw_req_cli_include</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-cli-translation admonition" id="swe-test-rst-tc-cli-translation">
+<p class="admonition-title">tc_cli_translation</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether a translation file can be configured via the command line.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-cli-translation"><span class="std std-ref">SwRequirements.sw_req_cli_translation</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-cli-render-cfg admonition" id="swe-test-rst-tc-cli-render-cfg">
+<p class="admonition-title">tc_cli_render_cfg</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether a render configuration file can be configured via the command line.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-cli-render-cfg"><span class="std std-ref">SwRequirements.sw_req_cli_render_cfg</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="markdown">
+<span id="swe-test-rst-markdown"></span><h3>Markdown<a class="headerlink" href="#markdown" title="Link to this heading"></a></h3>
+<div class="admonition-tc-markdown admonition" id="swe-test-rst-tc-markdown">
+<p class="admonition-title">tc_markdown</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether the conversion to Markdown format works.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-markdown"><span class="std std-ref">SwRequirements.sw_req_markdown</span></a></p></li>
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-markdown-record"><span class="std std-ref">SwRequirements.sw_req_markdown_record</span></a></p></li>
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-no-prj-spec"><span class="std std-ref">SwRequirements.sw_req_no_prj_spec</span></a></p></li>
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-cli-out"><span class="std std-ref">SwRequirements.sw_req_cli_out</span></a></p></li>
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-markdown-single-doc-mode"><span class="std std-ref">SwRequirements.sw_req_markdown_single_doc_mode</span></a></p></li>
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-markdown-out-file-name-default"><span class="std std-ref">SwRequirements.sw_req_markdown_out_file_name_default</span></a></p></li>
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-markdown-sd-top-level"><span class="std std-ref">SwRequirements.sw_req_markdown_sd_top_level</span></a></p></li>
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-markdown-top-level-default"><span class="std std-ref">SwRequirements.sw_req_markdown_top_level_default</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-markdown-section admonition" id="swe-test-rst-tc-markdown-section">
+<p class="admonition-title">tc_markdown_section</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether the conversion of a TRLC section to a Markdown section works.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-markdown-section"><span class="std std-ref">SwRequirements.sw_req_markdown_section</span></a></p></li>
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-markdown-out-file-name-custom"><span class="std std-ref">SwRequirements.sw_req_markdown_out_file_name_custom</span></a></p></li>
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-markdown-top-level-custom"><span class="std std-ref">SwRequirements.sw_req_markdown_top_level_custom</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-markdown-escape admonition" id="swe-test-rst-tc-markdown-escape">
+<p class="admonition-title">tc_markdown_escape</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether the default Markdown converter can convert strings with Markdown escaping.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-markdown-escape"><span class="std std-ref">SwRequirements.sw_req_markdown_escape</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-markdown-heading admonition" id="swe-test-rst-tc-markdown-heading">
+<p class="admonition-title">tc_markdown_heading</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether the default Markdown converter provides a function
+to create valid Markdown headings.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-markdown-heading"><span class="std std-ref">SwRequirements.sw_req_markdown_heading</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-markdown-table admonition" id="swe-test-rst-tc-markdown-table">
+<p class="admonition-title">tc_markdown_table</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether the default Markdown converter provides the functionality
+to create valid Markdown tables.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-markdown-table"><span class="std std-ref">SwRequirements.sw_req_markdown_table</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-markdown-list admonition" id="swe-test-rst-tc-markdown-list">
+<p class="admonition-title">tc_markdown_list</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether the default Markdown converter provides a function
+to create valid Markdown list and a valid HTML list.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-markdown-list"><span class="std std-ref">SwRequirements.sw_req_markdown_list</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-markdown-link admonition" id="swe-test-rst-tc-markdown-link">
+<p class="admonition-title">tc_markdown_link</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether the default Markdown converter provides a function
+to create valid Markdown links.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-markdown-link"><span class="std std-ref">SwRequirements.sw_req_markdown_link</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-markdown-image admonition" id="swe-test-rst-tc-markdown-image">
+<p class="admonition-title">tc_markdown_image</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether the default Markdown converter provides a function
+to embed images in Markdown.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-markdown-image"><span class="std std-ref">SwRequirements.sw_req_markdown_image</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-markdown-text-color admonition" id="swe-test-rst-tc-markdown-text-color">
+<p class="admonition-title">tc_markdown_text_color</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether the default Markdown converter provides a function
+to create colored text in Markdown.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-markdown-text-color"><span class="std std-ref">SwRequirements.sw_req_markdown_text_color</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-markdown-soft-return admonition" id="swe-test-rst-tc-markdown-soft-return">
+<p class="admonition-title">tc_markdown_soft_return</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether the default Markdown converter provides a function
+to encode line feeds as Markdown soft returns.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-markdown-soft-return"><span class="std std-ref">SwRequirements.sw_req_markdown_soft_return</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-markdown-out-folder admonition" id="swe-test-rst-tc-markdown-out-folder">
+<p class="admonition-title">tc_markdown_out_folder</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether the default Markdown converter creates output files in the
+specified output folder.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-markdown-out-folder"><span class="std std-ref">SwRequirements.sw_req_markdown_out_folder</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-markdown-multi-doc admonition" id="swe-test-rst-tc-markdown-multi-doc">
+<p class="admonition-title">tc_markdown_multi_doc</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether the conversion to markdown in multiple document mode creates one output document per TRLC source file and
+whether the top level heading is created when required.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-markdown-multiple-doc-mode"><span class="std std-ref">SwRequirements.sw_req_markdown_multiple_doc_mode</span></a></p></li>
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-markdown-md-top-level"><span class="std std-ref">SwRequirements.sw_req_markdown_md_top_level</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-markdown-render-md admonition" id="swe-test-rst-tc-markdown-render-md">
+<p class="admonition-title">tc_markdown_render_md</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether Markdown content in requirement attributes is rendered correctly
+when the render configuration is set to “md”.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-markdown-render-md"><span class="std std-ref">SwRequirements.sw_req_markdown_render_md</span></a></p></li>
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-markdown-string-format"><span class="std std-ref">SwRequirements.sw_req_markdown_string_format</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="restructuredtext">
+<span id="swe-test-rst-restructuredtext"></span><h3>reStructuredText<a class="headerlink" href="#restructuredtext" title="Link to this heading"></a></h3>
+<div class="admonition-tc-rst admonition" id="swe-test-rst-tc-rst">
+<p class="admonition-title">tc_rst</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether the conversion to reStructuredText format works.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-rst"><span class="std std-ref">SwRequirements.sw_req_rst</span></a></p></li>
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-rst-record"><span class="std std-ref">SwRequirements.sw_req_rst_record</span></a></p></li>
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-no-prj-spec"><span class="std std-ref">SwRequirements.sw_req_no_prj_spec</span></a></p></li>
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-cli-out"><span class="std std-ref">SwRequirements.sw_req_cli_out</span></a></p></li>
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-rst-single-doc-mode"><span class="std std-ref">SwRequirements.sw_req_rst_single_doc_mode</span></a></p></li>
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-rst-out-file-name-default"><span class="std std-ref">SwRequirements.sw_req_rst_out_file_name_default</span></a></p></li>
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-rst-sd-top-level"><span class="std std-ref">SwRequirements.sw_req_rst_sd_top_level</span></a></p></li>
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-rst-sd-top-level-default"><span class="std std-ref">SwRequirements.sw_req_rst_sd_top_level_default</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-rst-section admonition" id="swe-test-rst-tc-rst-section">
+<p class="admonition-title">tc_rst_section</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether the conversion of a TRLC section to a reStructuredText section works.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-rst-section"><span class="std std-ref">SwRequirements.sw_req_rst_section</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-rst-escape admonition" id="swe-test-rst-tc-rst-escape">
+<p class="admonition-title">tc_rst_escape</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether the default reStructuredText converter can convert strings with reStructuredText escaping.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-rst-escape"><span class="std std-ref">SwRequirements.sw_req_rst_escape</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-rst-heading admonition" id="swe-test-rst-tc-rst-heading">
+<p class="admonition-title">tc_rst_heading</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether the default reStructuredText converter provides a function
+to create valid reStructuredText headings.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-rst-heading"><span class="std std-ref">SwRequirements.sw_req_rst_heading</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-rst-admonition admonition" id="swe-test-rst-tc-rst-admonition">
+<p class="admonition-title">tc_rst_admonition</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether the default reStructuredText converter provides a function
+to create valid reStructuredText admonition.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-rst-admonition"><span class="std std-ref">SwRequirements.sw_req_rst_admonition</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-rst-table admonition" id="swe-test-rst-tc-rst-table">
+<p class="admonition-title">tc_rst_table</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether the default reStructuredText converter provides the functionality
+to create valid reStructuredText tables.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-rst-table"><span class="std std-ref">SwRequirements.sw_req_rst_table</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-rst-list admonition" id="swe-test-rst-tc-rst-list">
+<p class="admonition-title">tc_rst_list</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether the default reStructuredText converter provides a function
+to create valid reStructuredText list.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-rst-list"><span class="std std-ref">SwRequirements.sw_req_rst_list</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-rst-link admonition" id="swe-test-rst-tc-rst-link">
+<p class="admonition-title">tc_rst_link</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether the default reStructuredText converter provides a function
+to create valid reStructuredText links.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-rst-link"><span class="std std-ref">SwRequirements.sw_req_rst_link</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-rst-image admonition" id="swe-test-rst-tc-rst-image">
+<p class="admonition-title">tc_rst_image</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether the default reStructuredText converter provides a function
+to embed images in reStructuredText.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-rst-image"><span class="std std-ref">SwRequirements.sw_req_rst_image</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-rst-role admonition" id="swe-test-rst-tc-rst-role">
+<p class="admonition-title">tc_rst_role</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether the default reStructuredText converter provides a function
+to create colored text in reStructuredText.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-rst-role"><span class="std std-ref">SwRequirements.sw_req_rst_role</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-rst-out-folder admonition" id="swe-test-rst-tc-rst-out-folder">
+<p class="admonition-title">tc_rst_out_folder</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether the default reStructuredText converter creates output files in the
+specified output folder.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-rst-out-folder"><span class="std std-ref">SwRequirements.sw_req_rst_out_folder</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-rst-single-doc-custom admonition" id="swe-test-rst-tc-rst-single-doc-custom">
+<p class="admonition-title">tc_rst_single_doc_custom</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether the conversion to reStructuredText in single document mode is customizeable.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-rst-out-file-name-custom"><span class="std std-ref">SwRequirements.sw_req_rst_out_file_name_custom</span></a></p></li>
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-rst-sd-top-level-custom"><span class="std std-ref">SwRequirements.sw_req_rst_sd_top_level_custom</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-rst-multi-doc admonition" id="swe-test-rst-tc-rst-multi-doc">
+<p class="admonition-title">tc_rst_multi_doc</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether the conversion to reStructuredText in multiple document mode convers one output document per TRLC source file.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-rst-multiple-doc-mode"><span class="std std-ref">SwRequirements.sw_req_rst_multiple_doc_mode</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-rst-string-format admonition" id="swe-test-rst-tc-rst-string-format">
+<p class="admonition-title">tc_rst_string_format</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks that strings already in reStructuredText format are not escaped.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-rst-string-format"><span class="std std-ref">SwRequirements.sw_req_rst_string_format</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-rst-render-md admonition" id="swe-test-rst-tc-rst-render-md">
+<p class="admonition-title">tc_rst_render_md</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether Markdown content in requirement attributes is rendered correctly
+when the render configuration is set to “md”.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-rst-render-md"><span class="std std-ref">SwRequirements.sw_req_rst_render_md</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="docx">
+<span id="swe-test-rst-docx"></span><h3>Docx<a class="headerlink" href="#docx" title="Link to this heading"></a></h3>
+<div class="admonition-tc-docx admonition" id="swe-test-rst-tc-docx">
+<p class="admonition-title">tc_docx</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether the conversion to docx format works.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-docx"><span class="std std-ref">SwRequirements.sw_req_docx</span></a></p></li>
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-docx-record"><span class="std std-ref">SwRequirements.sw_req_docx_record</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-docx-multiple admonition" id="swe-test-rst-tc-docx-multiple">
+<p class="admonition-title">tc_docx_multiple</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether the conversion of multiple records containing record_references to docx format works.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-docx-record"><span class="std std-ref">SwRequirements.sw_req_docx_record</span></a></p></li>
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-docx-reference"><span class="std std-ref">SwRequirements.sw_req_docx_reference</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-docx-section admonition" id="swe-test-rst-tc-docx-section">
+<p class="admonition-title">tc_docx_section</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether the conversion of a TRLC section to a docx section works.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-docx-section"><span class="std std-ref">SwRequirements.sw_req_docx_section</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-docx-file admonition" id="swe-test-rst-tc-docx-file">
+<p class="admonition-title">tc_docx_file</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether the conversion to docx combines the results from multiple TRLC files into one docx file</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-docx-file"><span class="std std-ref">SwRequirements.sw_req_docx_file</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-docx-template admonition" id="swe-test-rst-tc-docx-template">
+<p class="admonition-title">tc_docx_template</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether the conversion using a template works correctly.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-docx-template"><span class="std std-ref">SwRequirements.sw_req_docx_template</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-docx-render-md admonition" id="swe-test-rst-tc-docx-render-md">
+<p class="admonition-title">tc_docx_render_md</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>this test case checks whether the conversion from markdown strings to docx works correctly.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-docx-render-md"><span class="std std-ref">SwRequirements.sw_req_docx_render_md</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="dump">
+<span id="swe-test-rst-dump"></span><h3>Dump<a class="headerlink" href="#dump" title="Link to this heading"></a></h3>
+<div class="admonition-tc-ascii-conversion admonition" id="swe-test-rst-tc-ascii-conversion">
+<p class="admonition-title">tc_ascii_conversion</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether the conversion to ASCII format works.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-ascii-conversion"><span class="std std-ref">SwRequirements.sw_req_ascii_conversion</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="sw_architecture.html" class="btn btn-neutral float-left" title="SW-Architecture" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="sw_tracing_report.html" class="btn btn-neutral float-right" title="Software Tracing Report" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024 - 2026, NewTec GmbH.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
