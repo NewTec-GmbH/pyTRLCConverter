@@ -26,13 +26,13 @@
         if (document.currentScript && document.currentScript.src) {
             const scriptUrl = new URL(document.currentScript.src, window.location.href);
             return {
-                shared: new URL('../../versions/version_selector_data.js', scriptUrl).toString(),
+                shared: new URL('./../versions/version_selector_data.js', scriptUrl).toString(),
                 local: new URL('version_selector_data.js', scriptUrl).toString()
             };
         }
 
         return {
-            shared: new URL('../../versions/version_selector_data.js', window.location.href).toString(),
+            shared: new URL('./../versions/version_selector_data.js', window.location.href).toString(),
             local: new URL('./_static/version_selector_data.js', window.location.href).toString()
         };
     }
