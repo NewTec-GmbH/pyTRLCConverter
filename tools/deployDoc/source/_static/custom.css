@@ -1,5 +1,3 @@
-@import 'haiku.css';
-
 body {
     max-width: 75% !important;
 }
@@ -28,4 +26,19 @@ p.admonition-title {
 /* Use available width for navigation content (read the docs theme). */
 .wy-nav-content {
     max-width: none;
+}
+
+.local-version-selector {
+    padding: 0.5rem 1rem;
+}
+
+.local-version-selector label {
+    color: #fcfcfc;
+    display: block;
+    font-size: 0.8rem;
+    margin-bottom: 0.25rem;
+}
+
+.local-version-selector select {
+    width: 100%;
 }

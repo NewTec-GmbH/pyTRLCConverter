@@ -1,10 +1,23 @@
 # Deploy documentation on Github Pages.
+#
+# Folder structure on gh-pages branch:
+# index.html (routes always to the latest stable version)
+# /stable (alias for the latest stable version in the main branch)
+# /unstable (alias for the latest development version in the develop branch)
+# /v1.0.0 (example release tag)
+# /v1.1.0 (example release tag)
+# /versions/version_selector_data.js (shared version selector data for all versions)
 name: Deploy Github Pages
 
 on:
   release:
     # A release, pre-release, or draft of a release is published.
     types: [published]
+  # Deploy documentation when changes are merged/pushed to main development branches.
+  push:
+    branches:
+      - main
+      - develop
   # Allows you to run this workflow manually from the Actions tab.
   workflow_dispatch:
 
@@ -16,7 +29,9 @@ jobs:
     runs-on: ubuntu-latest
     # Steps represent a sequence of tasks that will be executed as part of the job.
     steps:
+      # Print which event triggered this workflow run.
       - run: echo "The job was automatically triggered by a ${{ github.event_name }} event."
+      # Print branch and repository context for quick debugging.
       - run: echo "The name of the branch is ${{ github.ref }} and the repository is ${{ github.repository }}."
 
   # Build and deploy to gh-pages branch.
@@ -25,25 +40,43 @@ jobs:
     runs-on: ubuntu-latest
     env:
       PLANTUML_VARIABLE: ""
+      DOCS_VERSION: ${{ github.event_name == 'release' && github.event.release.tag_name || github.ref_name == 'main' && 'latest' || github.ref_name == 'develop' && 'unstable' || github.ref_name }}
+      DOCS_VERSIONS: latest,unstable
+
     # Steps represent a sequence of tasks that will be executed as part of the job.
     steps:
+      # Cache pip downloads to speed up repeated workflow runs.
       - name: Setup cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
           restore-keys: |
             ${{ runner.os }}-pip-
 
+      # Checkout complete git history so all tags are available.
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
+      # Build DOCS_VERSIONS from all tags and export it for later steps.
+      - name: Build docs versions from git tags
+        shell: bash
+        run: |
+          TAG_VERSIONS=$(git tag --sort=-v:refname | paste -sd, -)
+          if [ -n "$TAG_VERSIONS" ]; then
+            echo "DOCS_VERSIONS=latest,unstable,$TAG_VERSIONS" >> "$GITHUB_ENV"
+          fi
+
+      # Prepare the Python runtime used by docs tooling.
       - name: Set up Python 3.12
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
           cache: pip
 
+      # Install system and Python dependencies needed to build documentation.
       - name: Install dependencies
         run: |
           sudo apt-get install -y graphviz curl default-jre
@@ -51,6 +84,7 @@ jobs:
           pip install -r requirements-dev.txt
           pip install .
 
+      # Run the project docs generation script.
       - name: Run tools workflow
         run: |
           pushd ./tools
@@ -58,10 +92,24 @@ jobs:
           ./make_html.sh
           popd
 
-      - name: Upload static files as artifacts
-        id: deployment
+      # Publish generated HTML documentation to the target version folder on gh-pages.
+      - name: Deploy static files to GitHub Pages
+        id: deploy_docs
         uses: peaceiris/actions-gh-pages@v4
         with:
           publish_branch: gh-pages
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./tools/deployDoc/build/html
+          # main -> latest, develop -> unstable, release tag -> tag name, otherwise branch name
+          destination_dir: ${{ github.event_name == 'release' && github.event.release.tag_name || github.ref_name == 'main' && 'latest' || github.ref_name == 'develop' && 'unstable' || github.ref_name }}
+
+      # Publish shared version selector metadata for release builds only.
+      - name: Deploy version selector data (only for releases) to GitHub Pages
+        if: ${{ github.event_name == 'release' }}
+        id: deploy_version_selector_data
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          publish_branch: gh-pages
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./tools/deployDoc/build/html/_static/version_selector_data.js
+          destination_dir: ./versions
