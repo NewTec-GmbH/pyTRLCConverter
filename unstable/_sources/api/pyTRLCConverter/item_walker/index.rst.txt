@@ -1,0 +1,97 @@
+pyTRLCConverter.item_walker
+===========================
+
+.. py:module:: pyTRLCConverter.item_walker
+
+.. autoapi-nested-parse::
+
+   This module implements a TRLC items walker over the loaded model.
+
+   Author: Norbert Schulz (norbert.schulz@newtec.de)
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   pyTRLCConverter.item_walker.ItemWalker
+
+
+Module Contents
+---------------
+
+.. py:class:: ItemWalker(args: Any, converter: pyTRLCConverter.abstract_converter.AbstractConverter)
+
+   A walker that traverses through the TRLC items in the given symbol table.
+
+   .. attribute:: _converter
+
+      The converter used for processing items.
+
+      :type: AbstractConverter
+
+   .. attribute:: _exclude_files
+
+      List of file paths to exclude from processing.
+
+      :type: list
+
+
+   .. py:method:: _visit_item(item: Any) -> pyTRLCConverter.ret.Ret
+
+      Visits the given item and processes it based on its type.
+
+      :param item: The item to visit.
+      :type item: Any
+
+      :returns: The result of the visit.
+      :rtype: Ret
+
+
+
+   .. py:method:: _walk_file(file_name: str, item_list: Any) -> pyTRLCConverter.ret.Ret
+
+      Walks through the items in the given file.
+
+      :param file_name: The name of the file.
+      :type file_name: str
+      :param item_list: The list of trlc items in the file.
+      :type item_list: Any
+
+      :returns: The result of the walk operation.
+      :rtype: Ret
+
+
+
+   .. py:method:: _walk_items(item_list: list) -> pyTRLCConverter.ret.Ret
+
+      Walks through the given list of items.
+
+      :param item_list: The list of items to walk through.
+      :type item_list: list
+
+      :returns: The result of the walk operation.
+      :rtype: Ret
+
+
+
+   .. py:method:: walk_symbols(symbol_table: trlc.ast.Symbol_Table) -> pyTRLCConverter.ret.Ret
+
+      Walks through the items in the given symbol table and processes them.
+
+      :param symbol_table: The symbol table containing items to be walked through.
+      :type symbol_table: Symbol_Table
+
+      :returns: Status of the walk operation.
+      :rtype: Ret
+
+
+
+   .. py:attribute:: _converter
+
+
+   .. py:attribute:: _exclude_files
+
+

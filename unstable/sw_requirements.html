@@ -6,9 +6,10 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SW-Requirements &mdash; pyTRLCConverter  documentation</title>
+  <title>SW Requirements &mdash; pyTRLCConverter  documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="_static/custom.css?v=e7155383" />
 
   
@@ -22,7 +23,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="SW-Architecture" href="sw_architecture.html" />
+    <link rel="next" title="SW Architecture" href="sw_architecture.html" />
     <link rel="prev" title="pyTRLCConverter documentation" href="index.html" /> 
 </head>
 
@@ -48,29 +49,40 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">SW-Requirements</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#pytrlcconverter">pyTRLCConverter</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#software-requirements">Software Requirements</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#general">General</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#project-specific-conversion">Project Specific Conversion</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#command-line-arguments">Command Line Arguments</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#markdown">Markdown</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#restructuredtext">reStructuredText</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#docx">Docx</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#dump">Dump</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#plantuml">PlantUML</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">SW Requirements</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#functional-requirements">Functional Requirements</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#general">General</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#project-specific-conversion">Project Specific Conversion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#command-line-arguments">Command Line Arguments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#markdown">Markdown</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#multiple-documents-mode">Multiple Documents Mode</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#single-document-mode">Single Document Mode</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#markdown-render-configuration">Markdown Render Configuration</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#software-constraints">Software Constraints</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#restructuredtext">reStructuredText</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#restructuredtext-multiple-documents-mode">ReStructuredText Multiple Documents Mode</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#restructuredtext-single-document-mode">ReStructuredText Single Document Mode</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#restructuredtext-render-configuration">ReStructuredText Render Configuration</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="#docx">Docx</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#docx-render-configuration">Docx Render Configuration</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="sw_architecture.html">SW-Architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dump">Dump</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#plantuml">PlantUML</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#constraints">Constraints</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sw_architecture.html">SW Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sw_detail_design.html">SW-Detailed Design</a></li>
 <li class="toctree-l1"><a class="reference internal" href="sw_tests.html">SW-Test Cases</a></li>
 <li class="toctree-l1"><a class="reference internal" href="sw_tracing_report.html">Software Tracing Report</a></li>
 <li class="toctree-l1"><a class="reference internal" href="coverage_resport.html">Coverage Report</a></li>
-<li class="toctree-l1"><a class="reference internal" href="sw_test_result_report.html">SW Test Result Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sw_test_result_report.html">SW Test Results</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="license_include.html">License information</a></li>
@@ -90,7 +102,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">SW-Requirements</li>
+      <li class="breadcrumb-item active">SW Requirements</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/sw_requirements.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -101,9 +113,7 @@
            <div itemprop="articleBody">
              
   <section id="sw-requirements">
-<h1>SW-Requirements<a class="headerlink" href="#sw-requirements" title="Link to this heading"></a></h1>
-<section id="pytrlcconverter">
-<span id="swe-req-rst-pytrlcconverter"></span><h2>pyTRLCConverter<a class="headerlink" href="#pytrlcconverter" title="Link to this heading"></a></h2>
+<span id="swe-req-rst-sw-requirements"></span><h1>SW Requirements<a class="headerlink" href="#sw-requirements" title="Link to this heading"></a></h1>
 <p>This file contains the software requirements for the pyTRLCConverter tool.</p>
 <figure class="align-default" id="id1">
 <img alt="PyTRLCConverter Tool Flow" src="context_diagram.svg" />
@@ -111,10 +121,10 @@
 <p><span class="caption-text">PyTRLCConverter Tool Flow</span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
 </figcaption>
 </figure>
-<section id="software-requirements">
-<span id="swe-req-rst-software-requirements"></span><h3>Software Requirements<a class="headerlink" href="#software-requirements" title="Link to this heading"></a></h3>
+<section id="functional-requirements">
+<span id="swe-req-rst-functional-requirements"></span><h2>Functional Requirements<a class="headerlink" href="#functional-requirements" title="Link to this heading"></a></h2>
 <section id="general">
-<span id="swe-req-rst-general"></span><h4>General<a class="headerlink" href="#general" title="Link to this heading"></a></h4>
+<span id="swe-req-rst-general"></span><h3>General<a class="headerlink" href="#general" title="Link to this heading"></a></h3>
 <div class="admonition-sw-req-cli admonition" id="swe-req-rst-sw-req-cli">
 <p class="admonition-title">sw_req_cli</p>
 <table class="docutils align-default">
@@ -360,7 +370,7 @@
 </div>
 </section>
 <section id="project-specific-conversion">
-<span id="swe-req-rst-project-specific-conversion"></span><h4>Project Specific Conversion<a class="headerlink" href="#project-specific-conversion" title="Link to this heading"></a></h4>
+<span id="swe-req-rst-project-specific-conversion"></span><h3>Project Specific Conversion<a class="headerlink" href="#project-specific-conversion" title="Link to this heading"></a></h3>
 <div class="admonition-sw-req-prj-spec-file admonition" id="swe-req-rst-sw-req-prj-spec-file">
 <p class="admonition-title">sw_req_prj_spec_file</p>
 <table class="docutils align-default">
@@ -420,7 +430,7 @@
 </div>
 </section>
 <section id="command-line-arguments">
-<span id="swe-req-rst-command-line-arguments"></span><h4>Command Line Arguments<a class="headerlink" href="#command-line-arguments" title="Link to this heading"></a></h4>
+<span id="swe-req-rst-command-line-arguments"></span><h3>Command Line Arguments<a class="headerlink" href="#command-line-arguments" title="Link to this heading"></a></h3>
 <p>The following requirements describe the general command line arguments supported by the software. They are independent of the destination format.</p>
 <div class="admonition-sw-req-cli-help admonition" id="swe-req-rst-sw-req-cli-help">
 <p class="admonition-title">sw_req_cli_help</p>
@@ -700,7 +710,7 @@
 </div>
 </section>
 <section id="markdown">
-<span id="swe-req-rst-markdown"></span><h4>Markdown<a class="headerlink" href="#markdown" title="Link to this heading"></a></h4>
+<span id="swe-req-rst-markdown"></span><h3>Markdown<a class="headerlink" href="#markdown" title="Link to this heading"></a></h3>
 <p>The following requirements describe the Markdown destination format supported by the software.</p>
 <div class="admonition-sw-req-markdown admonition" id="swe-req-rst-sw-req-markdown">
 <p class="admonition-title">sw_req_markdown</p>
@@ -1054,7 +1064,7 @@
 </table>
 </div>
 <section id="multiple-documents-mode">
-<span id="swe-req-rst-multiple-documents-mode"></span><h5>Multiple Documents Mode<a class="headerlink" href="#multiple-documents-mode" title="Link to this heading"></a></h5>
+<span id="swe-req-rst-multiple-documents-mode"></span><h4>Multiple Documents Mode<a class="headerlink" href="#multiple-documents-mode" title="Link to this heading"></a></h4>
 <div class="admonition-sw-req-markdown-multiple-doc-mode admonition" id="swe-req-rst-sw-req-markdown-multiple-doc-mode">
 <p class="admonition-title">sw_req_markdown_multiple_doc_mode</p>
 <table class="docutils align-default">
@@ -1111,7 +1121,7 @@
 </div>
 </section>
 <section id="single-document-mode">
-<span id="swe-req-rst-single-document-mode"></span><h5>Single Document Mode<a class="headerlink" href="#single-document-mode" title="Link to this heading"></a></h5>
+<span id="swe-req-rst-single-document-mode"></span><h4>Single Document Mode<a class="headerlink" href="#single-document-mode" title="Link to this heading"></a></h4>
 <div class="admonition-sw-req-markdown-single-doc-mode admonition" id="swe-req-rst-sw-req-markdown-single-doc-mode">
 <p class="admonition-title">sw_req_markdown_single_doc_mode</p>
 <table class="docutils align-default">
@@ -1276,7 +1286,7 @@
 </div>
 </section>
 <section id="markdown-render-configuration">
-<span id="swe-req-rst-markdown-render-configuration"></span><h5>Markdown Render Configuration<a class="headerlink" href="#markdown-render-configuration" title="Link to this heading"></a></h5>
+<span id="swe-req-rst-markdown-render-configuration"></span><h4>Markdown Render Configuration<a class="headerlink" href="#markdown-render-configuration" title="Link to this heading"></a></h4>
 <div class="admonition-sw-req-markdown-render-md admonition" id="swe-req-rst-sw-req-markdown-render-md">
 <p class="admonition-title">sw_req_markdown_render_md</p>
 <table class="docutils align-default">
@@ -1307,7 +1317,7 @@
 </section>
 </section>
 <section id="restructuredtext">
-<span id="swe-req-rst-restructuredtext"></span><h4>reStructuredText<a class="headerlink" href="#restructuredtext" title="Link to this heading"></a></h4>
+<span id="swe-req-rst-restructuredtext"></span><h3>reStructuredText<a class="headerlink" href="#restructuredtext" title="Link to this heading"></a></h3>
 <p>The following requirements describe the reStructuredText destination format supported by the software.</p>
 <div class="admonition-sw-req-rst admonition" id="swe-req-rst-sw-req-rst">
 <p class="admonition-title">sw_req_rst</p>
@@ -1688,7 +1698,7 @@
 </table>
 </div>
 <section id="restructuredtext-multiple-documents-mode">
-<span id="swe-req-rst-restructuredtext-multiple-documents-mode"></span><h5>ReStructuredText Multiple Documents Mode<a class="headerlink" href="#restructuredtext-multiple-documents-mode" title="Link to this heading"></a></h5>
+<span id="swe-req-rst-restructuredtext-multiple-documents-mode"></span><h4>ReStructuredText Multiple Documents Mode<a class="headerlink" href="#restructuredtext-multiple-documents-mode" title="Link to this heading"></a></h4>
 <div class="admonition-sw-req-rst-multiple-doc-mode admonition" id="swe-req-rst-sw-req-rst-multiple-doc-mode">
 <p class="admonition-title">sw_req_rst_multiple_doc_mode</p>
 <table class="docutils align-default">
@@ -1718,7 +1728,7 @@
 </div>
 </section>
 <section id="restructuredtext-single-document-mode">
-<span id="swe-req-rst-restructuredtext-single-document-mode"></span><h5>ReStructuredText Single Document Mode<a class="headerlink" href="#restructuredtext-single-document-mode" title="Link to this heading"></a></h5>
+<span id="swe-req-rst-restructuredtext-single-document-mode"></span><h4>ReStructuredText Single Document Mode<a class="headerlink" href="#restructuredtext-single-document-mode" title="Link to this heading"></a></h4>
 <div class="admonition-sw-req-rst-single-doc-mode admonition" id="swe-req-rst-sw-req-rst-single-doc-mode">
 <p class="admonition-title">sw_req_rst_single_doc_mode</p>
 <table class="docutils align-default">
@@ -1883,7 +1893,7 @@
 </div>
 </section>
 <section id="restructuredtext-render-configuration">
-<span id="swe-req-rst-restructuredtext-render-configuration"></span><h5>ReStructuredText Render Configuration<a class="headerlink" href="#restructuredtext-render-configuration" title="Link to this heading"></a></h5>
+<span id="swe-req-rst-restructuredtext-render-configuration"></span><h4>ReStructuredText Render Configuration<a class="headerlink" href="#restructuredtext-render-configuration" title="Link to this heading"></a></h4>
 <div class="admonition-sw-req-rst-render-md admonition" id="swe-req-rst-sw-req-rst-render-md">
 <p class="admonition-title">sw_req_rst_render_md</p>
 <table class="docutils align-default">
@@ -1914,7 +1924,7 @@
 </section>
 </section>
 <section id="docx">
-<span id="swe-req-rst-docx"></span><h4>Docx<a class="headerlink" href="#docx" title="Link to this heading"></a></h4>
+<span id="swe-req-rst-docx"></span><h3>Docx<a class="headerlink" href="#docx" title="Link to this heading"></a></h3>
 <p>The following requirements describe the docx destination format supported by the software.</p>
 <div class="admonition-sw-req-docx admonition" id="swe-req-rst-sw-req-docx">
 <p class="admonition-title">sw_req_docx</p>
@@ -2079,7 +2089,7 @@
 </table>
 </div>
 <section id="docx-render-configuration">
-<span id="swe-req-rst-docx-render-configuration"></span><h5>Docx Render Configuration<a class="headerlink" href="#docx-render-configuration" title="Link to this heading"></a></h5>
+<span id="swe-req-rst-docx-render-configuration"></span><h4>Docx Render Configuration<a class="headerlink" href="#docx-render-configuration" title="Link to this heading"></a></h4>
 <div class="admonition-sw-req-docx-render-md admonition" id="swe-req-rst-sw-req-docx-render-md">
 <p class="admonition-title">sw_req_docx_render_md</p>
 <table class="docutils align-default">
@@ -2110,7 +2120,7 @@
 </section>
 </section>
 <section id="dump">
-<span id="swe-req-rst-dump"></span><h4>Dump<a class="headerlink" href="#dump" title="Link to this heading"></a></h4>
+<span id="swe-req-rst-dump"></span><h3>Dump<a class="headerlink" href="#dump" title="Link to this heading"></a></h3>
 <p>The following requirements describe the dump destination format supported by the software.</p>
 <div class="admonition-sw-req-ascii-conversion admonition" id="swe-req-rst-sw-req-ascii-conversion">
 <p class="admonition-title">sw_req_ascii_conversion</p>
@@ -2141,7 +2151,7 @@
 </div>
 </section>
 <section id="plantuml">
-<span id="swe-req-rst-plantuml"></span><h4>PlantUML<a class="headerlink" href="#plantuml" title="Link to this heading"></a></h4>
+<span id="swe-req-rst-plantuml"></span><h3>PlantUML<a class="headerlink" href="#plantuml" title="Link to this heading"></a></h3>
 <p>The following requirements describe the PlantUML destination format supported by the software.</p>
 <div class="admonition-sw-req-plantuml admonition" id="swe-req-rst-sw-req-plantuml">
 <p class="admonition-title">sw_req_plantuml</p>
@@ -2172,8 +2182,8 @@
 </div>
 </section>
 </section>
-<section id="software-constraints">
-<span id="swe-req-rst-software-constraints"></span><h3>Software Constraints<a class="headerlink" href="#software-constraints" title="Link to this heading"></a></h3>
+<section id="constraints">
+<span id="swe-req-rst-constraints"></span><h2>Constraints<a class="headerlink" href="#constraints" title="Link to this heading"></a></h2>
 <div class="admonition-sw-constraint-os-win admonition" id="swe-req-rst-sw-constraint-os-win">
 <p class="admonition-title">sw_constraint_os_win</p>
 <table class="docutils align-default">
@@ -2272,14 +2282,13 @@
 </div>
 </section>
 </section>
-</section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="index.html" class="btn btn-neutral float-left" title="pyTRLCConverter documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="sw_architecture.html" class="btn btn-neutral float-right" title="SW-Architecture" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="sw_architecture.html" class="btn btn-neutral float-right" title="SW Architecture" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

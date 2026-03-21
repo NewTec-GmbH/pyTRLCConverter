@@ -1,0 +1,456 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pyTRLCConverter.docx_converter &mdash; pyTRLCConverter  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=e7155383" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/version_selector.js?v=02fa0f40"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="pyTRLCConverter.dump_converter" href="../dump_converter/index.html" />
+    <link rel="prev" title="pyTRLCConverter.base_converter" href="../base_converter/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            pyTRLCConverter
+              <img src="../../../_static/NewTec_Logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../sw_requirements.html">SW Requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../sw_architecture.html">SW Architecture</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../sw_detail_design.html">SW-Detailed Design</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../sw_detail_design.html#api-reference">API Reference</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../index.html">pyTRLCConverter</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../index.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../sw_tests.html">SW-Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../sw_tracing_report.html">Software Tracing Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../coverage_resport.html">Coverage Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../sw_test_result_report.html">SW Test Results</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../license_include.html">License information</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">pyTRLCConverter</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../sw_detail_design.html">SW-Detailed Design</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">pyTRLCConverter</a></li>
+      <li class="breadcrumb-item active">pyTRLCConverter.docx_converter</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/api/pyTRLCConverter/docx_converter/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-pyTRLCConverter.docx_converter">
+<span id="pytrlcconverter-docx-converter"></span><h1>pyTRLCConverter.docx_converter<a class="headerlink" href="#module-pyTRLCConverter.docx_converter" title="Link to this heading"></a></h1>
+<p>Converter to Word docx format.</p>
+<p>Author: Norbert Schulz (<a class="reference external" href="mailto:norbert&#46;schulz&#37;&#52;&#48;newtec&#46;de">norbert<span>&#46;</span>schulz<span>&#64;</span>newtec<span>&#46;</span>de</a>)</p>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyTRLCConverter.docx_converter.DocxConverter" title="pyTRLCConverter.docx_converter.DocxConverter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DocxConverter</span></code></a></p></td>
+<td><p>Converter to docx format.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyTRLCConverter.docx_converter.DocxConverter">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyTRLCConverter.docx_converter.</span></span><span class="sig-name descname"><span class="pre">DocxConverter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/pyTRLCConverter/docx_converter.html#DocxConverter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.docx_converter.DocxConverter" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="../base_converter/index.html#pyTRLCConverter.base_converter.BaseConverter" title="pyTRLCConverter.base_converter.BaseConverter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pyTRLCConverter.base_converter.BaseConverter</span></code></a></p>
+<div class="graphviz"><img src="../../../_images/inheritance-354c1a2578b5e3071de0a07ccd0b34f0502f44c8.png" alt="Inheritance diagram of pyTRLCConverter.docx_converter.DocxConverter" usemap="#inheritance4ae01e4cf9" class="inheritance graphviz" /></div>
+<map id="inheritance4ae01e4cf9" name="inheritance4ae01e4cf9">
+<area shape="rect" id="node2" href="../abstract_converter/index.html#pyTRLCConverter.abstract_converter.AbstractConverter" target="_top" title="Abstract converter interface." alt="" coords="5,79,145,104"/>
+<area shape="rect" id="node3" href="../base_converter/index.html#pyTRLCConverter.base_converter.BaseConverter" target="_top" title="Base converter with empty method implementations and helper functions " alt="" coords="16,152,135,177"/>
+<area shape="rect" id="node4" href="#pyTRLCConverter.docx_converter.DocxConverter" target="_top" title="Converter to docx format." alt="" coords="16,225,135,251"/>
+</map><p>Converter to docx format.</p>
+<p>The following Word docx objects are used:</p>
+<ul class="simple">
+<li><p><strong>Document</strong>: Represents the entire Word document.</p></li>
+<li><p><strong>Paragraph</strong>: A block of text in the document with its own formatting properties.</p></li>
+<li><p><strong>Run</strong>: A contiguous run of text with the same formatting within a paragraph.</p></li>
+<li><p><strong>Table</strong>: A two-dimensional structure for presenting data in rows and columns.</p></li>
+</ul>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.docx_converter.DocxConverter._convert_record_object">
+<span class="sig-name descname"><span class="pre">_convert_record_object</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">trlc.ast.Record_Object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../ret/index.html#pyTRLCConverter.ret.Ret" title="pyTRLCConverter.ret.Ret"><span class="pre">pyTRLCConverter.ret.Ret</span></a></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/docx_converter.html#DocxConverter._convert_record_object"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.docx_converter.DocxConverter._convert_record_object" title="Link to this definition"></a></dt>
+<dd><p>Process the given record object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>record</strong> (<em>Record_Object</em>) – The record object.</p></li>
+<li><p><strong>level</strong> (<em>int</em>) – The record level.</p></li>
+<li><p><strong>translation</strong> (<em>Optional</em><em>[</em><em>dict</em><em>]</em>) – Translation dictionary for the record object.
+If None, no translation is applied.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Status</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../ret/index.html#pyTRLCConverter.ret.Ret" title="pyTRLCConverter.ret.Ret">Ret</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.docx_converter.DocxConverter._get_trlc_ast_walker">
+<span class="sig-name descname"><span class="pre">_get_trlc_ast_walker</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../trlc_helper/index.html#pyTRLCConverter.trlc_helper.TrlcAstWalker" title="pyTRLCConverter.trlc_helper.TrlcAstWalker"><span class="pre">pyTRLCConverter.trlc_helper.TrlcAstWalker</span></a></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/docx_converter.html#DocxConverter._get_trlc_ast_walker"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.docx_converter.DocxConverter._get_trlc_ast_walker" title="Link to this definition"></a></dt>
+<dd><p>If a record object contains a record reference, the record reference will be converted to
+a hyperlink.
+If a record object contains an array of record references, the array will be converted to
+a list of links.
+Otherwise the record object fields attribute values will be written to the table.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The TRLC AST walker.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../trlc_helper/index.html#pyTRLCConverter.trlc_helper.TrlcAstWalker" title="pyTRLCConverter.trlc_helper.TrlcAstWalker">TrlcAstWalker</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.docx_converter.DocxConverter._on_array_aggregate_begin">
+<span class="sig-name descname"><span class="pre">_on_array_aggregate_begin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">array_aggregate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">trlc.ast.Array_Aggregate</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/docx_converter.html#DocxConverter._on_array_aggregate_begin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.docx_converter.DocxConverter._on_array_aggregate_begin" title="Link to this definition"></a></dt>
+<dd><p>Handle the beginning of a list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>array_aggregate</strong> (<em>Array_Aggregate</em>) – The AST node.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.docx_converter.DocxConverter._on_array_aggregate_finish">
+<span class="sig-name descname"><span class="pre">_on_array_aggregate_finish</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">array_aggregate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">trlc.ast.Array_Aggregate</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/docx_converter.html#DocxConverter._on_array_aggregate_finish"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.docx_converter.DocxConverter._on_array_aggregate_finish" title="Link to this definition"></a></dt>
+<dd><p>Handle the end of a list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>array_aggregate</strong> (<em>Array_Aggregate</em>) – The AST node.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.docx_converter.DocxConverter._on_implict_null">
+<span class="sig-name descname"><span class="pre">_on_implict_null</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">_</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">trlc.ast.Implicit_Null</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/docx_converter.html#DocxConverter._on_implict_null"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.docx_converter.DocxConverter._on_implict_null" title="Link to this definition"></a></dt>
+<dd><p>Process the given implicit null value.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.docx_converter.DocxConverter._on_list_item">
+<span class="sig-name descname"><span class="pre">_on_list_item</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">expression</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">trlc.ast.Expression</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">item_result</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/docx_converter.html#DocxConverter._on_list_item"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.docx_converter.DocxConverter._on_list_item" title="Link to this definition"></a></dt>
+<dd><p>Handle the list item by adding a bullet point.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>expression</strong> (<em>Expression</em>) – The AST node.</p></li>
+<li><p><strong>item_result</strong> (<em>Union</em><em>[</em><em>list</em><em>[</em><em>DocumentObject</em><em>]</em><em>,</em><em>DocumentObject</em><em>]</em>) – The result of processing the list item.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The processed list item.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Any</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.docx_converter.DocxConverter._on_record_reference">
+<span class="sig-name descname"><span class="pre">_on_record_reference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record_reference</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">trlc.ast.Record_Reference</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/docx_converter.html#DocxConverter._on_record_reference"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.docx_converter.DocxConverter._on_record_reference" title="Link to this definition"></a></dt>
+<dd><p>Process the given record reference value and return a hyperlink paragraph.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>record_reference</strong> (<em>Record_Reference</em>) – The record reference value.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.docx_converter.DocxConverter._on_string_literal">
+<span class="sig-name descname"><span class="pre">_on_string_literal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string_literal</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">trlc.ast.String_Literal</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/docx_converter.html#DocxConverter._on_string_literal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.docx_converter.DocxConverter._on_string_literal" title="Link to this definition"></a></dt>
+<dd><p>Process the given string literal value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>string_literal</strong> (<em>String_Literal</em>) – The string literal value.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.docx_converter.DocxConverter._other_dispatcher">
+<span class="sig-name descname"><span class="pre">_other_dispatcher</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">expression</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">trlc.ast.Expression</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/docx_converter.html#DocxConverter._other_dispatcher"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.docx_converter.DocxConverter._other_dispatcher" title="Link to this definition"></a></dt>
+<dd><p>Dispatcher for all other expressions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>expression</strong> (<em>Expression</em>) – The expression to process.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.docx_converter.DocxConverter._render">
+<span class="sig-name descname"><span class="pre">_render</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">package_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attribute_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attribute_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/docx_converter.html#DocxConverter._render"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.docx_converter.DocxConverter._render" title="Link to this definition"></a></dt>
+<dd><p>Render the attribute value depened on its format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>package_name</strong> (<em>str</em>) – The package name.</p></li>
+<li><p><strong>type_name</strong> (<em>str</em>) – The type name.</p></li>
+<li><p><strong>attribute_name</strong> (<em>str</em>) – The attribute name.</p></li>
+<li><p><strong>attribute_value</strong> (<em>str</em>) – The attribute value.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.docx_converter.DocxConverter.convert_record_object_generic">
+<span class="sig-name descname"><span class="pre">convert_record_object_generic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">trlc.ast.Record_Object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../ret/index.html#pyTRLCConverter.ret.Ret" title="pyTRLCConverter.ret.Ret"><span class="pre">pyTRLCConverter.ret.Ret</span></a></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/docx_converter.html#DocxConverter.convert_record_object_generic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.docx_converter.DocxConverter.convert_record_object_generic" title="Link to this definition"></a></dt>
+<dd><p>Process the given record object in a generic way.</p>
+<p>The handler is called by the base converter if no specific handler is
+defined for the record type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>record</strong> (<em>Record_Object</em>) – The record object.</p></li>
+<li><p><strong>level</strong> (<em>int</em>) – The record level.</p></li>
+<li><p><strong>translation</strong> (<em>Optional</em><em>[</em><em>dict</em><em>]</em>) – Translation dictionary for the record object.
+If None, no translation is applied.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Status</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../ret/index.html#pyTRLCConverter.ret.Ret" title="pyTRLCConverter.ret.Ret">Ret</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.docx_converter.DocxConverter.convert_section">
+<span class="sig-name descname"><span class="pre">convert_section</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">section</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../ret/index.html#pyTRLCConverter.ret.Ret" title="pyTRLCConverter.ret.Ret"><span class="pre">pyTRLCConverter.ret.Ret</span></a></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/docx_converter.html#DocxConverter.convert_section"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.docx_converter.DocxConverter.convert_section" title="Link to this definition"></a></dt>
+<dd><p>Process the given section item.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>section</strong> (<em>str</em>) – The section name</p></li>
+<li><p><strong>level</strong> (<em>int</em>) – The section indentation level</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Status</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../ret/index.html#pyTRLCConverter.ret.Ret" title="pyTRLCConverter.ret.Ret">Ret</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.docx_converter.DocxConverter.docx_add_bookmark">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">docx_add_bookmark</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">paragraph</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">docx.text.paragraph.Paragraph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bookmark_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/docx_converter.html#DocxConverter.docx_add_bookmark"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.docx_converter.DocxConverter.docx_add_bookmark" title="Link to this definition"></a></dt>
+<dd><p>Adds a bookmark to a paragraph.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>paragraph</strong> (<em>Paragraph</em>) – The paragraph to add the bookmark to.</p></li>
+<li><p><strong>bookmark_name</strong> (<em>str</em>) – The name of the bookmark.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.docx_converter.DocxConverter.docx_add_link_to_bookmark">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">docx_add_link_to_bookmark</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">paragraph</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">docx.text.paragraph.Paragraph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bookmark_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">link_text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/docx_converter.html#DocxConverter.docx_add_link_to_bookmark"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.docx_converter.DocxConverter.docx_add_link_to_bookmark" title="Link to this definition"></a></dt>
+<dd><p>Add a hyperlink to a bookmark in a paragraph.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>paragraph</strong> (<em>Paragraph</em>) – The paragraph to add the hyperlink to.</p></li>
+<li><p><strong>bookmark_name</strong> (<em>str</em>) – The name of the bookmark.</p></li>
+<li><p><strong>link_text</strong> (<em>str</em>) – The text to display for the hyperlink.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.docx_converter.DocxConverter.finish">
+<span class="sig-name descname"><span class="pre">finish</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../ret/index.html#pyTRLCConverter.ret.Ret" title="pyTRLCConverter.ret.Ret"><span class="pre">pyTRLCConverter.ret.Ret</span></a></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/docx_converter.html#DocxConverter.finish"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.docx_converter.DocxConverter.finish" title="Link to this definition"></a></dt>
+<dd><p>Finish the conversion.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Status</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../ret/index.html#pyTRLCConverter.ret.Ret" title="pyTRLCConverter.ret.Ret">Ret</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.docx_converter.DocxConverter.get_description">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">get_description</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/docx_converter.html#DocxConverter.get_description"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.docx_converter.DocxConverter.get_description" title="Link to this definition"></a></dt>
+<dd><p>Return converter description.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Status</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../ret/index.html#pyTRLCConverter.ret.Ret" title="pyTRLCConverter.ret.Ret">Ret</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.docx_converter.DocxConverter.get_subcommand">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">get_subcommand</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/docx_converter.html#DocxConverter.get_subcommand"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.docx_converter.DocxConverter.get_subcommand" title="Link to this definition"></a></dt>
+<dd><p>Return subcommand token for this converter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Status</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../ret/index.html#pyTRLCConverter.ret.Ret" title="pyTRLCConverter.ret.Ret">Ret</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.docx_converter.DocxConverter.register">
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">register</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args_parser</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/docx_converter.html#DocxConverter.register"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.docx_converter.DocxConverter.register" title="Link to this definition"></a></dt>
+<dd><p>Register converter specific argument parser.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>args_parser</strong> (<em>Any</em>) – Argument parser</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.docx_converter.DocxConverter.OUTPUT_FILE_NAME_DEFAULT">
+<span class="sig-name descname"><span class="pre">OUTPUT_FILE_NAME_DEFAULT</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'output.docx'</span></span><a class="headerlink" href="#pyTRLCConverter.docx_converter.DocxConverter.OUTPUT_FILE_NAME_DEFAULT" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.docx_converter.DocxConverter._ast_meta_data">
+<span class="sig-name descname"><span class="pre">_ast_meta_data</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#pyTRLCConverter.docx_converter.DocxConverter._ast_meta_data" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.docx_converter.DocxConverter._block_item_container">
+<span class="sig-name descname"><span class="pre">_block_item_container</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">docx.blkcntnr.BlockItemContainer</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#pyTRLCConverter.docx_converter.DocxConverter._block_item_container" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.docx_converter.DocxConverter._docx">
+<span class="sig-name descname"><span class="pre">_docx</span></span><a class="headerlink" href="#pyTRLCConverter.docx_converter.DocxConverter._docx" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.docx_converter.DocxConverter._list_item_indent_level">
+<span class="sig-name descname"><span class="pre">_list_item_indent_level</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></span><a class="headerlink" href="#pyTRLCConverter.docx_converter.DocxConverter._list_item_indent_level" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../base_converter/index.html" class="btn btn-neutral float-left" title="pyTRLCConverter.base_converter" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../dump_converter/index.html" class="btn btn-neutral float-right" title="pyTRLCConverter.dump_converter" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024 - 2026, NewTec GmbH.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

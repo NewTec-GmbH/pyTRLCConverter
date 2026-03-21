@@ -6,9 +6,10 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SW-Architecture &mdash; pyTRLCConverter  documentation</title>
+  <title>SW Architecture &mdash; pyTRLCConverter  documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="_static/custom.css?v=e7155383" />
 
   
@@ -22,8 +23,8 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="SW-Test Cases" href="sw_tests.html" />
-    <link rel="prev" title="SW-Requirements" href="sw_requirements.html" /> 
+    <link rel="next" title="SW-Detailed Design" href="sw_detail_design.html" />
+    <link rel="prev" title="SW Requirements" href="sw_requirements.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -48,40 +49,38 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="sw_requirements.html">SW-Requirements</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">SW-Architecture</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#pytrlcconverter-sw-architecture">pyTRLCConverter SW Architecture</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#general">General</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#static-view">Static View</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#dynamic-view">Dynamic View</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sw_requirements.html">SW Requirements</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">SW Architecture</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#general">General</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#static-view">Static View</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dynamic-view">Dynamic View</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#concepts">Concepts</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#converter-derivation-concept">Converter Derivation Concept</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#text-formatting">Text Formatting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#concepts">Concepts</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#converter-derivation-concept">Converter Derivation Concept</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#text-formatting">Text Formatting</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#components">Components</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#main">main</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#itemwalker">ItemWalker</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#base-converter">Base Converter</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#dump-converter">Dump Converter</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#markdown-converter">Markdown Converter</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#restructuredtext-converter">ReStructuredText Converter</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#docx-converter">DocX Converter</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#version-information">Version Information</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#logger">Logger</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#plantuml">PlantUML</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="#components">Components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#main">main</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#itemwalker">ItemWalker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#base-converter">Base Converter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dump-converter">Dump Converter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#markdown-converter">Markdown Converter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#restructuredtext-converter">ReStructuredText Converter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#docx-converter">DocX Converter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#version-information">Version Information</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#logger">Logger</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#plantuml">PlantUML</a></li>
 </ul>
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="sw_detail_design.html">SW-Detailed Design</a></li>
 <li class="toctree-l1"><a class="reference internal" href="sw_tests.html">SW-Test Cases</a></li>
 <li class="toctree-l1"><a class="reference internal" href="sw_tracing_report.html">Software Tracing Report</a></li>
 <li class="toctree-l1"><a class="reference internal" href="coverage_resport.html">Coverage Report</a></li>
-<li class="toctree-l1"><a class="reference internal" href="sw_test_result_report.html">SW Test Result Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sw_test_result_report.html">SW Test Results</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="license_include.html">License information</a></li>
@@ -101,7 +100,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">SW-Architecture</li>
+      <li class="breadcrumb-item active">SW Architecture</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/sw_architecture.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -112,9 +111,7 @@
            <div itemprop="articleBody">
              
   <section id="sw-architecture">
-<h1>SW-Architecture<a class="headerlink" href="#sw-architecture" title="Link to this heading"></a></h1>
-<section id="pytrlcconverter-sw-architecture">
-<span id="swe-arch-rst-pytrlcconverter-sw-architecture"></span><h2>pyTRLCConverter SW Architecture<a class="headerlink" href="#pytrlcconverter-sw-architecture" title="Link to this heading"></a></h2>
+<span id="swe-arch-rst-sw-architecture"></span><h1>SW Architecture<a class="headerlink" href="#sw-architecture" title="Link to this heading"></a></h1>
 <p>This file contains the software architecture for the pyTRLCConverter tool.</p>
 <p>pyTRLCConverter is a command-line tool to convert TRLC files to different output formats, e.g. Markdown, reStructuredText or docx.</p>
 <p>A main challenge for pyTRLCConverter is the conversion of project-specific TRLC types. TRLC is a framework that gets adapted to
@@ -129,7 +126,7 @@ result.  These built-in converter can be extended in an object-oriented manner t
 </figcaption>
 </figure>
 <section id="general">
-<span id="swe-arch-rst-general"></span><h3>General<a class="headerlink" href="#general" title="Link to this heading"></a></h3>
+<span id="swe-arch-rst-general"></span><h2>General<a class="headerlink" href="#general" title="Link to this heading"></a></h2>
 <div class="admonition-sw-arch-python-python admonition" id="swe-arch-rst-sw-arch-python-python">
 <p class="admonition-title">sw_arch_python_python</p>
 <table class="docutils align-default">
@@ -241,7 +238,7 @@ result.  These built-in converter can be extended in an object-oriented manner t
 </table>
 </div>
 <section id="static-view">
-<span id="swe-arch-rst-static-view"></span><h4>Static View<a class="headerlink" href="#static-view" title="Link to this heading"></a></h4>
+<span id="swe-arch-rst-static-view"></span><h3>Static View<a class="headerlink" href="#static-view" title="Link to this heading"></a></h3>
 <p>The following diagram shows the static architecture of the tool. It contains the components (Python modules) and their relations.</p>
 <figure class="align-default" id="id2">
 <img alt="Static Architecture view" src="class_diagram.svg" />
@@ -251,7 +248,7 @@ result.  These built-in converter can be extended in an object-oriented manner t
 </figure>
 </section>
 <section id="dynamic-view">
-<span id="swe-arch-rst-dynamic-view"></span><h4>Dynamic View<a class="headerlink" href="#dynamic-view" title="Link to this heading"></a></h4>
+<span id="swe-arch-rst-dynamic-view"></span><h3>Dynamic View<a class="headerlink" href="#dynamic-view" title="Link to this heading"></a></h3>
 <p>The following diagram shows the pyTRLCConverter runtime view using a sequence_diagram.
 There are 4 main phases:</p>
 <ul class="simple">
@@ -269,10 +266,10 @@ There are 4 main phases:</p>
 </section>
 </section>
 <section id="concepts">
-<span id="swe-arch-rst-concepts"></span><h3>Concepts<a class="headerlink" href="#concepts" title="Link to this heading"></a></h3>
+<span id="swe-arch-rst-concepts"></span><h2>Concepts<a class="headerlink" href="#concepts" title="Link to this heading"></a></h2>
 <p>This sections explains the major concepts used in pyTRLCConverter.</p>
 <section id="converter-derivation-concept">
-<span id="swe-arch-rst-converter-derivation-concept"></span><h4>Converter Derivation Concept<a class="headerlink" href="#converter-derivation-concept" title="Link to this heading"></a></h4>
+<span id="swe-arch-rst-converter-derivation-concept"></span><h3>Converter Derivation Concept<a class="headerlink" href="#converter-derivation-concept" title="Link to this heading"></a></h3>
 <p>pyTRLCConverter uses a multilevel class hierarchy for providing different
 output formats and user defined type conversions. Only the ProjectConverter
 derivation level must be provided by a project using pyTRLCConverter. The
@@ -285,7 +282,7 @@ upper base class levels are part of pyTRLCConverter.</p>
 </figure>
 </section>
 <section id="text-formatting">
-<span id="swe-arch-rst-text-formatting"></span><h4>Text Formatting<a class="headerlink" href="#text-formatting" title="Link to this heading"></a></h4>
+<span id="swe-arch-rst-text-formatting"></span><h3>Text Formatting<a class="headerlink" href="#text-formatting" title="Link to this heading"></a></h3>
 <p><strong>Attribute Translation</strong></p>
 <p>TRLC attributes are key/value pairs inside a TRLC type, but not necessarily nice for
 documentation. The pyTRLCConverter converters provide a translation concept to map
@@ -325,10 +322,10 @@ entry in the render configuration list is used.</p>
 </section>
 </section>
 <section id="components">
-<span id="swe-arch-rst-components"></span><h3>Components<a class="headerlink" href="#components" title="Link to this heading"></a></h3>
+<span id="swe-arch-rst-components"></span><h2>Components<a class="headerlink" href="#components" title="Link to this heading"></a></h2>
 <p>This sections shows details of the major components of pyTRLCConverter.</p>
 <section id="main">
-<span id="swe-arch-rst-main"></span><h4>main<a class="headerlink" href="#main" title="Link to this heading"></a></h4>
+<span id="swe-arch-rst-main"></span><h3>main<a class="headerlink" href="#main" title="Link to this heading"></a></h3>
 <figure class="align-default" id="id5">
 <img alt="Internal Functions and Dependencies in \_\_main\_\_\.py" src="comp_main.svg" />
 <figcaption>
@@ -385,7 +382,7 @@ help printing, usage error handling and version printing.</p>
 </div>
 </section>
 <section id="itemwalker">
-<span id="swe-arch-rst-itemwalker"></span><h4>ItemWalker<a class="headerlink" href="#itemwalker" title="Link to this heading"></a></h4>
+<span id="swe-arch-rst-itemwalker"></span><h3>ItemWalker<a class="headerlink" href="#itemwalker" title="Link to this heading"></a></h3>
 <figure class="align-default" id="id6">
 <img alt="Class Diagram for ItemWalker" src="comp_item_walker.svg" />
 <figcaption>
@@ -429,7 +426,7 @@ all of the elements.</p>
 </div>
 </section>
 <section id="base-converter">
-<span id="swe-arch-rst-base-converter"></span><h4>Base Converter<a class="headerlink" href="#base-converter" title="Link to this heading"></a></h4>
+<span id="swe-arch-rst-base-converter"></span><h3>Base Converter<a class="headerlink" href="#base-converter" title="Link to this heading"></a></h3>
 <figure class="align-default" id="id7">
 <img alt="Class Diagram for BaseConverter" src="comp_base_converter.svg" />
 <figcaption>
@@ -474,7 +471,7 @@ that is common between all format specific converter implementations.</p>
 </div>
 </section>
 <section id="dump-converter">
-<span id="swe-arch-rst-dump-converter"></span><h4>Dump Converter<a class="headerlink" href="#dump-converter" title="Link to this heading"></a></h4>
+<span id="swe-arch-rst-dump-converter"></span><h3>Dump Converter<a class="headerlink" href="#dump-converter" title="Link to this heading"></a></h3>
 <figure class="align-default" id="id8">
 <img alt="Class Diagram for Dump\-Converter" src="comp_dump_converter.svg" />
 <figcaption>
@@ -517,7 +514,7 @@ that is common between all format specific converter implementations.</p>
 </div>
 </section>
 <section id="markdown-converter">
-<span id="swe-arch-rst-markdown-converter"></span><h4>Markdown Converter<a class="headerlink" href="#markdown-converter" title="Link to this heading"></a></h4>
+<span id="swe-arch-rst-markdown-converter"></span><h3>Markdown Converter<a class="headerlink" href="#markdown-converter" title="Link to this heading"></a></h3>
 <figure class="align-default" id="id9">
 <img alt="Class Diagram for Markdown\-Converter" src="comp_markdown_converter.svg" />
 <figcaption>
@@ -580,7 +577,7 @@ that is common between all format specific converter implementations.</p>
 </div>
 </section>
 <section id="restructuredtext-converter">
-<span id="swe-arch-rst-restructuredtext-converter"></span><h4>ReStructuredText Converter<a class="headerlink" href="#restructuredtext-converter" title="Link to this heading"></a></h4>
+<span id="swe-arch-rst-restructuredtext-converter"></span><h3>ReStructuredText Converter<a class="headerlink" href="#restructuredtext-converter" title="Link to this heading"></a></h3>
 <figure class="align-default" id="id10">
 <img alt="Class Diagram for ReStructuredText\-Converter" src="comp_rst_converter.svg" />
 <figcaption>
@@ -642,7 +639,7 @@ that is common between all format specific converter implementations.</p>
 </div>
 </section>
 <section id="docx-converter">
-<span id="swe-arch-rst-docx-converter"></span><h4>DocX Converter<a class="headerlink" href="#docx-converter" title="Link to this heading"></a></h4>
+<span id="swe-arch-rst-docx-converter"></span><h3>DocX Converter<a class="headerlink" href="#docx-converter" title="Link to this heading"></a></h3>
 <figure class="align-default" id="id11">
 <img alt="Class Diagram for DocX\-Converter" src="comp_docx_converter.svg" />
 <figcaption>
@@ -690,7 +687,7 @@ that is common between all format specific converter implementations.</p>
 </div>
 </section>
 <section id="version-information">
-<span id="swe-arch-rst-version-information"></span><h4>Version Information<a class="headerlink" href="#version-information" title="Link to this heading"></a></h4>
+<span id="swe-arch-rst-version-information"></span><h3>Version Information<a class="headerlink" href="#version-information" title="Link to this heading"></a></h3>
 <figure class="align-default" id="id12">
 <img alt="Class Diagram for Version" src="comp_version.svg" />
 <figcaption>
@@ -727,7 +724,7 @@ that is common between all format specific converter implementations.</p>
 </div>
 </section>
 <section id="logger">
-<span id="swe-arch-rst-logger"></span><h4>Logger<a class="headerlink" href="#logger" title="Link to this heading"></a></h4>
+<span id="swe-arch-rst-logger"></span><h3>Logger<a class="headerlink" href="#logger" title="Link to this heading"></a></h3>
 <figure class="align-default" id="id13">
 <img alt="Class Diagram for Logging" src="comp_logger.svg" />
 <figcaption>
@@ -763,7 +760,7 @@ that is common between all format specific converter implementations.</p>
 </div>
 </section>
 <section id="plantuml">
-<span id="swe-arch-rst-plantuml"></span><h4>PlantUML<a class="headerlink" href="#plantuml" title="Link to this heading"></a></h4>
+<span id="swe-arch-rst-plantuml"></span><h3>PlantUML<a class="headerlink" href="#plantuml" title="Link to this heading"></a></h3>
 <figure class="align-default" id="id14">
 <img alt="Class Diagram for PlantUML" src="comp_plantuml.svg" />
 <figcaption>
@@ -800,14 +797,13 @@ that is common between all format specific converter implementations.</p>
 </section>
 </section>
 </section>
-</section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="sw_requirements.html" class="btn btn-neutral float-left" title="SW-Requirements" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="sw_tests.html" class="btn btn-neutral float-right" title="SW-Test Cases" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="sw_requirements.html" class="btn btn-neutral float-left" title="SW Requirements" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="sw_detail_design.html" class="btn btn-neutral float-right" title="SW-Detailed Design" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

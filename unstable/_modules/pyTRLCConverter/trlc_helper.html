@@ -1,0 +1,466 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pyTRLCConverter.trlc_helper &mdash; pyTRLCConverter  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=e7155383" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/version_selector.js?v=02fa0f40"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            pyTRLCConverter
+              <img src="../../_static/NewTec_Logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../sw_requirements.html">SW Requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sw_architecture.html">SW Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sw_detail_design.html">SW-Detailed Design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sw_tests.html">SW-Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sw_tracing_report.html">Software Tracing Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../coverage_resport.html">Coverage Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sw_test_result_report.html">SW Test Results</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../license_include.html">License information</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pyTRLCConverter</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">pyTRLCConverter.trlc_helper</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pyTRLCConverter.trlc_helper</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;TRLC helper functions.</span>
+
+<span class="sd">    Author: Andreas Merkle (andreas.merkle@newtec.de)</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># pyTRLCConverter - A tool to convert TRLC files to specific formats.</span>
+<span class="c1"># Copyright (c) 2024 - 2026 NewTec GmbH</span>
+<span class="c1">#</span>
+<span class="c1"># This file is part of pyTRLCConverter program.</span>
+<span class="c1">#</span>
+<span class="c1"># The pyTRLCConverter program is free software: you can redistribute it and/or modify it under</span>
+<span class="c1"># the terms of the GNU General Public License as published by the Free Software Foundation,</span>
+<span class="c1"># either version 3 of the License, or (at your option) any later version.</span>
+<span class="c1">#</span>
+<span class="c1"># The pyTRLCConverter program is distributed in the hope that it will be useful, but</span>
+<span class="c1"># WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or</span>
+<span class="c1"># FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1"># You should have received a copy of the GNU General Public License along with pyTRLCConverter.</span>
+<span class="c1"># If not, see &lt;https://www.gnu.org/licenses/&gt;.</span>
+
+<span class="c1"># Imports **********************************************************************</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">trlc.errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">Message_Handler</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">trlc.trlc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Source_Manager</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">trlc.ast</span><span class="w"> </span><span class="kn">import</span> <span class="n">Array_Aggregate</span><span class="p">,</span> <span class="n">Expression</span><span class="p">,</span> <span class="n">Record_Object</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyTRLCConverter.logger</span><span class="w"> </span><span class="kn">import</span> <span class="n">log_verbose</span>
+
+<span class="c1"># Variables ********************************************************************</span>
+
+<span class="c1"># Classes **********************************************************************</span>
+
+<div class="viewcode-block" id="TrlcAstWalker">
+<a class="viewcode-back" href="../../api/pyTRLCConverter/trlc_helper/index.html#pyTRLCConverter.trlc_helper.TrlcAstWalker">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TrlcAstWalker</span><span class="p">():</span>
+    <span class="c1"># lobster-trace: SwRequirements.sw_req_markdown</span>
+    <span class="c1"># lobster-trace: SwRequirements.sw_req_rst</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This class helps to walk through the TRLC AST. It uses a dispatcher map to handle</span>
+<span class="sd">    the different AST nodes.</span>
+
+<span class="sd">    It contains three dispatcher maps: begin, process and finish.</span>
+<span class="sd">    </span>
+<span class="sd">    The begin map is used to handle the node when it is entered, the process map is used to</span>
+<span class="sd">    handle the node when it is processed and the finish map is used to handle the node when</span>
+<span class="sd">    it is finished.</span>
+<span class="sd">    </span>
+<span class="sd">    The dispatcher map is a dictionary with the type name as key and the handler as value.</span>
+
+<span class="sd">    By default the walker contains a dispatcher map only for the Array_Aggregate node. The other</span>
+<span class="sd">    nodes are handled by the other dispatcher. If no other dispatcher is set, the node is</span>
+<span class="sd">    converted to a string.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dispatcher_map_begin</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dispatcher_map_process</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">Array_Aggregate</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_on_array_aggregate</span>
+        <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dispatcher_map_finish</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_other_dispatcher</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_list_item_dispatcher</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="TrlcAstWalker.walk">
+<a class="viewcode-back" href="../../api/pyTRLCConverter/trlc_helper/index.html#pyTRLCConverter.trlc_helper.TrlcAstWalker.walk">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">walk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">expression</span><span class="p">:</span> <span class="n">Expression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span><span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Walk through the TRLC AST.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            expression (Expression): The AST node.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Union[list[Any],Any]: The result of the walking as string or list of strings.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_on_general</span><span class="p">(</span><span class="n">expression</span><span class="p">)</span></div>
+
+
+    <span class="c1"># pylint: disable-next=line-too-long</span>
+<div class="viewcode-block" id="TrlcAstWalker.add_dispatcher">
+<a class="viewcode-back" href="../../api/pyTRLCConverter/trlc_helper/index.html#pyTRLCConverter.trlc_helper.TrlcAstWalker.add_dispatcher">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_dispatcher</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">type_name</span><span class="p">:</span> <span class="nb">type</span><span class="p">,</span> <span class="n">begin</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">],</span> <span class="n">process</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">],</span> <span class="n">finish</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add a dispatcher to the walker.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            type_name (type): The type name</span>
+<span class="sd">            begin (Optional[Callable]): The begin handler</span>
+<span class="sd">            process (Optional[Callable]): The process handler</span>
+<span class="sd">            finish (Optional[Callable]): The finish handler</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">begin</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_dispatcher_map_begin</span><span class="p">[</span><span class="n">type_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">begin</span>
+
+        <span class="k">if</span> <span class="n">process</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_dispatcher_map_process</span><span class="p">[</span><span class="n">type_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">process</span>
+
+        <span class="k">if</span> <span class="n">finish</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_dispatcher_map_finish</span><span class="p">[</span><span class="n">type_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">finish</span></div>
+
+
+<div class="viewcode-block" id="TrlcAstWalker.set_other_dispatcher">
+<a class="viewcode-back" href="../../api/pyTRLCConverter/trlc_helper/index.html#pyTRLCConverter.trlc_helper.TrlcAstWalker.set_other_dispatcher">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_other_dispatcher</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dispatcher</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the other dispatcher. This dispatcher is called when no dispatcher is found for the node.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            dispatcher (Callable): The other dispatcher</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_other_dispatcher</span> <span class="o">=</span> <span class="n">dispatcher</span></div>
+
+
+<div class="viewcode-block" id="TrlcAstWalker.set_list_item_dispatcher">
+<a class="viewcode-back" href="../../api/pyTRLCConverter/trlc_helper/index.html#pyTRLCConverter.trlc_helper.TrlcAstWalker.set_list_item_dispatcher">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_list_item_dispatcher</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dispatcher</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the list item dispatcher. This dispatcher is called when a list item is processed.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            dispatcher (Callable): The list item dispatcher.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_list_item_dispatcher</span> <span class="o">=</span> <span class="n">dispatcher</span></div>
+
+
+<div class="viewcode-block" id="TrlcAstWalker._dispatch">
+<a class="viewcode-back" href="../../api/pyTRLCConverter/trlc_helper/index.html#pyTRLCConverter.trlc_helper.TrlcAstWalker._dispatch">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_dispatch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dispatcher_map</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">expression</span><span class="p">:</span> <span class="n">Expression</span><span class="p">,</span> <span class="n">handle_other</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span><span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Dispatch the expression to the dispatcher map.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            dispatcher_map (dict): The dispatcher map.</span>
+<span class="sd">            expression (Expression): The AST node.</span>
+<span class="sd">            handle_other (bool): If True, the other dispatcher is called when no dispatcher is found.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Union[list[Any],Any]: The result of the dispatcher.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+        <span class="n">type_name</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">expression</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">type_name</span> <span class="ow">in</span> <span class="n">dispatcher_map</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">dispatcher_map</span><span class="p">[</span><span class="n">type_name</span><span class="p">](</span><span class="n">expression</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">handle_other</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_on_other</span><span class="p">(</span><span class="n">expression</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="TrlcAstWalker._on_array_aggregate">
+<a class="viewcode-back" href="../../api/pyTRLCConverter/trlc_helper/index.html#pyTRLCConverter.trlc_helper.TrlcAstWalker._on_array_aggregate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_on_array_aggregate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">array_aggregate</span><span class="p">:</span> <span class="n">Array_Aggregate</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Handle the Array_Aggregate node.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            array_aggregate (Array_Aggregate): The AST node.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list[Any]: The result of the handling.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dispatch</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dispatcher_map_begin</span><span class="p">,</span> <span class="n">array_aggregate</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">expression</span> <span class="ow">in</span> <span class="n">array_aggregate</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+            <span class="n">value_result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dispatch</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dispatcher_map_process</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_list_item_dispatcher</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">value_result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_list_item_dispatcher</span><span class="p">(</span><span class="n">expression</span><span class="p">,</span> <span class="n">value_result</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value_result</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="n">result</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">value_result</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value_result</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dispatch</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dispatcher_map_finish</span><span class="p">,</span> <span class="n">array_aggregate</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="TrlcAstWalker._on_general">
+<a class="viewcode-back" href="../../api/pyTRLCConverter/trlc_helper/index.html#pyTRLCConverter.trlc_helper.TrlcAstWalker._on_general">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_on_general</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">expression</span><span class="p">:</span> <span class="n">Expression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span><span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Handle the general case.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            expression (Expression): The AST node.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Union[list[str],str]: The result of the handling.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dispatch</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dispatcher_map_begin</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dispatch</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dispatcher_map_process</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dispatch</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dispatcher_map_finish</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="TrlcAstWalker._on_other">
+<a class="viewcode-back" href="../../api/pyTRLCConverter/trlc_helper/index.html#pyTRLCConverter.trlc_helper.TrlcAstWalker._on_other">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_on_other</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">expression</span><span class="p">:</span> <span class="n">Expression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Handle the other case.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            expression (Expression): The AST node.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Union[list[Any],str]: The result of the handling.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_other_dispatcher</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_other_dispatcher</span><span class="p">(</span><span class="n">expression</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">expression</span><span class="o">.</span><span class="n">to_string</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">result</span></div>
+</div>
+
+
+<span class="c1"># Functions ********************************************************************</span>
+
+<div class="viewcode-block" id="get_trlc_symbols">
+<a class="viewcode-back" href="../../api/pyTRLCConverter/trlc_helper/index.html#pyTRLCConverter.trlc_helper.get_trlc_symbols">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_trlc_symbols</span><span class="p">(</span><span class="n">source_items</span><span class="p">,</span> <span class="n">includes</span><span class="p">):</span>
+    <span class="c1"># lobster-trace: SwRequirements.sw_req_destination_format</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the TRLC symbol table by parsing the given folder.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        source_items ([str]|str): One or more paths to folder with TRLC files \</span>
+<span class="sd">                                  or a single path to a TRLC file.</span>
+<span class="sd">        includes (str|None): Path for automatically file inclusion.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Symbol_Table: TRLC symbol table</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">symbol_table</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="c1"># Create Source_Manager.</span>
+    <span class="n">mh</span> <span class="o">=</span> <span class="n">Message_Handler</span><span class="p">()</span>
+    <span class="n">sm</span> <span class="o">=</span> <span class="n">Source_Manager</span><span class="p">(</span><span class="n">mh</span><span class="p">)</span>
+
+    <span class="c1"># Read all .rsl and .trlc files in the given directory.</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Handle first the include folders, because the source folders may depend on them.</span>
+        <span class="k">if</span> <span class="n">includes</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">folder</span> <span class="ow">in</span> <span class="n">includes</span><span class="p">:</span>
+                <span class="n">log_verbose</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Registering include folder: </span><span class="si">{</span><span class="n">folder</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">sm</span><span class="o">.</span><span class="n">register_include</span><span class="p">(</span><span class="n">folder</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">src_item</span> <span class="ow">in</span> <span class="n">source_items</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">src_item</span><span class="p">):</span>
+                <span class="n">log_verbose</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Registering source folder: </span><span class="si">{</span><span class="n">src_item</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">sm</span><span class="o">.</span><span class="n">register_directory</span><span class="p">(</span><span class="n">src_item</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">log_verbose</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Registering source file: </span><span class="si">{</span><span class="n">src_item</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">sm</span><span class="o">.</span><span class="n">register_file</span><span class="p">(</span><span class="n">src_item</span><span class="p">)</span>
+
+        <span class="n">symbol_table</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">process</span><span class="p">()</span>
+    <span class="k">except</span> <span class="ne">AssertionError</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+    <span class="k">return</span> <span class="n">symbol_table</span></div>
+
+
+<div class="viewcode-block" id="is_item_file_name">
+<a class="viewcode-back" href="../../api/pyTRLCConverter/trlc_helper/index.html#pyTRLCConverter.trlc_helper.is_item_file_name">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">is_item_file_name</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+    <span class="c1"># lobster-trace: SwRequirements.sw_req_destination_format</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if the item is a file name.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        item (str|tuple): The item to check.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: True if the item is a file name, otherwise False.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="is_item_section">
+<a class="viewcode-back" href="../../api/pyTRLCConverter/trlc_helper/index.html#pyTRLCConverter.trlc_helper.is_item_section">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">is_item_section</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+    <span class="c1"># lobster-trace: SwRequirements.sw_req_destination_format</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if the item is a section.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        item (str|tuple): The item to check.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: True if the item is a section, otherwise False.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="ow">and</span> \
+            <span class="nb">len</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> \
+            <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> \
+            <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nb">int</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="is_item_record">
+<a class="viewcode-back" href="../../api/pyTRLCConverter/trlc_helper/index.html#pyTRLCConverter.trlc_helper.is_item_record">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">is_item_record</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+    <span class="c1"># lobster-trace: SwRequirements.sw_req_destination_format</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if the item is a record.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        item (str|tuple): The item to check.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: True if the item is a record, otherwise False.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="ow">and</span> \
+            <span class="nb">len</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> \
+            <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">Record_Object</span><span class="p">)</span> <span class="ow">and</span> \
+            <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nb">int</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_file_dict_from_symbols">
+<a class="viewcode-back" href="../../api/pyTRLCConverter/trlc_helper/index.html#pyTRLCConverter.trlc_helper.get_file_dict_from_symbols">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_file_dict_from_symbols</span><span class="p">(</span><span class="n">symbols</span><span class="p">):</span>
+    <span class="c1"># lobster-trace: SwRequirements.sw_req_destination_format</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get a dictionary with the file names and their content.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        symbols (Symbol_Table): The TRLC symbols to dump.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: A dictionary with the file names and their content.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">file_dict</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">item_list</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">if</span> <span class="n">symbols</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">symbols</span><span class="o">.</span><span class="n">iter_record_objects_by_section</span><span class="p">():</span>
+            <span class="c1"># Is item a file name?</span>
+            <span class="k">if</span> <span class="n">is_item_file_name</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+                <span class="n">file_dict</span><span class="p">[</span><span class="n">item</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">item_list</span> <span class="o">=</span> <span class="n">file_dict</span><span class="p">[</span><span class="n">item</span><span class="p">]</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">assert</span> <span class="n">item_list</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                <span class="n">item_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">file_dict</span></div>
+
+
+<span class="c1"># Main *************************************************************************</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024 - 2026, NewTec GmbH.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

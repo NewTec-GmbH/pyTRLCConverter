@@ -1,0 +1,312 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pyTRLCConverter.abstract_converter &mdash; pyTRLCConverter  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=e7155383" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/version_selector.js?v=02fa0f40"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="pyTRLCConverter.base_converter" href="../base_converter/index.html" />
+    <link rel="prev" title="pyTRLCConverter.__main__" href="../__main__/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            pyTRLCConverter
+              <img src="../../../_static/NewTec_Logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../sw_requirements.html">SW Requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../sw_architecture.html">SW Architecture</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../sw_detail_design.html">SW-Detailed Design</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../sw_detail_design.html#api-reference">API Reference</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../index.html">pyTRLCConverter</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../index.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../sw_tests.html">SW-Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../sw_tracing_report.html">Software Tracing Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../coverage_resport.html">Coverage Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../sw_test_result_report.html">SW Test Results</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../license_include.html">License information</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">pyTRLCConverter</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../sw_detail_design.html">SW-Detailed Design</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">pyTRLCConverter</a></li>
+      <li class="breadcrumb-item active">pyTRLCConverter.abstract_converter</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/api/pyTRLCConverter/abstract_converter/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-pyTRLCConverter.abstract_converter">
+<span id="pytrlcconverter-abstract-converter"></span><h1>pyTRLCConverter.abstract_converter<a class="headerlink" href="#module-pyTRLCConverter.abstract_converter" title="Link to this heading"></a></h1>
+<p>Abstract converter interface which all implementations must fullfill.</p>
+<p>Author: Norbert Schulz (<a class="reference external" href="mailto:norbert&#46;schulz&#37;&#52;&#48;newtec&#46;de">norbert<span>&#46;</span>schulz<span>&#64;</span>newtec<span>&#46;</span>de</a>)</p>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyTRLCConverter.abstract_converter.AbstractConverter" title="pyTRLCConverter.abstract_converter.AbstractConverter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AbstractConverter</span></code></a></p></td>
+<td><p>Abstract converter interface.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyTRLCConverter.abstract_converter.AbstractConverter">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyTRLCConverter.abstract_converter.</span></span><span class="sig-name descname"><span class="pre">AbstractConverter</span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/abstract_converter.html#AbstractConverter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.abstract_converter.AbstractConverter" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">abc.ABC</span></code></p>
+<div class="graphviz"><img src="../../../_images/inheritance-ab075a6c0b1e1f955b95d5298004ebcb72aed64c.png" alt="Inheritance diagram of pyTRLCConverter.abstract_converter.AbstractConverter" usemap="#inheritanceef2b97b27e" class="inheritance graphviz" /></div>
+<map id="inheritanceef2b97b27e" name="inheritanceef2b97b27e">
+<area shape="rect" id="node2" href="#pyTRLCConverter.abstract_converter.AbstractConverter" target="_top" title="Abstract converter interface." alt="" coords="5,79,145,104"/>
+</map><p>Abstract converter interface.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.abstract_converter.AbstractConverter.begin">
+<span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">begin</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../ret/index.html#pyTRLCConverter.ret.Ret" title="pyTRLCConverter.ret.Ret"><span class="pre">pyTRLCConverter.ret.Ret</span></a></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/abstract_converter.html#AbstractConverter.begin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.abstract_converter.AbstractConverter.begin" title="Link to this definition"></a></dt>
+<dd><p>Begin the conversion process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Status</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../ret/index.html#pyTRLCConverter.ret.Ret" title="pyTRLCConverter.ret.Ret">Ret</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.abstract_converter.AbstractConverter.convert_record_object">
+<span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">convert_record_object</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pyTRLCConverter.trlc_helper.Record_Object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../ret/index.html#pyTRLCConverter.ret.Ret" title="pyTRLCConverter.ret.Ret"><span class="pre">pyTRLCConverter.ret.Ret</span></a></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/abstract_converter.html#AbstractConverter.convert_record_object"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.abstract_converter.AbstractConverter.convert_record_object" title="Link to this definition"></a></dt>
+<dd><p>Process the given  record object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>record</strong> (<em>Record_Object</em>) – The record object</p></li>
+<li><p><strong>level</strong> (<em>int</em>) – The record indentation level</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Status</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../ret/index.html#pyTRLCConverter.ret.Ret" title="pyTRLCConverter.ret.Ret">Ret</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.abstract_converter.AbstractConverter.convert_section">
+<span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">convert_section</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">section</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../ret/index.html#pyTRLCConverter.ret.Ret" title="pyTRLCConverter.ret.Ret"><span class="pre">pyTRLCConverter.ret.Ret</span></a></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/abstract_converter.html#AbstractConverter.convert_section"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.abstract_converter.AbstractConverter.convert_section" title="Link to this definition"></a></dt>
+<dd><p>Process the given section item.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>section</strong> (<em>str</em>) – The section name</p></li>
+<li><p><strong>level</strong> (<em>int</em>) – The section indentation level</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Status</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../ret/index.html#pyTRLCConverter.ret.Ret" title="pyTRLCConverter.ret.Ret">Ret</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.abstract_converter.AbstractConverter.enter_file">
+<span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">enter_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../ret/index.html#pyTRLCConverter.ret.Ret" title="pyTRLCConverter.ret.Ret"><span class="pre">pyTRLCConverter.ret.Ret</span></a></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/abstract_converter.html#AbstractConverter.enter_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.abstract_converter.AbstractConverter.enter_file" title="Link to this definition"></a></dt>
+<dd><p>Enter a file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file_name</strong> (<em>str</em>) – File name</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Status</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../ret/index.html#pyTRLCConverter.ret.Ret" title="pyTRLCConverter.ret.Ret">Ret</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.abstract_converter.AbstractConverter.finish">
+<span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">finish</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../ret/index.html#pyTRLCConverter.ret.Ret" title="pyTRLCConverter.ret.Ret"><span class="pre">pyTRLCConverter.ret.Ret</span></a></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/abstract_converter.html#AbstractConverter.finish"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.abstract_converter.AbstractConverter.finish" title="Link to this definition"></a></dt>
+<dd><p>Finish the conversion process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Status</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../ret/index.html#pyTRLCConverter.ret.Ret" title="pyTRLCConverter.ret.Ret">Ret</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.abstract_converter.AbstractConverter.get_description">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">get_description</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/abstract_converter.html#AbstractConverter.get_description"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.abstract_converter.AbstractConverter.get_description" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Abstractmethod<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<p>Return converter description.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Converter description</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.abstract_converter.AbstractConverter.get_subcommand">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">get_subcommand</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/abstract_converter.html#AbstractConverter.get_subcommand"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.abstract_converter.AbstractConverter.get_subcommand" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Abstractmethod<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<p>Return subcommand token for this converter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>subcomand argument token</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.abstract_converter.AbstractConverter.leave_file">
+<span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">leave_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../ret/index.html#pyTRLCConverter.ret.Ret" title="pyTRLCConverter.ret.Ret"><span class="pre">pyTRLCConverter.ret.Ret</span></a></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/abstract_converter.html#AbstractConverter.leave_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.abstract_converter.AbstractConverter.leave_file" title="Link to this definition"></a></dt>
+<dd><p>Leave a file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file_name</strong> (<em>str</em>) – File name</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Status</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../ret/index.html#pyTRLCConverter.ret.Ret" title="pyTRLCConverter.ret.Ret">Ret</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.abstract_converter.AbstractConverter.register">
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">register</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args_parser</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/abstract_converter.html#AbstractConverter.register"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.abstract_converter.AbstractConverter.register" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Abstractmethod<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<p>Register converter specific argument parser.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>args_parser</strong> (<em>Any</em>) – Argument parser</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../__main__/index.html" class="btn btn-neutral float-left" title="pyTRLCConverter.__main__" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../base_converter/index.html" class="btn btn-neutral float-right" title="pyTRLCConverter.base_converter" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024 - 2026, NewTec GmbH.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

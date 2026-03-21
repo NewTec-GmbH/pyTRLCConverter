@@ -1,0 +1,158 @@
+pyTRLCConverter.abstract_converter
+==================================
+
+.. py:module:: pyTRLCConverter.abstract_converter
+
+.. autoapi-nested-parse::
+
+   Abstract converter interface which all implementations must fullfill.
+
+   Author: Norbert Schulz (norbert.schulz@newtec.de)
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   pyTRLCConverter.abstract_converter.AbstractConverter
+
+
+Module Contents
+---------------
+
+.. py:class:: AbstractConverter
+
+   Bases: :py:obj:`abc.ABC`
+
+   .. autoapi-inheritance-diagram:: pyTRLCConverter.abstract_converter.AbstractConverter
+      :parts: 1
+      :private-bases:
+
+
+   Abstract converter interface.
+
+
+
+   .. py:method:: begin() -> pyTRLCConverter.ret.Ret
+      :abstractmethod:
+
+
+      Begin the conversion process.
+
+      :returns: Status
+      :rtype: Ret
+
+
+
+   .. py:method:: convert_record_object(record: pyTRLCConverter.trlc_helper.Record_Object, level: int) -> pyTRLCConverter.ret.Ret
+      :abstractmethod:
+
+
+      Process the given  record object
+
+      :param record: The record object
+      :type record: Record_Object
+      :param level: The record indentation level
+      :type level: int
+
+      :returns: Status
+      :rtype: Ret
+
+
+
+   .. py:method:: convert_section(section: str, level: int) -> pyTRLCConverter.ret.Ret
+      :abstractmethod:
+
+
+      Process the given section item.
+
+      :param section: The section name
+      :type section: str
+      :param level: The section indentation level
+      :type level: int
+
+      :returns: Status
+      :rtype: Ret
+
+
+
+   .. py:method:: enter_file(file_name: str) -> pyTRLCConverter.ret.Ret
+      :abstractmethod:
+
+
+      Enter a file.
+
+      :param file_name: File name
+      :type file_name: str
+
+      :returns: Status
+      :rtype: Ret
+
+
+
+   .. py:method:: finish() -> pyTRLCConverter.ret.Ret
+      :abstractmethod:
+
+
+      Finish the conversion process.
+
+      :returns: Status
+      :rtype: Ret
+
+
+
+   .. py:method:: get_description() -> str
+      :staticmethod:
+
+      :abstractmethod:
+
+
+      Return converter description.
+
+      :returns: Converter description
+      :rtype: str
+
+
+
+   .. py:method:: get_subcommand() -> str
+      :staticmethod:
+
+      :abstractmethod:
+
+
+      Return subcommand token for this converter.
+
+      :returns: subcomand argument token
+      :rtype: str
+
+
+
+   .. py:method:: leave_file(file_name: str) -> pyTRLCConverter.ret.Ret
+      :abstractmethod:
+
+
+      Leave a file.
+
+      :param file_name: File name
+      :type file_name: str
+
+      :returns: Status
+      :rtype: Ret
+
+
+
+   .. py:method:: register(args_parser: Any) -> None
+      :classmethod:
+
+      :abstractmethod:
+
+
+      Register converter specific argument parser.
+
+      :param args_parser: Argument parser
+      :type args_parser: Any
+
+
+

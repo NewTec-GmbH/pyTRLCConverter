@@ -9,6 +9,7 @@
   <title>SW-Test Cases &mdash; pyTRLCConverter  documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
       <link rel="stylesheet" type="text/css" href="_static/custom.css?v=e7155383" />
 
   
@@ -23,7 +24,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Software Tracing Report" href="sw_tracing_report.html" />
-    <link rel="prev" title="SW-Architecture" href="sw_architecture.html" /> 
+    <link rel="prev" title="pyTRLCConverter.version" href="api/pyTRLCConverter/version/index.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -48,24 +49,22 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="sw_requirements.html">SW-Requirements</a></li>
-<li class="toctree-l1"><a class="reference internal" href="sw_architecture.html">SW-Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sw_requirements.html">SW Requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sw_architecture.html">SW Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sw_detail_design.html">SW-Detailed Design</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">SW-Test Cases</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#sw-tests">SW-Tests</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#general">General</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#plantuml">PlantUML</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#command-line-arguments">Command Line Arguments</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#markdown">Markdown</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#restructuredtext">reStructuredText</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#docx">Docx</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#dump">Dump</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="#general">General</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#plantuml">PlantUML</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#command-line-arguments">Command Line Arguments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#markdown">Markdown</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#restructuredtext">reStructuredText</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#docx">Docx</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dump">Dump</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="sw_tracing_report.html">Software Tracing Report</a></li>
 <li class="toctree-l1"><a class="reference internal" href="coverage_resport.html">Coverage Report</a></li>
-<li class="toctree-l1"><a class="reference internal" href="sw_test_result_report.html">SW Test Result Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sw_test_result_report.html">SW Test Results</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="license_include.html">License information</a></li>
@@ -96,12 +95,10 @@
            <div itemprop="articleBody">
              
   <section id="sw-test-cases">
-<h1>SW-Test Cases<a class="headerlink" href="#sw-test-cases" title="Link to this heading"></a></h1>
-<section id="sw-tests">
-<span id="swe-test-rst-sw-tests"></span><h2>SW-Tests<a class="headerlink" href="#sw-tests" title="Link to this heading"></a></h2>
+<span id="swe-test-rst-sw-test-cases"></span><h1>SW-Test Cases<a class="headerlink" href="#sw-test-cases" title="Link to this heading"></a></h1>
 <p>This file contains the software test cases for the pyTRLCConverter tool.</p>
 <section id="general">
-<span id="swe-test-rst-general"></span><h3>General<a class="headerlink" href="#general" title="Link to this heading"></a></h3>
+<span id="swe-test-rst-general"></span><h2>General<a class="headerlink" href="#general" title="Link to this heading"></a></h2>
 <div class="admonition-tc-cli admonition" id="swe-test-rst-tc-cli">
 <p class="admonition-title">tc_cli</p>
 <table class="docutils align-default">
@@ -301,7 +298,7 @@
 </div>
 </section>
 <section id="plantuml">
-<span id="swe-test-rst-plantuml"></span><h3>PlantUML<a class="headerlink" href="#plantuml" title="Link to this heading"></a></h3>
+<span id="swe-test-rst-plantuml"></span><h2>PlantUML<a class="headerlink" href="#plantuml" title="Link to this heading"></a></h2>
 <div class="admonition-tc-plantuml admonition" id="swe-test-rst-tc-plantuml">
 <p class="admonition-title">tc_plantuml</p>
 <table class="docutils align-default">
@@ -325,7 +322,7 @@
 </div>
 </section>
 <section id="command-line-arguments">
-<span id="swe-test-rst-command-line-arguments"></span><h3>Command Line Arguments<a class="headerlink" href="#command-line-arguments" title="Link to this heading"></a></h3>
+<span id="swe-test-rst-command-line-arguments"></span><h2>Command Line Arguments<a class="headerlink" href="#command-line-arguments" title="Link to this heading"></a></h2>
 <div class="admonition-tc-help admonition" id="swe-test-rst-tc-help">
 <p class="admonition-title">tc_help</p>
 <table class="docutils align-default">
@@ -454,7 +451,7 @@
 </div>
 </section>
 <section id="markdown">
-<span id="swe-test-rst-markdown"></span><h3>Markdown<a class="headerlink" href="#markdown" title="Link to this heading"></a></h3>
+<span id="swe-test-rst-markdown"></span><h2>Markdown<a class="headerlink" href="#markdown" title="Link to this heading"></a></h2>
 <div class="admonition-tc-markdown admonition" id="swe-test-rst-tc-markdown">
 <p class="admonition-title">tc_markdown</p>
 <table class="docutils align-default">
@@ -751,7 +748,7 @@ when the render configuration is set to “md”.</p></td>
 </div>
 </section>
 <section id="restructuredtext">
-<span id="swe-test-rst-restructuredtext"></span><h3>reStructuredText<a class="headerlink" href="#restructuredtext" title="Link to this heading"></a></h3>
+<span id="swe-test-rst-restructuredtext"></span><h2>reStructuredText<a class="headerlink" href="#restructuredtext" title="Link to this heading"></a></h2>
 <div class="admonition-tc-rst admonition" id="swe-test-rst-tc-rst">
 <p class="admonition-title">tc_rst</p>
 <table class="docutils align-default">
@@ -1086,7 +1083,7 @@ when the render configuration is set to “md”.</p></td>
 </div>
 </section>
 <section id="docx">
-<span id="swe-test-rst-docx"></span><h3>Docx<a class="headerlink" href="#docx" title="Link to this heading"></a></h3>
+<span id="swe-test-rst-docx"></span><h2>Docx<a class="headerlink" href="#docx" title="Link to this heading"></a></h2>
 <div class="admonition-tc-docx admonition" id="swe-test-rst-tc-docx">
 <p class="admonition-title">tc_docx</p>
 <table class="docutils align-default">
@@ -1217,7 +1214,7 @@ when the render configuration is set to “md”.</p></td>
 </div>
 </section>
 <section id="dump">
-<span id="swe-test-rst-dump"></span><h3>Dump<a class="headerlink" href="#dump" title="Link to this heading"></a></h3>
+<span id="swe-test-rst-dump"></span><h2>Dump<a class="headerlink" href="#dump" title="Link to this heading"></a></h2>
 <div class="admonition-tc-ascii-conversion admonition" id="swe-test-rst-tc-ascii-conversion">
 <p class="admonition-title">tc_ascii_conversion</p>
 <table class="docutils align-default">
@@ -1241,13 +1238,12 @@ when the render configuration is set to “md”.</p></td>
 </div>
 </section>
 </section>
-</section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="sw_architecture.html" class="btn btn-neutral float-left" title="SW-Architecture" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="api/pyTRLCConverter/version/index.html" class="btn btn-neutral float-left" title="pyTRLCConverter.version" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="sw_tracing_report.html" class="btn btn-neutral float-right" title="Software Tracing Report" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

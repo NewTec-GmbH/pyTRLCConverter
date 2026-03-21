@@ -1,0 +1,426 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pyTRLCConverter.trlc_helper &mdash; pyTRLCConverter  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=e7155383" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/version_selector.js?v=02fa0f40"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="pyTRLCConverter.version" href="../version/index.html" />
+    <link rel="prev" title="pyTRLCConverter.translator" href="../translator/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            pyTRLCConverter
+              <img src="../../../_static/NewTec_Logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../sw_requirements.html">SW Requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../sw_architecture.html">SW Architecture</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../sw_detail_design.html">SW-Detailed Design</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../sw_detail_design.html#api-reference">API Reference</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../index.html">pyTRLCConverter</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../index.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../sw_tests.html">SW-Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../sw_tracing_report.html">Software Tracing Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../coverage_resport.html">Coverage Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../sw_test_result_report.html">SW Test Results</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../license_include.html">License information</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">pyTRLCConverter</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../sw_detail_design.html">SW-Detailed Design</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">pyTRLCConverter</a></li>
+      <li class="breadcrumb-item active">pyTRLCConverter.trlc_helper</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/api/pyTRLCConverter/trlc_helper/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-pyTRLCConverter.trlc_helper">
+<span id="pytrlcconverter-trlc-helper"></span><h1>pyTRLCConverter.trlc_helper<a class="headerlink" href="#module-pyTRLCConverter.trlc_helper" title="Link to this heading"></a></h1>
+<p>TRLC helper functions.</p>
+<p>Author: Andreas Merkle (<a class="reference external" href="mailto:andreas&#46;merkle&#37;&#52;&#48;newtec&#46;de">andreas<span>&#46;</span>merkle<span>&#64;</span>newtec<span>&#46;</span>de</a>)</p>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyTRLCConverter.trlc_helper.TrlcAstWalker" title="pyTRLCConverter.trlc_helper.TrlcAstWalker"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TrlcAstWalker</span></code></a></p></td>
+<td><p>This class helps to walk through the TRLC AST. It uses a dispatcher map to handle</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyTRLCConverter.trlc_helper.get_file_dict_from_symbols" title="pyTRLCConverter.trlc_helper.get_file_dict_from_symbols"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_file_dict_from_symbols</span></code></a>(symbols)</p></td>
+<td><p>Get a dictionary with the file names and their content.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyTRLCConverter.trlc_helper.get_trlc_symbols" title="pyTRLCConverter.trlc_helper.get_trlc_symbols"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_trlc_symbols</span></code></a>(source_items, includes)</p></td>
+<td><p>Get the TRLC symbol table by parsing the given folder.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyTRLCConverter.trlc_helper.is_item_file_name" title="pyTRLCConverter.trlc_helper.is_item_file_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_item_file_name</span></code></a>(item)</p></td>
+<td><p>Check if the item is a file name.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyTRLCConverter.trlc_helper.is_item_record" title="pyTRLCConverter.trlc_helper.is_item_record"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_item_record</span></code></a>(item)</p></td>
+<td><p>Check if the item is a record.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyTRLCConverter.trlc_helper.is_item_section" title="pyTRLCConverter.trlc_helper.is_item_section"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_item_section</span></code></a>(item)</p></td>
+<td><p>Check if the item is a section.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyTRLCConverter.trlc_helper.TrlcAstWalker">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyTRLCConverter.trlc_helper.</span></span><span class="sig-name descname"><span class="pre">TrlcAstWalker</span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/trlc_helper.html#TrlcAstWalker"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.trlc_helper.TrlcAstWalker" title="Link to this definition"></a></dt>
+<dd><p>This class helps to walk through the TRLC AST. It uses a dispatcher map to handle
+the different AST nodes.</p>
+<p>It contains three dispatcher maps: begin, process and finish.</p>
+<p>The begin map is used to handle the node when it is entered, the process map is used to
+handle the node when it is processed and the finish map is used to handle the node when
+it is finished.</p>
+<p>The dispatcher map is a dictionary with the type name as key and the handler as value.</p>
+<p>By default the walker contains a dispatcher map only for the Array_Aggregate node. The other
+nodes are handled by the other dispatcher. If no other dispatcher is set, the node is
+converted to a string.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.trlc_helper.TrlcAstWalker._dispatch">
+<span class="sig-name descname"><span class="pre">_dispatch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dispatcher_map</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expression</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">trlc.ast.Expression</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">handle_other</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Any</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/trlc_helper.html#TrlcAstWalker._dispatch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.trlc_helper.TrlcAstWalker._dispatch" title="Link to this definition"></a></dt>
+<dd><p>Dispatch the expression to the dispatcher map.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dispatcher_map</strong> (<em>dict</em>) – The dispatcher map.</p></li>
+<li><p><strong>expression</strong> (<em>Expression</em>) – The AST node.</p></li>
+<li><p><strong>handle_other</strong> (<em>bool</em>) – If True, the other dispatcher is called when no dispatcher is found.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The result of the dispatcher.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Union[list[Any],Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.trlc_helper.TrlcAstWalker._on_array_aggregate">
+<span class="sig-name descname"><span class="pre">_on_array_aggregate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">array_aggregate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">trlc.ast.Array_Aggregate</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/trlc_helper.html#TrlcAstWalker._on_array_aggregate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.trlc_helper.TrlcAstWalker._on_array_aggregate" title="Link to this definition"></a></dt>
+<dd><p>Handle the Array_Aggregate node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>array_aggregate</strong> (<em>Array_Aggregate</em>) – The AST node.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The result of the handling.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.trlc_helper.TrlcAstWalker._on_general">
+<span class="sig-name descname"><span class="pre">_on_general</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">expression</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">trlc.ast.Expression</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Any</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/trlc_helper.html#TrlcAstWalker._on_general"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.trlc_helper.TrlcAstWalker._on_general" title="Link to this definition"></a></dt>
+<dd><p>Handle the general case.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>expression</strong> (<em>Expression</em>) – The AST node.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The result of the handling.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Union[list[str],str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.trlc_helper.TrlcAstWalker._on_other">
+<span class="sig-name descname"><span class="pre">_on_other</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">expression</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">trlc.ast.Expression</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/trlc_helper.html#TrlcAstWalker._on_other"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.trlc_helper.TrlcAstWalker._on_other" title="Link to this definition"></a></dt>
+<dd><p>Handle the other case.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>expression</strong> (<em>Expression</em>) – The AST node.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The result of the handling.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Union[list[Any],str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.trlc_helper.TrlcAstWalker.add_dispatcher">
+<span class="sig-name descname"><span class="pre">add_dispatcher</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">begin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">process</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">finish</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/trlc_helper.html#TrlcAstWalker.add_dispatcher"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.trlc_helper.TrlcAstWalker.add_dispatcher" title="Link to this definition"></a></dt>
+<dd><p>Add a dispatcher to the walker.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>type_name</strong> (<em>type</em>) – The type name</p></li>
+<li><p><strong>begin</strong> (<em>Optional</em><em>[</em><em>Callable</em><em>]</em>) – The begin handler</p></li>
+<li><p><strong>process</strong> (<em>Optional</em><em>[</em><em>Callable</em><em>]</em>) – The process handler</p></li>
+<li><p><strong>finish</strong> (<em>Optional</em><em>[</em><em>Callable</em><em>]</em>) – The finish handler</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.trlc_helper.TrlcAstWalker.set_list_item_dispatcher">
+<span class="sig-name descname"><span class="pre">set_list_item_dispatcher</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dispatcher</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/trlc_helper.html#TrlcAstWalker.set_list_item_dispatcher"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.trlc_helper.TrlcAstWalker.set_list_item_dispatcher" title="Link to this definition"></a></dt>
+<dd><p>Set the list item dispatcher. This dispatcher is called when a list item is processed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dispatcher</strong> (<em>Callable</em>) – The list item dispatcher.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.trlc_helper.TrlcAstWalker.set_other_dispatcher">
+<span class="sig-name descname"><span class="pre">set_other_dispatcher</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dispatcher</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/trlc_helper.html#TrlcAstWalker.set_other_dispatcher"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.trlc_helper.TrlcAstWalker.set_other_dispatcher" title="Link to this definition"></a></dt>
+<dd><p>Set the other dispatcher. This dispatcher is called when no dispatcher is found for the node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dispatcher</strong> (<em>Callable</em>) – The other dispatcher</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.trlc_helper.TrlcAstWalker.walk">
+<span class="sig-name descname"><span class="pre">walk</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">expression</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">trlc.ast.Expression</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Any</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/trlc_helper.html#TrlcAstWalker.walk"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.trlc_helper.TrlcAstWalker.walk" title="Link to this definition"></a></dt>
+<dd><p>Walk through the TRLC AST.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>expression</strong> (<em>Expression</em>) – The AST node.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The result of the walking as string or list of strings.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Union[list[Any],Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.trlc_helper.TrlcAstWalker._dispatcher_map_begin">
+<span class="sig-name descname"><span class="pre">_dispatcher_map_begin</span></span><a class="headerlink" href="#pyTRLCConverter.trlc_helper.TrlcAstWalker._dispatcher_map_begin" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.trlc_helper.TrlcAstWalker._dispatcher_map_finish">
+<span class="sig-name descname"><span class="pre">_dispatcher_map_finish</span></span><a class="headerlink" href="#pyTRLCConverter.trlc_helper.TrlcAstWalker._dispatcher_map_finish" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.trlc_helper.TrlcAstWalker._dispatcher_map_process">
+<span class="sig-name descname"><span class="pre">_dispatcher_map_process</span></span><a class="headerlink" href="#pyTRLCConverter.trlc_helper.TrlcAstWalker._dispatcher_map_process" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.trlc_helper.TrlcAstWalker._list_item_dispatcher">
+<span class="sig-name descname"><span class="pre">_list_item_dispatcher</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Callable</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#pyTRLCConverter.trlc_helper.TrlcAstWalker._list_item_dispatcher" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.trlc_helper.TrlcAstWalker._other_dispatcher">
+<span class="sig-name descname"><span class="pre">_other_dispatcher</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Callable</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#pyTRLCConverter.trlc_helper.TrlcAstWalker._other_dispatcher" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyTRLCConverter.trlc_helper.get_file_dict_from_symbols">
+<span class="sig-prename descclassname"><span class="pre">pyTRLCConverter.trlc_helper.</span></span><span class="sig-name descname"><span class="pre">get_file_dict_from_symbols</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">symbols</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/pyTRLCConverter/trlc_helper.html#get_file_dict_from_symbols"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.trlc_helper.get_file_dict_from_symbols" title="Link to this definition"></a></dt>
+<dd><p>Get a dictionary with the file names and their content.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>symbols</strong> (<em>Symbol_Table</em>) – The TRLC symbols to dump.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary with the file names and their content.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyTRLCConverter.trlc_helper.get_trlc_symbols">
+<span class="sig-prename descclassname"><span class="pre">pyTRLCConverter.trlc_helper.</span></span><span class="sig-name descname"><span class="pre">get_trlc_symbols</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source_items</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">includes</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/pyTRLCConverter/trlc_helper.html#get_trlc_symbols"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.trlc_helper.get_trlc_symbols" title="Link to this definition"></a></dt>
+<dd><p>Get the TRLC symbol table by parsing the given folder.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source_items</strong> (<em>[</em><em>str</em><em>]</em><em>|</em><em>str</em>) – One or more paths to folder with TRLC files                                   or a single path to a TRLC file.</p></li>
+<li><p><strong>includes</strong> (<em>str</em><em>|</em><em>None</em>) – Path for automatically file inclusion.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>TRLC symbol table</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Symbol_Table</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyTRLCConverter.trlc_helper.is_item_file_name">
+<span class="sig-prename descclassname"><span class="pre">pyTRLCConverter.trlc_helper.</span></span><span class="sig-name descname"><span class="pre">is_item_file_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/pyTRLCConverter/trlc_helper.html#is_item_file_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.trlc_helper.is_item_file_name" title="Link to this definition"></a></dt>
+<dd><p>Check if the item is a file name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>item</strong> (<em>str</em><em>|</em><em>tuple</em>) – The item to check.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the item is a file name, otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyTRLCConverter.trlc_helper.is_item_record">
+<span class="sig-prename descclassname"><span class="pre">pyTRLCConverter.trlc_helper.</span></span><span class="sig-name descname"><span class="pre">is_item_record</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/pyTRLCConverter/trlc_helper.html#is_item_record"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.trlc_helper.is_item_record" title="Link to this definition"></a></dt>
+<dd><p>Check if the item is a record.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>item</strong> (<em>str</em><em>|</em><em>tuple</em>) – The item to check.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the item is a record, otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyTRLCConverter.trlc_helper.is_item_section">
+<span class="sig-prename descclassname"><span class="pre">pyTRLCConverter.trlc_helper.</span></span><span class="sig-name descname"><span class="pre">is_item_section</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/pyTRLCConverter/trlc_helper.html#is_item_section"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.trlc_helper.is_item_section" title="Link to this definition"></a></dt>
+<dd><p>Check if the item is a section.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>item</strong> (<em>str</em><em>|</em><em>tuple</em>) – The item to check.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the item is a section, otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../translator/index.html" class="btn btn-neutral float-left" title="pyTRLCConverter.translator" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../version/index.html" class="btn btn-neutral float-right" title="pyTRLCConverter.version" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024 - 2026, NewTec GmbH.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
