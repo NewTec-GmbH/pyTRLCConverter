@@ -6,7 +6,7 @@
 """
 
 # pyTRLCConverter - A tool to convert TRLC files to specific formats.
-# Copyright (c) 2024 - 2025 NewTec GmbH
+# Copyright (c) 2024 - 2026 NewTec GmbH
 #
 # This file is part of pyTRLCConverter program.
 #
@@ -44,7 +44,7 @@ from pyTRLCConverter.render_config import RenderConfig
 
 PROG_NAME = "pyTRLCConverter"
 PROG_DESC = "A CLI tool to convert TRLC into different formats."
-PROG_COPYRIGHT = "Copyright (c) 2024 - 2025 NewTec GmbH - " + __license__
+PROG_COPYRIGHT = "Copyright (c) 2024 - 2026 NewTec GmbH - " + __license__
 PROG_GITHUB = "Find the project on GitHub: " + __repository__
 PROG_EPILOG = PROG_COPYRIGHT + " - " + PROG_GITHUB
 

@@ -5,7 +5,7 @@
 """
 
 # pyTRLCConverter - A tool to convert PlantUML diagrams to image files.
-# Copyright (c) 2024 - 2025 NewTec GmbH
+# Copyright (c) 2024 - 2026 NewTec GmbH
 #
 # This file is part of pyTRLCConverter program.
 #
