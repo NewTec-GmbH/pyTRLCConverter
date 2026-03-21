@@ -41,15 +41,14 @@ from pyTRLCConverter.logger import log_verbose
 # Classes **********************************************************************
 
 class DocxConverter(BaseConverter):
-    """
-    Converter to docx format.
+    """Converter to docx format.
 
     The following Word docx objects are used:
-    - Document: Represents the entire Word document. You can create a new document or load an existing one.
-    - Paragraph: A block of text in the document. It has its own formatting properties.
-    - Run: A contiguous run of text with the same formatting. You can change the formatting of a run
-            independently within a paragraph.
-    - Table: A two-dimensional structure for presenting data in rows and columns.
+
+    - **Document**: Represents the entire Word document.
+    - **Paragraph**: A block of text in the document with its own formatting properties.
+    - **Run**: A contiguous run of text with the same formatting within a paragraph.
+    - **Table**: A two-dimensional structure for presenting data in rows and columns.
     """
 
     OUTPUT_FILE_NAME_DEFAULT = "output.docx"

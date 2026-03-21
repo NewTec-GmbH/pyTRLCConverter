@@ -3,7 +3,7 @@ package SwArch
 import Generic
 import SwRequirements
 
-section "pyTRLCConverter SW Architecture" {
+section "SW Architecture" {
 
     Generic.Info sw_arch_info_about {
         description =
