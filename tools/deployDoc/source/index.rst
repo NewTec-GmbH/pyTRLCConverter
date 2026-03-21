@@ -19,6 +19,7 @@ an object-oriented manner.
 
    sw_requirements
    sw_architecture
+   sw_detail_design
    sw_tests
    sw_tracing_report
    coverage_resport

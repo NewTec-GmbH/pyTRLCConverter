@@ -49,7 +49,15 @@ extensions = [
     'myst_parser',
     'sphinx_rtd_theme',
     # https://github.com/sphinx-contrib/plantuml
-    'sphinxcontrib.plantuml'
+    'sphinxcontrib.plantuml',
+    # https://sphinx-autoapi.readthedocs.io/en/latest/tutorials.html#python
+    'autoapi.extension',
+    # Extension to support google docstring style and numpy docstring style.
+    'sphinx.ext.napoleon',
+    # Extension to view source code in documentation.
+    'sphinx.ext.viewcode',
+    # Extension to generate inheritance diagrams.
+    'sphinx.ext.inheritance_diagram'
 ]
 
 templates_path = ['_templates']
@@ -63,7 +71,36 @@ rst_prolog = """
 
 """
 
-# -- MyST parser configuration ---------------------------------------------------
+# sphinx-autoapi configuration
+# https://sphinx-autoapi.readthedocs.io/en/latest/reference/config.html
+autoapi_dirs = ['../../../src']
+autoapi_root = 'api'
+autoapi_ignore = ['*/marko/*']      # Exclude internal marko renderers from public API docs
+autoapi_add_toctree_entry = False   # Included manually in sw_detail_design.rst
+autoapi_member_order = 'groupwise'  # Classes, then functions, then attributes
+autoapi_options = [
+    'members',                  # Show module/class members
+    'undoc-members',            # Include members without docstrings
+    'private-members',          # Include private members (starting with _)
+    'special-members',          # Include special members (starting and ending with __)
+    'show-inheritance',         # Show base classes on class pages
+    'show-inheritance-diagram', # Show inheritance diagrams for classes
+    'show-module-summary'       # Summary table at the top of each module page
+]
+suppress_warnings = ['autoapi.python_import_resolution', 'autoapi.not_readable']
+
+# sphinx.ext.inheritance_diagram configuration
+# https://www.sphinx-doc.org/en/master/usage/extensions/inheritance.html
+inheritance_graph_attrs = {
+    'rankdir': 'TB',  # Top-to-bottom layout (use 'LR' for left-to-right)
+    'size': '"8.0, 12.0"',
+    'bgcolor': 'transparent',
+}
+inheritance_edge_attrs = {
+    'arrowsize': '1.5',
+}
+
+# MyST parser configuration ---------------------------------------------------
 
 # Configure MyST parser to generate GitHub-style anchors
 myst_heading_anchors = 6

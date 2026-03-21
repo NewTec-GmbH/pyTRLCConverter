@@ -2,7 +2,7 @@ package SwRequirements
 import AbstractRequirements
 import Generic
 
-section "pyTRLCConverter" {
+section "SW Requirements" {
 
     Generic.Info sw_req_info_about_sw_req {
         description = "This file contains the software requirements for the pyTRLCConverter tool."
@@ -13,7 +13,7 @@ section "pyTRLCConverter" {
         caption = "PyTRLCConverter Tool Flow"
     }
 
-    section "Software Requirements" {
+    section "Functional Requirements" {
 
         section "General" {
 
@@ -532,7 +532,7 @@ section "pyTRLCConverter" {
         }
     }
 
-    section "Software Constraints" {
+    section "Constraints" {
 
         SwConstraint sw_constraint_os_win {
             description = "The software shall support the Windows operating system."
