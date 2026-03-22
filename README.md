@@ -202,6 +202,20 @@ See the [example](./examples/simple_req_translation/) for more information.
 
 When requirements include lists or need bold/italic emphasis, TRLC currently supports plain text only. pyTRLCConverter lets you write requirement descriptions in Markdown and converts them to the chosen target format (e.g., reStructuredText). To enable this, you must explicitly specify in a JSON configuration which attribute contains Markdown-formatted content.
 
+Two Markdown specifications are supported:
+
+- "md": [CommonMark's spec v0.31.2](https://spec.commonmark.org/0.31.2/)
+- "gfm": [GitHub Flavored Markdown spec v0.29-gfm](https://github.github.com/gfm)
+
+Supported by the formats:
+
+| Format           | CommonMark               | GitHub Flavored          |
+| ---------------- | ------------------------ | ------------------------ |
+| docx             | X                        | Output as string literal |
+| dump             | Output as string literal | Output as string literal |
+| markdown         | X                        | X                        |
+| reStructuredText | X                        | X                        |
+
 Configuration example:
 
 ```json
@@ -261,14 +275,14 @@ Tools used for development or automations, see [Tools](./tools/README.md).
 
 Used 3rd party libraries which are not part of the standard Python package:
 
-| Library | Description | License |
-| ------- | ----------- | ------- |
-| [PlantUML](https://github.com/plantuml/plantuml) | Generate UML diagrams. | GPL-3.0 |
-| [python-docx](https://github.com/python-openxml/python-docx) | Creation of Microsoft Word 2007+ (.docx) files. | MIT |
-| [requests](https://github.com/psf/requests) | HTTP processing | Apache-2.0 |
-| [sphinx](https://github.com/sphinx-doc/sphinx) | Using Sphinx for documentation deployment. | BSD |
-| [toml](https://github.com/uiri/toml) | Parsing [TOML](https://en.wikipedia.org/wiki/TOML) | MIT |
-| [trlc](https://github.com/bmw-software-engineering/trlc) | Treat Requirements Like Code | GPL-3.0 |
+| Library                                                      | Description                                        | License    |
+| ------------------------------------------------------------ | -------------------------------------------------- | ---------- |
+| [PlantUML](https://github.com/plantuml/plantuml)             | Generate UML diagrams.                             | GPL-3.0    |
+| [python-docx](https://github.com/python-openxml/python-docx) | Creation of Microsoft Word 2007+ (.docx) files.    | MIT        |
+| [requests](https://github.com/psf/requests)                  | HTTP processing                                    | Apache-2.0 |
+| [sphinx](https://github.com/sphinx-doc/sphinx)               | Using Sphinx for documentation deployment.         | BSD        |
+| [toml](https://github.com/uiri/toml)                         | Parsing [TOML](https://en.wikipedia.org/wiki/TOML) | MIT        |
+| [trlc](https://github.com/bmw-software-engineering/trlc)     | Treat Requirements Like Code                       | GPL-3.0    |
 
 see also [requirements.txt](requirements.txt)
 

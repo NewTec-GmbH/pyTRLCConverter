@@ -495,6 +495,7 @@ def test_tc_markdown_single_doc_exclude(record_property, capsys, monkeypatch, tm
         "--exclude", "./tests/utils/single_req_no_section.trlc",
         "--exclude", "./tests/utils/single_req_with_section.trlc",
         "--exclude", "./tests/utils/single_req_description_md.trlc",
+        "--exclude", "./tests/utils/single_req_description_gfm.trlc",
         "--exclude", "./tests/utils/single_req_description_rst.trlc",
         "--exclude", "./tests/utils/multi_req_with_link.trlc",
         "--out", str(tmp_path),
@@ -720,7 +721,90 @@ Code block example
         line_index = 0
         line_index += _assert_heading(lines[line_index:], 1, "Specification")
         line_index += _assert_empty_line(lines[line_index:])
-        line_index += _assert_heading(lines[line_index:], 3, r"req\_id\_4")
+        line_index += _assert_heading(lines[line_index:], 3, r"req\_id\_md")
+        line_index += _assert_empty_line(lines[line_index:])
+        line_index += _assert_table(lines[line_index:],
+                                    [["Attribute Name", "Attribute Value"]],
+                                    [["description", attribute_value],
+                                     ["link", "N/A"],
+                                     ["index", "N/A"],
+                                     ["precision", "N/A"],
+                                     ["valid", "N/A"]])
+
+def test_tc_markdown_render_gfm(record_property, capsys, monkeypatch, tmp_path):
+    # lobster-trace: SwTests.tc_markdown_render_gfm
+    """
+    The software shall support rendering requirement attributes containing GitHub Flavored Markdown (GFM) syntax.
+
+    Args:
+        record_property (Any): Used to inject the test case reference into the test results.
+        capsys (Any): Used to capture stdout and stderr.
+        monkeypatch (Any): Used to mock program arguments.
+        tmp_path (Path): Used to create a temporary output directory.
+    """
+    record_property("lobster-trace", "SwTests.tc_markdown_render_gfm")
+
+    # Mock program arguments to specify an output folder.
+    output_file_name = "myReq.md"
+    monkeypatch.setattr("sys.argv", [
+        "pyTRLCConverter",
+        "--source", "./tests/utils/req.rsl",
+        "--source", "./tests/utils/single_req_description_gfm.trlc",
+        "--out", str(tmp_path),
+        "--renderCfg", "./tests/utils/renderCfgGfm.json",
+        "markdown",
+        "--single-document",
+        "--name", output_file_name
+    ])
+
+    # Expect the program to run without any exceptions.
+    main()
+
+    # Capture stdout and stderr.
+    captured = capsys.readouterr()
+    # Check that no errors were reported.
+    assert captured.err == ""
+
+    attribute_value = \
+'''# Heading 1
+
+## Heading 2
+
+- Bullet point 1
+- Bullet point 2
+    - Sub bullet point 1
+    - Sub bullet point 2
+
+1. Numbered point 1
+2. Numbered point 2
+    1. Sub numbered point 1
+    2. Sub numbered point 2
+
+**Bold text**, *italic text* and __underlined text__.
+
+```
+Code block example
+```
+
+--- Divider ---
+
+> Blockquote example
+
+[Link to pyTRLCConverter](https://github.com/NewTec-GmbH/pyTRLCConverter)
+
+| Col 0 | Col 1 |
+| ----- | ----- |
+| A     | B     |
+
+~~I am strikethrough.~~'''
+
+    # Verify
+    with open(os.path.join(tmp_path, output_file_name), "r", encoding='utf-8') as generated_md:
+        lines = generated_md.readlines()
+        line_index = 0
+        line_index += _assert_heading(lines[line_index:], 1, "Specification")
+        line_index += _assert_empty_line(lines[line_index:])
+        line_index += _assert_heading(lines[line_index:], 3, r"req\_id\_gfm")
         line_index += _assert_empty_line(lines[line_index:])
         line_index += _assert_table(lines[line_index:],
                                     [["Attribute Name", "Attribute Value"]],

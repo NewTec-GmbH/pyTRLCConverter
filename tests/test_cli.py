@@ -109,6 +109,7 @@ def test_tc_cli_exclude(record_property, capsys, monkeypatch):
         "--source", "./tests/utils",
         "--exclude", "./tests/utils/single_req_with_link.trlc",
         "--exclude", "./tests/utils/single_req_description_md.trlc",
+        "--exclude", "./tests/utils/single_req_description_gfm.trlc",
         "--exclude", "./tests/utils/single_req_description_rst.trlc",
         "--exclude", "./tests/utils/multi_req_with_link.trlc",
         "--project", "./tests/utils/psc_simple",
@@ -152,6 +153,7 @@ def test_tc_cli_include(record_property, capsys, monkeypatch):
         "--source", "./tests/utils/req.rsl",
         "--source", "./tests/utils/single_req_with_link.trlc",  # Linking to req_2 in single_req_with_section.trlc
         "--exclude", "./tests/utils/single_req_description_md.trlc",
+        "--exclude", "./tests/utils/single_req_description_gfm.trlc",
         "--exclude", "./tests/utils/single_req_description_rst.trlc",
         "--exclude", "./tests/utils/multi_req_with_link.trlc",
         "--include", "./tests/utils",

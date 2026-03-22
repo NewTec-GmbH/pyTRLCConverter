@@ -42,9 +42,9 @@ jobs:
           pip install -r requirements-dev.txt
           pip install "pyTRLCConverter>=2.0.0"
 
-      - name: Analysing the requirements and test cases with TRLC
+      - name: Analysing all TRLC releated elements
         run: |
-          trlc ./trlc/model ./trlc/swe-req ./trlc/swe-test
+          trlc ./trlc
 
       - name: Prepare test report
         run: |
@@ -55,12 +55,12 @@ jobs:
 
       - name: Build tracing report
         run: |
-            pushd ./tools/traceReport
-            chmod +x make.sh
-            ./make.sh online
-            rm -f ./out/*-lobster.json
-            popd
-  
+          pushd ./tools/traceReport
+          chmod +x make.sh
+          ./make.sh online
+          rm -f ./out/*-lobster.json
+          popd
+
       - name: Upload tracing report
         uses: actions/upload-artifact@v4
         with:
@@ -93,7 +93,7 @@ jobs:
 
       - name: Analysing the code with pylint
         run: |
-          pylint ./src ./tools
+          pylint ./src ./tests ./tools
 
   test:
     # The type of runner that the job will run on.
@@ -122,7 +122,7 @@ jobs:
       - name: Test and create coverage report
         run: |
           pytest tests -v --cov=./src --cov-report=term
-  
+
 # Uncomment this section to generate a html coverage report
 #      - name: Test and create coverage report
 #        run: |
