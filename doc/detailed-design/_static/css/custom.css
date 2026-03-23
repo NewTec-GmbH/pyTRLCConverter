@@ -1,31 +1,8 @@
 @import 'haiku.css';
 
-/*
-This CSS resource incorporates links to font software which is the valuable copyrighted property of 
-Monotype and/or its suppliers.  
-You may not attempt to copy, install, redistribute, convert, modify or reverse engineer this font software. 
-Please contact Monotype with any questions regarding Web Fonts: https://www.linotype.com
-*/
-@import url("https://fast.fonts.net/lt/1.css?apiType=css&c=850362e1-4bbb-4e8b-8dbb-53c332c38175&fontids=5227398,5364007,5780718");
-@font-face{
-    font-family:"Frutiger LT W05_55 Roma5227398";
-    src:url("../fonts/5227398/0fef41d9-a4ca-49cb-a052-4e9a83a342ff.eot?#iefix");
-    src:url("../fonts/5227398/0fef41d9-a4ca-49cb-a052-4e9a83a342ff.eot?#iefix") format("eot"),url("../fonts/5227398/3b3bb74f-0579-4650-8ad8-71ecd8a005f2.woff2") format("woff2"),url("../fonts/5227398/a3d2331d-37b1-42d3-8532-b1c75e5251bd.woff") format("woff"),url("../fonts/5227398/67a8a300-cc83-4e01-9e73-157c1f4f6dd4.ttf") format("truetype");
-}
-@font-face{
-    font-family:"Frutiger LT W05_45 Light";
-    src:url("../fonts/5364007/79b1a48f-6b1d-47d9-b4ee-b9b718b4188e.eot?#iefix");
-    src:url("Fonts/5364007/79b1a48f-6b1d-47d9-b4ee-b9b718b4188e.eot?#iefix") format("eot"),url("../fonts/5364007/945c822d-e761-49bc-b64b-c1be82582d15.woff2") format("woff2"),url("../fonts/5364007/bf478d74-4a40-4eb7-ba6e-7c0a18d521bd.woff") format("woff"),url("../fonts/5364007/e3a2e438-80f7-4a67-b993-b18d0d94c21b.ttf") format("truetype");
-}
-@font-face{
-    font-family:"Frutiger Neue LT W05 Medium";
-    src:url("../fonts/5780718/f5d8ea2c-9fd8-47aa-89f5-a46488194c13.eot?#iefix");
-    src:url("../fonts/5780718/f5d8ea2c-9fd8-47aa-89f5-a46488194c13.eot?#iefix") format("eot"),url("../fonts/5780718/5dffb2c0-4fa6-44da-b3e4-ffdcffee4082.woff2") format("woff2"),url("../fonts/5780718/5272dab4-89dc-48f3-9e46-bc10584ddab5.woff") format("woff"),url("../fonts/5780718/749c8c49-9436-47ac-a2f7-3feba0b383e8.ttf") format("truetype");
-}
-
 body {
-    font-family: 'Frutiger LT W05_45 Light', Arial, Helvetica, sans-serif;
-  /*  max-width: 75% !important;*/
+    font-family: Arial, Helvetica, sans-serif;
+    max-width: none !important;
 }
 
 
@@ -59,8 +36,13 @@ p.admonition-title {
 }
 
 .wy-nav-content {
-    max-width: none;
+    max-width: 100% !important;
 }
+.rst-content {
+    width: 100% !important;
+    padding: 20px !important;
+}
+
 
 
 
