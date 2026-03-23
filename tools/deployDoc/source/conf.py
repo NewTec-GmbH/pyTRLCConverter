@@ -43,13 +43,23 @@ author = 'NewTec GmbH'
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
-extensions = [
+#extensions = [
     # https://www.sphinx-doc.org/en/master/usage/markdown.html
-    'myst_parser',
-    'sphinx_rtd_theme',
+    #'myst_parser',
+    #'sphinx_rtd_theme',
     # https://github.com/sphinx-contrib/plantuml
-    'sphinxcontrib.plantuml'
-]
+    #'sphinxcontrib.plantuml'
+#]
+
+extensions = ['sphinx.ext.autodoc',  # extension for python docstring
+              'sphinx.ext.napoleon',  # extension to support google docstring style
+              'sphinx_favicon',  # extension to support favicon for html output
+              'sphinx.ext.viewcode',  # view code in documentation
+              'sphinx.ext.autosummary',  # crawls python files to extract content
+              'sphinxcontrib.plantuml',  # plantuml support
+              'myst_parser'              # markdown support
+] 
+
 
 templates_path = ['_templates']
 exclude_patterns = []
@@ -72,6 +82,9 @@ myst_heading_anchors = 6
 
 html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
+html_js_files = [
+    'custom.js',
+]
 html_css_files = [
     "css/custom.css",
 ]
