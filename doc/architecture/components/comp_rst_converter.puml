@@ -33,7 +33,11 @@ package "Dependencies" {
         + walk(ast: Any) : None
     }
 
-    class RSTRenderer {
+    class Md2RstRenderer {
+        + render(ast: Any) : str
+    }
+
+    class Gfm2RstRenderer {
         + render(ast: Any) : str
     }
 
@@ -47,7 +51,8 @@ package "Dependencies" {
 ' Relationships
 RstConverter ..> trlc
 RstConverter ..> TrlcAstWalker
-RstConverter ..> RSTRenderer
+RstConverter ..> Md2RstRenderer
+RstConverter ..> Gfm2RstRenderer
 RstConverter ..> marko
 
 @enduml

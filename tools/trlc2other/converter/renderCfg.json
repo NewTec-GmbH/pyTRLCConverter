@@ -5,13 +5,13 @@
             "package": ".*",
             "type": "Info",
             "attribute": "description",
-            "format": "md"
+            "format": "gfm"
         },
         {
             "package": ".*",
             "type": "SwArchSpec",
             "attribute": "description",
-            "format": "md"
+            "format": "gfm"
         }
     ]   
 }

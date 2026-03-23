@@ -1,4 +1,5 @@
 """Docx Renderer for Marko.
+    It is used to convert CommonMark AST to docx format.
 
     Author: Andreas Merkle (andreas.merkle@newtec.de)
 """
@@ -55,7 +56,7 @@ class Singleton(type):
         return cls._instances[cls]
 
 # pylint: disable-next=too-many-public-methods, too-many-instance-attributes
-class DocxRenderer(Renderer, metaclass=Singleton):
+class Md2DocxRenderer(Renderer, metaclass=Singleton):
     # lobster-trace: SwRequirements.sw_req_docx_render_md
     """Renderer for docx output."""
 
@@ -63,7 +64,7 @@ class DocxRenderer(Renderer, metaclass=Singleton):
     block_item_container: Optional[BlockItemContainer] = None
 
     def __init__(self) -> None:
-        """Initialize docx renderer."""
+        """Initialize the renderer."""
         super().__init__()
         self._list_indent_level = 0
         self._is_italic = False
@@ -245,7 +246,7 @@ class DocxRenderer(Renderer, metaclass=Singleton):
         Args:
             element (block.LinkRefDef): The link reference definition element to render.
         """
-        # reStructuredText uses reference links differently than Markdown.
+        # docx uses reference links differently than Markdown.
         # It shall not be rendered in the document.
 
     def render_emphasis(self, element: inline.Emphasis) -> None:

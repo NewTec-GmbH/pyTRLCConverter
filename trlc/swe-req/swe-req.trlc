@@ -300,8 +300,14 @@ section "SW Requirements" {
             section "Markdown Render Configuration" {
 
                 SwReq sw_req_markdown_render_md {
-                    description = "The software shall render strings in Markdown format if specified in the render configuration."
-                    verification_criteria = "Verify by using strings in Markdown format, which needs no escaping."
+                    description = "The software shall render strings in [CommonMark's spec v0.31.2](https://spec.commonmark.org/0.31.2/) Markdown format if specified in the render configuration."
+                    verification_criteria = "Verify by using strings in Markdown format according to CommonMark's spec, which needs no escaping."
+                    valid_status = AbstractRequirements.VALID_STATUS.valid
+                }
+
+                SwReq sw_req_markdown_render_gfm {
+                    description = "The software shall render strings in [GitHub Flavored Markdown spec v0.29-gfm](https://github.github.com/gfm) Markdown format if specified in the render configuration."
+                    verification_criteria = "Verify by using strings in Markdown format according to GitHub Flavored Markdown spec, which needs no escaping."
                     valid_status = AbstractRequirements.VALID_STATUS.valid
                 }
             }
@@ -446,8 +452,14 @@ section "SW Requirements" {
             section "ReStructuredText Render Configuration" {
 
                 SwReq sw_req_rst_render_md {
-                    description = "The software shall convert strings in Markdown format to reStructuredText format if specified in the render configuration."
-                    verification_criteria = "Verify by using strings in Markdown format, that are converted."
+                    description = "The software shall convert strings in [CommonMark's spec v0.31.2](https://spec.commonmark.org/0.31.2/) Markdown format to reStructuredText format if specified in the render configuration."
+                    verification_criteria = "Verify by using strings in Markdown format according to CommonMark's spec, that are converted."
+                    valid_status = AbstractRequirements.VALID_STATUS.valid
+                }
+
+                SwReq sw_req_rst_render_gfm {
+                    description = "The software shall convert strings in [GitHub Flavored Markdown spec v0.29-gfm](https://github.github.com/gfm) Markdown format to reStructuredText format if specified in the render configuration."
+                    verification_criteria = "Verify by using strings in Markdown format according to GitHub Flavored Markdown spec, that are converted."
                     valid_status = AbstractRequirements.VALID_STATUS.valid
                 }
             }
@@ -498,8 +510,8 @@ section "SW Requirements" {
             section "Docx Render Configuration" {
 
                 SwReq sw_req_docx_render_md {
-                    description = "The software shall convert strings in Markdown format to docx format if specified in the render configuration."
-                    verification_criteria = "Verify by using strings in Markdown format, that are converted."
+                    description = "The software shall convert strings in [CommonMark's spec v0.31.2](https://spec.commonmark.org/0.31.2/) Markdown format to docx format if specified in the render configuration."
+                    verification_criteria = "Verify by using strings in Markdown format according to CommonMark's spec, that are converted."
                     valid_status = AbstractRequirements.VALID_STATUS.valid
                 }
             }
