@@ -65,7 +65,7 @@
             <a id="nextFileLink" class="nav" href="z_4eabd51d59ab20be_dump_converter_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io/en/7.13.5">coverage.py v7.13.5</a>,
-            created at 2026-03-21 11:09 +0000
+            created at 2026-03-23 21:11 +0000
         </p>
         <aside class="hidden">
             <button type="button" class="button_next_chunk" data-shortcut="j"></button>
@@ -113,7 +113,7 @@
     <p class="run"><span class="n"><a id="t31" href="#t31">31</a></span><span class="t"><span class="key">from</span> <span class="nam">marko</span> <span class="key">import</span> <span class="nam">Markdown</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t32" href="#t32">32</a></span><span class="t"><span class="key">from</span> <span class="nam">trlc</span><span class="op">.</span><span class="nam">ast</span> <span class="key">import</span> <span class="nam">Implicit_Null</span><span class="op">,</span> <span class="nam">Record_Object</span><span class="op">,</span> <span class="nam">Record_Reference</span><span class="op">,</span> <span class="nam">String_Literal</span><span class="op">,</span> <span class="nam">Array_Aggregate</span><span class="op">,</span> <span class="nam">Expression</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t33" href="#t33">33</a></span><span class="t"><span class="key">from</span> <span class="nam">pyTRLCConverter</span><span class="op">.</span><span class="nam">base_converter</span> <span class="key">import</span> <span class="nam">BaseConverter</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t34" href="#t34">34</a></span><span class="t"><span class="key">from</span> <span class="nam">pyTRLCConverter</span><span class="op">.</span><span class="nam">marko</span><span class="op">.</span><span class="nam">docx_renderer</span> <span class="key">import</span> <span class="nam">DocxRenderer</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t34" href="#t34">34</a></span><span class="t"><span class="key">from</span> <span class="nam">pyTRLCConverter</span><span class="op">.</span><span class="nam">marko</span><span class="op">.</span><span class="nam">md2docx_renderer</span> <span class="key">import</span> <span class="nam">Md2DocxRenderer</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t35" href="#t35">35</a></span><span class="t"><span class="key">from</span> <span class="nam">pyTRLCConverter</span><span class="op">.</span><span class="nam">ret</span> <span class="key">import</span> <span class="nam">Ret</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t36" href="#t36">36</a></span><span class="t"><span class="key">from</span> <span class="nam">pyTRLCConverter</span><span class="op">.</span><span class="nam">trlc_helper</span> <span class="key">import</span> <span class="nam">TrlcAstWalker</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t37" href="#t37">37</a></span><span class="t"><span class="key">from</span> <span class="nam">pyTRLCConverter</span><span class="op">.</span><span class="nam">logger</span> <span class="key">import</span> <span class="nam">log_verbose</span>&nbsp;</span><span class="r"></span></p>
@@ -437,10 +437,10 @@
     <p class="pln"><span class="n"><a id="t355" href="#t355">355</a></span><span class="t"><span class="str">        """</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t356" href="#t356">356</a></span><span class="t">        <span class="key">assert</span> <span class="nam">self</span><span class="op">.</span><span class="nam">_block_item_container</span> <span class="key">is</span> <span class="key">not</span> <span class="key">None</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t357" href="#t357">357</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t358" href="#t358">358</a></span><span class="t">        <span class="com"># If the attribute is marked as markdown format, convert it.</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t358" href="#t358">358</a></span><span class="t">        <span class="com"># If the attribute is marked as CommonMark Markdown format, convert it.</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t359" href="#t359">359</a></span><span class="t">        <span class="key">if</span> <span class="nam">self</span><span class="op">.</span><span class="nam">_render_cfg</span><span class="op">.</span><span class="nam">is_format_md</span><span class="op">(</span><span class="nam">package_name</span><span class="op">,</span> <span class="nam">type_name</span><span class="op">,</span> <span class="nam">attribute_name</span><span class="op">)</span> <span class="key">is</span> <span class="key">True</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis show_mis"><span class="n"><a id="t360" href="#t360">360</a></span><span class="t">            <span class="nam">DocxRenderer</span><span class="op">.</span><span class="nam">block_item_container</span> <span class="op">=</span> <span class="nam">self</span><span class="op">.</span><span class="nam">_block_item_container</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis show_mis"><span class="n"><a id="t361" href="#t361">361</a></span><span class="t">            <span class="nam">markdown</span> <span class="op">=</span> <span class="nam">Markdown</span><span class="op">(</span><span class="nam">renderer</span><span class="op">=</span><span class="nam">DocxRenderer</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis show_mis"><span class="n"><a id="t360" href="#t360">360</a></span><span class="t">            <span class="nam">Md2DocxRenderer</span><span class="op">.</span><span class="nam">block_item_container</span> <span class="op">=</span> <span class="nam">self</span><span class="op">.</span><span class="nam">_block_item_container</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis show_mis"><span class="n"><a id="t361" href="#t361">361</a></span><span class="t">            <span class="nam">markdown</span> <span class="op">=</span> <span class="nam">Markdown</span><span class="op">(</span><span class="nam">renderer</span><span class="op">=</span><span class="nam">Md2DocxRenderer</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis show_mis"><span class="n"><a id="t362" href="#t362">362</a></span><span class="t">            <span class="nam">markdown</span><span class="op">.</span><span class="nam">convert</span><span class="op">(</span><span class="nam">attribute_value</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t363" href="#t363">363</a></span><span class="t">        <span class="key">else</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t364" href="#t364">364</a></span><span class="t">            <span class="nam">self</span><span class="op">.</span><span class="nam">_block_item_container</span><span class="op">.</span><span class="nam">add_paragraph</span><span class="op">(</span><span class="nam">attribute_value</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
@@ -578,7 +578,7 @@
             <a class="nav" href="z_4eabd51d59ab20be_dump_converter_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io/en/7.13.5">coverage.py v7.13.5</a>,
-            created at 2026-03-21 11:09 +0000
+            created at 2026-03-23 21:11 +0000
         </p>
     </div>
 </footer>

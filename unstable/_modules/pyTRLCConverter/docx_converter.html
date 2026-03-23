@@ -116,7 +116,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">marko</span><span class="w"> </span><span class="kn">import</span> <span class="n">Markdown</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">trlc.ast</span><span class="w"> </span><span class="kn">import</span> <span class="n">Implicit_Null</span><span class="p">,</span> <span class="n">Record_Object</span><span class="p">,</span> <span class="n">Record_Reference</span><span class="p">,</span> <span class="n">String_Literal</span><span class="p">,</span> <span class="n">Array_Aggregate</span><span class="p">,</span> <span class="n">Expression</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pyTRLCConverter.base_converter</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseConverter</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pyTRLCConverter.marko.docx_renderer</span><span class="w"> </span><span class="kn">import</span> <span class="n">DocxRenderer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyTRLCConverter.marko.md2docx_renderer</span><span class="w"> </span><span class="kn">import</span> <span class="n">Md2DocxRenderer</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pyTRLCConverter.ret</span><span class="w"> </span><span class="kn">import</span> <span class="n">Ret</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pyTRLCConverter.trlc_helper</span><span class="w"> </span><span class="kn">import</span> <span class="n">TrlcAstWalker</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pyTRLCConverter.logger</span><span class="w"> </span><span class="kn">import</span> <span class="n">log_verbose</span>
@@ -486,10 +486,10 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_block_item_container</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
 
-        <span class="c1"># If the attribute is marked as markdown format, convert it.</span>
+        <span class="c1"># If the attribute is marked as CommonMark Markdown format, convert it.</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_render_cfg</span><span class="o">.</span><span class="n">is_format_md</span><span class="p">(</span><span class="n">package_name</span><span class="p">,</span> <span class="n">type_name</span><span class="p">,</span> <span class="n">attribute_name</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="n">DocxRenderer</span><span class="o">.</span><span class="n">block_item_container</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_block_item_container</span>
-            <span class="n">markdown</span> <span class="o">=</span> <span class="n">Markdown</span><span class="p">(</span><span class="n">renderer</span><span class="o">=</span><span class="n">DocxRenderer</span><span class="p">)</span>
+            <span class="n">Md2DocxRenderer</span><span class="o">.</span><span class="n">block_item_container</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_block_item_container</span>
+            <span class="n">markdown</span> <span class="o">=</span> <span class="n">Markdown</span><span class="p">(</span><span class="n">renderer</span><span class="o">=</span><span class="n">Md2DocxRenderer</span><span class="p">)</span>
             <span class="n">markdown</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="n">attribute_value</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_block_item_container</span><span class="o">.</span><span class="n">add_paragraph</span><span class="p">(</span><span class="n">attribute_value</span><span class="p">)</span></div>

@@ -86,6 +86,22 @@ Module Contents
 
 
 
+   .. py:method:: is_format_gfm(trlc_package: str, trlc_type: str, trlc_type_attribute: str) -> bool
+
+      Checks if the given TRLC package, type and attribute should be rendered in GitHub Flavored Markdown format.
+
+      :param trlc_package: The TRLC package.
+      :type trlc_package: str
+      :param trlc_type: The TRLC type.
+      :type trlc_type: str
+      :param trlc_type_attribute: The TRLC type attribute.
+      :type trlc_type_attribute: str
+
+      :returns: True if the given TRLC attribute has GitHub Flavored Markdown format, otherwise False.
+      :rtype: bool
+
+
+
    .. py:method:: is_format_md(trlc_package: str, trlc_type: str, trlc_type_attribute: str) -> bool
 
       Checks if the given TRLC package, type and attribute should be rendered in markdown format.
@@ -143,6 +159,11 @@ Module Contents
 
       :returns: True if successful, False otherwise.
       :rtype: bool
+
+
+
+   .. py:attribute:: FORMAT_SPECIFIER_GFM
+      :value: 'gfm'
 
 
 

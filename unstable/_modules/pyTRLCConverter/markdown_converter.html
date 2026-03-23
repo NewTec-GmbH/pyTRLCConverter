@@ -561,6 +561,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">_on_string_literal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">string_literal</span><span class="p">:</span> <span class="n">String_Literal</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_markdown_string_format</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_markdown_render_md</span>
+        <span class="c1"># lobster-trace: SwRequirements.sw_req_markdown_render_gfm</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Process the given string literal value.</span>
 
@@ -685,6 +686,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">_render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">package_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">type_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">attribute_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">attribute_value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_markdown_string_format</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_markdown_render_md</span>
+        <span class="c1"># lobster-trace: SwRequirements.sw_req_markdown_render_gfm</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Render the attribute value depened on its format.</span>
 
 <span class="sd">        Args:</span>
@@ -699,7 +701,9 @@
         <span class="n">result</span> <span class="o">=</span> <span class="n">attribute_value</span>
 
         <span class="c1"># If the attribute value is not already in Markdown format, it will be escaped.</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_render_cfg</span><span class="o">.</span><span class="n">is_format_md</span><span class="p">(</span><span class="n">package_name</span><span class="p">,</span> <span class="n">type_name</span><span class="p">,</span> <span class="n">attribute_name</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_render_cfg</span><span class="o">.</span><span class="n">is_format_md</span><span class="p">(</span><span class="n">package_name</span><span class="p">,</span> <span class="n">type_name</span><span class="p">,</span> <span class="n">attribute_name</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">False</span> <span class="ow">and</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">_render_cfg</span><span class="o">.</span><span class="n">is_format_gfm</span><span class="p">(</span><span class="n">package_name</span><span class="p">,</span> <span class="n">type_name</span><span class="p">,</span> <span class="n">attribute_name</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+
             <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">markdown_escape</span><span class="p">(</span><span class="n">attribute_value</span><span class="p">)</span>
             <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">markdown_lf2soft_return</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
 
