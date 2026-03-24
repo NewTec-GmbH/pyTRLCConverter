@@ -109,6 +109,10 @@ myst_heading_anchors = 6
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
 html_theme = 'sphinx_rtd_theme'
+# set html_logo to None to show only the project name in the header, or set it to the path of the logo image to show both the logo and project name.
+html_theme_options = {   
+    'style_nav_header_background': '#0C2C40',   # Set the navigation header background color to NewTec black  #0C2C40
+}
 html_static_path = ['_static']
 html_css_files = ['custom.css']
 html_js_files = ['version_selector.js']
