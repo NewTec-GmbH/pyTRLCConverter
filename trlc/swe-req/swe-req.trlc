@@ -465,6 +465,86 @@ section "SW Requirements" {
             }
         }
 
+        section "ReqIF" {
+
+            Generic.Info sw_req_info_reqif {
+                description = "The following requirements describe the ReqIF destination format supported by the software."
+            }
+
+            SwReq sw_req_reqif {
+                description = "The software shall support the conversion into ReqIF format."
+                verification_criteria = "Verify by converting one or more TRLC files into ReqIF format."
+                valid_status = AbstractRequirements.VALID_STATUS.valid
+            }
+
+            SwReq sw_req_reqif_section {
+                description = "The ReqIF converter shall convert a TRLC section into a ReqIF hierarchy section by considering the depth level."
+                verification_criteria = "Verify by converting a TRLC section into ReqIF and checking the generated hierarchy."
+                valid_status = AbstractRequirements.VALID_STATUS.valid
+            }
+
+            SwReq sw_req_reqif_record {
+                description = "The ReqIF converter shall convert the attributes of a TRLC record into ReqIF SpecObject attributes."
+                verification_criteria = "Verify by converting one or more TRLC records and checking generated ReqIF SpecObjects."
+                valid_status = AbstractRequirements.VALID_STATUS.valid
+            }
+
+            section "ReqIF Multiple Documents Mode" {
+                SwReq sw_req_reqif_multiple_doc_mode {
+                    description = "The software shall create a ReqIF file for each TRLC file by default."
+                    verification_criteria = "Verify by converting one or more TRLC files into ReqIF and checking one ReqIF file is created for each TRLC file."
+                    valid_status = AbstractRequirements.VALID_STATUS.valid
+                }
+            }
+
+            section "ReqIF Single Document Mode" {
+                SwReq sw_req_reqif_single_doc_mode {
+                    description = "The software shall create a single ReqIF file which combines all TRLC files if requested by command line arguments."
+                    verification_criteria = "Verify by converting one or more TRLC files into ReqIF and checking a single ReqIF file is created."
+                    valid_status = AbstractRequirements.VALID_STATUS.valid
+                }
+
+                SwReq sw_req_reqif_out_file_name_default {
+                    description = "The output file name shall be 'output.reqif' by default."
+                    verification_criteria = "Verify by converting one or more TRLC files into ReqIF and check if the output file name is 'output.reqif'."
+                    valid_status = AbstractRequirements.VALID_STATUS.valid
+                }
+
+                SwReq sw_req_reqif_out_file_name_custom {
+                    description = "The output file name shall be customizable by command line arguments."
+                    verification_criteria = "Verify by converting one or more TRLC files into ReqIF and check if the output file name is customizable."
+                    valid_status = AbstractRequirements.VALID_STATUS.valid
+                }
+
+                SwReq sw_req_reqif_top_level_default {
+                    description = "The top level heading shall be 'Specification' by default."
+                    verification_criteria = "Verify the top level heading in the ReqIF file in single doc mode."
+                    valid_status = AbstractRequirements.VALID_STATUS.valid
+                }
+
+                SwReq sw_req_reqif_top_level_custom {
+                    description = "The top level heading shall be customizable by command line arguments."
+                    verification_criteria = "Verify by specifying a custom top level heading in the ReqIF file in single doc mode."
+                    valid_status = AbstractRequirements.VALID_STATUS.valid
+                }
+            }
+
+            section "ReqIF Render Configuration" {
+
+                SwReq sw_req_reqif_render_md {
+                    description = "The software shall convert strings in [CommonMark's spec v0.31.2](https://spec.commonmark.org/0.31.2/) Markdown format to ReqIF XHTML if specified in the render configuration."
+                    verification_criteria = "Verify by using strings in Markdown format according to CommonMark's spec, that are converted to ReqIF XHTML."
+                    valid_status = AbstractRequirements.VALID_STATUS.valid
+                }
+
+                SwReq sw_req_reqif_render_gfm {
+                    description = "The software shall convert strings in [GitHub Flavored Markdown spec v0.29-gfm](https://github.github.com/gfm) Markdown format to ReqIF XHTML if specified in the render configuration."
+                    verification_criteria = "Verify by using strings in Markdown format according to GitHub Flavored Markdown spec, that are converted to ReqIF XHTML."
+                    valid_status = AbstractRequirements.VALID_STATUS.valid
+                }
+            }
+        }
+
         section "Docx" {
 
             Generic.Info sw_req_info_docx {

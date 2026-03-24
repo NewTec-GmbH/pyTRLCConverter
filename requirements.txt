@@ -3,3 +3,4 @@ toml==0.10.2
 python-docx>=1.2.0
 trlc==2.0.*
 marko>=2.2.1
+reqif>=0.0.54

@@ -10,6 +10,7 @@ Currently out of the box supported formats:
 * Markdown
 * docx
 * reStructuredText
+* ReqIF
 * dump
 
 Find the requirements, test cases, coverage and etc. on the [github pages](https://newtec-gmbh.github.io/pyTRLCConverter/).
@@ -25,6 +26,7 @@ Find the requirements, test cases, coverage and etc. on the [github pages](https
   - [Conversion to Markdown format](#conversion-to-markdown-format)
   - [Conversion to docx format](#conversion-to-docx-format)
   - [Conversion to reStructuredText format](#conversion-to-restructuredtext-format)
+  - [Conversion to ReqIF format](#conversion-to-reqif-format)
   - [Dump TRLC item list to console](#dump-trlc-item-list-to-console)
   - [Apply attribute name translation](#apply-attribute-name-translation)
   - [Requirement description in Markdown](#requirement-description-in-markdown)
@@ -172,6 +174,49 @@ options:
 
 More examples are shown in the [examples folder](./examples/).
 
+### Conversion to ReqIF format
+
+The tool requires two kinds of TRLC input sources for the conversion. These are the requirements (*.trlc) files and the model (*.tls) files. These input files are specified using one or more --source or -s options followed by a file name or directory path. If a path is given, all files with a .trlc or .tls extension are read by the tool.
+
+```bash
+pyTRLCConverter --source trlc/model --source trlc/swe-req reqif
+```
+
+If the requirements are split into several files (*.trlc), a ReqIF file will be created for each. To generate a single ReqIF file the argument --single-document can be used, which will create an `output.reqif` file by default.
+
+The converter supports additional arguments that are shown by adding the --help option after the ReqIF subcommand.
+
+```bash
+pyTRLCConverter reqif --help
+
+usage: pyTRLCConverter reqif [-h] [-e EMPTY] [-n NAME] [-sd] [-tl TOP_LEVEL]
+
+options:
+  -h, --help            show this help message and exit
+  -e EMPTY, --empty EMPTY
+                        Every attribute value which is empty will output the string (default = N/A).
+  -n NAME, --name NAME  Name of the generated output file inside the output folder (default = output.reqif) in case a single document is generated.
+  -sd, --single-document
+                        Generate a single document instead of multiple files. The default is to generate multiple files.
+  -tl TOP_LEVEL, --top-level TOP_LEVEL
+                        Name of the top level section, required in single document mode (default = Specification).
+```
+
+Markdown-formatted requirement attributes configured via `--renderCfg` are automatically converted to ReqIF-compatible XHTML content.
+
+Conversion rules:
+
+- A TRLC type is converted to a ```SPEC-OBJECT-TYPE```.
+- Every ```SPEC-OBJECT-TYPE``` has its own attribute set that corresponds to the TRLC type attributes.
+- A section is converted to a ```SPEC-OBJECT-TYPE``` as well.
+- A section inside a section is child and all following object on this level.
+- The TRLC record name is mapped to an explicit string attribute named ```ID``` on the owning ```SPEC-OBJECT-TYPE```.
+- TRLC record references are converted to ```SPEC-RELATION-TYPE``` and ```SPEC-RELATION``` entries.
+  - The relation type name is the TRLC attribute name, for example ```link```.
+  - The reference field is no longer emitted as a regular object attribute.
+  - This preserves target links in a form that can later be imported by DOORS Next.
+  - The source and target records must be part of the same generated ReqIF document. Use ```--single-document``` when references span multiple TRLC files.
+
 ### Dump TRLC item list to console
 
 Mainly for development all TRLC items can be dumped to the console.
@@ -215,6 +260,7 @@ Supported by the formats:
 | dump             | Output as string literal | Output as string literal |
 | markdown         | X                        | X                        |
 | reStructuredText | X                        | X                        |
+| reqif            | X                        | X                        |
 
 Configuration example:
 

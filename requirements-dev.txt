@@ -12,3 +12,4 @@ sphinxcontrib-plantuml>=0.30
 sphinx-autoapi>=0.5.0
 m2r>=0.3.1
 bmw-lobster==1.0.*
+reqif>=0.0.54

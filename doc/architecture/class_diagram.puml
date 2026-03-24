@@ -32,6 +32,9 @@ package "Built-in Converters" {
 
     class "DumpConverter" as dumpConverter {
     }
+
+    class "ReqifConverter" as reqifConverter {
+    }
 }
 
 abstractConverter <|.. baseConverter: <<realize>>
@@ -39,6 +42,7 @@ baseConverter <|.. markdownConverter: <<realize>>
 baseConverter <|.. docxConverter: <<realize>>
 baseConverter <|.. dumpConverter: <<realize>>
 baseConverter <|.. rstConverter: <<realize>>
+baseConverter <|.. reqifConverter: <<realize>>
 
 class "version" as version <<module>> {
 }

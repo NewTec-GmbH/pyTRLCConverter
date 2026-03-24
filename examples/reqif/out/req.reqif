@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<REQ-IF xmlns="http://www.omg.org/spec/ReqIF/20110401/reqif.xsd" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <CORE-CONTENT>
+    <REQ-IF-CONTENT>
+      <DATATYPES>
+        <DATATYPE-DEFINITION-XHTML IDENTIFIER="datatype-xhtml" LAST-CHANGE="2026-03-24T19:55:28+00:00" LONG-NAME="XHTML">
+        </DATATYPE-DEFINITION-XHTML>
+        <DATATYPE-DEFINITION-STRING IDENTIFIER="datatype-string" LAST-CHANGE="2026-03-24T19:55:28+00:00" LONG-NAME="String" MAX-LENGTH="255"/>
+      </DATATYPES>
+      <SPEC-TYPES>
+        <SPEC-OBJECT-TYPE IDENTIFIER="spec-object-type-section" LAST-CHANGE="2026-03-24T19:55:28+00:00" LONG-NAME="Section">
+          <SPEC-ATTRIBUTES>
+          </SPEC-ATTRIBUTES>
+        </SPEC-OBJECT-TYPE>
+        <SPEC-OBJECT-TYPE IDENTIFIER="spec-object-type-requirement" LAST-CHANGE="2026-03-24T19:55:28+00:00" LONG-NAME="Requirement">
+          <SPEC-ATTRIBUTES>
+            <ATTRIBUTE-DEFINITION-STRING IDENTIFIER="attribute-spec-object-type-requirement-externalid" LONG-NAME="External ID" MULTI-VALUED="false">
+              <TYPE>
+                <DATATYPE-DEFINITION-STRING-REF>datatype-string</DATATYPE-DEFINITION-STRING-REF>
+              </TYPE>
+            </ATTRIBUTE-DEFINITION-STRING>
+            <ATTRIBUTE-DEFINITION-XHTML IDENTIFIER="attribute-spec-object-type-requirement-field-derived" LONG-NAME="derived" MULTI-VALUED="false">
+              <TYPE>
+                <DATATYPE-DEFINITION-XHTML-REF>datatype-xhtml</DATATYPE-DEFINITION-XHTML-REF>
+              </TYPE>
+            </ATTRIBUTE-DEFINITION-XHTML>
+            <ATTRIBUTE-DEFINITION-XHTML IDENTIFIER="attribute-spec-object-type-requirement-field-description" LONG-NAME="Description" MULTI-VALUED="false">
+              <TYPE>
+                <DATATYPE-DEFINITION-XHTML-REF>datatype-xhtml</DATATYPE-DEFINITION-XHTML-REF>
+              </TYPE>
+            </ATTRIBUTE-DEFINITION-XHTML>
+            <ATTRIBUTE-DEFINITION-XHTML IDENTIFIER="attribute-spec-object-type-requirement-field-name" LONG-NAME="Name" MULTI-VALUED="false">
+              <TYPE>
+                <DATATYPE-DEFINITION-XHTML-REF>datatype-xhtml</DATATYPE-DEFINITION-XHTML-REF>
+              </TYPE>
+            </ATTRIBUTE-DEFINITION-XHTML>
+            <ATTRIBUTE-DEFINITION-XHTML IDENTIFIER="attribute-spec-object-type-requirement-field-status" LONG-NAME="Status" MULTI-VALUED="false">
+              <TYPE>
+                <DATATYPE-DEFINITION-XHTML-REF>datatype-xhtml</DATATYPE-DEFINITION-XHTML-REF>
+              </TYPE>
+            </ATTRIBUTE-DEFINITION-XHTML>
+          </SPEC-ATTRIBUTES>
+        </SPEC-OBJECT-TYPE>
+        <SPEC-RELATION-TYPE IDENTIFIER="spec-relation-type-derived" LAST-CHANGE="2026-03-24T19:55:28+00:00" LONG-NAME="derived"/>
+        <SPECIFICATION-TYPE IDENTIFIER="specification-type-trlc" LAST-CHANGE="2026-03-24T19:55:28+00:00" LONG-NAME="TRLC Specification">
+          <SPEC-ATTRIBUTES>
+          </SPEC-ATTRIBUTES>
+        </SPECIFICATION-TYPE>
+      </SPEC-TYPES>
+      <SPEC-OBJECTS>
+        <SPEC-OBJECT IDENTIFIER="spec-object-1" LAST-CHANGE="2026-03-24T19:55:28+00:00" LONG-NAME="req_plain_text">
+          <VALUES>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="req_plain_text">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>attribute-spec-object-type-requirement-externalid</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>attribute-spec-object-type-requirement-field-derived</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE><div xmlns="http://www.w3.org/1999/xhtml"><p>N/A</p></div></THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>attribute-spec-object-type-requirement-field-description</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE><div xmlns="http://www.w3.org/1999/xhtml"><p>This requirements is written with plain text.</p></div></THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>attribute-spec-object-type-requirement-field-name</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE><div xmlns="http://www.w3.org/1999/xhtml"><p>plain text</p></div></THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>attribute-spec-object-type-requirement-field-status</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE><div xmlns="http://www.w3.org/1999/xhtml"><p>Status.Draft</p></div></THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+          </VALUES>
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>spec-object-type-requirement</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+        </SPEC-OBJECT>
+        <SPEC-OBJECT IDENTIFIER="spec-object-3" LAST-CHANGE="2026-03-24T19:55:28+00:00" LONG-NAME="req_table">
+          <VALUES>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="req_table">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>attribute-spec-object-type-requirement-externalid</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>attribute-spec-object-type-requirement-field-derived</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE><div xmlns="http://www.w3.org/1999/xhtml"><p>N/A</p></div></THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>attribute-spec-object-type-requirement-field-description</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE><div xmlns="http://www.w3.org/1999/xhtml"><table>
+<thead>
+<tr>
+<th>Column 1</th>
+<th>Column 2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A</td>
+<td>B</td>
+</tr>
+</tbody></table></div></THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>attribute-spec-object-type-requirement-field-name</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE><div xmlns="http://www.w3.org/1999/xhtml"><p>table</p></div></THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>attribute-spec-object-type-requirement-field-status</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE><div xmlns="http://www.w3.org/1999/xhtml"><p>Status.Draft</p></div></THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+          </VALUES>
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>spec-object-type-requirement</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+        </SPEC-OBJECT>
+        <SPEC-OBJECT IDENTIFIER="spec-object-5" LAST-CHANGE="2026-03-24T19:55:28+00:00" LONG-NAME="Children">
+          <VALUES/>
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>spec-object-type-section</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+        </SPEC-OBJECT>
+        <SPEC-OBJECT IDENTIFIER="spec-object-7" LAST-CHANGE="2026-03-24T19:55:28+00:00" LONG-NAME="req_child_1">
+          <VALUES>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="req_child_1">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>attribute-spec-object-type-requirement-externalid</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>attribute-spec-object-type-requirement-field-derived</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE><div xmlns="http://www.w3.org/1999/xhtml"><p>N/A</p></div></THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>attribute-spec-object-type-requirement-field-description</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE><div xmlns="http://www.w3.org/1999/xhtml"><p>This requirements is child 1.</p></div></THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>attribute-spec-object-type-requirement-field-name</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE><div xmlns="http://www.w3.org/1999/xhtml"><p>child 1</p></div></THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>attribute-spec-object-type-requirement-field-status</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE><div xmlns="http://www.w3.org/1999/xhtml"><p>Status.Draft</p></div></THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+          </VALUES>
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>spec-object-type-requirement</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+        </SPEC-OBJECT>
+        <SPEC-OBJECT IDENTIFIER="spec-object-9" LAST-CHANGE="2026-03-24T19:55:28+00:00" LONG-NAME="req_child_2">
+          <VALUES>
+            <ATTRIBUTE-VALUE-STRING THE-VALUE="req_child_2">
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-STRING-REF>attribute-spec-object-type-requirement-externalid</ATTRIBUTE-DEFINITION-STRING-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-STRING>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>attribute-spec-object-type-requirement-field-description</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE><div xmlns="http://www.w3.org/1999/xhtml"><p>This requirements is child 2.</p></div></THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>attribute-spec-object-type-requirement-field-name</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE><div xmlns="http://www.w3.org/1999/xhtml"><p>child 2</p></div></THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>attribute-spec-object-type-requirement-field-status</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+              <THE-VALUE><div xmlns="http://www.w3.org/1999/xhtml"><p>Status.Draft</p></div></THE-VALUE>
+            </ATTRIBUTE-VALUE-XHTML>
+          </VALUES>
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>spec-object-type-requirement</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+        </SPEC-OBJECT>
+      </SPEC-OBJECTS>
+      <SPEC-RELATIONS>
+        <SPEC-RELATION IDENTIFIER="spec-relation-11" LAST-CHANGE="2026-03-24T19:55:28+00:00" LONG-NAME="derived">
+          <TYPE>
+            <SPEC-RELATION-TYPE-REF>spec-relation-type-derived</SPEC-RELATION-TYPE-REF>
+          </TYPE>
+          <SOURCE>
+            <SPEC-OBJECT-REF>spec-object-9</SPEC-OBJECT-REF>
+          </SOURCE>
+          <TARGET>
+            <SPEC-OBJECT-REF>spec-object-7</SPEC-OBJECT-REF>
+          </TARGET>
+        </SPEC-RELATION>
+      </SPEC-RELATIONS>
+      <SPECIFICATIONS>
+        <SPECIFICATION IDENTIFIER="specification-12" LAST-CHANGE="2026-03-24T19:55:28+00:00" LONG-NAME="req">
+          <TYPE>
+            <SPECIFICATION-TYPE-REF>specification-type-trlc</SPECIFICATION-TYPE-REF>
+          </TYPE>
+          <CHILDREN>
+                <SPEC-HIERARCHY IDENTIFIER="hierarchy-2" IS-EDITABLE="false" IS-TABLE-INTERNAL="false" LONG-NAME="req_plain_text">
+                  <OBJECT>
+                    <SPEC-OBJECT-REF>spec-object-1</SPEC-OBJECT-REF>
+                  </OBJECT>
+                  <CHILDREN>
+                  </CHILDREN>
+                </SPEC-HIERARCHY>
+                <SPEC-HIERARCHY IDENTIFIER="hierarchy-4" IS-EDITABLE="false" IS-TABLE-INTERNAL="false" LONG-NAME="req_table">
+                  <OBJECT>
+                    <SPEC-OBJECT-REF>spec-object-3</SPEC-OBJECT-REF>
+                  </OBJECT>
+                  <CHILDREN>
+                  </CHILDREN>
+                </SPEC-HIERARCHY>
+            <SPEC-HIERARCHY IDENTIFIER="hierarchy-6" IS-EDITABLE="false" IS-TABLE-INTERNAL="false" LONG-NAME="Children">
+              <OBJECT>
+                <SPEC-OBJECT-REF>spec-object-5</SPEC-OBJECT-REF>
+              </OBJECT>
+              <CHILDREN>
+                <SPEC-HIERARCHY IDENTIFIER="hierarchy-8" IS-EDITABLE="false" IS-TABLE-INTERNAL="false" LONG-NAME="req_child_1">
+                  <OBJECT>
+                    <SPEC-OBJECT-REF>spec-object-7</SPEC-OBJECT-REF>
+                  </OBJECT>
+                  <CHILDREN>
+                  </CHILDREN>
+                </SPEC-HIERARCHY>
+                <SPEC-HIERARCHY IDENTIFIER="hierarchy-10" IS-EDITABLE="false" IS-TABLE-INTERNAL="false" LONG-NAME="req_child_2">
+                  <OBJECT>
+                    <SPEC-OBJECT-REF>spec-object-9</SPEC-OBJECT-REF>
+                  </OBJECT>
+                  <CHILDREN>
+                  </CHILDREN>
+                </SPEC-HIERARCHY>
+              </CHILDREN>
+            </SPEC-HIERARCHY>
+          </CHILDREN>
+          <VALUES/>
+        </SPECIFICATION>
+      </SPECIFICATIONS>
+    </REQ-IF-CONTENT>
+  </CORE-CONTENT>
+</REQ-IF>

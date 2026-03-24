@@ -1,0 +1,34 @@
+package Requirements
+
+Requirement req_plain_text {
+    name = "plain text"
+    description = "This requirements is written with plain text."
+    status = Status.Draft
+}
+
+Requirement req_table {
+    name = "table"
+    description =
+    '''
+    | Column 1 | Column 2 |
+    | -------- | -------- |
+    | A        | B        |
+    '''
+    status = Status.Draft
+}
+
+section "Children" {
+
+    Requirement req_child_1 {
+        name = "child 1"
+        description = "This requirements is child 1."
+        status = Status.Draft
+    }
+
+    Requirement req_child_2 {
+        name = "child 2"
+        description = "This requirements is child 2."
+        derived = [Requirements.req_child_1]
+        status = Status.Draft
+    }
+}

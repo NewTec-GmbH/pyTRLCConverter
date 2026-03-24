@@ -1,0 +1,11 @@
+package Requirements
+
+type SwReq {
+    description             String
+    verification            String
+}
+
+type SwReqNonFunc {
+    constraint              String
+    rationale               optional String
+}

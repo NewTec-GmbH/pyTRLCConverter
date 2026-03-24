@@ -1,0 +1,17 @@
+{
+    "renderCfg": 
+    [
+        {
+            "package": ".*",
+            "type": "Information",
+            "attribute": "description",
+            "format": "gfm"
+        },
+        {
+            "package": ".*",
+            "type": "Requirement",
+            "attribute": "description",
+            "format": "gfm"
+        }
+    ]   
+}

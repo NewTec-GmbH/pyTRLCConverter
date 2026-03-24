@@ -1,0 +1,14 @@
+package Requirements
+
+Requirement req_a {
+    description = "Requirement A"
+}
+
+Requirement req_b {
+    description = "Requirement B"
+}
+
+TestCase tc_array {
+    description = "Test case with two verified requirements"
+    verifies = [req_a, req_b]
+}

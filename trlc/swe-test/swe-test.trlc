@@ -299,6 +299,43 @@ section "SW-Test Cases" {
         }
     }
 
+    section "ReqIF" {
+
+        SwTestCase tc_reqif {
+            description = "This test case checks whether the conversion to ReqIF format works."
+            verifies = [
+                SwRequirements.sw_req_reqif,
+                SwRequirements.sw_req_reqif_record,
+                SwRequirements.sw_req_no_prj_spec,
+                SwRequirements.sw_req_cli_out,
+                SwRequirements.sw_req_reqif_single_doc_mode,
+                SwRequirements.sw_req_reqif_out_file_name_default,
+                SwRequirements.sw_req_reqif_top_level_default]
+        }
+
+        SwTestCase tc_reqif_section {
+            description = "This test case checks whether the conversion of a TRLC section to a ReqIF hierarchy section works."
+            verifies = [SwRequirements.sw_req_reqif_section]
+        }
+
+        SwTestCase tc_reqif_single_doc_custom {
+            description = "This test case checks whether the conversion to ReqIF in single document mode is customizable."
+            verifies = [SwRequirements.sw_req_reqif_out_file_name_custom, SwRequirements.sw_req_reqif_top_level_custom]
+        }
+
+        SwTestCase tc_reqif_render_md {
+            description = '''This test case checks whether CommonMark Markdown content in requirement attributes is rendered correctly
+             when the render configuration is set to "md".'''
+            verifies = [SwRequirements.sw_req_reqif_render_md]
+        }
+
+        SwTestCase tc_reqif_render_gfm {
+            description = '''This test case checks whether GitHub Flavored Markdown content in requirement attributes is rendered correctly
+             when the render configuration is set to "gfm".'''
+            verifies = [SwRequirements.sw_req_reqif_render_gfm]
+        }
+    }
+
     section "Docx" {
 
         SwTestCase tc_docx {

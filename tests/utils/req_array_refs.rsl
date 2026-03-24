@@ -1,0 +1,10 @@
+package Requirements
+
+type Requirement {
+    description String
+}
+
+type TestCase {
+    description String
+    verifies Requirement [0 .. *]
+}

@@ -38,6 +38,7 @@ from pyTRLCConverter.markdown_converter import MarkdownConverter
 from pyTRLCConverter.docx_converter import DocxConverter
 from pyTRLCConverter.logger import enable_verbose, log_verbose, is_verbose_enabled, log_error
 from pyTRLCConverter.rst_converter import RstConverter
+from pyTRLCConverter.reqif_converter import ReqifConverter
 from pyTRLCConverter.render_config import RenderConfig
 
 # Variables ********************************************************************
@@ -53,7 +54,8 @@ BUILD_IN_CONVERTER_LIST = [
     MarkdownConverter,
     DocxConverter,
     DumpConverter,
-    RstConverter
+    RstConverter,
+    ReqifConverter
 ]
 
 # Classes **********************************************************************
