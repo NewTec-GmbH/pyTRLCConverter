@@ -2,10 +2,10 @@
    sphinx-quickstart on Thu Jan 30 11:04:25 2025.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
+   
 .. figure:: ../../../doc/images/NewTec_Logo_Slogan.png
    :align: right
    :figwidth: 400px
-|
 pyTRLCConverter documentation
 =============================
 
@@ -15,10 +15,6 @@ of TRLC types is project-specific, the built-in converters can be extended in
 an object-oriented manner.
 
 .. uml:: ../../../doc/architecture/context_diagram.puml
-
-.. figure:: ../../../doc/images/Gitterkugel_grau.png
-   :align: right
-   :figwidth: 250px
 
 .. toctree::
    :maxdepth: 1

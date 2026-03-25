@@ -45,15 +45,27 @@ author = 'NewTec GmbH'
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
 
-extensions = ['sphinx.ext.autodoc',  # extension for python docstring
-              'sphinx.ext.napoleon',  # extension to support google docstring style
-              'sphinx_favicon',  # extension to support favicon for html output
-              'sphinx.ext.viewcode',  # view code in documentation
-              'sphinx.ext.autosummary',  # crawls python files to extract content
-              'sphinxcontrib.plantuml',  # plantuml support
-              'myst_parser',              # markdown support
-              'autoapi.extension',
-              'sphinx.ext.inheritance_diagram' # Extension to generate inheritance diagrams.
+extensions = [ 
+    # https://www.sphinx-doc.org/en/master/usage/markdown.html
+    'myst_parser',
+    # Extension for the Read the Docs theme, which provides a modern and responsive design for documentation. 
+    'sphinx_rtd_theme',    
+    # https://github.com/sphinx-contrib/plantuml
+    'sphinxcontrib.plantuml',
+    # https://sphinx-autoapi.readthedocs.io/en/latest/tutorials.html#python
+    'autoapi.extension',
+    # Extension to support google docstring style and numpy docstring style.
+    'sphinx.ext.napoleon',
+    # Extension to view source code in documentation.
+    'sphinx.ext.viewcode',
+    # Extension to generate inheritance diagrams.
+    'sphinx.ext.inheritance_diagram',
+    # Extension to automatically generate documentation from docstrings in the code.
+    'sphinx.ext.autodoc',  
+    # extension to support favicon for html output
+    'sphinx_favicon',  
+    # crawls python files to extract content for autodoc and generates summary tables for modules and classes.
+    'sphinx.ext.autosummary',  
 ]
 
 templates_path = ['_templates']
