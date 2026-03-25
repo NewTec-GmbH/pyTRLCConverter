@@ -195,9 +195,10 @@ def _assert_reqif_v12_compliance(reqif_file: str, tmp_path: Path):
         '<xsd:import namespace="http://www.w3.org/XML/1998/namespace" '
         'schemaLocation="http://www.w3.org/2001/xml.xsd"/>'
     )
+    xml_schema_path = str(xml_schema_stub).replace("\\", "/")
     xml_import_replacement = (
         '<xsd:import namespace="http://www.w3.org/XML/1998/namespace" '
-        f'schemaLocation="{str(xml_schema_stub).replace("\\", "/")}"/>'
+        f'schemaLocation="{xml_schema_path}"/>'
     )
     patched_schema_content = patched_schema_content.replace(
         xml_import,
