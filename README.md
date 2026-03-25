@@ -321,14 +321,16 @@ Tools used for development or automations, see [Tools](./tools/README.md).
 
 Used 3rd party libraries which are not part of the standard Python package:
 
-| Library                                                      | Description                                        | License    |
-| ------------------------------------------------------------ | -------------------------------------------------- | ---------- |
-| [PlantUML](https://github.com/plantuml/plantuml)             | Generate UML diagrams.                             | GPL-3.0    |
-| [python-docx](https://github.com/python-openxml/python-docx) | Creation of Microsoft Word 2007+ (.docx) files.    | MIT        |
-| [requests](https://github.com/psf/requests)                  | HTTP processing                                    | Apache-2.0 |
-| [sphinx](https://github.com/sphinx-doc/sphinx)               | Using Sphinx for documentation deployment.         | BSD        |
-| [toml](https://github.com/uiri/toml)                         | Parsing [TOML](https://en.wikipedia.org/wiki/TOML) | MIT        |
-| [trlc](https://github.com/bmw-software-engineering/trlc)     | Treat Requirements Like Code                       | GPL-3.0    |
+| Library                                                      | Description                                              | License    |
+| ------------------------------------------------------------ | -------------------------------------------------------- | ---------- |
+| [Marko](https://github.com/frostming/marko)                  | A markdown parser with high extensibility.               | MIT        |
+| [ReqIF](https://github.com/strictdoc-project/reqif)          | ReqIF is a Python library for working with ReqIF format. | Apache-2.0 |
+| [PlantUML](https://github.com/plantuml/plantuml)             | Generate UML diagrams.                                   | GPL-3.0    |
+| [python-docx](https://github.com/python-openxml/python-docx) | Creation of Microsoft Word 2007+ (.docx) files.          | MIT        |
+| [requests](https://github.com/psf/requests)                  | HTTP processing                                          | Apache-2.0 |
+| [sphinx](https://github.com/sphinx-doc/sphinx)               | Using Sphinx for documentation deployment.               | BSD        |
+| [toml](https://github.com/uiri/toml)                         | Parsing [TOML](https://en.wikipedia.org/wiki/TOML)       | MIT        |
+| [trlc](https://github.com/bmw-software-engineering/trlc)     | Treat Requirements Like Code                             | GPL-3.0    |
 
 see also [requirements.txt](requirements.txt)
 
