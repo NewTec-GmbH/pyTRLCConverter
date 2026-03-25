@@ -5,7 +5,7 @@
 """
 
 # pyTRLCConverter - A tool to convert PlantUML diagrams to image files.
-# Copyright (c) 2024 - 2025 NewTec GmbH
+# Copyright (c) 2024 - 2026 NewTec GmbH
 #
 # This file is part of pyTRLCConverter program.
 #
@@ -24,6 +24,7 @@
 import os
 import shutil
 import fnmatch
+import json
 
 from typing import Any
 from urllib.parse import urlparse
@@ -37,19 +38,12 @@ from sphinx.errors import ConfigError
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = 'pyTRLCConverter'
-copyright = '2025, NewTec GmbH'
+copyright = '2024 - 2026, NewTec GmbH'
 author = 'NewTec GmbH'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
-#extensions = [
-    # https://www.sphinx-doc.org/en/master/usage/markdown.html
-    #'myst_parser',
-    #'sphinx_rtd_theme',
-    # https://github.com/sphinx-contrib/plantuml
-    #'sphinxcontrib.plantuml'
-#]
 
 extensions = ['sphinx.ext.autodoc',  # extension for python docstring
               'sphinx.ext.napoleon',  # extension to support google docstring style
@@ -57,9 +51,10 @@ extensions = ['sphinx.ext.autodoc',  # extension for python docstring
               'sphinx.ext.viewcode',  # view code in documentation
               'sphinx.ext.autosummary',  # crawls python files to extract content
               'sphinxcontrib.plantuml',  # plantuml support
-              'myst_parser'              # markdown support
-] 
-
+              'myst_parser',              # markdown support
+              'autoapi.extension',
+              'sphinx.ext.inheritance_diagram' # Extension to generate inheritance diagrams.
+]
 
 templates_path = ['_templates']
 exclude_patterns = []
@@ -72,7 +67,36 @@ rst_prolog = """
 
 """
 
-# -- MyST parser configuration ---------------------------------------------------
+# sphinx-autoapi configuration
+# https://sphinx-autoapi.readthedocs.io/en/latest/reference/config.html
+autoapi_dirs = ['../../../src']
+autoapi_root = 'api'
+autoapi_ignore = ['*/marko/*']      # Exclude internal marko renderers from public API docs
+autoapi_add_toctree_entry = False   # Included manually in sw_detail_design.rst
+autoapi_member_order = 'groupwise'  # Classes, then functions, then attributes
+autoapi_options = [
+    'members',                  # Show module/class members
+    'undoc-members',            # Include members without docstrings
+    'private-members',          # Include private members (starting with _)
+    'special-members',          # Include special members (starting and ending with __)
+    'show-inheritance',         # Show base classes on class pages
+    'show-inheritance-diagram', # Show inheritance diagrams for classes
+    'show-module-summary'       # Summary table at the top of each module page
+]
+suppress_warnings = ['autoapi.python_import_resolution', 'autoapi.not_readable']
+
+# sphinx.ext.inheritance_diagram configuration
+# https://www.sphinx-doc.org/en/master/usage/extensions/inheritance.html
+inheritance_graph_attrs = {
+    'rankdir': 'TB',  # Top-to-bottom layout (use 'LR' for left-to-right)
+    'size': '"8.0, 12.0"',
+    'bgcolor': 'transparent',
+}
+inheritance_edge_attrs = {
+    'arrowsize': '1.5',
+}
+
+# MyST parser configuration ---------------------------------------------------
 
 # Configure MyST parser to generate GitHub-style anchors
 myst_heading_anchors = 6
@@ -81,14 +105,13 @@ myst_heading_anchors = 6
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
 html_theme = 'sphinx_rtd_theme'
+# set html_logo to None to show only the project name in the header, or set it to the path of the logo image to show both the logo and project name.
+html_theme_options = {   
+    'style_nav_header_background': '#0C2C40',   # Set the navigation header background color to NewTec black  #0C2C40
+}
 html_static_path = ['_static']
-html_js_files = [
-    'custom.js',
-]
-html_css_files = [
-    "css/custom.css",
-]
-
+html_css_files = ['custom.css']
+html_js_files = ['version_selector.js']
 
 # Copy favorite icon to static path.
 html_favicon = '../../../doc/images/favicon.ico'
@@ -117,6 +140,71 @@ favicons = [
 plantuml_env = os.getenv('PLANTUML')
 plantuml = []
 
+
+def _build_version_links() -> tuple[str, list[tuple[str, str]]]:
+    """Build documentation version selector entries for the RTD theme.
+
+    It divides between local and deployed documentation based on the presence of environment variables.
+
+    Environment parameters:
+        DOCS_VERSION: Current docs version shown as active entry.
+            Falls back to ``local`` if not set.
+        DOCS_VERSIONS: Comma-separated list of versions shown in the selector.
+            Defaults to ``latest,unstable``.
+        DOCS_LATEST_TARGET: Version folder used for the ``latest`` selector entry.
+            Defaults to ``latest``.
+        DOCS_BASE_PATH: Base URL path for generated links.
+            If not set, it is derived from GITHUB_REPOSITORY.
+
+    Returns:
+        tuple[str, list[tuple[str, str]]]:
+            Current version and a list of ``(label, url)`` selector entries.
+    """
+    current_version = os.getenv('DOCS_VERSION') or 'local'
+    version_links = []
+
+    # Local documentation does not have version selector entries, as it is only used for development and testing.
+    if current_version == 'local':
+        version_links.append(('local', '.'))
+
+    # For deployed documentation, build the version selector entries based on environment variables.
+    else:
+        configured_versions = os.getenv('DOCS_VERSIONS', 'unstable')
+        latest_target = os.getenv('DOCS_LATEST_TARGET', 'latest').strip() or 'latest'
+        versions = [version.strip() for version in configured_versions.split(',') if version.strip()]
+
+        if current_version not in versions:
+            versions.insert(0, current_version)
+
+        docs_base_path = os.getenv('DOCS_BASE_PATH', '')
+        if not docs_base_path:
+            repository = os.getenv('GITHUB_REPOSITORY', '')
+            if '/' in repository:
+                docs_base_path = f"/{repository.split('/', maxsplit=1)[1]}"
+
+        docs_base_path = docs_base_path.rstrip('/')
+        for version in versions:
+            if docs_base_path:
+                version_links.append((version, f"{docs_base_path}/{version}/"))
+            else:
+                version_links.append((version, f"/{version}/"))
+
+        if docs_base_path:
+            latest_url = f"{docs_base_path}/{latest_target}/"
+        else:
+            latest_url = f"/{latest_target}/"
+
+        version_links.insert(0, ('latest', latest_url))
+
+    return current_version, version_links
+
+current_version, versions_for_selector = _build_version_links()
+html_context = {
+    'current_version': current_version,
+    'version': current_version,
+    'versions': versions_for_selector
+}
+
 # Classes **********************************************************************
 
 # Functions ********************************************************************
@@ -144,7 +232,28 @@ def setup(app: Any) -> None:
     Args:
         app (Any): The sphinx application.
     """
+    app.connect('builder-inited', write_version_selector_data)
     app.connect('builder-inited', copy_files)
+
+
+def write_version_selector_data(app: Any) -> None:
+    """Create selector data consumed by local version selector JavaScript.
+
+    Args:
+        app (Any): The sphinx application.
+    """
+    static_dir = os.path.join(os.path.dirname(__file__), '_static')
+    selector_file = os.path.join(static_dir, 'version_selector_data.js')
+
+    selector_data = {
+        'current': current_version,
+        'versions': [{'label': slug, 'url': url} for slug, url in versions_for_selector]
+    }
+
+    with open(selector_file, 'w', encoding='utf-8') as file:
+        file.write(
+            f"window.PYTRLC_DOCS_VERSION_SELECTOR = {json.dumps(selector_data)};\n"
+        )
 
 def copy_files(app: Any) -> None:
     """Copy files to the output directory.

@@ -3,7 +3,7 @@ package SwTests
 import Generic
 import SwRequirements
 
-section "SW-Tests" {
+section "SW-Test Cases" {
 
     Generic.Info sw_test_info_about_sw_test {
         description = "This file contains the software test cases for the pyTRLCConverter tool."
@@ -186,9 +186,15 @@ section "SW-Tests" {
         }
 
         SwTestCase tc_markdown_render_md {
-            description = '''This test case checks whether Markdown content in requirement attributes is rendered correctly
+            description = '''This test case checks whether CommonMark Markdown content in requirement attributes is rendered correctly
              when the render configuration is set to "md".'''
             verifies = [SwRequirements.sw_req_markdown_render_md, SwRequirements.sw_req_markdown_string_format]
+        }
+
+        SwTestCase tc_markdown_render_gfm {
+            description = '''This test case checks whether GitHub Flavored Markdown content in requirement attributes is rendered correctly
+             when the render configuration is set to "gfm".'''
+            verifies = [SwRequirements.sw_req_markdown_render_gfm, SwRequirements.sw_req_markdown_string_format]
         }
     }
 
@@ -281,9 +287,15 @@ section "SW-Tests" {
         }
 
         SwTestCase tc_rst_render_md {
-            description = '''This test case checks whether Markdown content in requirement attributes is rendered correctly
+            description = '''This test case checks whether CommonMark Markdown content in requirement attributes is rendered correctly
              when the render configuration is set to "md".'''
             verifies = [SwRequirements.sw_req_rst_render_md]
+        }
+
+        SwTestCase tc_rst_render_gfm {
+            description = '''This test case checks whether GitHub Flavored Markdown content in requirement attributes is rendered correctly
+             when the render configuration is set to "gfm".'''
+            verifies = [SwRequirements.sw_req_rst_render_gfm]
         }
     }
 
@@ -315,7 +327,7 @@ section "SW-Tests" {
         }
 
         SwTestCase tc_docx_render_md {
-            description = "this test case checks whether the conversion from markdown strings to docx works correctly."
+            description = "this test case checks whether the conversion from CommonMark Markdown strings to docx works correctly."
             verifies = [SwRequirements.sw_req_docx_render_md]
         }
 

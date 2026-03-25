@@ -4,7 +4,7 @@
 """
 
 # pyTRLCConverter - A tool to convert TRLC files to specific formats.
-# Copyright (c) 2024 - 2025 NewTec GmbH
+# Copyright (c) 2024 - 2026 NewTec GmbH
 #
 # This file is part of pyTRLCConverter program.
 #
@@ -31,7 +31,7 @@ from docx.enum.style import WD_STYLE_TYPE
 from marko import Markdown
 from trlc.ast import Implicit_Null, Record_Object, Record_Reference, String_Literal, Array_Aggregate, Expression
 from pyTRLCConverter.base_converter import BaseConverter
-from pyTRLCConverter.marko.docx_renderer import DocxRenderer
+from pyTRLCConverter.marko.md2docx_renderer import Md2DocxRenderer
 from pyTRLCConverter.ret import Ret
 from pyTRLCConverter.trlc_helper import TrlcAstWalker
 from pyTRLCConverter.logger import log_verbose
@@ -41,15 +41,14 @@ from pyTRLCConverter.logger import log_verbose
 # Classes **********************************************************************
 
 class DocxConverter(BaseConverter):
-    """
-    Converter to docx format.
+    """Converter to docx format.
 
     The following Word docx objects are used:
-    - Document: Represents the entire Word document. You can create a new document or load an existing one.
-    - Paragraph: A block of text in the document. It has its own formatting properties.
-    - Run: A contiguous run of text with the same formatting. You can change the formatting of a run
-            independently within a paragraph.
-    - Table: A two-dimensional structure for presenting data in rows and columns.
+
+    - **Document**: Represents the entire Word document.
+    - **Paragraph**: A block of text in the document with its own formatting properties.
+    - **Run**: A contiguous run of text with the same formatting within a paragraph.
+    - **Table**: A two-dimensional structure for presenting data in rows and columns.
     """
 
     OUTPUT_FILE_NAME_DEFAULT = "output.docx"
@@ -356,10 +355,10 @@ class DocxConverter(BaseConverter):
         """
         assert self._block_item_container is not None
 
-        # If the attribute is marked as markdown format, convert it.
+        # If the attribute is marked as CommonMark Markdown format, convert it.
         if self._render_cfg.is_format_md(package_name, type_name, attribute_name) is True:
-            DocxRenderer.block_item_container = self._block_item_container
-            markdown = Markdown(renderer=DocxRenderer)
+            Md2DocxRenderer.block_item_container = self._block_item_container
+            markdown = Markdown(renderer=Md2DocxRenderer)
             markdown.convert(attribute_value)
         else:
             self._block_item_container.add_paragraph(attribute_value)

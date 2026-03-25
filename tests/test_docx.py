@@ -2,7 +2,7 @@
 """
 
 # pyTRLCConverter - A tool to convert TRLC files to specific formats.
-# Copyright (c) 2024 - 2025 NewTec GmbH
+# Copyright (c) 2024 - 2026 NewTec GmbH
 #
 # This file is part of pyTRLCConverter program.
 #
@@ -114,8 +114,8 @@ def test_tc_docx_multiple(record_property, capsys, monkeypatch, tmp_path):
     assert created_docx.tables[1].cell(2, 1).text == "Requirements.req_id_5"
 
     # Check that the hyperlink anchors were correctly set. Cells paragraph needs to hold a hyperlink with orrect anchor.
-    assert created_docx.tables[0].cell(2, 1).paragraphs[0]._p.hyperlink_lst[0].anchor == "req_id_6"
-    assert created_docx.tables[1].cell(2, 1).paragraphs[0]._p.hyperlink_lst[0].anchor == "req_id_5"
+    assert created_docx.tables[0].cell(2, 1).paragraphs[0]._p.hyperlink_lst[0].anchor == "req_id_6" # pylint: disable=protected-access
+    assert created_docx.tables[1].cell(2, 1).paragraphs[0]._p.hyperlink_lst[0].anchor == "req_id_5" # pylint: disable=protected-access
 
 def test_tc_docx_section(record_property, capsys, monkeypatch, tmp_path):
     # lobster-trace: SwTests.tc_docx_section
@@ -272,7 +272,7 @@ def test_tc_docx_render_md(record_property, capsys, monkeypatch, tmp_path):
     created_docx = docx.Document(docx=str(tmp_path / DocxConverter.OUTPUT_FILE_NAME_DEFAULT))
 
     # Check that the requirement is present.
-    assert created_docx.paragraphs[1].text == "req_id_4 (Requirement)"
+    assert created_docx.paragraphs[1].text == "req_id_md (Requirement)"
 
     # Check that the description was converted.
     assert created_docx.tables[0].cell(1, 0).text == "description"
@@ -304,4 +304,3 @@ def test_tc_docx_render_md(record_property, capsys, monkeypatch, tmp_path):
         r'',
         r'[Link to pyTRLCConverter](https://github.com/NewTec-GmbH/pyTRLCConverter)',
   ]
-    

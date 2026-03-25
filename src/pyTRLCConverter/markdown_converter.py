@@ -4,7 +4,7 @@
 """
 
 # pyTRLCConverter - A tool to convert TRLC files to specific formats.
-# Copyright (c) 2024 - 2025 NewTec GmbH
+# Copyright (c) 2024 - 2026 NewTec GmbH
 #
 # This file is part of pyTRLCConverter program.
 #
@@ -424,6 +424,7 @@ class MarkdownConverter(BaseConverter):
     def _on_string_literal(self, string_literal: String_Literal) -> str:
         # lobster-trace: SwRequirements.sw_req_markdown_string_format
         # lobster-trace: SwRequirements.sw_req_markdown_render_md
+        # lobster-trace: SwRequirements.sw_req_markdown_render_gfm
         """
         Process the given string literal value.
 
@@ -536,6 +537,7 @@ class MarkdownConverter(BaseConverter):
     def _render(self, package_name: str, type_name: str, attribute_name: str, attribute_value: str) -> str:
         # lobster-trace: SwRequirements.sw_req_markdown_string_format
         # lobster-trace: SwRequirements.sw_req_markdown_render_md
+        # lobster-trace: SwRequirements.sw_req_markdown_render_gfm
         """Render the attribute value depened on its format.
 
         Args:
@@ -550,7 +552,9 @@ class MarkdownConverter(BaseConverter):
         result = attribute_value
 
         # If the attribute value is not already in Markdown format, it will be escaped.
-        if self._render_cfg.is_format_md(package_name, type_name, attribute_name) is False:
+        if self._render_cfg.is_format_md(package_name, type_name, attribute_name) is False and \
+            self._render_cfg.is_format_gfm(package_name, type_name, attribute_name) is False:
+
             result = self.markdown_escape(attribute_value)
             result = self.markdown_lf2soft_return(result)
 

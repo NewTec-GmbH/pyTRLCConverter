@@ -1,7 +1,7 @@
 @echo off
 
 rem pyTRLCConverter - A tool to convert TRLC files to specific formats.
-rem Copyright (c) 2024 - 2025 NewTec GmbH
+rem Copyright (c) 2024 - 2026 NewTec GmbH
 rem
 rem This file is part of pyTRLCConverter program.
 rem

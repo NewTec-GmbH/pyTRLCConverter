@@ -1,10 +1,11 @@
 """reStructuredText renderer for Marko.
+    It is used to convert CommonMark AST to reStructuredText format.
 
     Author: Andreas Merkle (andreas.merkle@newtec.de)
 """
 
 # pyTRLCConverter - A tool to convert TRLC files to specific formats.
-# Copyright (c) 2024 - 2025 NewTec GmbH
+# Copyright (c) 2024 - 2026 NewTec GmbH
 #
 # This file is part of pyTRLCConverter program.
 #
@@ -33,13 +34,16 @@ if TYPE_CHECKING:
 # Classes **********************************************************************
 
 # pylint: disable-next=too-many-public-methods
-class RSTRenderer(Renderer):
+class Md2RstRenderer(Renderer):
     # lobster-trace: SwRequirements.sw_req_rst_render_md
-    """Renderer for reStructuredText output."""
+    """
+    Renderer for reStructuredText output.
+    It is used to convert CommonMark Markdown to reStructuredText format.
+    """
 
     def __init__(self) -> None:
         """
-        Initializes the RSTRenderer.
+        Initializes the renderer.
         """
         super().__init__()
         self._list_indent_level = 0
@@ -305,6 +309,17 @@ class RSTRenderer(Renderer):
 
         Returns:
             str: The rendered auto link as a string.
+        """
+        return self.render_link(cast("inline.Link", element))
+
+    def render_url(self, element: Any) -> str:
+        """Renders a GitHub Flavored Markdown URL element.
+
+        Args:
+            element (Any): The URL element.
+
+        Returns:
+            str: The rendered URL as an RST link.
         """
         return self.render_link(cast("inline.Link", element))
 

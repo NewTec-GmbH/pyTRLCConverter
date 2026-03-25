@@ -5,9 +5,9 @@
 .. figure:: ../../../doc/images/NewTec_Logo_Slogan.png
    :align: right
    :figwidth: 400px
-
-NewTec pyTRLCConverter documentation
-====================================
+|
+pyTRLCConverter documentation
+=============================
 
 pyTRLCConverter is a command-line tool to convert TRLC files to different
 output formats, e.g. Markdown, reStructuredText or docx. Since the definition
@@ -26,6 +26,7 @@ an object-oriented manner.
 
    sw_requirements
    sw_architecture
+   sw_detail_design
    sw_tests
    sw_tracing_report
    coverage_resport

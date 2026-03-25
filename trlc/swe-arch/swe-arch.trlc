@@ -3,7 +3,7 @@ package SwArch
 import Generic
 import SwRequirements
 
-section "pyTRLCConverter SW Architecture" {
+section "SW Architecture" {
 
     Generic.Info sw_arch_info_about {
         description =
@@ -250,6 +250,7 @@ section "pyTRLCConverter SW Architecture" {
                 satisfies = [
                     SwRequirements.sw_req_translation,
                     SwRequirements.sw_req_rst_render_md,
+                    SwRequirements.sw_req_rst_render_gfm,
                     SwRequirements.sw_req_prj_spec_interface
                 ]
             }
@@ -311,6 +312,7 @@ section "pyTRLCConverter SW Architecture" {
                     SwRequirements.sw_req_markdown_top_level_default,
                     SwRequirements.sw_req_markdown_top_level_custom,
                     SwRequirements.sw_req_markdown_render_md,
+                    SwRequirements.sw_req_markdown_render_gfm,
                     SwRequirements.sw_req_markdown_out_file_name_default,
                     SwRequirements.sw_req_destination_format
                 ]
@@ -352,6 +354,7 @@ section "pyTRLCConverter SW Architecture" {
                     SwRequirements.sw_req_rst_sd_top_level_default,
                     SwRequirements.sw_req_rst_sd_top_level_custom,
                     SwRequirements.sw_req_rst_render_md,
+                    SwRequirements.sw_req_rst_render_gfm,
                     SwRequirements.sw_req_destination_format
                 ]
             }

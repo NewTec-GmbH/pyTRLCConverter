@@ -1,6 +1,6 @@
 package Requirements
 
-Requirement req_id_md {
+Requirement req_id_gfm {
     description =
     '''
     # Heading 1
@@ -28,5 +28,11 @@ Requirement req_id_md {
     > Blockquote example
 
     [Link to pyTRLCConverter](https://github.com/NewTec-GmbH/pyTRLCConverter)
+
+    | Col 0 | Col 1 |
+    | ----- | ----- |
+    | A     | B     |
+
+    ~~I am strikethrough.~~
     '''
 }

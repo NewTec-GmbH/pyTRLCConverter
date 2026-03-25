@@ -4,7 +4,7 @@
 """
 
 # pyTRLCConverter - A tool to convert TRLC files to specific formats.
-# Copyright (c) 2024 - 2025 NewTec GmbH
+# Copyright (c) 2024 - 2026 NewTec GmbH
 #
 # This file is part of pyTRLCConverter program.
 #
@@ -35,9 +35,10 @@ class RenderConfig():
     """Render configuration provider.
     """
 
-    FORMAT_SPECIFIER_PLAIN = "plain"
-    FORMAT_SPECIFIER_MD = "md"
-    FORMAT_SPECIFIER_RST = "rst"
+    FORMAT_SPECIFIER_PLAIN = "plain"    # Plain text format; no special formatting, e.g. for line breaks, lists, etc.
+    FORMAT_SPECIFIER_MD = "md"          # CommonMark Markdown format; https://spec.commonmark.org/0.31.2/
+    FORMAT_SPECIFIER_RST = "rst"        # ReStructuredText format; https://docutils.sourceforge.io/rst.html
+    FORMAT_SPECIFIER_GFM = "gfm"        # GitHub Flavored Markdown format; https://github.github.com/gfm/
 
     def __init__(self):
         """Constructs the render configuration provider.
@@ -194,6 +195,19 @@ class RenderConfig():
            bool: True if the given TRLC attribute has reStructuredText format, otherwise False.
         """
         return self.get_format_specifier(trlc_package, trlc_type, trlc_type_attribute) == self.FORMAT_SPECIFIER_RST
+
+    def is_format_gfm(self, trlc_package: str, trlc_type: str, trlc_type_attribute: str) -> bool:
+        """Checks if the given TRLC package, type and attribute should be rendered in GitHub Flavored Markdown format.
+
+        Args:
+            trlc_package (str): The TRLC package.
+            trlc_type (str): The TRLC type.
+            trlc_type_attribute (str): The TRLC type attribute.
+        
+        Returns:
+           bool: True if the given TRLC attribute has GitHub Flavored Markdown format, otherwise False.
+        """
+        return self.get_format_specifier(trlc_package, trlc_type, trlc_type_attribute) == self.FORMAT_SPECIFIER_GFM
 
 # Functions ********************************************************************
 

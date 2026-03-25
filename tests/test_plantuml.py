@@ -12,7 +12,7 @@ Tests:
 """
 
 # pyTRLCConverter - A tool to convert TRLC files to specific formats.
-# Copyright (c) 2024 - 2025 NewTec GmbH
+# Copyright (c) 2024 - 2026 NewTec GmbH
 #
 # This file is part of pyTRLCConverter program.
 #
@@ -57,7 +57,8 @@ def plantuml_instance():
         return PlantUML()
 
 
-def test_make_server_url(record_property: any, plantuml_instance: PlantUML):
+# pylint: disable-next=redefined-outer-name
+def test_make_server_url(record_property, plantuml_instance: PlantUML):
     # lobster-trace: SwTests.tc_plantuml
     """
     Test the _make_server_url method of the PlantUML instance.
@@ -66,7 +67,7 @@ def test_make_server_url(record_property: any, plantuml_instance: PlantUML):
     of the diagram file and checks if the generated URL matches the expected URL.
     Args:
         record_property (Any): Used to inject the test case reference into the test results.
-        plantuml (PlantUML): An instance of the PlantUML class.
+        plantuml_instance (PlantUML): An instance of the PlantUML class.
     Asserts:
         The generated URL starts with the expected base URL.
         The generated URL matches the expected URL.

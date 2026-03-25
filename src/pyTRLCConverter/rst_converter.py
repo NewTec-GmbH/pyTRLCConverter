@@ -4,7 +4,7 @@
 """
 
 # pyTRLCConverter - A tool to convert TRLC files to specific formats.
-# Copyright (c) 2024 - 2025 NewTec GmbH
+# Copyright (c) 2024 - 2026 NewTec GmbH
 #
 # This file is part of pyTRLCConverter program.
 #
@@ -28,7 +28,8 @@ from pyTRLCConverter.base_converter import BaseConverter
 from pyTRLCConverter.ret import Ret
 from pyTRLCConverter.trlc_helper import TrlcAstWalker
 from pyTRLCConverter.logger import log_verbose, log_error
-from pyTRLCConverter.marko.rst_renderer import RSTRenderer
+from pyTRLCConverter.marko.md2rst_renderer import Md2RstRenderer
+from pyTRLCConverter.marko.gfm2rst_renderer import Gfm2RstRenderer
 
 # Variables ********************************************************************
 
@@ -403,6 +404,7 @@ class RstConverter(BaseConverter):
     def _on_string_literal(self, string_literal: String_Literal) -> str:
         # lobster-trace: SwRequirements.sw_req_rst_string_format
         # lobster-trace: SwRequirements.sw_req_rst_render_md
+        # lobster-trace: SwRequirements.sw_req_rst_render_gfm
         """
         Process the given string literal value.
 
@@ -515,6 +517,7 @@ class RstConverter(BaseConverter):
     def _render(self, package_name: str, type_name: str, attribute_name: str, attribute_value: str) -> str:
         # lobster-trace: SwRequirements.sw_req_rst_string_format
         # lobster-trace: SwRequirements.sw_req_rst_render_md
+        # lobster-trace: SwRequirements.sw_req_rst_render_gfm
         """Render the attribute value depened on its format.
 
         Args:
@@ -531,10 +534,16 @@ class RstConverter(BaseConverter):
         # If the attribute value is not already in reStructuredText format, it will be escaped.
         if self._render_cfg.is_format_rst(package_name, type_name, attribute_name) is False:
 
-            # Is it Markdown format?
+            # Is it CommonMark Markdown format?
             if self._render_cfg.is_format_md(package_name, type_name, attribute_name) is True:
                 # Convert Markdown to reStructuredText.
-                markdown = Markdown(renderer=RSTRenderer)
+                markdown = Markdown(renderer=Md2RstRenderer)
+                result = markdown.convert(attribute_value)
+
+            # Is it GitHub Flavored Markdown format?
+            elif self._render_cfg.is_format_gfm(package_name, type_name, attribute_name) is True:
+                # Convert GitHub Flavored Markdown to reStructuredText.
+                markdown = Markdown(renderer=Gfm2RstRenderer, extensions=['gfm'])
                 result = markdown.convert(attribute_value)
 
             # Otherwise escape the text for reStructuredText.

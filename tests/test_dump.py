@@ -2,7 +2,7 @@
 """
 
 # pyTRLCConverter - A tool to convert TRLC files to specific formats.
-# Copyright (c) 2024 - 2025 NewTec GmbH
+# Copyright (c) 2024 - 2026 NewTec GmbH
 #
 # This file is part of pyTRLCConverter program.
 #
@@ -27,6 +27,7 @@ from pyTRLCConverter.__main__ import main
 
 # Functions ********************************************************************
 
+# pylint: disable-next=too-many-statements
 def test_tc_ascii_conversion(record_property, capsys, monkeypatch):
     # lobster-trace: SwTests.tc_ascii_conversion
     """
@@ -44,6 +45,7 @@ def test_tc_ascii_conversion(record_property, capsys, monkeypatch):
         "pyTRLCConverter",
         "--source", "./tests/utils",
         "--exclude", "./tests/utils/single_req_description_md.trlc",
+        "--exclude", "./tests/utils/single_req_description_gfm.trlc",
         "--exclude", "./tests/utils/single_req_description_rst.trlc",
         "--exclude", "./tests/utils/multi_req_with_link.trlc",
         "dump"
