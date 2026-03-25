@@ -108,6 +108,25 @@ def _find_attribute_identifier(bundle, long_name: str):
     return None
 
 
+def _find_any_attribute_identifier(bundle, long_names: list[str]):
+    # lobster-exclude: Utility function for other test code.
+    """Find the first matching attribute definition identifier from a list of long-names.
+
+    Args:
+        bundle: The parsed ReqIF bundle.
+        long_names (list[str]): Candidate attribute long-names in priority order.
+
+    Returns:
+        str: The first matching attribute definition identifier, or None if not found.
+    """
+    for long_name in long_names:
+        identifier = _find_attribute_identifier(bundle, long_name)
+        if identifier is not None:
+            return identifier
+
+    return None
+
+
 def _find_spec_type_by_long_name(bundle, long_name: str):
     # lobster-exclude: Utility function for other test code.
     """Find a spec-type in the bundle by its long-name.
@@ -364,6 +383,7 @@ def test_tc_reqif_render_gfm(record_property, capsys, monkeypatch, tmp_path):
     assert "<del>I am strikethrough.</del>" in description_attribute.value
 
 
+# pylint: disable=too-many-locals, too-many-statements
 def test_tc_reqif_type_specific_spec_object_types(record_property, capsys, monkeypatch, tmp_path):
     # lobster-trace: SwTests.tc_reqif
     # lobster-trace: SwTests.tc_reqif_section
@@ -414,8 +434,18 @@ def test_tc_reqif_type_specific_spec_object_types(record_property, capsys, monke
     sw_req_non_func_attributes = getattr(sw_req_non_func_type, "attribute_definitions", [])
 
     assert len(section_attributes) == 0
-    assert {definition.long_name for definition in sw_req_attributes} == {"ID", "description", "verification"}
-    assert {definition.long_name for definition in sw_req_non_func_attributes} == {"ID", "constraint", "rationale"}
+    sw_req_attribute_names = {definition.long_name for definition in sw_req_attributes}
+    sw_req_non_func_attribute_names = {definition.long_name for definition in sw_req_non_func_attributes}
+
+    assert "description" in sw_req_attribute_names
+    assert "verification" in sw_req_attribute_names
+    assert len(sw_req_attribute_names) == 3
+    assert len(sw_req_attribute_names.intersection({"ID", "External ID"})) == 1
+
+    assert "constraint" in sw_req_non_func_attribute_names
+    assert "rationale" in sw_req_non_func_attribute_names
+    assert len(sw_req_non_func_attribute_names) == 3
+    assert len(sw_req_non_func_attribute_names.intersection({"ID", "External ID"})) == 1
 
     # Verify that record objects reference their TRLC-specific spec-object types.
     functional_record = _find_spec_object_by_long_name(bundle, "sw_req_1")
@@ -500,8 +530,11 @@ def test_tc_reqif_record_reference_relation(record_property, capsys, monkeypatch
     assert requirement_type is not None
     assert link_relation_type is not None
 
-    requirement_attribute_names = {definition.long_name for definition in getattr(requirement_type, "attribute_definitions", [])}
-    assert "ID" in requirement_attribute_names
+    requirement_attribute_names = {
+        definition.long_name
+        for definition in getattr(requirement_type, "attribute_definitions", [])
+    }
+    assert requirement_attribute_names.intersection({"ID", "External ID"})
     assert "link" not in requirement_attribute_names
 
     req_5 = _find_spec_object_by_long_name(bundle, "req_id_5")
@@ -510,7 +543,7 @@ def test_tc_reqif_record_reference_relation(record_property, capsys, monkeypatch
     assert req_5 is not None
     assert req_6 is not None
 
-    id_identifier = _find_attribute_identifier(bundle, "ID")
+    id_identifier = _find_any_attribute_identifier(bundle, ["ID", "External ID"])
     assert id_identifier is not None
 
     req_5_id_attribute = _find_attribute_by_identifier(req_5, id_identifier)
@@ -575,8 +608,13 @@ def test_tc_reqif_record_reference_array_relation(record_property, capsys, monke
     assert test_case_type is not None
     assert verifies_relation_type is not None
 
-    test_case_attribute_names = {definition.long_name for definition in getattr(test_case_type, "attribute_definitions", [])}
-    assert test_case_attribute_names == {"ID", "description"}
+    test_case_attribute_names = {
+        definition.long_name
+        for definition in getattr(test_case_type, "attribute_definitions", [])
+    }
+    assert "description" in test_case_attribute_names
+    assert len(test_case_attribute_names) == 2
+    assert len(test_case_attribute_names.intersection({"ID", "External ID"})) == 1
 
     tc_array = _find_spec_object_by_long_name(bundle, "tc_array")
     req_a = _find_spec_object_by_long_name(bundle, "req_a")

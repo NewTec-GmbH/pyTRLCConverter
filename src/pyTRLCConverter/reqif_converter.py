@@ -47,11 +47,14 @@ from pyTRLCConverter.ret import Ret
 from pyTRLCConverter.trlc_helper import TrlcAstWalker
 from pyTRLCConverter.logger import log_error, log_verbose
 
+# pylint: disable=too-many-lines
+
 # Variables ********************************************************************
 
 # Classes **********************************************************************
 
 
+# pylint: disable-next=too-many-instance-attributes
 class ReqifConverter(BaseConverter):
     """ReqifConverter provides functionality for converting to ReqIF format."""
 
