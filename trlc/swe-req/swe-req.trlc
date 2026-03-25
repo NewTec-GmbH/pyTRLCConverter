@@ -472,7 +472,7 @@ section "SW Requirements" {
             }
 
             SwReq sw_req_reqif {
-                description = "The software shall support the conversion into ReqIF format."
+                description = "The software shall support the conversion into ReqIF format v1.2."
                 verification_criteria = "Verify by converting one or more TRLC files into ReqIF format."
                 valid_status = AbstractRequirements.VALID_STATUS.valid
             }

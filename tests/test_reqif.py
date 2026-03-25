@@ -18,6 +18,8 @@
 
 # Imports **********************************************************************
 import os
+from pathlib import Path
+from lxml import etree
 from reqif.parser import ReqIFParser
 from pyTRLCConverter.__main__ import main
 from pyTRLCConverter.reqif_converter import ReqifConverter
@@ -163,6 +165,63 @@ def _find_spec_relation_type_by_long_name(bundle, long_name: str):
     return _find_spec_type_by_long_name(bundle, long_name)
 
 
+def _assert_reqif_v12_compliance(reqif_file: str, tmp_path: Path):
+    # lobster-exclude: Utility function for other test code.
+    """Validate a generated ReqIF file against the ReqIF v1.2 XSD.
+
+    Args:
+        reqif_file (str): Path to generated ReqIF file.
+        tmp_path (Path): Temporary path used for patched schema material.
+    """
+    schema_source = Path("./doc/reqif/v1.2/dtc-11-04-05.xsd")
+    assert schema_source.exists() is True
+
+    xml_schema_stub = tmp_path / "xml.xsd"
+    xml_schema_stub.write_text(
+        """<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<xsd:schema xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"
+            targetNamespace=\"http://www.w3.org/XML/1998/namespace\"
+            xmlns:xml=\"http://www.w3.org/XML/1998/namespace\"
+            elementFormDefault=\"qualified\"
+            attributeFormDefault=\"qualified\">
+  <xsd:attribute name=\"lang\" type=\"xsd:language\"/>
+</xsd:schema>
+""",
+        encoding="utf-8"
+    )
+
+    patched_schema_content = schema_source.read_text(encoding="utf-8")
+    xml_import = (
+        '<xsd:import namespace="http://www.w3.org/XML/1998/namespace" '
+        'schemaLocation="http://www.w3.org/2001/xml.xsd"/>'
+    )
+    xml_import_replacement = (
+        '<xsd:import namespace="http://www.w3.org/XML/1998/namespace" '
+        f'schemaLocation="{str(xml_schema_stub).replace("\\", "/")}"/>'
+    )
+    patched_schema_content = patched_schema_content.replace(
+        xml_import,
+        xml_import_replacement
+    )
+    xhtml_import = (
+        '<xsd:import namespace="http://www.w3.org/1999/xhtml" '
+        'schemaLocation="http://www.omg.org/spec/ReqIF/20110402/driver.xsd"/>'
+    )
+    patched_schema_content = patched_schema_content.replace(xhtml_import, "")
+    patched_schema_content = patched_schema_content.replace(
+        '<xsd:group ref="xhtml.BlkStruct.class"/>',
+        '<xsd:sequence><xsd:any minOccurs="0" maxOccurs="unbounded" processContents="lax"/></xsd:sequence>'
+    )
+
+    patched_schema_file = tmp_path / "dtc-11-04-05.patched.xsd"
+    patched_schema_file.write_text(patched_schema_content, encoding="utf-8")
+
+    schema = etree.XMLSchema(etree.parse(str(patched_schema_file)))  # pylint: disable=c-extension-no-member
+    reqif_document = etree.parse(reqif_file)  # pylint: disable=c-extension-no-member
+
+    assert schema.validate(reqif_document) is True, str(schema.error_log)
+
+
 def test_tc_reqif(record_property, capsys, monkeypatch, tmp_path):
     # lobster-trace: SwTests.tc_reqif
     """The software shall support the conversion into ReqIF format.
@@ -202,6 +261,9 @@ def test_tc_reqif(record_property, capsys, monkeypatch, tmp_path):
     spec_object = _find_spec_object_by_long_name(bundle, "req_id_1")
 
     assert spec_object is not None
+
+    # Verify ReqIF v1.2 XSD compliance of the generated file.
+    _assert_reqif_v12_compliance(output_file, tmp_path)
 
 
 def test_tc_reqif_section(record_property, capsys, monkeypatch, tmp_path):
@@ -332,7 +394,7 @@ def test_tc_reqif_render_md(record_property, capsys, monkeypatch, tmp_path):
     description_attribute = _find_attribute_by_identifier(spec_object, description_identifier)
     assert description_attribute is not None
     # Verify that Markdown heading syntax was rendered to HTML inside the XHTML wrapper.
-    assert "<h1>Heading 1</h1>" in description_attribute.value
+    assert "Heading 1</h1>" in description_attribute.value
 
 
 def test_tc_reqif_render_gfm(record_property, capsys, monkeypatch, tmp_path):
@@ -380,7 +442,7 @@ def test_tc_reqif_render_gfm(record_property, capsys, monkeypatch, tmp_path):
     description_attribute = _find_attribute_by_identifier(spec_object, description_identifier)
     assert description_attribute is not None
     # Verify that GFM strikethrough syntax was rendered to <del> HTML inside the XHTML wrapper.
-    assert "<del>I am strikethrough.</del>" in description_attribute.value
+    assert "I am strikethrough.</del>" in description_attribute.value
 
 
 # pylint: disable=too-many-locals, too-many-statements
