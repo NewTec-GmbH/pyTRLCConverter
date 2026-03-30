@@ -4,7 +4,7 @@
 
 The example demonstrates how the requirements in a **single file** are converted to ReqIF format **without any project specific conversion**, but **with a translation file** to translate the requirement type attribute name and with **render configuration**. The pyTRLCConverter will generate a simple output without project-specific conversion functions.
 
-## Analyze ReqIF file
+## Analyze ReqIF File
 
 Analyze an existing ReqIF file (.reqif or .reqifz) by replacing &lt;INPUT&gt; with the ReqIF file path.
 
@@ -15,6 +15,16 @@ python -o ./out/analysis.md ./reqif_list_types/reqif_list_types.py <INPUT>
 ```
 
 It will create an ```./out/analyzis.md``` file that shows all kind of ReqIF specific types.
+
+## Validate Generated ReqIF File
+
+Validate a ReqIF file (.reqif or .reqifz) against ReqIF format compliance, XHTML compliance and against ReqIF implementation guide.
+
+Replace &lt;INPUT&gt; with the ReqIF file path.
+
+```bash
+python ./validate_reqif/validate_reqif.py <INPUT>
+```
 
 ## Issues, Ideas And Bugs
 
