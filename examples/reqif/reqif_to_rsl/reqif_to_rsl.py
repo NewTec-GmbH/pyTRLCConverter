@@ -82,12 +82,16 @@ _TRLC_KEYWORDS: frozenset[str] = frozenset({
     "section", "separator", "then", "true", "tuple", "type", "warning", "xor",
 })
 
+_REQIF_SYSTEM_PREFIX: str = "ReqIF."
 _REQIF_FOREIGN_ID_LONG_NAME: str = "ReqIF.ForeignID"
 
-# Attribute LONG-NAMEs managed automatically by pyTRLCConverter — omit from RSL/TRLC.
-# ReqIF.ForeignID is set from the TRLC record object name; including it would create
-# a duplicate attribute definition in the round-trip output.
-_SKIP_LONG_NAMES: frozenset[str] = frozenset({_REQIF_FOREIGN_ID_LONG_NAME})
+# ReqIF system attributes whose full long name (including prefix) must be preserved
+# in translation.json so that pyTRLCConverter restores the exact ReqIF long name.
+_REQIF_MANDATORY_LONG_NAMES: frozenset[str] = frozenset({
+    "ReqIF.Name",
+    "ReqIF.Text",
+    "ReqIF.Description",
+})
 
 
 # Classes **********************************************************************
@@ -500,15 +504,16 @@ def _build_attr_meta(attr_def: Any, datatype_map: dict[str, Any],  # pylint: dis
         ``attr_def_id``, ``datatype``, or None when the attribute is skipped.
     """
     attr_long_name = getattr(attr_def, "long_name", None) or attr_def.identifier
-    if attr_long_name in _SKIP_LONG_NAMES:
-        return None
 
     datatype_ref = getattr(attr_def, "datatype_definition", None)
     datatype = datatype_map.get(datatype_ref) if datatype_ref else None
     attr_type = getattr(attr_def, "attribute_type", None)
     is_xhtml = attr_type == spec_obj_attr_type.XHTML
     is_enum = attr_type == spec_obj_attr_type.ENUMERATION
-    trlc_attr_name = _unique_name(_sanitize_identifier(attr_long_name), used_attr_names)
+    trlc_base = (attr_long_name[len(_REQIF_SYSTEM_PREFIX):]
+                 if attr_long_name.startswith(_REQIF_SYSTEM_PREFIX)
+                 else attr_long_name)
+    trlc_attr_name = _unique_name(_sanitize_identifier(trlc_base), used_attr_names)
 
     enum_trlc_name: Optional[str] = None
     is_multi_valued = False
@@ -957,8 +962,14 @@ def _write_translation(trans_path: str, type_info: dict[str, Any]) -> None:
         trlc_type = type_data["trlc_name"]
         attr_map: dict[str, str] = {}
         for attr in type_data["attrs"]:
-            if attr["trlc_name"] != attr["long_name"]:
-                attr_map[attr["trlc_name"]] = attr["long_name"]
+            original = attr["long_name"]
+            if (original.startswith(_REQIF_SYSTEM_PREFIX)
+                    and original not in _REQIF_MANDATORY_LONG_NAMES):
+                long_name = original[len(_REQIF_SYSTEM_PREFIX):]
+            else:
+                long_name = original
+            if attr["trlc_name"] != long_name:
+                attr_map[attr["trlc_name"]] = long_name
         if attr_map:
             translation[trlc_type] = attr_map
 
