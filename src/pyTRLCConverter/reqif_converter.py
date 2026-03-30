@@ -70,6 +70,7 @@ class ReqifConverter(BaseConverter):
     """ReqifConverter provides functionality for converting to ReqIF format."""
 
     REQIF_VERSION = "1.0"
+    EMPTY_ATTRIBUTE_DEFAULT = ""
 
     OUTPUT_FILE_NAME_DEFAULT = "output.reqif"
     TOP_LEVEL_DEFAULT = "Specification"
@@ -154,10 +155,10 @@ class ReqifConverter(BaseConverter):
             "-e",
             "--empty",
             type=str,
-            default=BaseConverter.EMPTY_ATTRIBUTE_DEFAULT,
+            default=ReqifConverter.EMPTY_ATTRIBUTE_DEFAULT,
             required=False,
             help="Every attribute value which is empty will output the string "
-                 f"(default = {BaseConverter.EMPTY_ATTRIBUTE_DEFAULT})."
+                 f"(default = {ReqifConverter.EMPTY_ATTRIBUTE_DEFAULT})."
         )
 
         BaseConverter._parser.add_argument(
