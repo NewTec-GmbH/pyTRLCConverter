@@ -69,6 +69,8 @@ from pyTRLCConverter.version import __version__
 class ReqifConverter(BaseConverter):
     """ReqifConverter provides functionality for converting to ReqIF format."""
 
+    REQIF_VERSION = "1.0"
+
     OUTPUT_FILE_NAME_DEFAULT = "output.reqif"
     TOP_LEVEL_DEFAULT = "Specification"
 
@@ -468,7 +470,7 @@ class ReqifConverter(BaseConverter):
             creation_time=last_change,
             repository_id="",
             req_if_tool_id=f"pyTRLCConverter {__version__}",
-            req_if_version="1.0",
+            req_if_version=ReqifConverter.REQIF_VERSION,
             source_tool_id=f"pyTRLCConverter {__version__}",
             title=self._document_title
         )
