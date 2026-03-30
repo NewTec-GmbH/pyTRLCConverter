@@ -26,6 +26,18 @@ Replace &lt;INPUT&gt; with the ReqIF file path.
 python ./validate_reqif/validate_reqif.py <INPUT>
 ```
 
+If no output option is used, the files will be written to the same location as the ReqIF file.
+
+## Prepare pyTRLCConverter Inputs from ReqIF File
+
+Prepare .trlc, .rsl, render configuration and translation from a given ReqIF file (.reqif or .reqifz).
+
+Replace &lt;INPUT&gt; with the ReqIF file path.
+
+```bash
+python ./reqif_to_rsl/reqif_to_rsl.py -o out_reqif_to_rsl -p Req <INPUT>
+```
+
 ## Issues, Ideas And Bugs
 
 If you have further ideas or you found some bugs, great! Create a [issue](https://github.com/NewTec-GmbH/pyTRLCConverter/issues) or if you are able and willing to fix it by yourself, clone the repository and create a pull request.

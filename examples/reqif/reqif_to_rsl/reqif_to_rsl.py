@@ -5,7 +5,9 @@ and produces four files ready for use with pyTRLCConverter:
 
 - <package>.rsl        TRLC type definitions (one ``type`` per SPEC-OBJECT-TYPE)
 - <package>.trlc       TRLC requirement instances, following the SPEC-HIERARCHY
-- renderCfg.json       Marks XHTML-typed attributes as ``gfm`` format
+- renderCfg.json       Render configuration: emits ``"xhtml"`` format entries for every
+                       XHTML-typed attribute so pyTRLCConverter passes those values through
+                       unchanged on the round-trip conversion
 - translation.json     Maps sanitised TRLC attribute names back to their ReqIF LONG-NAMEs
 
 Round-trip fidelity
@@ -18,10 +20,11 @@ The generated TRLC files are intended so that a subsequent::
 run reproduces THE-VALUE content identical (or as close as possible) to the
 analysed source.  The following constraints apply:
 
-* XHTML-typed attributes are converted to GitHub Flavored Markdown.  Marko
-  (used by pyTRLCConverter) re-renders the Markdown to XHTML.  Simple content
-  (paragraphs, bold, italic, code, lists, links) round-trips cleanly.
-  Complex XHTML (deeply nested tables, custom attributes) is approximated.
+* XHTML-typed attributes are stored as raw XHTML strings in the TRLC file.
+  The namespace-stripped form (``value_stripped_xhtml``) is used when available
+  so element tags have no ``ns0:`` prefix.  The generated ``renderCfg.json``
+  marks every such attribute with ``"format": "xhtml"`` so pyTRLCConverter
+  passes the content through verbatim on the round-trip conversion.
 * Non-XHTML attributes (STRING, INTEGER, BOOLEAN, DATE) are stored as plain
   TRLC ``String`` values.  pyTRLCConverter wraps them in ``<p>…</p>``; the
   original attribute was a plain value, so the attribute type differs in the
@@ -59,14 +62,13 @@ analysed source.  The following constraints apply:
 
 # Imports **********************************************************************
 import argparse
-import html
 import json
 import os
 import re
 import sys
 import tempfile
-import zipfile
 import xml.etree.ElementTree as ET
+import zipfile
 from typing import Any, Optional
 
 # pylint: disable=too-many-lines
@@ -86,9 +88,6 @@ _REQIF_FOREIGN_ID_LONG_NAME: str = "ReqIF.ForeignID"
 # ReqIF.ForeignID is set from the TRLC record object name; including it would create
 # a duplicate attribute definition in the round-trip output.
 _SKIP_LONG_NAMES: frozenset[str] = frozenset({_REQIF_FOREIGN_ID_LONG_NAME})
-
-# XHTML namespace URI as it appears in attribute values
-_XHTML_NS: str = "http://www.w3.org/1999/xhtml"
 
 
 # Classes **********************************************************************
@@ -336,165 +335,6 @@ def _unique_name(base: str, used: set[str]) -> str:
     return candidate
 
 
-def _strip_ns(tag: str) -> str:
-    """Strip the XML namespace URI (``{...}``) from an element tag.
-
-    Args:
-        tag: Element tag string, possibly with a ``{namespace}`` prefix.
-
-    Returns:
-        Tag name without namespace.
-    """
-    return tag.split("}")[-1] if "}" in tag else tag
-
-
-def _element_to_md(elem: ET.Element, _list_type: str = "") -> str:  # pylint: disable=too-many-branches,too-many-statements,too-many-locals
-    """Recursively convert an XML element to GitHub Flavored Markdown text.
-
-    Only the most common XHTML elements produced by ReqIF tools are handled.
-    Unknown elements fall back to rendering their text content.
-
-    Args:
-        elem:       XML element to convert.
-        _list_type: ``"ul"`` or ``"ol"`` when rendering inside a list, empty otherwise.
-
-    Returns:
-        Markdown string for the element and all its descendants.
-    """
-    tag = _strip_ns(elem.tag)
-    text = html.escape(elem.text or "", quote=False)
-    tail = html.escape(elem.tail or "", quote=False)
-
-    child_content = "".join(_element_to_md(child, _list_type) for child in elem)
-
-    if tag in ("div", "span", "body", "html"):
-        result = text + child_content
-    elif tag == "p":
-        inner = (text + child_content).strip()
-        result = inner + "\n\n"
-    elif tag in ("strong", "b"):
-        result = f"**{text}{child_content}**"
-    elif tag in ("em", "i"):
-        result = f"*{text}{child_content}*"
-    elif tag == "code" and _list_type == "pre":
-        result = text + child_content
-    elif tag == "code":
-        result = f"`{text}{child_content}`"
-    elif tag == "pre":
-        inner_elem = list(elem)
-        if inner_elem and _strip_ns(inner_elem[0].tag) == "code":
-            code_text = inner_elem[0].text or ""
-            result = f"```\n{code_text}\n```\n\n"
-        else:
-            result = f"```\n{text}{child_content}\n```\n\n"
-    elif tag == "br":
-        result = "  \n"
-    elif tag == "a":
-        href = elem.get("href", "")
-        inner = (text + child_content).strip()
-        result = f"[{inner}]({href})"
-    elif tag in ("h1", "h2", "h3", "h4", "h5", "h6"):
-        level = int(tag[1])
-        inner = (text + child_content).strip()
-        result = "#" * level + " " + inner + "\n\n"
-    elif tag == "ul":
-        items = "".join(_element_to_md(child, "ul") for child in elem)
-        result = items + "\n"
-    elif tag == "ol":
-        parts = []
-        for idx, child in enumerate(elem, start=1):
-            item_md = _element_to_md(child, "ol")
-            # Replace leading "- " (from li handler) with numbered prefix
-            item_md = re.sub(r"^- ", f"{idx}. ", item_md)
-            parts.append(item_md)
-        result = "".join(parts) + "\n"
-    elif tag == "li":
-        inner = (text + child_content).strip()
-        result = f"- {inner}\n"
-    elif tag == "table":
-        result = _table_to_md(elem)
-    elif tag in ("thead", "tbody", "tfoot"):
-        result = text + child_content
-    else:
-        # Unknown element: render its text content
-        result = text + child_content
-
-    return result + tail
-
-
-def _table_to_md(table_elem: ET.Element) -> str:
-    """Convert an XHTML table element to a GFM pipe table.
-
-    Args:
-        table_elem: The ``<table>`` XML element.
-
-    Returns:
-        GFM Markdown table string, or plain text if the table has no rows.
-    """
-    rows: list[list[str]] = []
-    for child in table_elem.iter():
-        tag = _strip_ns(child.tag)
-        if tag == "tr":
-            cells: list[str] = []
-            for cell in child:
-                cell_tag = _strip_ns(cell.tag)
-                if cell_tag in ("td", "th"):
-                    cell_text = "".join(cell.itertext()).strip().replace("|", "\\|")
-                    cells.append(cell_text)
-            if cells:
-                rows.append(cells)
-
-    if not rows:
-        return ""
-
-    col_count = max(len(r) for r in rows)
-    # Pad rows to equal column count
-    padded = [r + [""] * (col_count - len(r)) for r in rows]
-
-    header = "| " + " | ".join(padded[0]) + " |"
-    separator = "| " + " | ".join("---" for _ in range(col_count)) + " |"
-    body = "\n".join("| " + " | ".join(row) + " |" for row in padded[1:])
-
-    parts = [header, separator]
-    if body:
-        parts.append(body)
-    parts.append("\n")
-    return "\n".join(parts)
-
-
-def _xhtml_to_markdown(xhtml_value: Optional[str]) -> str:
-    """Convert an XHTML string (as stored in a ReqIF XHTML attribute value) to Markdown.
-
-    Strips the outer ``<div xmlns="...">`` wrapper and recursively converts
-    the inner XHTML to GitHub Flavored Markdown.  Falls back to extracting
-    plain text if the XML cannot be parsed.
-
-    Args:
-        xhtml_value: XHTML string, possibly ``None``.
-
-    Returns:
-        Markdown string, stripped of leading/trailing whitespace.
-    """
-    if not xhtml_value:
-        return ""
-
-    # Use value_stripped_xhtml-style input if caller already stripped namespace
-    xml_input = xhtml_value.strip()
-
-    # Wrap in a root element so partial XHTML (e.g. bare <p>…</p>) parses cleanly
-    try:
-        # Register the XHTML namespace to avoid "ns0:" prefixes in output
-        ET.register_namespace("", _XHTML_NS)
-        root = ET.fromstring(xml_input)
-        md = _element_to_md(root).strip()
-    except ET.ParseError:
-        # Fallback: extract all text with a simple regex
-        md = re.sub(r"<[^>]+>", " ", xhtml_value)
-        md = re.sub(r"\s+", " ", md).strip()
-
-    return md
-
-
 def _get_enum_value_names(value_refs: list[str], datatype: Any) -> str:
     """Return a human-readable string for a list of enum value identifier references.
 
@@ -514,11 +354,82 @@ def _get_enum_value_names(value_refs: list[str], datatype: Any) -> str:
     return ", ".join(names)
 
 
+def _get_enum_attr_string(attr: Any, raw_value: Any,
+                          datatype_map: dict[str, Any],
+                          attr_def_map: dict[str, Any]) -> str:
+    """Resolve an ENUMERATION attribute value to a comma-separated string of long-names.
+
+    Args:
+        attr:         SpecObjectAttribute object.
+        raw_value:    Raw value from the attribute (identifier or list of identifiers).
+        datatype_map: Mapping from datatype identifier to datatype object.
+        attr_def_map: Mapping from attribute-definition identifier to SpecAttributeDefinition.
+
+    Returns:
+        Comma-separated LONG-NAMEs, or raw identifier strings when the datatype is unknown.
+    """
+    attr_def = attr_def_map.get(getattr(attr, "definition_ref", ""))
+    datatype_ref = getattr(attr_def, "datatype_definition", None) if attr_def else None
+    datatype = datatype_map.get(datatype_ref) if datatype_ref else None
+    if isinstance(raw_value, list):
+        refs = raw_value
+    elif raw_value:
+        refs = [raw_value]
+    else:
+        refs = []
+    if datatype:
+        return _get_enum_value_names(refs, datatype)
+    return ", ".join(str(r) for r in refs)
+
+
+def _unwrap_xhtml_div(xhtml_str: str) -> str:
+    """Strip the outer ``<div>`` wrapper from a namespace-stripped XHTML string.
+
+    ReqIF requires XHTML content to be wrapped in ``<div xmlns="...">``.  After
+    namespace stripping (``value_stripped_xhtml``) this becomes a plain
+    ``<div>``.  Storing the ``<div>`` in TRLC would cause
+    ``_wrap_xhtml`` in the converter to add another outer ``<div xmlns="...">``
+    on the round-trip, resulting in bare text directly inside the inner
+    ``<div>`` — invalid per the ReqIF IG.
+
+    This function removes the redundant outer ``<div>`` so the converter can
+    re-wrap the inner content correctly.  If the outer element is not a
+    ``<div>``, or if parsing fails, the original string is returned unchanged.
+
+    Args:
+        xhtml_str: Namespace-stripped XHTML string from ``value_stripped_xhtml``.
+
+    Returns:
+        Inner content of the ``<div>``, or the original string on any error.
+    """
+    stripped = xhtml_str.strip()
+    if not stripped.startswith("<div"):
+        return xhtml_str
+
+    try:
+        root = ET.fromstring(stripped)
+    except ET.ParseError:
+        return xhtml_str
+
+    if root.tag != "div":
+        return xhtml_str
+
+    inner_parts = []
+    if root.text:
+        inner_parts.append(root.text)
+    for child in root:
+        inner_parts.append(ET.tostring(child, encoding="unicode"))
+        if child.tail:
+            inner_parts.append(child.tail)
+
+    return "".join(inner_parts)
+
+
 def _get_attr_value(attr: Any, datatype_map: dict[str, Any],
                     attr_def_map: dict[str, Any]) -> tuple[str, bool]:
     """Extract the string representation of a spec-object attribute value.
 
-    For XHTML attributes the value is converted to Markdown.
+    For XHTML attributes the raw XHTML string is returned as-is.
     For ENUMERATION attributes the enum long-names are returned.
     For all other types the raw string value is used.
 
@@ -530,24 +441,21 @@ def _get_attr_value(attr: Any, datatype_map: dict[str, Any],
     Returns:
         Tuple of (string value, is_xhtml) where is_xhtml indicates the source was XHTML.
     """
-    _, SpecObjectAttributeType = _get_reqif_module()
+    _, spec_object_attr_type = _get_reqif_module()
 
     attr_type = getattr(attr, "attribute_type", None)
     raw_value = getattr(attr, "value", None)
 
-    if attr_type == SpecObjectAttributeType.XHTML:
-        # Prefer namespace-stripped value for simpler parsing
-        stripped = getattr(attr, "value_stripped_xhtml", None) or raw_value
-        return _xhtml_to_markdown(stripped), True
+    if attr_type == spec_object_attr_type.XHTML:
+        # Use namespace-stripped form when available to avoid ns0: prefixes in output.
+        # Strip the outer <div> wrapper: _wrap_xhtml in the converter will re-add it,
+        # so keeping it here would produce a redundant nested <div> with bare text inside.
+        xhtml = getattr(attr, "value_stripped_xhtml", None) or raw_value
+        xhtml_str = str(xhtml) if xhtml is not None else ""
+        return _unwrap_xhtml_div(xhtml_str), True
 
-    if attr_type == SpecObjectAttributeType.ENUMERATION:
-        attr_def = attr_def_map.get(getattr(attr, "definition_ref", ""))
-        datatype_ref = getattr(attr_def, "datatype_definition", None) if attr_def else None
-        datatype = datatype_map.get(datatype_ref) if datatype_ref else None
-        refs = raw_value if isinstance(raw_value, list) else ([raw_value] if raw_value else [])
-        if datatype:
-            return _get_enum_value_names(refs, datatype), False
-        return ", ".join(str(r) for r in refs), False
+    if attr_type == spec_object_attr_type.ENUMERATION:
+        return _get_enum_attr_string(attr, raw_value, datatype_map, attr_def_map), False
 
     return str(raw_value) if raw_value is not None else "", False
 
@@ -743,8 +651,9 @@ def _write_rsl(rsl_path: str, package_name: str, type_info: dict[str, Any],
 
     for enum_data in enum_info.values():
         lines.append(f'enum {enum_data["trlc_name"]} "{enum_data["long_name"]}" {{')
+        max_lit_len = max((len(lit["trlc_name"]) for lit in enum_data["literals"].values()), default=0)
         for lit in enum_data["literals"].values():
-            lines.append(f'    {lit["trlc_name"]}    "{lit["long_name"]}"')
+            lines.append(f'    {lit["trlc_name"]:<{max_lit_len}}    "{lit["long_name"]}"')
         lines.append("}")
         lines.append("")
 
@@ -754,22 +663,26 @@ def _write_rsl(rsl_path: str, package_name: str, type_info: dict[str, Any],
 
         lines.append(f'type {type_data["trlc_name"]} "{type_data["long_name"]}" {{')
 
+        max_attr_len = max((len(attr["trlc_name"]) for attr in type_data["attrs"]), default=0)
         for attr in type_data["attrs"]:
             if attr["is_enum"] and attr["enum_trlc_name"]:
                 if attr["is_multi_valued"]:
                     lines.append(
-                        f'    {attr["trlc_name"]}    optional    {attr["enum_trlc_name"]}    [0 .. *]'
+                        f'    {attr["trlc_name"]:<{max_attr_len}}    optional    '
+                        f'{attr["enum_trlc_name"]}    [0 .. *]'
                     )
                 else:
-                    lines.append(f'    {attr["trlc_name"]}    optional    {attr["enum_trlc_name"]}')
+                    lines.append(
+                        f'    {attr["trlc_name"]:<{max_attr_len}}    optional    {attr["enum_trlc_name"]}'
+                    )
             else:
-                lines.append(f'    {attr["trlc_name"]}    optional    String')
+                lines.append(f'    {attr["trlc_name"]:<{max_attr_len}}    optional    String')
 
         lines.append("}")
         lines.append("")
 
     with open(rsl_path, "w", encoding="utf-8") as fh:
-        fh.write("\n".join(lines))
+        fh.write("\n".join(lines) + "\n")
 
 
 def _build_value_maps(spec_obj: Any, datatype_map: dict[str, Any],
@@ -829,6 +742,37 @@ def _format_enum_attr_value(attr_meta: dict[str, Any], enum_refs: list[str],
     return trlc_refs[0]
 
 
+def _append_string_attr(lines: list[str], pad: str, attr_name: str, value_str: str) -> None:
+    """Append a TRLC string attribute assignment to the line buffer.
+
+    Single-line values are written inline: ``attr = '''value'''``.
+    Multi-line values are written with the string literal on its own line::
+
+        attr =
+        '''
+        content
+        '''
+
+    Args:
+        lines:      Line buffer to append to.
+        pad:        Indentation prefix for the enclosing block.
+        attr_name:  TRLC attribute name.
+        value_str:  Raw string value to embed.
+
+    Returns:
+        None
+    """
+    if not value_str:
+        return
+
+    trlc_lit = _trlc_string(value_str)
+    if "\n" in value_str:
+        lines.append(f"{pad}    {attr_name} =")
+        lines.append(trlc_lit)
+    else:
+        lines.append(f"{pad}    {attr_name} = {trlc_lit}")
+
+
 def _write_spec_object_instance(lines: list[str], spec_obj: Any, indent: int,  # pylint: disable=too-many-arguments,too-many-positional-arguments
                                  type_data: dict[str, Any],
                                  ctx: _WritingContext,
@@ -859,8 +803,7 @@ def _write_spec_object_instance(lines: list[str], spec_obj: Any, indent: int,  #
                 lines.append(f"{pad}    {attr_meta['trlc_name']} = {formatted}")
         else:
             value_str = value_map.get(attr_meta["attr_def_id"], "")
-            if value_str:
-                lines.append(f"{pad}    {attr_meta['trlc_name']} = {_trlc_string(value_str)}")
+            _append_string_attr(lines, pad, attr_meta["trlc_name"], value_str)
 
     lines.append(f"{pad}}}")
     lines.append("")
@@ -958,17 +901,18 @@ def _write_trlc(trlc_path: str, package_name: str, content: Any,
         lines.append("")
 
     with open(trlc_path, "w", encoding="utf-8") as fh:
-        fh.write("\n".join(lines))
+        fh.write("\n".join(lines) + "\n")
 
 
-def _write_render_config(cfg_path: str, package_name: str,
-                         type_info: dict[str, Any]) -> None:
-    """Write a renderCfg.json marking all XHTML-sourced attributes as ``gfm``.
+def _write_render_config(cfg_path: str, type_info: dict[str, Any]) -> None:
+    """Write a renderCfg.json with ``"xhtml"`` entries for every XHTML-typed attribute.
+
+    The entries instruct pyTRLCConverter to pass XHTML attribute values through
+    verbatim so that the round-trip output preserves the original XHTML content.
 
     Args:
-        cfg_path:     Destination file path.
-        package_name: TRLC package name used as the ``package`` pattern.
-        type_info:    Type metadata as returned by ``_collect_type_info``.
+        cfg_path:  Destination file path.
+        type_info: Type metadata as returned by ``_collect_type_info``.
 
     Returns:
         None
@@ -977,16 +921,17 @@ def _write_render_config(cfg_path: str, package_name: str,
     for type_data in type_info.values():
         if type_data["is_section"]:
             continue
+        trlc_type = type_data["trlc_name"]
         for attr in type_data["attrs"]:
             if attr["is_xhtml"]:
                 entries.append({
-                    "package": package_name,
-                    "type": type_data["trlc_name"],
-                    "attribute": attr["trlc_name"],
-                    "format": "gfm",
+                    "package": ".*",
+                    "type": re.escape(trlc_type),
+                    "attribute": re.escape(attr["trlc_name"]),
+                    "format": "xhtml",
                 })
 
-    config = {"renderCfg": entries}
+    config: dict[str, list[dict[str, str]]] = {"renderCfg": entries}
     with open(cfg_path, "w", encoding="utf-8") as fh:
         json.dump(config, fh, indent=4, ensure_ascii=False)
         fh.write("\n")
@@ -1059,7 +1004,7 @@ def generate_output(reqif_path: str, output_dir: str, package_name: str) -> None
     _write_trlc(trlc_path, package_name, content, ctx)
     print(f"Written: {trlc_path}")
 
-    _write_render_config(cfg_path, package_name, type_info)
+    _write_render_config(cfg_path, type_info)
     print(f"Written: {cfg_path}")
 
     _write_translation(trans_path, type_info)
