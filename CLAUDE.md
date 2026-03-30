@@ -43,13 +43,14 @@ The core design is a **strategy/plugin pattern** around `AbstractConverter` (`sr
 
 Every output format implements this interface:
 
-```
+```text
 begin() → enter_file() → [convert_section() | convert_record_object()] × N → leave_file() → finish()
 ```
 
 `BaseConverter` (`base_converter.py`) provides default no-op implementations and shared helpers (argument parsing, translation, render config, empty-value handling). All built-in converters subclass `BaseConverter`, not `AbstractConverter` directly.
 
 Built-in converters registered in `__main__.py`:
+
 - `MarkdownConverter` → `markdown`
 - `DocxConverter` → `docx`
 - `RstConverter` → `rst`
@@ -71,15 +72,30 @@ When a `--renderCfg` JSON file is provided, `RenderConfig` matches record attrib
 ### ReqIF Converter Specifics
 
 `ReqifConverter` builds a document in memory using the `reqif` library, then serialises with `ReqIFUnparser`. Two modes:
+
 - **Multiple-document mode** (default): one `.reqif` per `.trlc` file, written in `leave_file()`.
 - **Single-document mode** (`--single-document`): all TRLC files merged into one `.reqif`, written in `finish()`.
 
 TRLC record references become `SPEC-RELATION` entries (not plain attributes); cross-file references require `--single-document`.
 
+TRLC enumeration type attributes become `DATATYPE-DEFINITION-ENUMERATION` entries with `ENUM-VALUE` keys starting at 0 in RSL literal declaration order. The corresponding record field produces an `ATTRIBUTE-VALUE-ENUMERATION`. Optional enum fields with a null value are omitted from the spec-object entirely.
+
+### New Features Workflow
+
+When adding a new converter feature, follow this order to maintain full traceability:
+
+1. **Requirements** — add `SwReq` entries in `trlc/swe-req/swe-req.trlc`.
+2. **Architecture** — add or update `SwArchSpec` entries in `trlc/swe-arch/swe-arch.trlc`, referencing the new requirements in `satisfies`.
+3. **Source code** — implement the feature; add `# lobster-trace: SwRequirements.<id>` comments to every method that implements a requirement.
+4. **Test utilities** — create any needed `.rsl` / `.trlc` fixture files under `tests/utils/`.
+5. **Test cases** — add `SwTestCase` entries in `trlc/swe-test/swe-test.trlc`, referencing the new requirements in `verifies`.
+6. **Test code** — add `test_*` functions in `tests/test_reqif.py` (or the relevant test module); annotate each with `# lobster-trace: SwTests.<tc_id>` and `record_property("lobster-trace", "SwTests.<tc_id>")`.
+7. **Validate** — run `pylint` (must score 10.00/10) and `pytest` (all tests must pass).
+
 ### Key Files
 
 | File | Purpose |
-|---|---|
+| --- | --- |
 | `src/pyTRLCConverter/abstract_converter.py` | Converter interface (subclass this for new formats) |
 | `src/pyTRLCConverter/base_converter.py` | Shared implementation — subclass for built-in formats |
 | `src/pyTRLCConverter/item_walker.py` | Drives the converter lifecycle over TRLC symbols |
