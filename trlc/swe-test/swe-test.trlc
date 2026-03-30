@@ -334,6 +334,16 @@ section "SW-Test Cases" {
              when the render configuration is set to "gfm".'''
             verifies = [SwRequirements.sw_req_reqif_render_gfm]
         }
+
+        SwTestCase tc_reqif_enum {
+            description = "This test case checks whether a TRLC enumeration attribute is converted to a DATATYPE-DEFINITION-ENUMERATION with 0-based consecutive ENUM-VALUE keys and emitted as ATTRIBUTE-VALUE-ENUMERATION in the spec-object."
+            verifies = [SwRequirements.sw_req_reqif_enum, SwRequirements.sw_req_reqif_enum_key_order]
+        }
+
+        SwTestCase tc_reqif_enum_null {
+            description = "This test case checks whether an optional TRLC enumeration attribute with a null value is omitted from the generated ReqIF spec-object."
+            verifies = [SwRequirements.sw_req_reqif_enum_null]
+        }
     }
 
     section "Docx" {

@@ -206,16 +206,33 @@ Markdown-formatted requirement attributes configured via `--renderCfg` are autom
 
 Conversion rules:
 
-- A TRLC type is converted to a ```SPEC-OBJECT-TYPE```.
-- Every ```SPEC-OBJECT-TYPE``` has its own attribute set that corresponds to the TRLC type attributes.
-- A section is converted to a ```SPEC-OBJECT-TYPE``` as well.
-- A section inside a section is child and all following object on this level.
-- The TRLC record name is mapped to an explicit string attribute named ```ID``` on the owning ```SPEC-OBJECT-TYPE```.
-- TRLC record references are converted to ```SPEC-RELATION-TYPE``` and ```SPEC-RELATION``` entries.
-  - The relation type name is the TRLC attribute name, for example ```link```.
-  - The reference field is no longer emitted as a regular object attribute.
-  - This preserves target links in a form that can later be imported by DOORS Next.
-  - The source and target records must be part of the same generated ReqIF document. Use ```--single-document``` when references span multiple TRLC files.
+**Types and spec-objects:**
+
+* Each distinct TRLC record type is mapped to one `SPEC-OBJECT-TYPE`. The type's attributes are reflected as `ATTRIBUTE-DEFINITION-*` entries on the type.
+* TRLC `section` headings are mapped to a dedicated `SPEC-OBJECT-TYPE` named `Section` and produce a container `SPEC-OBJECT` in the hierarchy.
+* Every TRLC record object produces one `SPEC-OBJECT` of the matching `SPEC-OBJECT-TYPE`.
+
+**Attribute mapping by field type:**
+
+| TRLC field type | ReqIF datatype | ReqIF attribute value |
+| --- | --- | --- |
+| String / Integer / Boolean / Decimal | `DATATYPE-DEFINITION-XHTML` | `ATTRIBUTE-VALUE-XHTML` — plain text is HTML-escaped and wrapped in `<p>` tags |
+| String with Markdown render config | `DATATYPE-DEFINITION-XHTML` | `ATTRIBUTE-VALUE-XHTML` — Markdown is converted to XHTML via `marko` |
+| Enumeration | `DATATYPE-DEFINITION-ENUMERATION` | `ATTRIBUTE-VALUE-ENUMERATION` — enum value keys start at 0 and follow the literal declaration order in the RSL model |
+| Record reference / array of references | — | Converted to `SPEC-RELATION` entries (see below) |
+| Optional field with `null` value | — | Attribute is omitted from the `SPEC-OBJECT` |
+
+**Record name:**
+
+- The TRLC record name is mapped to an explicit `ATTRIBUTE-VALUE-STRING` attribute named `ReqIF.ForeignID` on the owning `SPEC-OBJECT-TYPE`.
+
+**Record references:**
+
+- TRLC record reference fields (single or array) are converted to `SPEC-RELATION-TYPE` and `SPEC-RELATION` entries.
+- The relation type name is the TRLC attribute name, for example `derived`.
+- The reference field is not emitted as a regular object attribute.
+- This preserves traceability links in a form that can be imported by DOORS Next.
+- The source and target records must be part of the same generated ReqIF document. Use `--single-document` when references span multiple TRLC files.
 
 ### Dump TRLC item list to console
 

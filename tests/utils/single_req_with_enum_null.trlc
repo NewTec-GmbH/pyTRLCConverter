@@ -1,0 +1,5 @@
+package Requirements
+
+Requirement req_enum_null_1 {
+    description = "Requirement with null enumeration attribute."
+}

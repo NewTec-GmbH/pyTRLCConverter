@@ -372,6 +372,8 @@ section "SW Architecture" {
                     * Registers the `reqif` output format and options.
                     * Creates sections and records in ReqIF format.
                     * Converts configured CommonMark and GFM fields into ReqIF XHTML.
+                    * Converts TRLC enumeration type attributes to DATATYPE-DEFINITION-ENUMERATION with 0-based consecutive ENUM-VALUE keys in RSL declaration order.
+                    * Omits optional enumeration attributes with null value from the generated spec-object.
                     """
                 verification_criteria = "Call the tool using the `pyTRLCConverter` frontend with reqif output format."
                 satisfies = [
@@ -386,6 +388,9 @@ section "SW Architecture" {
                     SwRequirements.sw_req_reqif_top_level_custom,
                     SwRequirements.sw_req_reqif_render_md,
                     SwRequirements.sw_req_reqif_render_gfm,
+                    SwRequirements.sw_req_reqif_enum,
+                    SwRequirements.sw_req_reqif_enum_key_order,
+                    SwRequirements.sw_req_reqif_enum_null,
                     SwRequirements.sw_req_destination_format
                 ]
             }

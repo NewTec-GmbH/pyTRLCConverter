@@ -31,7 +31,12 @@ from reqif.object_lookup import ReqIFObjectLookup
 from reqif.reqif_bundle import ReqIFBundle
 from reqif.unparser import ReqIFUnparser
 from reqif.models.reqif_core_content import ReqIFCoreContent
-from reqif.models.reqif_data_type import ReqIFDataTypeDefinitionString, ReqIFDataTypeDefinitionXHTML
+from reqif.models.reqif_data_type import (
+    ReqIFDataTypeDefinitionEnumeration,
+    ReqIFDataTypeDefinitionString,
+    ReqIFDataTypeDefinitionXHTML,
+    ReqIFEnumValue
+)
 from reqif.models.reqif_namespace_info import ReqIFNamespaceInfo
 from reqif.models.reqif_reqif_header import ReqIFReqIFHeader
 from reqif.models.reqif_req_if_content import ReqIFReqIFContent
@@ -43,7 +48,10 @@ from reqif.models.reqif_spec_relation_type import ReqIFSpecRelationType
 from reqif.models.reqif_specification import ReqIFSpecification
 from reqif.models.reqif_specification_type import ReqIFSpecificationType
 from reqif.models.reqif_types import SpecObjectAttributeType
-from trlc.ast import Array_Aggregate, Implicit_Null, Record_Object, Record_Reference, String_Literal, Expression
+from trlc.ast import (
+    Array_Aggregate, Enumeration_Literal, Enumeration_Type, Implicit_Null,
+    Record_Object, Record_Reference, String_Literal, Expression, Symbol_Table
+)
 from pyTRLCConverter.base_converter import BaseConverter
 from pyTRLCConverter.ret import Ret
 from pyTRLCConverter.trlc_helper import TrlcAstWalker
@@ -98,6 +106,7 @@ class ReqifConverter(BaseConverter):
         self._spec_object_identifier_by_record = {}
         self._id_counter = 0
         self._document_title = ReqifConverter.TOP_LEVEL_DEFAULT
+        self._enum_datatype_registry = {}
 
     @staticmethod
     def get_subcommand() -> str:
@@ -266,6 +275,7 @@ class ReqifConverter(BaseConverter):
 
         return Ret.OK
 
+    # pylint: disable-next=too-many-locals
     def convert_record_object_generic(self, record: Record_Object, level: int, translation: Optional[dict]) -> Ret:
         # lobster-trace: SwRequirements.sw_req_reqif_record
         """Convert a record object generically to a ReqIF spec-object.
@@ -293,6 +303,20 @@ class ReqifConverter(BaseConverter):
             if self._queue_spec_relations_from_expression(record, value, name) is True:
                 continue
 
+            attribute_name = self._translate_attribute_name(translation, name)
+            enum_type = self._get_field_enum_type(record, name)
+
+            if enum_type is not None:
+                enum_values = self._collect_enum_values_from_expression(value)
+                if enum_values is not None:
+                    attribute_value_map[f"field_{name}"] = {
+                        "long_name": attribute_name,
+                        "value": enum_values,
+                        "attribute_type": SpecObjectAttributeType.ENUMERATION,
+                        "enum_type": enum_type,
+                    }
+                continue
+
             walker_result = trlc_ast_walker.walk(value)
 
             attribute_value = ""
@@ -304,7 +328,6 @@ class ReqifConverter(BaseConverter):
             if len(attribute_value) == 0:
                 attribute_value = self._empty_attribute_value
 
-            attribute_name = self._translate_attribute_name(translation, name)
             rendered_value = self._render(
                 package_name=record.n_package.name,
                 type_name=record.n_typ.name,
@@ -456,8 +479,18 @@ class ReqifConverter(BaseConverter):
             f"{ReqIFNamespaceInfo.REQIF_XSD} {ReqIFNamespaceInfo.REQIF_XSD}"
         )
 
+        enum_data_types = [
+            ReqIFDataTypeDefinitionEnumeration(
+                identifier=info["identifier"],
+                long_name=info["long_name"],
+                last_change=last_change,
+                values=info["values"]
+            )
+            for info in self._enum_datatype_registry.values()
+        ]
+
         content = ReqIFReqIFContent(
-            data_types=[data_type, string_data_type],
+            data_types=[data_type, string_data_type, *enum_data_types],
             spec_types=[*spec_object_type_list, *spec_relation_type_list, specification_type],
             spec_objects=self._spec_objects,
             spec_relations=self._build_spec_relations(),
@@ -490,6 +523,7 @@ class ReqifConverter(BaseConverter):
         self._spec_object_identifier_by_record = {}
         self._id_counter = 0
         self._document_title = title
+        self._enum_datatype_registry = {}
 
         self._ensure_spec_object_type(ReqifConverter.SECTION_TYPE_KEY, "Section")
 
@@ -566,6 +600,16 @@ class ReqifConverter(BaseConverter):
                         attribute_info["value"]
                     )
                 )
+            elif attribute_type == SpecObjectAttributeType.ENUMERATION:
+                attributes.append(
+                    self._create_enum_attribute(
+                        type_key,
+                        key,
+                        attribute_info["long_name"],
+                        attribute_info["value"],
+                        attribute_info["enum_type"]
+                    )
+                )
             else:
                 attributes.append(
                     self._create_xhtml_attribute(
@@ -639,6 +683,163 @@ class ReqifConverter(BaseConverter):
             definition_ref=definition_identifier,
             value=value
         )
+
+    # pylint: disable-next=too-many-arguments,too-many-positional-arguments
+    def _create_enum_attribute(self, type_key: str, definition_key: str, long_name: str,
+                               literal_names: list, enum_type: Enumeration_Type) -> SpecObjectAttribute:
+        # lobster-trace: SwRequirements.sw_req_reqif_enum
+        """Create a SpecObjectAttribute of type ENUMERATION for the given ReqIF spec-object type.
+
+        Args:
+            type_key (str): Internal key of the owning ReqIF spec-object type.
+            definition_key (str): Internal dictionary key used to look up or create the attribute definition.
+            long_name (str): Human-readable attribute name registered in the spec-object type.
+            literal_names (list): List of TRLC enumeration literal names for the attribute value.
+            enum_type (Enumeration_Type): The TRLC enumeration type.
+
+        Returns:
+            SpecObjectAttribute: The created attribute.
+        """
+        definition_identifier = self._ensure_enum_attribute_definition(
+            type_key, definition_key, long_name, enum_type
+        )
+        registry = self._enum_datatype_registry[enum_type.name]
+        value_identifiers = [registry["literal_identifier_by_name"][name] for name in literal_names]
+
+        return SpecObjectAttribute(
+            attribute_type=SpecObjectAttributeType.ENUMERATION,
+            definition_ref=definition_identifier,
+            value=value_identifiers
+        )
+
+    def _ensure_enum_datatype(self, enum_type: Enumeration_Type) -> str:
+        # lobster-trace: SwRequirements.sw_req_reqif_enum
+        # lobster-trace: SwRequirements.sw_req_reqif_enum_key_order
+        """Return the identifier of an existing DATATYPE-DEFINITION-ENUMERATION, or create and register a new one.
+
+        ENUM-VALUE keys are assigned as consecutive integers starting at 0,
+        in the order the literals are declared in the RSL enumeration.
+
+        Args:
+            enum_type (Enumeration_Type): The TRLC enumeration type.
+
+        Returns:
+            str: The datatype definition identifier.
+        """
+        if enum_type.name in self._enum_datatype_registry:
+            return self._enum_datatype_registry[enum_type.name]["identifier"]
+
+        last_change = self._get_reqif_timestamp()
+        sanitized = self._sanitize_identifier_token(enum_type.name)
+        datatype_identifier = f"datatype-enum-{sanitized}"
+
+        enum_values = []
+        literal_identifier_by_name = {}
+        for key_idx, literal_spec in enumerate(enum_type.literals.table.values()):
+            value_identifier = f"{datatype_identifier}-value-{key_idx}"
+            enum_values.append(ReqIFEnumValue(
+                identifier=value_identifier,
+                key=str(key_idx),
+                long_name=literal_spec.name,
+                last_change=last_change,
+                other_content=""
+            ))
+            literal_identifier_by_name[literal_spec.name] = value_identifier
+
+        self._enum_datatype_registry[enum_type.name] = {
+            "identifier": datatype_identifier,
+            "long_name": enum_type.name,
+            "values": enum_values,
+            "literal_identifier_by_name": literal_identifier_by_name
+        }
+
+        return datatype_identifier
+
+    def _ensure_enum_attribute_definition(self, type_key: str, definition_key: str,
+                                          long_name: str, enum_type: Enumeration_Type) -> str:
+        # lobster-trace: SwRequirements.sw_req_reqif_enum
+        """Return the identifier of an existing ATTRIBUTE-DEFINITION-ENUMERATION, or create and register a new one.
+
+        Args:
+            type_key (str): Internal key of the owning ReqIF spec-object type.
+            definition_key (str): Internal dictionary key for the attribute definition.
+            long_name (str): Human-readable name to assign when creating a new definition.
+            enum_type (Enumeration_Type): The TRLC enumeration type.
+
+        Returns:
+            str: The attribute definition identifier.
+        """
+        attribute_definitions = self._attribute_definitions_by_type.setdefault(type_key, {})
+
+        if definition_key in attribute_definitions:
+            return attribute_definitions[definition_key].identifier
+
+        type_identifier = self._ensure_spec_object_type(type_key, type_key)
+        sanitized_name = self._sanitize_identifier_token(definition_key)
+        definition_identifier = f"attribute-{type_identifier}-{sanitized_name}"
+        enum_datatype_identifier = self._ensure_enum_datatype(enum_type)
+
+        definition = SpecAttributeDefinition(
+            attribute_type=SpecObjectAttributeType.ENUMERATION,
+            identifier=definition_identifier,
+            datatype_definition=enum_datatype_identifier,
+            long_name=long_name,
+            last_change=self._get_reqif_timestamp(),
+            multi_valued=False
+        )
+
+        attribute_definitions[definition_key] = definition
+
+        return definition_identifier
+
+    @staticmethod
+    def _get_field_enum_type(record: Record_Object, field_name: str) -> Optional[Enumeration_Type]:
+        # lobster-trace: SwRequirements.sw_req_reqif_enum
+        # lobster-trace: SwRequirements.sw_req_reqif_enum_null
+        """Return the TRLC Enumeration_Type for the named field, or None if it is not an enum field.
+
+        Traverses the component hierarchy including inherited components.
+
+        Args:
+            record (Record_Object): The TRLC record object.
+            field_name (str): The field name to look up.
+
+        Returns:
+            Optional[Enumeration_Type]: The enumeration type, or None.
+        """
+        simplified = Symbol_Table.simplified_name(field_name)
+        stab = getattr(record.n_typ, "components", None)
+        component = None
+
+        while stab is not None and component is None:
+            component = stab.table.get(simplified)
+            stab = stab.parent
+
+        if component is not None and isinstance(component.n_typ, Enumeration_Type):
+            return component.n_typ
+
+        return None
+
+    @staticmethod
+    def _collect_enum_values_from_expression(value: Expression) -> Optional[list]:
+        # lobster-trace: SwRequirements.sw_req_reqif_enum
+        # lobster-trace: SwRequirements.sw_req_reqif_enum_null
+        """Collect TRLC enumeration literal names from a field expression.
+
+        Args:
+            value (Expression): The TRLC field expression.
+
+        Returns:
+            Optional[list]: List of literal name strings, or None if the expression is null or unsupported.
+        """
+        if isinstance(value, Enumeration_Literal):
+            return [value.value.name]
+
+        if isinstance(value, Array_Aggregate):
+            names = [item.value.name for item in value.value if isinstance(item, Enumeration_Literal)]
+            return names if names else None
+
+        return None
 
     def _ensure_spec_object_type(self, type_key: str, long_name: str) -> str:
         """Return the identifier of an existing ReqIF spec-object type, or create and register a new one.

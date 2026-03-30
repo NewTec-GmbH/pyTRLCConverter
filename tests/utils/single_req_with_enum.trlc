@@ -1,0 +1,6 @@
+package Requirements
+
+Requirement req_enum_1 {
+    description = "Requirement with enumeration attribute."
+    status = Status.Approved
+}

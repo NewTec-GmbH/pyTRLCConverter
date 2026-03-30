@@ -529,6 +529,29 @@ section "SW Requirements" {
                 }
             }
 
+            section "ReqIF Enumeration" {
+
+                SwReq sw_req_reqif_enum {
+                    description = "The ReqIF converter shall convert a TRLC enumeration type attribute into a DATATYPE-DEFINITION-ENUMERATION and emit ATTRIBUTE-VALUE-ENUMERATION for the corresponding spec-object attribute."
+                    verification_criteria = "Verify by converting a TRLC record with an enumeration field and checking that the generated ReqIF document contains a DATATYPE-DEFINITION-ENUMERATION and the spec-object contains an ATTRIBUTE-VALUE-ENUMERATION with the correct enum value reference."
+                    valid_status = AbstractRequirements.VALID_STATUS.valid
+                }
+
+                SwReq sw_req_reqif_enum_key_order {
+                    description = "The ENUM-VALUE keys inside a DATATYPE-DEFINITION-ENUMERATION shall start at 0 and be consecutive integers following the declaration order of the literals in the RSL enumeration."
+                    verification_criteria = "Verify that ENUM-VALUE KEY attributes in the generated ReqIF file are 0-based consecutive integers ordered as declared in the RSL model."
+                    valid_status = AbstractRequirements.VALID_STATUS.valid
+                    derived = [sw_req_reqif_enum]
+                }
+
+                SwReq sw_req_reqif_enum_null {
+                    description = "An optional TRLC enumeration attribute whose value is null shall be omitted from the generated ReqIF spec-object."
+                    verification_criteria = "Verify by converting a TRLC record with a null optional enumeration field and checking that the spec-object contains no ATTRIBUTE-VALUE-ENUMERATION for that field."
+                    valid_status = AbstractRequirements.VALID_STATUS.valid
+                    derived = [sw_req_reqif_enum]
+                }
+            }
+
             section "ReqIF Render Configuration" {
 
                 SwReq sw_req_reqif_render_md {

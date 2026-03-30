@@ -503,12 +503,12 @@ def test_tc_reqif_type_specific_spec_object_types(record_property, capsys, monke
     assert "description" in sw_req_attribute_names
     assert "verification" in sw_req_attribute_names
     assert len(sw_req_attribute_names) == 3
-    assert len(sw_req_attribute_names.intersection({"ID", "External ID"})) == 1
+    assert "ReqIF.ForeignID" in sw_req_attribute_names
 
     assert "constraint" in sw_req_non_func_attribute_names
     assert "rationale" in sw_req_non_func_attribute_names
     assert len(sw_req_non_func_attribute_names) == 3
-    assert len(sw_req_non_func_attribute_names.intersection({"ID", "External ID"})) == 1
+    assert "ReqIF.ForeignID" in sw_req_non_func_attribute_names
 
     # Verify that record objects reference their TRLC-specific spec-object types.
     functional_record = _find_spec_object_by_long_name(bundle, "sw_req_1")
@@ -597,7 +597,7 @@ def test_tc_reqif_record_reference_relation(record_property, capsys, monkeypatch
         definition.long_name
         for definition in getattr(requirement_type, "attribute_definitions", [])
     }
-    assert requirement_attribute_names.intersection({"ID", "External ID"})
+    assert "ReqIF.ForeignID" in requirement_attribute_names
     assert "link" not in requirement_attribute_names
 
     req_5 = _find_spec_object_by_long_name(bundle, "req_id_5")
@@ -606,7 +606,7 @@ def test_tc_reqif_record_reference_relation(record_property, capsys, monkeypatch
     assert req_5 is not None
     assert req_6 is not None
 
-    id_identifier = _find_any_attribute_identifier(bundle, ["ID", "External ID"])
+    id_identifier = _find_any_attribute_identifier(bundle, ["ReqIF.ForeignID", "ID", "External ID"])
     assert id_identifier is not None
 
     req_5_id_attribute = _find_attribute_by_identifier(req_5, id_identifier)
@@ -677,7 +677,7 @@ def test_tc_reqif_record_reference_array_relation(record_property, capsys, monke
     }
     assert "description" in test_case_attribute_names
     assert len(test_case_attribute_names) == 2
-    assert len(test_case_attribute_names.intersection({"ID", "External ID"})) == 1
+    assert "ReqIF.ForeignID" in test_case_attribute_names
 
     tc_array = _find_spec_object_by_long_name(bundle, "tc_array")
     req_a = _find_spec_object_by_long_name(bundle, "req_a")
@@ -700,5 +700,127 @@ def test_tc_reqif_record_reference_array_relation(record_property, capsys, monke
         (tc_array.identifier, req_a.identifier, verifies_relation_type.identifier),
         (tc_array.identifier, req_b.identifier, verifies_relation_type.identifier)
     }
+
+def _find_datatype_by_long_name(bundle, long_name: str):
+    # lobster-exclude: Utility function for other test code.
+    """Find a datatype definition in the bundle by its long-name.
+
+    Args:
+        bundle: The parsed ReqIF bundle.
+        long_name (str): The long-name to search for.
+
+    Returns:
+        The matching datatype definition, or None if not found.
+    """
+    assert bundle.core_content is not None
+    assert bundle.core_content.req_if_content is not None
+    assert bundle.core_content.req_if_content.data_types is not None
+
+    for datatype in bundle.core_content.req_if_content.data_types:
+        if datatype.long_name == long_name:
+            return datatype
+
+    return None
+
+
+def test_tc_reqif_enum(record_property, capsys, monkeypatch, tmp_path):
+    # lobster-trace: SwTests.tc_reqif_enum
+    """The ReqIF converter shall convert a TRLC enumeration attribute to DATATYPE-DEFINITION-ENUMERATION.
+
+    Args:
+        record_property (Any): Used to inject the test case reference into the test results.
+        capsys (Any): Used to capture stdout and stderr.
+        monkeypatch (Any): Used to mock program arguments.
+        tmp_path (Path): Used to create a temporary output directory.
+    """
+    record_property("lobster-trace", "SwTests.tc_reqif_enum")
+
+    monkeypatch.setattr("sys.argv", [
+        "pyTRLCConverter",
+        "--source", "./tests/utils/req_enum.rsl",
+        "--source", "./tests/utils/single_req_with_enum.trlc",
+        "--out", str(tmp_path),
+        "reqif",
+        "--single-document"
+    ])
+
+    main()
+
+    captured = capsys.readouterr()
+    assert captured.err == ""
+
+    output_file = os.path.join(tmp_path, ReqifConverter.OUTPUT_FILE_NAME_DEFAULT)
+    bundle = _parse_reqif(output_file)
+
+    # Verify the enumeration datatype is present with the correct long-name.
+    status_datatype = _find_datatype_by_long_name(bundle, "Status")
+    assert status_datatype is not None
+    assert status_datatype.values is not None
+    assert len(status_datatype.values) == 3
+
+    # Verify ENUM-VALUE keys are 0-based consecutive integers in RSL declaration order.
+    expected_literals = [("Draft", "0"), ("Approved", "1"), ("Rejected", "2")]
+    for enum_value, (expected_name, expected_key) in zip(status_datatype.values, expected_literals):
+        assert enum_value.long_name == expected_name
+        assert enum_value.key == expected_key
+
+    # Verify the spec-object has an ATTRIBUTE-VALUE-ENUMERATION referencing the correct ENUM-VALUE.
+    spec_object = _find_spec_object_by_long_name(bundle, "req_enum_1")
+    assert spec_object is not None
+
+    status_def_identifier = _find_attribute_identifier(bundle, "status")
+    assert status_def_identifier is not None
+
+    status_attribute = _find_attribute_by_identifier(spec_object, status_def_identifier)
+    assert status_attribute is not None
+
+    # The value must reference the ENUM-VALUE for "Approved" (key=1).
+    approved_value = next(v for v in status_datatype.values if v.long_name == "Approved")
+    assert approved_value.identifier in status_attribute.value
+
+    # Verify ReqIF XSD compliance.
+    _assert_reqif_v12_compliance(output_file, tmp_path)
+
+
+def test_tc_reqif_enum_null(record_property, capsys, monkeypatch, tmp_path):
+    # lobster-trace: SwTests.tc_reqif_enum_null
+    """An optional TRLC enumeration attribute with null value shall be omitted from the spec-object.
+
+    Args:
+        record_property (Any): Used to inject the test case reference into the test results.
+        capsys (Any): Used to capture stdout and stderr.
+        monkeypatch (Any): Used to mock program arguments.
+        tmp_path (Path): Used to create a temporary output directory.
+    """
+    record_property("lobster-trace", "SwTests.tc_reqif_enum_null")
+
+    monkeypatch.setattr("sys.argv", [
+        "pyTRLCConverter",
+        "--source", "./tests/utils/req_enum.rsl",
+        "--source", "./tests/utils/single_req_with_enum_null.trlc",
+        "--out", str(tmp_path),
+        "reqif",
+        "--single-document"
+    ])
+
+    main()
+
+    captured = capsys.readouterr()
+    assert captured.err == ""
+
+    output_file = os.path.join(tmp_path, ReqifConverter.OUTPUT_FILE_NAME_DEFAULT)
+    bundle = _parse_reqif(output_file)
+
+    spec_object = _find_spec_object_by_long_name(bundle, "req_enum_null_1")
+    assert spec_object is not None
+
+    # Verify no ATTRIBUTE-VALUE-ENUMERATION is present for the null status field.
+    from reqif.models.reqif_types import SpecObjectAttributeType  # pylint: disable=import-outside-toplevel
+    for attribute in spec_object.attributes:
+        assert attribute.attribute_type != SpecObjectAttributeType.ENUMERATION
+
+    # Verify ReqIF XSD compliance.
+    _assert_reqif_v12_compliance(output_file, tmp_path)
+
 
 # Main *************************************************************************
