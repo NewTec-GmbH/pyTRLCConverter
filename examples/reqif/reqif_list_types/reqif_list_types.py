@@ -237,6 +237,51 @@ def _resolve_reqif_path(reqif_path: str, tmpdir: str) -> list[str]:
     return [reqif_path]
 
 
+def _heading_to_anchor(text: str) -> str:
+    """Convert a heading text to a GitHub Markdown anchor string.
+
+    Lowercases the text, removes characters that are not alphanumeric,
+    spaces, hyphens, or underscores, and replaces spaces with hyphens.
+
+    Args:
+        text: The heading text without the leading ``#`` prefix and space.
+
+    Returns:
+        Anchor string suitable for use in a Markdown link.
+    """
+    anchor: str = text.lower()
+    anchor = "".join(ch if ch.isalnum() or ch in " -_" else "" for ch in anchor)
+    return anchor.replace(" ", "-")
+
+
+def _write_toc(out: list[str], lines: list[str]) -> None:
+    """Append a Table of Contents section to out, based on h2 headings in lines.
+
+    Scans ``lines`` for level-2 headings (``## ...``) and writes a bulleted
+    list of links.  Duplicate anchor names are disambiguated with a ``-N``
+    suffix, matching GitHub's behaviour.
+
+    Args:
+        out:   List of Markdown lines to append the TOC to.
+        lines: The full list of Markdown lines to scan for h2 headings.
+
+    Returns:
+        None
+    """
+    out.append("## Table of Contents")
+    out.append("")
+    seen: dict[str, int] = {}
+    for line in lines:
+        if line.startswith("## "):
+            text: str = line[3:]
+            anchor: str = _heading_to_anchor(text)
+            count: int = seen.get(anchor, 0)
+            seen[anchor] = count + 1
+            link_anchor: str = anchor if count == 0 else f"{anchor}-{count}"
+            out.append(f"- [{text}](#{link_anchor})")
+    out.append("")
+
+
 def _write_summary_section(out: list[str], spec_object_types: list[Any],
                             spec_relation_types: list[Any], specification_types: list[Any],
                             datatype_map: dict[str, Any]) -> None:
@@ -437,6 +482,10 @@ def generate_report(reqif_path: str) -> str:
     _write_spec_types_group(out, spec_object_types, "SpecObjectType", common_names, datatype_map)
     _write_spec_types_group(out, spec_relation_types, "SpecRelationType", set(), datatype_map)
     _write_spec_types_group(out, specification_types, "SpecificationType", set(), datatype_map)
+
+    toc: list[str] = []
+    _write_toc(toc, out)
+    out[2:2] = toc
 
     return "\n".join(out)
 
