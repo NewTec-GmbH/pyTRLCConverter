@@ -1,7 +1,7 @@
 {
     "Requirement": {
-        "name": "Name",
-        "description": "Description",
-        "status": "Status"
+        "name": "ReqIF.Name",
+        "text": "ReqIF.Text",
+        "description": "ReqIF.Description"
     }
 }

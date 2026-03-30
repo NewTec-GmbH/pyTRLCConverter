@@ -18,7 +18,7 @@
 
 OUT_PATH=./out
 
-pyTRLCConverter --source=. --translation=translation.json --renderCfg=renderCfg.json --out=$OUT_PATH reqif
+pyTRLCConverter --source=req.rsl --source=req.trlc --translation=translation.json --renderCfg=renderCfg.json --out=$OUT_PATH reqif --reqifz
 
 if [ $? -ne 0 ]; then
     read -p "Press any key to continue..."
