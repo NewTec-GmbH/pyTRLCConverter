@@ -446,6 +446,57 @@ def test_tc_reqif_render_gfm(record_property, capsys, monkeypatch, tmp_path):
     assert "I am strikethrough.</del>" in description_attribute.value
 
 
+def test_tc_reqif_render_xhtml(record_property, capsys, monkeypatch, tmp_path):
+    # lobster-trace: SwTests.tc_reqif_render_xhtml
+    """The software shall pass XHTML content through to ReqIF XHTML without modification.
+
+    Args:
+        record_property (Any): Used to inject the test case reference into the test results.
+        capsys (Any): Used to capture stdout and stderr.
+        monkeypatch (Any): Used to mock program arguments.
+        tmp_path (Path): Used to create a temporary output directory.
+    """
+    record_property("lobster-trace", "SwTests.tc_reqif_render_xhtml")
+
+    # Mock program arguments with an XHTML render configuration.
+    monkeypatch.setattr("sys.argv", [
+        "pyTRLCConverter",
+        "--source", "./tests/utils/req.rsl",
+        "--source", "./tests/utils/single_req_description_xhtml.trlc",
+        "--out", str(tmp_path),
+        "--renderCfg", "./tests/utils/renderCfgXhtml.json",
+        "reqif",
+        "--single-document"
+    ])
+
+    # Expect the program to run without any exceptions.
+    main()
+
+    # Capture stdout and stderr.
+    captured = capsys.readouterr()
+    # Check that no errors were reported.
+    assert captured.err == ""
+
+    # Parse the output file and locate the expected spec-object.
+    output_file = os.path.join(tmp_path, ReqifConverter.OUTPUT_FILE_NAME_DEFAULT)
+    bundle = _parse_reqif(output_file)
+
+    spec_object = _find_spec_object_by_long_name(bundle, "req_id_xhtml")
+    assert spec_object is not None
+
+    # Locate the description attribute definition and corresponding attribute value.
+    description_identifier = _find_attribute_identifier(bundle, "description")
+    assert description_identifier is not None
+
+    description_attribute = _find_attribute_by_identifier(spec_object, description_identifier)
+    assert description_attribute is not None
+    # Verify that the XHTML content is passed through unchanged inside the wrapper.
+    # Note: the reqif library re-serialises the parsed XML with explicit xmlns attributes on each
+    # element, so closing tags like </strong> are still present verbatim in the value.
+    assert "bold</strong>" in description_attribute.value
+    assert "italic</em>" in description_attribute.value
+
+
 # pylint: disable=too-many-locals, too-many-statements
 def test_tc_reqif_type_specific_spec_object_types(record_property, capsys, monkeypatch, tmp_path):
     # lobster-trace: SwTests.tc_reqif

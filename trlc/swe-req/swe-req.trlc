@@ -565,6 +565,12 @@ section "SW Requirements" {
                     verification_criteria = "Verify by using strings in Markdown format according to GitHub Flavored Markdown spec, that are converted to ReqIF XHTML."
                     valid_status = AbstractRequirements.VALID_STATUS.valid
                 }
+
+                SwReq sw_req_reqif_render_xhtml {
+                    description = "The software shall pass XHTML content through to the ReqIF XHTML attribute value without modification when the render configuration specifies the `xhtml` format."
+                    verification_criteria = "Verify that XHTML content in a requirement attribute is included unchanged (inside the ReqIF XHTML wrapper) in the generated ReqIF output."
+                    valid_status = AbstractRequirements.VALID_STATUS.valid
+                }
             }
         }
 

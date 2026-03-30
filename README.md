@@ -279,6 +279,8 @@ Supported by the formats:
 | reStructuredText | X                        | X                        |
 | reqif            | X                        | X                        |
 
+The `reqif` format additionally supports `"xhtml"` as a format specifier in the render configuration. When set, the attribute value is treated as already-valid XHTML and is embedded in the ReqIF output without any conversion. This allows requirement authors to write raw XHTML markup directly in their TRLC string attributes.
+
 Configuration example:
 
 ```json

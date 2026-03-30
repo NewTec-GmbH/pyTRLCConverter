@@ -335,6 +335,12 @@ section "SW-Test Cases" {
             verifies = [SwRequirements.sw_req_reqif_render_gfm]
         }
 
+        SwTestCase tc_reqif_render_xhtml {
+            description = '''This test case checks whether XHTML content in requirement attributes is passed through without modification
+             when the render configuration is set to "xhtml".'''
+            verifies = [SwRequirements.sw_req_reqif_render_xhtml]
+        }
+
         SwTestCase tc_reqif_enum {
             description = "This test case checks whether a TRLC enumeration attribute is converted to a DATATYPE-DEFINITION-ENUMERATION with 0-based consecutive ENUM-VALUE keys and emitted as ATTRIBUTE-VALUE-ENUMERATION in the spec-object."
             verifies = [SwRequirements.sw_req_reqif_enum, SwRequirements.sw_req_reqif_enum_key_order]

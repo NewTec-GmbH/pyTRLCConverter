@@ -39,6 +39,7 @@ class RenderConfig():
     FORMAT_SPECIFIER_MD = "md"          # CommonMark Markdown format; https://spec.commonmark.org/0.31.2/
     FORMAT_SPECIFIER_RST = "rst"        # ReStructuredText format; https://docutils.sourceforge.io/rst.html
     FORMAT_SPECIFIER_GFM = "gfm"        # GitHub Flavored Markdown format; https://github.github.com/gfm/
+    FORMAT_SPECIFIER_XHTML = "xhtml"    # XHTML format; https://www.w3.org/TR/xhtml1/
 
     def __init__(self):
         """Constructs the render configuration provider.
@@ -208,6 +209,20 @@ class RenderConfig():
            bool: True if the given TRLC attribute has GitHub Flavored Markdown format, otherwise False.
         """
         return self.get_format_specifier(trlc_package, trlc_type, trlc_type_attribute) == self.FORMAT_SPECIFIER_GFM
+
+    def is_format_xhtml(self, trlc_package: str, trlc_type: str, trlc_type_attribute: str) -> bool:
+        """Checks if the given TRLC package, type and attribute should be rendered in XHTML format.
+
+        Args:
+            trlc_package (str): The TRLC package.
+            trlc_type (str): The TRLC type.
+            trlc_type_attribute (str): The TRLC type attribute.
+        
+        Returns:
+           bool: True if the given TRLC attribute has XHTML format, otherwise False.
+        """
+        return self.get_format_specifier(trlc_package, trlc_type, trlc_type_attribute) == self.FORMAT_SPECIFIER_XHTML
+
 
 # Functions ********************************************************************
 

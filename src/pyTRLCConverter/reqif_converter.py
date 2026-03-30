@@ -1161,10 +1161,12 @@ class ReqifConverter(BaseConverter):
     def _render(self, package_name: str, type_name: str, attribute_name: str, attribute_value: str) -> str:
         # lobster-trace: SwRequirements.sw_req_reqif_render_md
         # lobster-trace: SwRequirements.sw_req_reqif_render_gfm
+        # lobster-trace: SwRequirements.sw_req_reqif_render_xhtml
         """Render an attribute value to an XHTML-wrapped string based on the render configuration.
 
         If the attribute is configured as CommonMark Markdown, it is converted via marko.
         If configured as GFM, it is converted with the GFM extension.
+        If configured as XHTML, the value is passed through as-is inside the XHTML wrapper.
         Otherwise plain text is HTML-escaped and wrapped.
 
         Args:
@@ -1181,6 +1183,11 @@ class ReqifConverter(BaseConverter):
 
         if self._render_cfg.is_format_gfm(package_name, type_name, attribute_name) is True:
             return self._markdown_to_xhtml(attribute_value, gfm_mode=True)
+
+        if self._render_cfg.is_format_xhtml(package_name, type_name, attribute_name) is True:
+            if "<" in attribute_value:
+                return self._wrap_xhtml(attribute_value)
+            return self._plain_text_to_xhtml(attribute_value)
 
         return self._plain_text_to_xhtml(attribute_value)
 
