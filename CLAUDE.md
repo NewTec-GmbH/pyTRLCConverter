@@ -105,6 +105,12 @@ Target format is ReqIF v1.2, following the ProSTEP ReqIF Implementation Guidelin
 
 See the `/reqif-format` skill for the full element reference and IG compliance checklist.
 
+## TRLC Language
+
+TRLC (Treat Requirements Like Code) is the DSL used for requirement definitions (`.rsl`) and instances (`.trlc`). Type definitions live in `trlc/model/`; requirement objects live in `trlc/swe-req/`, `trlc/swe-arch/`, and `trlc/swe-test/`.
+
+See the `/trlc` skill for the full language reference, syntax rules, and project-specific patterns.
+
 ## Traceability
 
 Requirements are traced in TRLC source files and linked to code via `# lobster-trace: SwRequirements.<id>` comments. Do not remove these trace comments when modifying traced functions.
