@@ -23,6 +23,7 @@
 import html
 import os
 import re
+import zipfile
 from datetime import datetime, timezone
 from typing import Any, Optional
 from marko import Markdown
@@ -67,8 +68,10 @@ class ReqifConverter(BaseConverter):
     DATATYPE_STRING_IDENTIFIER = "datatype-string"
     SECTION_TYPE_KEY = "section"
     SPECIFICATION_TYPE_IDENTIFIER = "specification-type-trlc"
-    ATTRIBUTE_KEY_RECORD_ID = "externalId"
     XSI_NAMESPACE = "http://www.w3.org/2001/XMLSchema-instance"
+
+    SYSTEM_ATTRIBUTE_PREFIX = "ReqIF."
+    ATTRIBUTE_KEY_RECORD_FOREIGN_ID = "foreignID"
 
     def __init__(self, args: Any) -> None:
         # lobster-trace: SwRequirements.sw_req_reqif
@@ -176,6 +179,15 @@ class ReqifConverter(BaseConverter):
                  f"(default = {ReqifConverter.TOP_LEVEL_DEFAULT})."
         )
 
+        BaseConverter._parser.add_argument(
+            "--reqifz",
+            action="store_true",
+            required=False,
+            default=False,
+            help="Archive the ReqIF output as a ZIP file with the .reqifz extension. "
+                 "The default is to write plain .reqif files."
+        )
+
     def begin(self) -> Ret:
         # lobster-trace: SwRequirements.sw_req_reqif_single_doc_mode
         """
@@ -269,8 +281,8 @@ class ReqifConverter(BaseConverter):
         """
         trlc_ast_walker = self._get_trlc_ast_walker()
         attribute_value_map = {
-            ReqifConverter.ATTRIBUTE_KEY_RECORD_ID: {
-                "long_name": "External ID",
+            ReqifConverter.ATTRIBUTE_KEY_RECORD_FOREIGN_ID: {
+                "long_name": f"{ReqifConverter.SYSTEM_ATTRIBUTE_PREFIX}ForeignID",
                 "value": record.name,
                 "attribute_type": SpecObjectAttributeType.STRING
             }
@@ -333,23 +345,35 @@ class ReqifConverter(BaseConverter):
     def _write_document(self, file_name: str) -> Ret:
         """Build the ReqIF bundle and write it to the output file.
 
+        When --reqifz is active the output is a ZIP archive with the .reqifz
+        extension that contains the .reqif file.
+
         Args:
             file_name (str): Output file name (without path prefix).
 
         Returns:
             Ret: Status
         """
-        out_file_name = file_name
+        reqif_file_name = os.path.splitext(os.path.basename(file_name))[0] + ".reqif"
+
+        if self._args.reqifz:
+            out_file_name = os.path.splitext(file_name)[0] + ".reqifz"
+        else:
+            out_file_name = file_name
 
         if 0 < len(self._out_path):
-            out_file_name = os.path.join(self._out_path, file_name)
+            out_file_name = os.path.join(self._out_path, out_file_name)
 
         try:
             bundle = self._build_reqif_bundle()
             reqif_xml = ReqIFUnparser.unparse(bundle)
 
-            with open(out_file_name, "w", encoding="utf-8") as fd:
-                fd.write(reqif_xml)
+            if self._args.reqifz:
+                with zipfile.ZipFile(out_file_name, "w", compression=zipfile.ZIP_DEFLATED) as zf:
+                    zf.writestr(reqif_file_name, reqif_xml)
+            else:
+                with open(out_file_name, "w", encoding="utf-8") as fd:
+                    fd.write(reqif_xml)
 
             return Ret.OK
 
