@@ -529,6 +529,26 @@ section "SW Requirements" {
                 }
             }
 
+            section "ReqIF Spec Relations" {
+
+                SwReq sw_req_reqif_relation {
+                    description = "The ReqIF converter shall convert a TRLC record reference attribute into a ReqIF SPEC-RELATION between the source and target spec-objects. Array record reference attributes shall produce one SPEC-RELATION per element. The field name shall be used as the relation type long-name."
+                    verification_criteria = "Verify by converting TRLC records with record reference fields and checking that the generated ReqIF document contains SPEC-RELATION entries linking source and target spec-objects with the correct relation type."
+                    valid_status = AbstractRequirements.VALID_STATUS.valid
+                    derived = [sw_req_reqif_record]
+                }
+            }
+
+            section "ReqIF Archive" {
+
+                SwReq sw_req_reqif_reqifz {
+                    description = "The ReqIF converter shall optionally archive the generated .reqif output when --reqifz is given. For each document a subfolder named after the document shall be created inside the output folder, the .reqif file shall be written there, and all files inside that subfolder shall be bundled into a .reqifz ZIP archive placed in the output folder. Each document produces one .reqifz file."
+                    verification_criteria = "Verify by converting TRLC files with --reqifz, checking that each document yields one .reqifz archive in the output folder whose contents include the generated .reqif file and any other files in the document subfolder."
+                    valid_status = AbstractRequirements.VALID_STATUS.valid
+                    derived = [sw_req_reqif]
+                }
+            }
+
             section "ReqIF Enumeration" {
 
                 SwReq sw_req_reqif_enum {

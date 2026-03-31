@@ -607,7 +607,7 @@ def test_tc_reqif_type_specific_spec_object_types(record_property, capsys, monke
 
 
 def test_tc_reqif_record_reference_relation(record_property, capsys, monkeypatch, tmp_path):
-    # lobster-trace: SwTests.tc_reqif
+    # lobster-trace: SwTests.tc_reqif_relation
     """The ReqIF converter shall emit record references as ReqIF spec-relations.
 
     Args:
@@ -616,7 +616,7 @@ def test_tc_reqif_record_reference_relation(record_property, capsys, monkeypatch
         monkeypatch (Any): Used to mock program arguments.
         tmp_path (Path): Used to create a temporary output directory.
     """
-    record_property("lobster-trace", "SwTests.tc_reqif")
+    record_property("lobster-trace", "SwTests.tc_reqif_relation")
 
     # Mock program arguments to convert records that reference each other.
     monkeypatch.setattr("sys.argv", [
@@ -690,7 +690,7 @@ def test_tc_reqif_record_reference_relation(record_property, capsys, monkeypatch
 
 
 def test_tc_reqif_record_reference_array_relation(record_property, capsys, monkeypatch, tmp_path):
-    # lobster-trace: SwTests.tc_reqif
+    # lobster-trace: SwTests.tc_reqif_relation
     """The ReqIF converter shall emit one spec-relation per element of a record-reference array.
 
     Args:
@@ -699,7 +699,7 @@ def test_tc_reqif_record_reference_array_relation(record_property, capsys, monke
         monkeypatch (Any): Used to mock program arguments.
         tmp_path (Path): Used to create a temporary output directory.
     """
-    record_property("lobster-trace", "SwTests.tc_reqif")
+    record_property("lobster-trace", "SwTests.tc_reqif_relation")
 
     monkeypatch.setattr("sys.argv", [
         "pyTRLCConverter",
@@ -874,6 +874,97 @@ def test_tc_reqif_enum_null(record_property, capsys, monkeypatch, tmp_path):
 
     # Verify ReqIF XSD compliance.
     _assert_reqif_v12_compliance(output_file, tmp_path)
+
+
+def test_tc_reqif_reqifz(record_property, capsys, monkeypatch, tmp_path):
+    # lobster-trace: SwTests.tc_reqif_reqifz
+    """The ReqIF converter shall produce a .reqifz ZIP archive when --reqifz is given.
+
+    Args:
+        record_property (Any): Used to inject the test case reference into the test results.
+        capsys (Any): Used to capture stdout and stderr.
+        monkeypatch (Any): Used to mock program arguments.
+        tmp_path (Path): Used to create a temporary output directory.
+    """
+    record_property("lobster-trace", "SwTests.tc_reqif_reqifz")
+
+    monkeypatch.setattr("sys.argv", [
+        "pyTRLCConverter",
+        "--source", "./tests/utils/req.rsl",
+        "--source", "./tests/utils/single_req_no_section.trlc",
+        "--out", str(tmp_path),
+        "reqif",
+        "--single-document",
+        "--reqifz"
+    ])
+
+    main()
+
+    captured = capsys.readouterr()
+    assert captured.err == ""
+
+    # A subfolder named after the document is created; the .reqif lives inside it.
+    doc_name = os.path.splitext(ReqifConverter.OUTPUT_FILE_NAME_DEFAULT)[0]
+    subfolder = os.path.join(tmp_path, doc_name)
+    assert os.path.isdir(subfolder), f"Expected document subfolder not found: {subfolder}"
+    assert os.path.isfile(os.path.join(subfolder, doc_name + ".reqif"))
+
+    # The .reqifz in the output folder bundles all files from the subfolder.
+    reqifz_file = os.path.join(tmp_path, doc_name + ".reqifz")
+    assert os.path.isfile(reqifz_file), f"Expected .reqifz not found: {reqifz_file}"
+
+    import zipfile  # pylint: disable=import-outside-toplevel
+    with zipfile.ZipFile(reqifz_file, "r") as zf:
+        names = zf.namelist()
+        assert len(names) == 1
+        assert names[0] == doc_name + ".reqif"
+        reqif_content = zf.read(names[0]).decode("utf-8")
+
+    assert "REQ-IF" in reqif_content
+
+
+def test_tc_reqif_reqifz_multiple_doc(record_property, capsys, monkeypatch, tmp_path):
+    # lobster-trace: SwTests.tc_reqif_reqifz
+    """In multiple document mode each document produces its own .reqifz archive.
+
+    Args:
+        record_property (Any): Used to inject the test case reference into the test results.
+        capsys (Any): Used to capture stdout and stderr.
+        monkeypatch (Any): Used to mock program arguments.
+        tmp_path (Path): Used to create a temporary output directory.
+    """
+    record_property("lobster-trace", "SwTests.tc_reqif_reqifz")
+
+    # Two separate TRLC source files — multiple-document mode (no --single-document).
+    monkeypatch.setattr("sys.argv", [
+        "pyTRLCConverter",
+        "--source", "./tests/utils/req.rsl",
+        "--source", "./tests/utils/single_req_no_section.trlc",
+        "--source", "./tests/utils/single_req_with_section.trlc",
+        "--out", str(tmp_path),
+        "reqif",
+        "--reqifz"
+    ])
+
+    main()
+
+    captured = capsys.readouterr()
+    assert captured.err == ""
+
+    import zipfile  # pylint: disable=import-outside-toplevel
+    for doc_name in ("single_req_no_section", "single_req_with_section"):
+        # Each document gets its own subfolder and .reqifz in the output folder.
+        subfolder = os.path.join(tmp_path, doc_name)
+        assert os.path.isdir(subfolder), f"Expected subfolder not found: {subfolder}"
+        assert os.path.isfile(os.path.join(subfolder, doc_name + ".reqif"))
+
+        reqifz_file = os.path.join(tmp_path, doc_name + ".reqifz")
+        assert os.path.isfile(reqifz_file), f"Expected .reqifz not found: {reqifz_file}"
+
+        with zipfile.ZipFile(reqifz_file, "r") as zf:
+            names = zf.namelist()
+            assert len(names) == 1
+            assert names[0] == doc_name + ".reqif"
 
 
 # Main *************************************************************************

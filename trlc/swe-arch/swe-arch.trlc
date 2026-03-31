@@ -375,6 +375,8 @@ section "SW Architecture" {
                     * Passes configured XHTML fields through to ReqIF XHTML without modification.
                     * Converts TRLC enumeration type attributes to DATATYPE-DEFINITION-ENUMERATION with 0-based consecutive ENUM-VALUE keys in RSL declaration order.
                     * Omits optional enumeration attributes with null value from the generated spec-object.
+                    * Converts TRLC record reference attributes to ReqIF SPEC-RELATION entries.
+                    * Optionally archives the generated .reqif output as a .reqifz ZIP archive.
                     """
                 verification_criteria = "Call the tool using the `pyTRLCConverter` frontend with reqif output format."
                 satisfies = [
@@ -393,6 +395,8 @@ section "SW Architecture" {
                     SwRequirements.sw_req_reqif_enum,
                     SwRequirements.sw_req_reqif_enum_key_order,
                     SwRequirements.sw_req_reqif_enum_null,
+                    SwRequirements.sw_req_reqif_relation,
+                    SwRequirements.sw_req_reqif_reqifz,
                     SwRequirements.sw_req_destination_format
                 ]
             }

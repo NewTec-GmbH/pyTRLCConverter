@@ -350,6 +350,16 @@ section "SW-Test Cases" {
             description = "This test case checks whether an optional TRLC enumeration attribute with a null value is omitted from the generated ReqIF spec-object."
             verifies = [SwRequirements.sw_req_reqif_enum_null]
         }
+
+        SwTestCase tc_reqif_relation {
+            description = "This test case checks whether TRLC record reference attributes are converted to ReqIF SPEC-RELATION entries, and that array record reference attributes produce one SPEC-RELATION per element."
+            verifies = [SwRequirements.sw_req_reqif_relation]
+        }
+
+        SwTestCase tc_reqif_reqifz {
+            description = "This test case checks whether the ReqIF converter archives the generated output as a .reqifz ZIP file when the --reqifz flag is given."
+            verifies = [SwRequirements.sw_req_reqif_reqifz]
+        }
     }
 
     section "Docx" {

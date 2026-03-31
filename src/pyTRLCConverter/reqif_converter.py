@@ -143,6 +143,7 @@ class ReqifConverter(BaseConverter):
         # lobster-trace: SwRequirements.sw_req_reqif_top_level_custom
         # lobster-trace: SwRequirements.sw_req_reqif_out_file_name_default
         # lobster-trace: SwRequirements.sw_req_reqif_out_file_name_custom
+        # lobster-trace: SwRequirements.sw_req_reqif_reqifz
         """
         Register converter specific argument parser.
 
@@ -382,6 +383,7 @@ class ReqifConverter(BaseConverter):
 
     def finish(self) -> Ret:
         # lobster-trace: SwRequirements.sw_req_reqif_single_doc_mode
+        # lobster-trace: SwRequirements.sw_req_reqif_reqifz
         """Finish the conversion process and write the output in single document mode.
 
         Returns:
@@ -394,10 +396,17 @@ class ReqifConverter(BaseConverter):
         return Ret.OK
 
     def _write_document(self, file_name: str) -> Ret:
+        # lobster-trace: SwRequirements.sw_req_reqif_multiple_doc_mode
+        # lobster-trace: SwRequirements.sw_req_reqif_single_doc_mode
+        # lobster-trace: SwRequirements.sw_req_reqif_out_file_name_default
+        # lobster-trace: SwRequirements.sw_req_reqif_out_file_name_custom
+        # lobster-trace: SwRequirements.sw_req_reqif_reqifz
         """Build the ReqIF bundle and write it to the output file.
 
-        When --reqifz is active the output is a ZIP archive with the .reqifz
-        extension that contains the .reqif file.
+        Without --reqifz the .reqif file is written directly into the output folder.
+        With --reqifz a subfolder named after the document is created inside the
+        output folder, the .reqif file is placed there, and all files inside that
+        subfolder are bundled into a .reqifz archive in the output folder.
 
         Args:
             file_name (str): Output file name (without path prefix).
@@ -405,34 +414,51 @@ class ReqifConverter(BaseConverter):
         Returns:
             Ret: Status
         """
-        reqif_file_name = os.path.splitext(os.path.basename(file_name))[0] + ".reqif"
-
-        if self._args.reqifz:
-            out_file_name = os.path.splitext(file_name)[0] + ".reqifz"
-        else:
-            out_file_name = file_name
-
-        if 0 < len(self._out_path):
-            out_file_name = os.path.join(self._out_path, out_file_name)
+        doc_name = os.path.splitext(os.path.basename(file_name))[0]
 
         try:
-            bundle = self._build_reqif_bundle()
-            reqif_xml = ReqIFUnparser.unparse(bundle)
+            reqif_xml = ReqIFUnparser.unparse(self._build_reqif_bundle())
 
             if self._args.reqifz:
-                with zipfile.ZipFile(out_file_name, "w", compression=zipfile.ZIP_DEFLATED) as zf:
-                    zf.writestr(reqif_file_name, reqif_xml)
+                self._bundle_as_reqifz(doc_name, reqif_xml)
             else:
+                out_file_name = os.path.join(self._out_path, file_name) if 0 < len(self._out_path) else file_name
                 with open(out_file_name, "w", encoding="utf-8") as fd:
                     fd.write(reqif_xml)
 
             return Ret.OK
 
         except (OSError, IOError, ValueError) as exc:
-            log_error(f"Failed to write ReqIF output file {out_file_name}: {exc}")
+            log_error(f"Failed to write ReqIF output: {exc}")
             return Ret.ERROR
 
+    def _bundle_as_reqifz(self, doc_name: str, reqif_xml: str) -> None:
+        # lobster-trace: SwRequirements.sw_req_reqif_reqifz
+        """Create the document subfolder, write the .reqif, and bundle into a .reqifz archive.
+
+        The subfolder is named after the document and placed inside the output folder.
+        All files inside the subfolder are included in the archive with paths relative
+        to the subfolder root.
+
+        Args:
+            doc_name (str): Document base name (no extension).
+            reqif_xml (str): Serialised ReqIF XML content.
+        """
+        subfolder = os.path.join(self._out_path, doc_name) if 0 < len(self._out_path) else doc_name
+        reqifz_path = (os.path.join(self._out_path, doc_name + ".reqifz")
+                       if 0 < len(self._out_path) else doc_name + ".reqifz")
+        os.makedirs(subfolder, exist_ok=True)
+        with open(os.path.join(subfolder, doc_name + ".reqif"), "w", encoding="utf-8") as fd:
+            fd.write(reqif_xml)
+        with zipfile.ZipFile(reqifz_path, "w", compression=zipfile.ZIP_DEFLATED) as zf:
+            for dirpath, _, filenames in os.walk(subfolder):
+                for fname in filenames:
+                    abs_path = os.path.join(dirpath, fname)
+                    arc_name = os.path.relpath(abs_path, subfolder).replace(os.sep, "/")
+                    zf.write(abs_path, arc_name)
+
     def _build_reqif_bundle(self) -> ReqIFBundle:
+        # lobster-trace: SwRequirements.sw_req_reqif
         """Assemble a complete ReqIFBundle from the accumulated spec objects, hierarchies and attribute definitions.
 
         Returns:
@@ -535,6 +561,8 @@ class ReqifConverter(BaseConverter):
         )
 
     def _reset_document_state(self, title: str) -> None:
+        # lobster-trace: SwRequirements.sw_req_reqif_multiple_doc_mode
+        # lobster-trace: SwRequirements.sw_req_reqif_single_doc_mode
         """Reset all per-document state.
 
         Args:
@@ -557,6 +585,7 @@ class ReqifConverter(BaseConverter):
         self._spec_title_captured = False
 
     def _flush_pending_hierarchy(self) -> None:
+        # lobster-trace: SwRequirements.sw_req_reqif_section
         """Flush a deferred record hierarchy node as a standalone leaf.
 
         When a record is processed its hierarchy insertion is deferred so that a
@@ -572,6 +601,8 @@ class ReqifConverter(BaseConverter):
 
     def _append_hierarchy(self, spec_object_identifier: str, level: int, long_name: str,
                           is_container: bool) -> None:
+        # lobster-trace: SwRequirements.sw_req_reqif_section
+        # lobster-trace: SwRequirements.sw_req_reqif_record
         """Append a new ReqIFSpecHierarchy node at the given nesting level.
 
         The internal hierarchy stack is pruned so the new node is correctly
@@ -615,6 +646,7 @@ class ReqifConverter(BaseConverter):
                             type_key: str,
                             type_long_name: str,
                             attribute_value_map: dict[str, dict[str, Any]]) -> ReqIFSpecObject:
+        # lobster-trace: SwRequirements.sw_req_reqif_record
         """Create a ReqIFSpecObject for the given ReqIF type and field attributes.
 
         Args:
@@ -678,6 +710,7 @@ class ReqifConverter(BaseConverter):
 
     def _create_xhtml_attribute(self, type_key: str, definition_key: str, long_name: str,
                                 xhtml_value: str) -> SpecObjectAttribute:
+        # lobster-trace: SwRequirements.sw_req_reqif_record
         """Create a SpecObjectAttribute of type XHTML, ensuring the corresponding attribute definition exists.
 
         Args:
@@ -704,6 +737,7 @@ class ReqifConverter(BaseConverter):
 
     def _create_string_attribute(self, type_key: str, definition_key: str, long_name: str,
                                  value: str) -> SpecObjectAttribute:
+        # lobster-trace: SwRequirements.sw_req_reqif_record
         """Create a SpecObjectAttribute of type STRING for the given ReqIF spec-object type.
 
         Args:
@@ -886,6 +920,7 @@ class ReqifConverter(BaseConverter):
         return None
 
     def _ensure_spec_object_type(self, type_key: str, long_name: str) -> str:
+        # lobster-trace: SwRequirements.sw_req_reqif_record
         """Return the identifier of an existing ReqIF spec-object type, or create and register a new one.
 
         Args:
@@ -910,6 +945,7 @@ class ReqifConverter(BaseConverter):
         return type_identifier
 
     def _get_spec_object_type_identifier(self, type_key: str) -> str:
+        # lobster-trace: SwRequirements.sw_req_reqif_record
         """Return the identifier of the requested ReqIF spec-object type.
 
         Args:
@@ -924,6 +960,7 @@ class ReqifConverter(BaseConverter):
 
     def _ensure_attribute_definition(self, type_key: str, definition_key: str, long_name: str,
                                      attribute_type: SpecObjectAttributeType) -> str:
+        # lobster-trace: SwRequirements.sw_req_reqif_record
         """Return the identifier of an existing attribute definition, or create and register a new one.
 
         Args:
@@ -960,6 +997,7 @@ class ReqifConverter(BaseConverter):
         return definition_identifier
 
     def _get_record_type_key(self, record: Record_Object) -> str:
+        # lobster-trace: SwRequirements.sw_req_reqif_record
         """Return the ReqIF type key for the given TRLC record.
 
         Args:
@@ -972,6 +1010,7 @@ class ReqifConverter(BaseConverter):
 
     def _queue_spec_relation(self, source_record: Record_Object, record_reference: Record_Reference,
                              relation_name: str) -> None:
+        # lobster-trace: SwRequirements.sw_req_reqif_relation
         """Queue a ReqIF spec relation derived from a TRLC record reference.
 
         Args:
@@ -993,6 +1032,7 @@ class ReqifConverter(BaseConverter):
 
     def _queue_spec_relations_from_expression(self, source_record: Record_Object, expression: Expression,
                                               relation_name: str) -> bool:
+        # lobster-trace: SwRequirements.sw_req_reqif_relation
         """Queue ReqIF spec relations from a TRLC expression if it consists of record references.
 
         Args:
@@ -1023,6 +1063,7 @@ class ReqifConverter(BaseConverter):
         return False
 
     def _ensure_spec_relation_type(self, relation_type_key: str, long_name: str) -> str:
+        # lobster-trace: SwRequirements.sw_req_reqif_relation
         """Return the identifier of an existing ReqIF spec-relation type, or create and register a new one.
 
         Args:
@@ -1044,6 +1085,7 @@ class ReqifConverter(BaseConverter):
         return relation_type_identifier
 
     def _build_spec_relations(self) -> list[ReqIFSpecRelation]:
+        # lobster-trace: SwRequirements.sw_req_reqif_relation
         """Build ReqIF spec relations from queued TRLC record references.
 
         Returns:
@@ -1082,6 +1124,7 @@ class ReqifConverter(BaseConverter):
 
     @staticmethod
     def _get_datatype_identifier(attribute_type: SpecObjectAttributeType) -> str:
+        # lobster-trace: SwRequirements.sw_req_reqif
         """Return the datatype definition identifier for the given ReqIF attribute type.
 
         Args:
@@ -1100,6 +1143,7 @@ class ReqifConverter(BaseConverter):
 
     @staticmethod
     def _sanitize_identifier_token(value: str) -> str:
+        # lobster-trace: SwRequirements.sw_req_reqif
         """Sanitize an identifier token for stable ReqIF identifiers.
 
         Args:
@@ -1112,6 +1156,7 @@ class ReqifConverter(BaseConverter):
         return sanitized_value if len(sanitized_value) > 0 else "item"
 
     def _file_name_trlc_to_reqif(self, file_name_trlc: str) -> str:
+        # lobster-trace: SwRequirements.sw_req_reqif_multiple_doc_mode
         """Convert a TRLC file name to a ReqIF file name.
 
         Args:
@@ -1126,6 +1171,7 @@ class ReqifConverter(BaseConverter):
         return file_name
 
     def _on_implict_null(self, _: Implicit_Null) -> str:
+        # lobster-trace: SwRequirements.sw_req_reqif_record
         """
         Process the given implicit null value.
 
@@ -1135,6 +1181,7 @@ class ReqifConverter(BaseConverter):
         return self._empty_attribute_value
 
     def _on_record_reference(self, record_reference: Record_Reference) -> str:
+        # lobster-trace: SwRequirements.sw_req_reqif_record
         """
         Process the given record reference value.
 
@@ -1147,6 +1194,7 @@ class ReqifConverter(BaseConverter):
         return str(record_reference.to_python_object())
 
     def _on_string_literal(self, string_literal: String_Literal) -> str:
+        # lobster-trace: SwRequirements.sw_req_reqif_record
         """
         Process the given string literal value.
 
@@ -1159,6 +1207,7 @@ class ReqifConverter(BaseConverter):
         return string_literal.to_string()
 
     def _other_dispatcher(self, expression: Expression) -> str:
+        # lobster-trace: SwRequirements.sw_req_reqif_record
         """
         Dispatcher for all other expressions.
 
@@ -1171,6 +1220,7 @@ class ReqifConverter(BaseConverter):
         return expression.to_string()
 
     def _get_trlc_ast_walker(self) -> TrlcAstWalker:
+        # lobster-trace: SwRequirements.sw_req_reqif_record
         """
         Create and configure a TrlcAstWalker for traversing TRLC record field values.
 
@@ -1234,6 +1284,7 @@ class ReqifConverter(BaseConverter):
         return self._plain_text_to_xhtml(attribute_value)
 
     def _plain_text_to_xhtml(self, plain_text: str) -> str:
+        # lobster-trace: SwRequirements.sw_req_reqif_record
         """Convert plain text to an XHTML-wrapped string.
 
         Blank-line-separated paragraphs are wrapped in ``<p>`` tags; single
@@ -1256,6 +1307,8 @@ class ReqifConverter(BaseConverter):
         return self._wrap_xhtml("".join(paragraph_list))
 
     def _markdown_to_xhtml(self, markdown_text: str, gfm_mode: bool) -> str:
+        # lobster-trace: SwRequirements.sw_req_reqif_render_md
+        # lobster-trace: SwRequirements.sw_req_reqif_render_gfm
         """Convert Markdown text to an XHTML-wrapped string using marko.
 
         Args:
@@ -1275,6 +1328,7 @@ class ReqifConverter(BaseConverter):
 
     @staticmethod
     def _wrap_xhtml(fragment: str) -> str:
+        # lobster-trace: SwRequirements.sw_req_reqif
         """Wrap an HTML fragment in a ReqIF-compatible XHTML div element.
 
         Args:
@@ -1287,6 +1341,7 @@ class ReqifConverter(BaseConverter):
 
     @staticmethod
     def _get_reqif_timestamp() -> str:
+        # lobster-trace: SwRequirements.sw_req_reqif
         """Return the current UTC time as a ReqIF-compatible ISO 8601 timestamp.
 
         Returns:
@@ -1295,6 +1350,7 @@ class ReqifConverter(BaseConverter):
         return datetime.now(timezone.utc).replace(microsecond=0).isoformat()
 
     def _new_identifier(self, prefix: str) -> str:
+        # lobster-trace: SwRequirements.sw_req_reqif
         """Generate a unique identifier by combining the given prefix with an auto-incrementing counter.
 
         Args:
