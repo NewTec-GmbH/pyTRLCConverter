@@ -3,6 +3,18 @@
     [
         {
             "package": ".*",
+            "type": "Image",
+            "attribute": "caption",
+            "format": "gfm"
+        },
+        {
+            "package": ".*",
+            "type": "Image",
+            "attribute": "file_path",
+            "format": "xhtml"
+        },
+        {
+            "package": ".*",
             "type": "Information",
             "attribute": "description",
             "format": "gfm"

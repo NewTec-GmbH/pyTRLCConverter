@@ -6,6 +6,16 @@ enum Status {
     Rejected
 }
 
+type Heading {
+    description String
+}
+
+type Image {
+    file_path   String
+    caption     String
+    status      Status
+}
+
 type Information {
     description String
     status      Status
