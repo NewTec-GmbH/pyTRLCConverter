@@ -8,7 +8,7 @@ Validation covers:
        - All descendant elements use only allowed XHTML 1.0 Strict element names
          within the XHTML namespace.
   3. ReqIF Implementation Guideline (IG) rules not enforced by the XSD:
-       - IG-001: REQ-IF-VERSION must be exactly "1.0".
+       - IG-001: REQ-IF-VERSION must be exactly "1.0" or "1.2".
        - IG-003: CREATION-TIME and every LAST-CHANGE must carry a UTC offset (e.g. +00:00).
        - IG-009: ATTRIBUTE-VALUE-STRING THE-VALUE must not be an empty string.
        - IG-010: ENUM-VALUE KEY integers must be unique within each
@@ -300,7 +300,7 @@ def _validate_xhtml_content(document: etree._Element) -> list[str]:  # pylint: d
 
 
 def _validate_ig001_version(document: etree._Element) -> list[str]:  # pylint: disable=c-extension-no-member
-    """Check that REQ-IF-VERSION is exactly '1.0' (IG-001).
+    """Check that REQ-IF-VERSION is exactly '1.0' or '1.2' (IG-001).
 
     Args:
         document (etree._Element): The root element of the parsed ReqIF document.
@@ -313,8 +313,8 @@ def _validate_ig001_version(document: etree._Element) -> list[str]:  # pylint: d
 
     for version_el in document.iter(version_tag):
         version_text = (version_el.text or "").strip()
-        if version_text != "1.0":
-            errors.append(f"IG-001: REQ-IF-VERSION must be '1.0', got '{version_text}'")
+        if version_text not in ("1.0", "1.2"):
+            errors.append(f"IG-001: REQ-IF-VERSION must be '1.0' or '1.2', got '{version_text}'")
 
     return errors
 
@@ -418,7 +418,7 @@ def _validate_ig_rules(document: etree._Element) -> list[str]:  # pylint: disabl
     """Run all ReqIF Implementation Guideline checks that the XSD cannot enforce.
 
     Checks performed:
-    - IG-001: REQ-IF-VERSION == "1.0"
+    - IG-001: REQ-IF-VERSION is "1.0" or "1.2"
     - IG-003: CREATION-TIME and LAST-CHANGE carry a UTC offset
     - IG-009: ATTRIBUTE-VALUE-STRING THE-VALUE is not an empty string
     - IG-010: ENUM-VALUE KEY integers are unique per DATATYPE-DEFINITION-ENUMERATION
