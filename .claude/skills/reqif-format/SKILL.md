@@ -12,7 +12,7 @@ Apply this workflow whenever ReqIF output or the `reqif_converter.py` is created
 ## Standard References
 
 - **ReqIF v1.2** – OMG standard, schema namespace: `http://www.omg.org/spec/ReqIF/20110401/reqif.xsd`
-- **ReqIF Implementation Guideline (IG)** – ProSTEP iViP association, latest version (v9.x). Adds interoperability rules on top of the base OMG spec.
+- **ReqIF Implementation Guideline (IG)** – ProSTEP iViP association, latest version (v1.10). Adds interoperability rules on top of the base OMG spec.
 - **Python `reqif` library** – used in this project via `reqif.*` imports (see `src/pyTRLCConverter/reqif_converter.py`).
 
 ## ReqIF v1.2 Document Structure
