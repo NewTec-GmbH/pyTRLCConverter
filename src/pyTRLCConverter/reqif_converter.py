@@ -21,8 +21,10 @@
 
 # Imports **********************************************************************
 import html
+import mimetypes
 import os
 import re
+import shutil
 import zipfile
 from datetime import datetime, timezone
 from typing import Any, Optional
@@ -112,6 +114,7 @@ class ReqifConverter(BaseConverter):
         self._last_spec_object_identifier: Optional[str] = None
         self._pending_hierarchy_args: Optional[tuple] = None
         self._spec_title_captured: bool = False
+        self._external_files: list = []
 
     @staticmethod
     def get_subcommand() -> str:
@@ -401,6 +404,7 @@ class ReqifConverter(BaseConverter):
         # lobster-trace: SwRequirements.sw_req_reqif_out_file_name_default
         # lobster-trace: SwRequirements.sw_req_reqif_out_file_name_custom
         # lobster-trace: SwRequirements.sw_req_reqif_reqifz
+        # lobster-trace: SwRequirements.sw_req_reqif_render_path
         """Build the ReqIF bundle and write it to the output file.
 
         Without --reqifz the .reqif file is written directly into the output folder.
@@ -425,6 +429,8 @@ class ReqifConverter(BaseConverter):
                 out_file_name = os.path.join(self._out_path, file_name) if 0 < len(self._out_path) else file_name
                 with open(out_file_name, "w", encoding="utf-8") as fd:
                     fd.write(reqif_xml)
+                out_dir = self._out_path if 0 < len(self._out_path) else "."
+                self._copy_external_files(out_dir)
 
             return Ret.OK
 
@@ -434,6 +440,7 @@ class ReqifConverter(BaseConverter):
 
     def _bundle_as_reqifz(self, doc_name: str, reqif_xml: str) -> None:
         # lobster-trace: SwRequirements.sw_req_reqif_reqifz
+        # lobster-trace: SwRequirements.sw_req_reqif_render_path
         """Create the document subfolder, write the .reqif, and bundle into a .reqifz archive.
 
         The subfolder is named after the document and placed inside the output folder.
@@ -450,6 +457,7 @@ class ReqifConverter(BaseConverter):
         os.makedirs(subfolder, exist_ok=True)
         with open(os.path.join(subfolder, doc_name + ".reqif"), "w", encoding="utf-8") as fd:
             fd.write(reqif_xml)
+        self._copy_external_files(subfolder)
         with zipfile.ZipFile(reqifz_path, "w", compression=zipfile.ZIP_DEFLATED) as zf:
             for dirpath, _, filenames in os.walk(subfolder):
                 for fname in filenames:
@@ -583,6 +591,7 @@ class ReqifConverter(BaseConverter):
         self._last_spec_object_identifier = None
         self._pending_hierarchy_args = None
         self._spec_title_captured = False
+        self._external_files = []
 
     def _flush_pending_hierarchy(self) -> None:
         # lobster-trace: SwRequirements.sw_req_reqif_section
@@ -1254,11 +1263,14 @@ class ReqifConverter(BaseConverter):
         # lobster-trace: SwRequirements.sw_req_reqif_render_md
         # lobster-trace: SwRequirements.sw_req_reqif_render_gfm
         # lobster-trace: SwRequirements.sw_req_reqif_render_xhtml
+        # lobster-trace: SwRequirements.sw_req_reqif_render_path
         """Render an attribute value to an XHTML-wrapped string based on the render configuration.
 
         If the attribute is configured as CommonMark Markdown, it is converted via marko.
         If configured as GFM, it is converted with the GFM extension.
         If configured as XHTML, the value is passed through as-is inside the XHTML wrapper.
+        If configured as path, the value is treated as a file path and converted to an XHTML
+        ``<object>`` element; the file is scheduled for copying to the output folder.
         Otherwise plain text is HTML-escaped and wrapped.
 
         Args:
@@ -1280,6 +1292,9 @@ class ReqifConverter(BaseConverter):
             if "<" in attribute_value:
                 return self._wrap_xhtml(attribute_value)
             return self._plain_text_to_xhtml(attribute_value)
+
+        if self._render_cfg.is_format_path(package_name, type_name, attribute_name) is True:
+            return self._path_to_xhtml(attribute_value)
 
         return self._plain_text_to_xhtml(attribute_value)
 
@@ -1325,6 +1340,59 @@ class ReqifConverter(BaseConverter):
             html_text = "<p></p>"
 
         return self._wrap_xhtml(html_text)
+
+    def _path_to_xhtml(self, file_path: str) -> str:
+        # lobster-trace: SwRequirements.sw_req_reqif_render_path
+        """Convert a file path to a ReqIF XHTML ``<object>`` element and schedule the file for copying.
+
+        The file is referenced locally by its basename.  The MIME type is determined from
+        the file extension; if unknown, ``application/octet-stream`` is used.  If ``file_path``
+        is empty the value is rendered as plain text instead.
+
+        Args:
+            file_path (str): Path to the external file (may be relative or absolute).
+
+        Returns:
+            str: XHTML-wrapped ``<object>`` element string.
+        """
+        if len(file_path) == 0:
+            return self._plain_text_to_xhtml(file_path)
+
+        local_name = os.path.basename(file_path)
+        mime_type, _ = mimetypes.guess_type(file_path)
+        if mime_type is None:
+            mime_type = "application/octet-stream"
+
+        self._external_files.append((file_path, local_name))
+
+        return self._wrap_xhtml(
+            f'<object type="{html.escape(mime_type)}" data="{html.escape(local_name)}"></object>'
+        )
+
+    def _copy_external_files(self, dest_dir: str) -> None:
+        # lobster-trace: SwRequirements.sw_req_reqif_render_path
+        """Copy all collected external files to the given destination directory.
+
+        Each file is copied using its basename as the destination file name.  Duplicate
+        source paths are copied only once.  If a source file cannot be read, an error
+        is logged and the file is skipped.
+
+        Args:
+            dest_dir (str): Destination directory path.
+        """
+        copied_sources = set()
+
+        for source_path, local_name in self._external_files:
+            if source_path in copied_sources:
+                continue
+
+            dest_path = os.path.join(dest_dir, local_name)
+
+            try:
+                shutil.copy2(source_path, dest_path)
+                copied_sources.add(source_path)
+            except (OSError, IOError) as exc:
+                log_error(f"Failed to copy external file '{source_path}': {exc}", False)
 
     @staticmethod
     def _wrap_xhtml(fragment: str) -> str:

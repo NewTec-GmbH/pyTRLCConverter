@@ -341,6 +341,18 @@ section "SW-Test Cases" {
             verifies = [SwRequirements.sw_req_reqif_render_xhtml]
         }
 
+        SwTestCase tc_reqif_render_path {
+            description = '''This test case checks whether a file path attribute is rendered as a ReqIF XHTML <object> element with the
+             correct MIME type and local file reference, and that the referenced file is copied to the output folder.'''
+            verifies = [SwRequirements.sw_req_reqif_render_path]
+        }
+
+        SwTestCase tc_reqif_render_path_reqifz {
+            description = '''This test case checks whether the external file referenced by a path format attribute is included in the
+             .reqifz archive when the --reqifz option is used.'''
+            verifies = [SwRequirements.sw_req_reqif_render_path]
+        }
+
         SwTestCase tc_reqif_enum {
             description = "This test case checks whether a TRLC enumeration attribute is converted to a DATATYPE-DEFINITION-ENUMERATION with 0-based consecutive ENUM-VALUE keys and emitted as ATTRIBUTE-VALUE-ENUMERATION in the spec-object."
             verifies = [SwRequirements.sw_req_reqif_enum, SwRequirements.sw_req_reqif_enum_key_order]

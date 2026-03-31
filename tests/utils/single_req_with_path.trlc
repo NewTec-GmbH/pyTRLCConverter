@@ -1,0 +1,6 @@
+package Requirements
+
+RequirementWithPath req_path {
+    description = "A requirement that references an external file."
+    file_path   = "./tests/utils/attachment.txt"
+}

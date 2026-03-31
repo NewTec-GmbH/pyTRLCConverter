@@ -591,6 +591,12 @@ section "SW Requirements" {
                     verification_criteria = "Verify that XHTML content in a requirement attribute is included unchanged (inside the ReqIF XHTML wrapper) in the generated ReqIF output."
                     valid_status = AbstractRequirements.VALID_STATUS.valid
                 }
+
+                SwReq sw_req_reqif_render_path {
+                    description = "The software shall convert a file path string attribute to a ReqIF XHTML `<object>` element with the MIME type derived from the file extension and a local reference to the file basename when the render configuration specifies the `path` format. The referenced file shall be copied to the output folder so that it is bundled into the .reqifz archive when the `--reqifz` option is used."
+                    verification_criteria = "Verify that a requirement attribute configured with the `path` format generates a ReqIF XHTML attribute containing an `<object>` element with a correct `type` (MIME type) and `data` (local file basename) attributes, and that the referenced file is present in the output folder."
+                    valid_status = AbstractRequirements.VALID_STATUS.valid
+                }
             }
         }
 

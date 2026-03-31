@@ -20,7 +20,14 @@ The generated TRLC files are intended so that a subsequent::
 run reproduces THE-VALUE content identical (or as close as possible) to the
 analysed source.  The following constraints apply:
 
-* XHTML-typed attributes are stored as raw XHTML strings in the TRLC file.
+* XHTML-typed attributes whose content is a single ``<object>`` element with a
+  plain local file reference (e.g. ``data="diagram.png"``) are treated as file
+  paths.  The generated ``renderCfg.json`` marks them with ``"format": "path"``
+  and the TRLC file stores just the filename so pyTRLCConverter copies the file
+  and rebuilds the ``<object>`` element on the round-trip.  XHTML attributes
+  whose ``<object>`` uses a ``data:`` base64 URI or any other URI scheme are kept
+  as ``"format": "xhtml"`` and a warning is printed.
+* Other XHTML-typed attributes are stored as raw XHTML strings in the TRLC file.
   The namespace-stripped form (``value_stripped_xhtml``) is used when available
   so element tags have no ``ns0:`` prefix.  The generated ``renderCfg.json``
   marks every such attribute with ``"format": "xhtml"`` so pyTRLCConverter
@@ -81,6 +88,12 @@ _TRLC_KEYWORDS: frozenset[str] = frozenset({
     "implies", "import", "in", "not", "null", "optional", "or", "package",
     "section", "separator", "then", "true", "tuple", "type", "warning", "xor",
 })
+
+# Matches a UUID (with optional leading underscore) used as an internal attachment
+# reference inside a reqifz archive, e.g. ``_eb9912ed-abd5-448f-be34-781388915ea1``.
+_INTERNAL_UUID_RE = re.compile(
+    r"^_?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+)
 
 _REQIF_SYSTEM_PREFIX: str = "ReqIF."
 _REQIF_FOREIGN_ID_LONG_NAME: str = "ReqIF.ForeignID"
@@ -386,6 +399,110 @@ def _get_enum_attr_string(attr: Any, raw_value: Any,
     return ", ".join(str(r) for r in refs)
 
 
+def _extract_object_data(xhtml_str: str) -> Optional[str]:
+    """Return the ``data`` attribute of the first ``<object>`` element in an XHTML string.
+
+    Handles both div-wrapped and unwrapped fragments.  Namespace prefixes on element
+    tags are stripped before matching so both ``<object>`` and ``<ns0:object>`` are found.
+
+    Args:
+        xhtml_str: XHTML string, possibly containing an outer ``<div>`` wrapper.
+
+    Returns:
+        The ``data`` attribute value, or ``None`` if no ``<object>`` element is found or
+        if the string cannot be parsed.
+    """
+    stripped = xhtml_str.strip()
+    try:
+        root = ET.fromstring(f"<root>{stripped}</root>")
+    except ET.ParseError:
+        return None
+
+    for elem in root.iter():
+        local = elem.tag.split("}")[-1] if "}" in elem.tag else elem.tag
+        if local.lower() == "object":
+            return elem.get("data")
+
+    return None
+
+
+def _detect_path_attributes(content: Any, attr_def_map: dict[str, Any]) -> set[str]:
+    """Scan all spec-object XHTML attribute values and identify path-format candidates.
+
+    For each XHTML attribute value that contains an ``<object>`` element the ``data``
+    URI is inspected:
+
+    - Plain filename or relative path → attribute becomes a candidate for
+      ``"format": "path"`` in the render configuration.
+    - ``data:…`` URI (base64 embedded) → warning is printed; attribute keeps
+      ``"format": "xhtml"``.
+    - Any other URI scheme (``urn:``, ``http://``, etc.) → warning is printed;
+      attribute keeps ``"format": "xhtml"``.
+
+    Each attribute definition is warned about at most once.
+
+    Args:
+        content:      ReqIFReqIFContent from the parsed bundle.
+        attr_def_map: Mapping from attribute-definition identifier to SpecAttributeDefinition.
+
+    Returns:
+        Set of attribute-definition identifier strings that should use ``"format": "path"``.
+    """
+    _, spec_obj_attr_type = _get_reqif_module()
+    path_attr_ids: set[str] = set()
+    warned_attr_ids: set[str] = set()
+
+    for spec_obj in (getattr(content, "spec_objects", None) or []):
+        for attr in (getattr(spec_obj, "attributes", None) or []):
+            if getattr(attr, "attribute_type", None) != spec_obj_attr_type.XHTML:
+                continue
+
+            def_id = getattr(attr, "definition_ref", "")
+            if def_id in path_attr_ids or def_id in warned_attr_ids:
+                continue
+
+            xhtml = getattr(attr, "value_stripped_xhtml", None) or getattr(attr, "value", None)
+            xhtml_str = str(xhtml) if xhtml is not None else ""
+            if not xhtml_str.strip():
+                continue
+
+            data_value = _extract_object_data(xhtml_str)
+            if data_value is None:
+                continue
+
+            attr_def = attr_def_map.get(def_id)
+            attr_long_name = getattr(attr_def, "long_name", def_id) if attr_def else def_id
+
+            if data_value.startswith("data:"):
+                print(
+                    f"WARNING: Attribute '{attr_long_name}' contains a base64-embedded file "
+                    f"(<object data=\"data:...\">); 'path' format is not supported — "
+                    f"using 'xhtml' instead.",
+                    file=sys.stderr
+                )
+                warned_attr_ids.add(def_id)
+            elif _INTERNAL_UUID_RE.match(data_value):
+                print(
+                    f"WARNING: Attribute '{attr_long_name}' references an internal attachment "
+                    f"by UUID '{data_value}'; 'path' format is not supported — "
+                    f"using 'xhtml' instead.",
+                    file=sys.stderr
+                )
+                warned_attr_ids.add(def_id)
+            elif "://" in data_value or data_value.startswith("urn:"):
+                print(
+                    f"WARNING: Attribute '{attr_long_name}' contains an attached file via "
+                    f"URI '{data_value}'; 'path' format is not supported — "
+                    f"using 'xhtml' instead.",
+                    file=sys.stderr
+                )
+                warned_attr_ids.add(def_id)
+            else:
+                path_attr_ids.add(def_id)
+
+    return path_attr_ids
+
+
 def _unwrap_xhtml_div(xhtml_str: str) -> str:
     """Strip the outer ``<div>`` wrapper from a namespace-stripped XHTML string.
 
@@ -527,6 +644,7 @@ def _build_attr_meta(attr_def: Any, datatype_map: dict[str, Any],  # pylint: dis
         "trlc_name": trlc_attr_name,
         "long_name": attr_long_name,
         "is_xhtml": is_xhtml,
+        "is_path": False,
         "is_enum": is_enum,
         "enum_trlc_name": enum_trlc_name,
         "is_multi_valued": is_multi_valued,
@@ -808,6 +926,10 @@ def _write_spec_object_instance(lines: list[str], spec_obj: Any, indent: int,  #
                 lines.append(f"{pad}    {attr_meta['trlc_name']} = {formatted}")
         else:
             value_str = value_map.get(attr_meta["attr_def_id"], "")
+            if attr_meta["is_path"] and value_str:
+                extracted = _extract_object_data(value_str)
+                if extracted is not None:
+                    value_str = extracted
             _append_string_attr(lines, pad, attr_meta["trlc_name"], value_str)
 
     lines.append(f"{pad}}}")
@@ -928,7 +1050,14 @@ def _write_render_config(cfg_path: str, type_info: dict[str, Any]) -> None:
             continue
         trlc_type = type_data["trlc_name"]
         for attr in type_data["attrs"]:
-            if attr["is_xhtml"]:
+            if attr["is_path"]:
+                entries.append({
+                    "package": ".*",
+                    "type": re.escape(trlc_type),
+                    "attribute": re.escape(attr["trlc_name"]),
+                    "format": "path",
+                })
+            elif attr["is_xhtml"]:
                 entries.append({
                     "package": ".*",
                     "type": re.escape(trlc_type),
@@ -1001,6 +1130,13 @@ def generate_output(reqif_path: str, output_dir: str, package_name: str) -> None
     spec_object_map = _build_spec_object_map(content)
 
     type_info, _ = _collect_type_info(content, datatype_map, enum_info)
+
+    path_attr_def_ids = _detect_path_attributes(content, attr_def_map)
+    for type_data in type_info.values():
+        for attr in type_data["attrs"]:
+            if attr["attr_def_id"] in path_attr_def_ids:
+                attr["is_path"] = True
+
     ctx = _WritingContext(type_info, attr_def_map, datatype_map, spec_object_map,
                           enum_info, package_name)
 

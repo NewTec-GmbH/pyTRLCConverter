@@ -11,7 +11,7 @@
             "package": ".*",
             "type": "Image",
             "attribute": "file_path",
-            "format": "xhtml"
+            "format": "path"
         },
         {
             "package": ".*",

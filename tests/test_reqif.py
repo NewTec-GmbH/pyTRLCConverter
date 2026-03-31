@@ -511,6 +511,94 @@ def test_tc_reqif_render_xhtml(record_property, capsys, monkeypatch, tmp_path):
     assert "italic</em>" in description_attribute.value
 
 
+def test_tc_reqif_render_path(record_property, capsys, monkeypatch, tmp_path):
+    # lobster-trace: SwTests.tc_reqif_render_path
+    """The software shall render a path attribute as XHTML <object> and copy the referenced file.
+
+    Args:
+        record_property (Any): Used to inject the test case reference into the test results.
+        capsys (Any): Used to capture stdout and stderr.
+        monkeypatch (Any): Used to mock program arguments.
+        tmp_path (Path): Used to create a temporary output directory.
+    """
+    record_property("lobster-trace", "SwTests.tc_reqif_render_path")
+
+    monkeypatch.setattr("sys.argv", [
+        "pyTRLCConverter",
+        "--source", "./tests/utils/req_with_path.rsl",
+        "--source", "./tests/utils/single_req_with_path.trlc",
+        "--out", str(tmp_path),
+        "--renderCfg", "./tests/utils/renderCfgPath.json",
+        "reqif",
+        "--single-document"
+    ])
+
+    main()
+
+    captured = capsys.readouterr()
+    assert captured.err == ""
+
+    output_file = os.path.join(tmp_path, ReqifConverter.OUTPUT_FILE_NAME_DEFAULT)
+    bundle = _parse_reqif(output_file)
+
+    spec_object = _find_spec_object_by_long_name(bundle, "req_path")
+    assert spec_object is not None
+
+    file_path_identifier = _find_attribute_identifier(bundle, "file_path")
+    assert file_path_identifier is not None
+
+    file_path_attribute = _find_attribute_by_identifier(spec_object, file_path_identifier)
+    assert file_path_attribute is not None
+    # Verify the XHTML <object> element with MIME type and local file reference.
+    assert "<object" in file_path_attribute.value
+    assert 'data="attachment.txt"' in file_path_attribute.value
+    assert 'type="text/plain"' in file_path_attribute.value
+
+    # Verify the referenced file was copied to the output folder.
+    assert os.path.isfile(os.path.join(tmp_path, "attachment.txt"))
+
+
+def test_tc_reqif_render_path_reqifz(record_property, capsys, monkeypatch, tmp_path):
+    # lobster-trace: SwTests.tc_reqif_render_path_reqifz
+    """The external file referenced by a path format attribute shall be bundled in the .reqifz archive.
+
+    Args:
+        record_property (Any): Used to inject the test case reference into the test results.
+        capsys (Any): Used to capture stdout and stderr.
+        monkeypatch (Any): Used to mock program arguments.
+        tmp_path (Path): Used to create a temporary output directory.
+    """
+    record_property("lobster-trace", "SwTests.tc_reqif_render_path_reqifz")
+
+    import zipfile  # pylint: disable=import-outside-toplevel
+
+    monkeypatch.setattr("sys.argv", [
+        "pyTRLCConverter",
+        "--source", "./tests/utils/req_with_path.rsl",
+        "--source", "./tests/utils/single_req_with_path.trlc",
+        "--out", str(tmp_path),
+        "--renderCfg", "./tests/utils/renderCfgPath.json",
+        "reqif",
+        "--single-document",
+        "--reqifz"
+    ])
+
+    main()
+
+    captured = capsys.readouterr()
+    assert captured.err == ""
+
+    doc_name = os.path.splitext(ReqifConverter.OUTPUT_FILE_NAME_DEFAULT)[0]
+    reqifz_file = os.path.join(tmp_path, doc_name + ".reqifz")
+    assert os.path.isfile(reqifz_file)
+
+    with zipfile.ZipFile(reqifz_file, "r") as zf:
+        names = zf.namelist()
+        # The archive must contain the .reqif and the copied external file.
+        assert doc_name + ".reqif" in names
+        assert "attachment.txt" in names
+
+
 # pylint: disable=too-many-locals, too-many-statements
 def test_tc_reqif_type_specific_spec_object_types(record_property, capsys, monkeypatch, tmp_path):
     # lobster-trace: SwTests.tc_reqif

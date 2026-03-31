@@ -214,13 +214,13 @@ Conversion rules:
 
 **Attribute mapping by field type:**
 
-| TRLC field type | ReqIF datatype | ReqIF attribute value |
-| --- | --- | --- |
-| String / Integer / Boolean / Decimal | `DATATYPE-DEFINITION-XHTML` | `ATTRIBUTE-VALUE-XHTML` — plain text is HTML-escaped and wrapped in `<p>` tags |
-| String with Markdown render config | `DATATYPE-DEFINITION-XHTML` | `ATTRIBUTE-VALUE-XHTML` — Markdown is converted to XHTML via `marko` |
-| Enumeration | `DATATYPE-DEFINITION-ENUMERATION` | `ATTRIBUTE-VALUE-ENUMERATION` — enum value keys start at 0 and follow the literal declaration order in the RSL model |
-| Record reference / array of references | — | Converted to `SPEC-RELATION` entries (see below) |
-| Optional field with `null` value | — | Attribute is omitted from the `SPEC-OBJECT` |
+| TRLC field type                        | ReqIF datatype                    | ReqIF attribute value                                                                                                |
+| -------------------------------------- | --------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| String / Integer / Boolean / Decimal   | `DATATYPE-DEFINITION-XHTML`       | `ATTRIBUTE-VALUE-XHTML` — plain text is HTML-escaped and wrapped in `<p>` tags                                       |
+| String with Markdown render config     | `DATATYPE-DEFINITION-XHTML`       | `ATTRIBUTE-VALUE-XHTML` — Markdown is converted to XHTML via `marko`                                                 |
+| Enumeration                            | `DATATYPE-DEFINITION-ENUMERATION` | `ATTRIBUTE-VALUE-ENUMERATION` — enum value keys start at 0 and follow the literal declaration order in the RSL model |
+| Record reference / array of references | —                                 | Converted to `SPEC-RELATION` entries (see below)                                                                     |
+| Optional field with `null` value       | —                                 | Attribute is omitted from the `SPEC-OBJECT`                                                                          |
 
 **Record name:**
 
