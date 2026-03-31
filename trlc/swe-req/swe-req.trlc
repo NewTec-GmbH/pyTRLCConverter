@@ -478,8 +478,8 @@ section "SW Requirements" {
             }
 
             SwReq sw_req_reqif_section {
-                description = "The ReqIF converter shall convert a TRLC section into a ReqIF hierarchy section by considering the depth level."
-                verification_criteria = "Verify by converting a TRLC section into ReqIF and checking the generated hierarchy."
+                description = '''The ReqIF converter shall convert a TRLC section into a SPEC-HIERARCHY node (no SPEC-OBJECT created) by reusing the last preceding TRLC record's SPEC-OBJECT as the mandatory SPEC-OBJECT-REF. If no preceding record exists, a warning shall be emitted and the section shall be omitted from the hierarchy.'''
+                verification_criteria = "Verify by converting TRLC sections into ReqIF and checking that section names appear only as hierarchy LONG-NAMEs, not in SPEC-OBJECTS, and that the SPEC-OBJECT-REF points to the preceding record."
                 valid_status = AbstractRequirements.VALID_STATUS.valid
             }
 

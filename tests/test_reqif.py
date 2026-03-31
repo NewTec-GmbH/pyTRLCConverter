@@ -269,7 +269,7 @@ def test_tc_reqif(record_property, capsys, monkeypatch, tmp_path):
 
 def test_tc_reqif_section(record_property, capsys, monkeypatch, tmp_path):
     # lobster-trace: SwTests.tc_reqif_section
-    """The ReqIF converter shall convert a TRLC section into a ReqIF hierarchy section.
+    """The ReqIF converter shall convert a TRLC section into a SPEC-HIERARCHY node without creating a SPEC-OBJECT.
 
     Args:
         record_property (Any): Used to inject the test case reference into the test results.
@@ -279,11 +279,11 @@ def test_tc_reqif_section(record_property, capsys, monkeypatch, tmp_path):
     """
     record_property("lobster-trace", "SwTests.tc_reqif_section")
 
-    # Mock program arguments to convert a TRLC file containing a section.
+    # Mock program arguments to convert a TRLC file where a record precedes the section.
     monkeypatch.setattr("sys.argv", [
         "pyTRLCConverter",
         "--source", "./tests/utils/req.rsl",
-        "--source", "./tests/utils/single_req_with_section.trlc",
+        "--source", "./tests/utils/single_req_with_prev_section.trlc",
         "--out", str(tmp_path),
         "reqif",
         "--single-document"
@@ -294,18 +294,32 @@ def test_tc_reqif_section(record_property, capsys, monkeypatch, tmp_path):
 
     # Capture stdout and stderr.
     captured = capsys.readouterr()
-    # Check that no errors were reported.
+    # No warning expected: req_id_1 precedes "Test section".
     assert captured.err == ""
 
-    # Parse the output file and verify both the section and the record spec-objects are present.
     output_file = os.path.join(tmp_path, ReqifConverter.OUTPUT_FILE_NAME_DEFAULT)
     bundle = _parse_reqif(output_file)
 
+    # "Test section" must NOT appear as a SPEC-OBJECT; only records produce spec-objects.
     section_object = _find_spec_object_by_long_name(bundle, "Test section")
-    record_object = _find_spec_object_by_long_name(bundle, "req_id_2")
+    preceding_record = _find_spec_object_by_long_name(bundle, "req_id_1")
+    nested_record = _find_spec_object_by_long_name(bundle, "req_id_2")
 
-    assert section_object is not None
-    assert record_object is not None
+    assert section_object is None
+    assert preceding_record is not None
+    assert nested_record is not None
+
+    # "Test section" must appear as a SPEC-HIERARCHY node referencing the preceding record.
+    specification = bundle.core_content.req_if_content.specifications[0]
+    section_hierarchy = next(
+        (h for h in specification.children if h.long_name == "Test section"), None
+    )
+    assert section_hierarchy is not None
+    assert section_hierarchy.spec_object == preceding_record.identifier
+
+    # req_id_2 must be nested inside the "Test section" hierarchy.
+    assert section_hierarchy.children is not None
+    assert section_hierarchy.children[0].long_name == "req_id_2"
 
 
 def test_tc_reqif_single_doc_custom(record_property, capsys, monkeypatch, tmp_path):
@@ -501,7 +515,7 @@ def test_tc_reqif_render_xhtml(record_property, capsys, monkeypatch, tmp_path):
 def test_tc_reqif_type_specific_spec_object_types(record_property, capsys, monkeypatch, tmp_path):
     # lobster-trace: SwTests.tc_reqif
     # lobster-trace: SwTests.tc_reqif_section
-    """The ReqIF converter shall emit one section type and one spec-object type per TRLC type.
+    """The ReqIF converter shall emit one spec-object type per TRLC record type (no Section type).
 
     Args:
         record_property (Any): Used to inject the test case reference into the test results.
@@ -512,7 +526,8 @@ def test_tc_reqif_type_specific_spec_object_types(record_property, capsys, monke
     record_property("lobster-trace", "SwTests.tc_reqif")
     record_property("lobster-trace", "SwTests.tc_reqif_section")
 
-    # Mock program arguments to convert nested sections with two different TRLC types.
+    # mock_type_nested_sections.trlc has all sections before any record, so warnings are expected
+    # for "System" and "Functional". "Non-Functional" follows sw_req_1 and uses it as reference.
     monkeypatch.setattr("sys.argv", [
         "pyTRLCConverter",
         "--source", "./tests/utils/req_mixed_types.rsl",
@@ -527,27 +542,27 @@ def test_tc_reqif_type_specific_spec_object_types(record_property, capsys, monke
 
     # Capture stdout and stderr.
     captured = capsys.readouterr()
-    # Check that no errors were reported.
-    assert captured.err == ""
+    # "System" and "Functional" have no preceding record; warnings expected on stderr.
+    assert "Warning: Section 'System'" in captured.err
+    assert "Warning: Section 'Functional'" in captured.err
 
     # Parse the output file for type and hierarchy assertions.
     output_file = os.path.join(tmp_path, ReqifConverter.OUTPUT_FILE_NAME_DEFAULT)
     bundle = _parse_reqif(output_file)
 
+    # No Section SPEC-OBJECT-TYPE; only TRLC record types produce types.
     section_type = _find_spec_type_by_long_name(bundle, "Section")
     sw_req_type = _find_spec_type_by_long_name(bundle, "SwReq")
     sw_req_non_func_type = _find_spec_type_by_long_name(bundle, "SwReqNonFunc")
 
-    assert section_type is not None
+    assert section_type is None
     assert sw_req_type is not None
     assert sw_req_non_func_type is not None
 
     # Verify that type-specific schemas only contain their own field definitions.
-    section_attributes = getattr(section_type, "attribute_definitions", [])
     sw_req_attributes = getattr(sw_req_type, "attribute_definitions", [])
     sw_req_non_func_attributes = getattr(sw_req_non_func_type, "attribute_definitions", [])
 
-    assert len(section_attributes) == 0
     sw_req_attribute_names = {definition.long_name for definition in sw_req_attributes}
     sw_req_non_func_attribute_names = {definition.long_name for definition in sw_req_non_func_attributes}
 
@@ -561,46 +576,30 @@ def test_tc_reqif_type_specific_spec_object_types(record_property, capsys, monke
     assert len(sw_req_non_func_attribute_names) == 3
     assert "ReqIF.ForeignID" in sw_req_non_func_attribute_names
 
-    # Verify that record objects reference their TRLC-specific spec-object types.
+    # Only records produce SPEC-OBJECTs; section names must not appear.
     functional_record = _find_spec_object_by_long_name(bundle, "sw_req_1")
     non_functional_record = _find_spec_object_by_long_name(bundle, "sw_req_nf_1")
-    parent_section = _find_spec_object_by_long_name(bundle, "System")
-    child_section = _find_spec_object_by_long_name(bundle, "Functional")
-    sibling_section = _find_spec_object_by_long_name(bundle, "Non-Functional")
 
+    assert _find_spec_object_by_long_name(bundle, "System") is None
+    assert _find_spec_object_by_long_name(bundle, "Functional") is None
+    assert _find_spec_object_by_long_name(bundle, "Non-Functional") is None
     assert functional_record is not None
     assert non_functional_record is not None
-    assert parent_section is not None
-    assert child_section is not None
-    assert sibling_section is not None
 
     assert functional_record.spec_object_type == sw_req_type.identifier
     assert non_functional_record.spec_object_type == sw_req_non_func_type.identifier
-    assert parent_section.spec_object_type == section_type.identifier
-    assert child_section.spec_object_type == section_type.identifier
-    assert sibling_section.spec_object_type == section_type.identifier
 
-    # Verify nested section hierarchy: System -> Functional -> sw_req_1 and System -> Non-Functional -> sw_req_nf_1.
-    assert bundle.core_content is not None
-    assert bundle.core_content.req_if_content is not None
-    assert bundle.core_content.req_if_content.specifications is not None
-
+    # "Non-Functional" section follows sw_req_1 in document order, so its hierarchy node
+    # references sw_req_1's spec-object. sw_req_nf_1 is nested inside it.
     specification = bundle.core_content.req_if_content.specifications[0]
     assert specification.children is not None
 
-    system_hierarchy = specification.children[0]
-    assert system_hierarchy.children is not None
-
-    functional_hierarchy = system_hierarchy.children[0]
-    non_functional_hierarchy = system_hierarchy.children[1]
-
-    assert functional_hierarchy.children is not None
+    non_functional_hierarchy = next(
+        (h for h in specification.children if h.long_name == "Non-Functional"), None
+    )
+    assert non_functional_hierarchy is not None
+    assert non_functional_hierarchy.spec_object == functional_record.identifier
     assert non_functional_hierarchy.children is not None
-
-    assert system_hierarchy.long_name == "System"
-    assert functional_hierarchy.long_name == "Functional"
-    assert non_functional_hierarchy.long_name == "Non-Functional"
-    assert functional_hierarchy.children[0].long_name == "sw_req_1"
     assert non_functional_hierarchy.children[0].long_name == "sw_req_nf_1"
 
 

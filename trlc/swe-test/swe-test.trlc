@@ -314,7 +314,7 @@ section "SW-Test Cases" {
         }
 
         SwTestCase tc_reqif_section {
-            description = "This test case checks whether the conversion of a TRLC section to a ReqIF hierarchy section works."
+            description = "This test case checks whether a TRLC section produces a SPEC-HIERARCHY node referencing the preceding record's SPEC-OBJECT, and that a warning is emitted when no preceding record exists."
             verifies = [SwRequirements.sw_req_reqif_section]
         }
 

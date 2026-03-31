@@ -77,7 +77,6 @@ class ReqifConverter(BaseConverter):
 
     DATATYPE_XHTML_IDENTIFIER = "datatype-xhtml"
     DATATYPE_STRING_IDENTIFIER = "datatype-string"
-    SECTION_TYPE_KEY = "section"
     SPECIFICATION_TYPE_IDENTIFIER = "specification-type-trlc"
     XSI_NAMESPACE = "http://www.w3.org/2001/XMLSchema-instance"
 
@@ -110,6 +109,8 @@ class ReqifConverter(BaseConverter):
         self._id_counter = 0
         self._document_title = ReqifConverter.TOP_LEVEL_DEFAULT
         self._enum_datatype_registry = {}
+        self._last_spec_object_identifier: Optional[str] = None
+        self._pending_hierarchy_args: Optional[tuple] = None
 
     @staticmethod
     def get_subcommand() -> str:
@@ -249,6 +250,7 @@ class ReqifConverter(BaseConverter):
             Ret: Status
         """
         if self._args.single_document is False:
+            self._flush_pending_hierarchy()
             out_file_name = self._file_name_trlc_to_reqif(file_name)
             return self._write_document(out_file_name)
 
@@ -256,7 +258,15 @@ class ReqifConverter(BaseConverter):
 
     def convert_section(self, section: str, level: int) -> Ret:
         # lobster-trace: SwRequirements.sw_req_reqif_section
-        """Process the given section item by creating a section spec-object.
+        """Process the given section item as a named SPEC-HIERARCHY container.
+
+        The section reuses the last processed TRLC record's SPEC-OBJECT as the mandatory
+        SPEC-OBJECT-REF in the SPEC-HIERARCHY node (the ReqIF v1.2 schema requires
+        minOccurs=1). The section title is carried by the hierarchy node's LONG-NAME.
+        No dedicated section SPEC-OBJECT is created.
+
+        If no record has been processed yet, a warning is emitted and the section is
+        skipped in the hierarchy.
 
         Args:
             section (str): The section name
@@ -267,14 +277,21 @@ class ReqifConverter(BaseConverter):
         """
         assert len(section) > 0
 
-        spec_object = self._create_spec_object(
-            item_name=section,
-            type_key=ReqifConverter.SECTION_TYPE_KEY,
-            type_long_name="Section",
-            attribute_value_map={}
-        )
+        if self._last_spec_object_identifier is None:
+            log_error(f"Warning: Section '{section}' has no preceding record; skipped in ReqIF hierarchy.")
+            return Ret.OK
 
-        self._append_hierarchy(spec_object.identifier, level, section, is_container=True)
+        if self._pending_hierarchy_args is not None:
+            # Promote the pending record to the section container: it is placed once in the
+            # hierarchy at the section's level (is_container=True) instead of being flushed
+            # as a standalone leaf.
+            section_spec_object_id = self._pending_hierarchy_args[0]
+            self._pending_hierarchy_args = None
+        else:
+            # No pending record; reuse the last known spec-object identifier.
+            section_spec_object_id = self._last_spec_object_identifier
+
+        self._append_hierarchy(section_spec_object_id, level, section, is_container=True)
 
         return Ret.OK
 
@@ -292,6 +309,7 @@ class ReqifConverter(BaseConverter):
         Returns:
             Ret: Status
         """
+        self._flush_pending_hierarchy()
         trlc_ast_walker = self._get_trlc_ast_walker()
         attribute_value_map = {
             ReqifConverter.ATTRIBUTE_KEY_RECORD_FOREIGN_ID: {
@@ -351,8 +369,8 @@ class ReqifConverter(BaseConverter):
             attribute_value_map=attribute_value_map
         )
         self._spec_object_identifier_by_record[id(record)] = spec_object.identifier
-
-        self._append_hierarchy(spec_object.identifier, level + 1, record.name, is_container=False)
+        self._last_spec_object_identifier = spec_object.identifier
+        self._pending_hierarchy_args = (spec_object.identifier, level, record.name)
 
         return Ret.OK
 
@@ -364,6 +382,7 @@ class ReqifConverter(BaseConverter):
             Ret: Status
         """
         if self._args.single_document is True:
+            self._flush_pending_hierarchy()
             return self._write_document(self._args.name)
 
         return Ret.OK
@@ -510,7 +529,7 @@ class ReqifConverter(BaseConverter):
         )
 
     def _reset_document_state(self, title: str) -> None:
-        """Reset all per-document state and pre-register the dedicated section type.
+        """Reset all per-document state.
 
         Args:
             title (str): The document title used as the specification long-name.
@@ -527,8 +546,22 @@ class ReqifConverter(BaseConverter):
         self._id_counter = 0
         self._document_title = title
         self._enum_datatype_registry = {}
+        self._last_spec_object_identifier = None
+        self._pending_hierarchy_args = None
 
-        self._ensure_spec_object_type(ReqifConverter.SECTION_TYPE_KEY, "Section")
+    def _flush_pending_hierarchy(self) -> None:
+        """Flush a deferred record hierarchy node as a standalone leaf.
+
+        When a record is processed its hierarchy insertion is deferred so that a
+        following section can promote it to a container instead.  Call this method
+        before inserting any new node (record or section) that must not consume the
+        pending record.
+        """
+        if self._pending_hierarchy_args is not None:
+            pending_id, pending_level, pending_name = self._pending_hierarchy_args
+            self._append_hierarchy(pending_id, pending_level + 1, pending_name,
+                                   is_container=False)
+            self._pending_hierarchy_args = None
 
     def _append_hierarchy(self, spec_object_identifier: str, level: int, long_name: str,
                           is_container: bool) -> None:
@@ -545,7 +578,8 @@ class ReqifConverter(BaseConverter):
         """
         hierarchy_level = max(1, level + 1)
 
-        while len(self._hierarchy_stack) >= hierarchy_level:
+        while (len(self._hierarchy_stack) > 0 and
+               self._hierarchy_stack[-1].level >= hierarchy_level):
             self._hierarchy_stack.pop()
 
         hierarchy = ReqIFSpecHierarchy(
