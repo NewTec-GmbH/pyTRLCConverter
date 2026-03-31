@@ -542,8 +542,9 @@ def test_tc_reqif_type_specific_spec_object_types(record_property, capsys, monke
 
     # Capture stdout and stderr.
     captured = capsys.readouterr()
-    # "System" and "Functional" have no preceding record; warnings expected on stderr.
-    assert "Warning: Section 'System'" in captured.err
+    # "System" is the very first section without a preceding record; it becomes the
+    # specification title silently. "Functional" is the second such section and warns.
+    assert "Warning: Section 'System'" not in captured.err
     assert "Warning: Section 'Functional'" in captured.err
 
     # Parse the output file for type and hierarchy assertions.
@@ -593,6 +594,8 @@ def test_tc_reqif_type_specific_spec_object_types(record_property, capsys, monke
     # references sw_req_1's spec-object. sw_req_nf_1 is nested inside it.
     specification = bundle.core_content.req_if_content.specifications[0]
     assert specification.children is not None
+    # "System" was the first section without a preceding record; it becomes the spec title.
+    assert specification.long_name == "System"
 
     non_functional_hierarchy = next(
         (h for h in specification.children if h.long_name == "Non-Functional"), None

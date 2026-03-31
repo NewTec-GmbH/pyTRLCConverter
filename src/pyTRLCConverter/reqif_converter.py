@@ -111,6 +111,7 @@ class ReqifConverter(BaseConverter):
         self._enum_datatype_registry = {}
         self._last_spec_object_identifier: Optional[str] = None
         self._pending_hierarchy_args: Optional[tuple] = None
+        self._spec_title_captured: bool = False
 
     @staticmethod
     def get_subcommand() -> str:
@@ -265,8 +266,9 @@ class ReqifConverter(BaseConverter):
         minOccurs=1). The section title is carried by the hierarchy node's LONG-NAME.
         No dedicated section SPEC-OBJECT is created.
 
-        If no record has been processed yet, a warning is emitted and the section is
-        skipped in the hierarchy.
+        If no record has been processed yet, the section name is used as the document
+        title (specification long-name) for the very first such section.  Any further
+        section without a preceding record emits a warning and is skipped.
 
         Args:
             section (str): The section name
@@ -278,7 +280,11 @@ class ReqifConverter(BaseConverter):
         assert len(section) > 0
 
         if self._last_spec_object_identifier is None:
-            log_error(f"Warning: Section '{section}' has no preceding record; skipped in ReqIF hierarchy.")
+            if self._spec_title_captured is False:
+                self._document_title = section
+                self._spec_title_captured = True
+            else:
+                log_error(f"Warning: Section '{section}' has no preceding record; skipped in ReqIF hierarchy.")
             return Ret.OK
 
         if self._pending_hierarchy_args is not None:
@@ -476,7 +482,7 @@ class ReqifConverter(BaseConverter):
         )
 
         specification = ReqIFSpecification(
-            identifier=self._new_identifier("specification"),
+            identifier=self._document_title,
             long_name=self._document_title,
             last_change=last_change,
             specification_type=ReqifConverter.SPECIFICATION_TYPE_IDENTIFIER,
@@ -548,6 +554,7 @@ class ReqifConverter(BaseConverter):
         self._enum_datatype_registry = {}
         self._last_spec_object_identifier = None
         self._pending_hierarchy_args = None
+        self._spec_title_captured = False
 
     def _flush_pending_hierarchy(self) -> None:
         """Flush a deferred record hierarchy node as a standalone leaf.
