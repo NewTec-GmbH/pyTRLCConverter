@@ -42,3 +42,7 @@ p.admonition-title {
 .local-version-selector select {
     width: 100%;
 }
+
+.clearboth {
+    clear: both;
+}

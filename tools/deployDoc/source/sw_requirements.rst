@@ -2,9 +2,8 @@
    :align: right
    :figwidth: 350px
 
-.. image alignment: No overlapping with the text
-.. raw:: html
-
-   <div style="clear: both;"></div>
+.. container:: clearboth
+  
+  .. image alignment: Comment needed for clearboth container to work, otherwise the image overlaps with the text 
 
 .. include:: ../../trlc2other/out/swe-req.rst
