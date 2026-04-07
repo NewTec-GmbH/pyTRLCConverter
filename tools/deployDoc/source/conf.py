@@ -113,6 +113,10 @@ html_static_path = ['_static']
 html_css_files = ['custom.css']
 html_js_files = ['version_selector.js']
 
+html_theme_options = {   
+    'style_nav_header_background': '#0C2C40',   # Set the navigation header background color to NewTec black  #0C2C40
+}
+
 # Copy favorite icon to static path.
 html_favicon = '../../../doc/images/favicon.ico'
 
