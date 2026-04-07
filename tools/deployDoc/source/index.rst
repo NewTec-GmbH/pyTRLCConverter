@@ -7,7 +7,10 @@
    :align: right
    :figwidth: 350px
 
-|
+.. image alignment: No overlapping with the text
+.. raw:: html
+
+   <div style="clear: both;"></div>
 
 pyTRLCConverter documentation
 =============================
@@ -20,7 +23,6 @@ an object-oriented manner.
 .. figure:: ../../../doc/images/gridball.png
    :align: right
    :figwidth: 200px
-
 
 .. uml:: ../../../doc/architecture/context_diagram.puml
 

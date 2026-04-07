@@ -2,7 +2,10 @@
    :align: right
    :figwidth: 350px
   
-|
+.. image alignment: No overlapping with the text
+.. raw:: html
+
+   <div style="clear: both;"></div>
 
 License information
 -------------------
