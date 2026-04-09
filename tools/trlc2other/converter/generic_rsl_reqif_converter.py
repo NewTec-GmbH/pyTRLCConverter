@@ -71,7 +71,7 @@ class GenericRslReqifConverter(ReqifConverter):
             type_key=self._get_record_type_key(info),
             type_long_name=info.n_typ.name,
             attribute_value_map={
-                ReqifConverter.ATTRIBUTE_KEY_RECORD_ID: {
+                ReqifConverter.ATTRIBUTE_KEY_RECORD_FOREIGN_ID: {
                     "long_name": "ID",
                     "value": info.name,
                     "attribute_type": SpecObjectAttributeType.STRING
@@ -124,7 +124,7 @@ class GenericRslReqifConverter(ReqifConverter):
             type_key=self._get_record_type_key(diagram),
             type_long_name=diagram.n_typ.name,
             attribute_value_map={
-                ReqifConverter.ATTRIBUTE_KEY_RECORD_ID: {
+                ReqifConverter.ATTRIBUTE_KEY_RECORD_FOREIGN_ID: {
                     "long_name": "ID",
                     "value": diagram.name,
                     "attribute_type": SpecObjectAttributeType.STRING
@@ -179,7 +179,7 @@ class GenericRslReqifConverter(ReqifConverter):
             type_key=self._get_record_type_key(image),
             type_long_name=image.n_typ.name,
             attribute_value_map={
-                ReqifConverter.ATTRIBUTE_KEY_RECORD_ID: {
+                ReqifConverter.ATTRIBUTE_KEY_RECORD_FOREIGN_ID: {
                     "long_name": "ID",
                     "value": image.name,
                     "attribute_type": SpecObjectAttributeType.STRING
