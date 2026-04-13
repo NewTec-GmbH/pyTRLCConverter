@@ -341,6 +341,13 @@ section "SW-Test Cases" {
             verifies = [SwRequirements.sw_req_reqif_render_xhtml]
         }
 
+        SwTestCase tc_reqif_render_table_options {
+            description = '''This test case checks whether GFM table rendering options (`border` and `headingStyle`) from the render
+             configuration are applied to the generated ReqIF XHTML, producing a `<table>` with the configured `style` and `<th>`
+             cells with the configured `style`.'''
+            verifies = [SwRequirements.sw_req_reqif_render_table_options]
+        }
+
         SwTestCase tc_reqif_render_path {
             description = '''This test case checks whether a file path attribute is rendered as a ReqIF XHTML <object> element with the
              correct MIME type and local file reference, and that the referenced file is copied to the output folder.'''

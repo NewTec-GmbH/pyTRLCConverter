@@ -393,6 +393,7 @@ section "SW Architecture" {
                     SwRequirements.sw_req_reqif_render_gfm,
                     SwRequirements.sw_req_reqif_render_xhtml,
                     SwRequirements.sw_req_reqif_render_path,
+                    SwRequirements.sw_req_reqif_render_table_options,
                     SwRequirements.sw_req_reqif_enum,
                     SwRequirements.sw_req_reqif_enum_key_order,
                     SwRequirements.sw_req_reqif_enum_null,

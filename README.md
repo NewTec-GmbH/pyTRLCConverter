@@ -271,13 +271,13 @@ Two Markdown specifications are supported:
 
 Supported by the formats:
 
-| Format           | CommonMark               | GitHub Flavored          |
-| ---------------- | ------------------------ | ------------------------ |
-| docx             | X                        | Output as string literal |
-| dump             | Output as string literal | Output as string literal |
-| markdown         | X                        | X                        |
-| reStructuredText | X                        | X                        |
-| reqif            | X                        | X                        |
+| Format           | CommonMark               | GitHub Flavored          | XHTML |
+| ---------------- | ------------------------ | ------------------------ | ----- |
+| docx             | X                        | Output as string literal | -     |
+| dump             | Output as string literal | Output as string literal | -     |
+| markdown         | X                        | X                        | -     |
+| reStructuredText | X                        | X                        | -     |
+| reqif            | X                        | X                        | X     |
 
 The `reqif` format additionally supports `"xhtml"` as a format specifier in the render configuration. When set, the attribute value is treated as already-valid XHTML and is embedded in the ReqIF output without any conversion. This allows requirement authors to write raw XHTML markup directly in their TRLC string attributes.
 

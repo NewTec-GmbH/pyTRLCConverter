@@ -48,7 +48,8 @@ class RenderConfig():
         # The render configuration as dict.
         #
         # Example in JSON format:
-        # { "renderCfg": [{ "package": "XX", "type": "YY", "attribute": "ZZ", "format": "md" }] }
+        # { "renderCfg": [{ "package": "XX", "type": "YY", "attribute": "ZZ", "format": "md",
+        #   "tableOptions": { "border": "<css-style>", "headingStyle": "<css-style>" } }] }
         self._cfg = {}
 
     def load(self, file_name: str) -> bool:
@@ -158,6 +159,44 @@ class RenderConfig():
                         break
 
         return format_specifier
+
+    def get_table_options(self, trlc_package: str, trlc_type: str, trlc_type_attribute: str) -> dict:
+        # lobster-trace: SwRequirements.sw_req_reqif_render_table_options
+        """Returns the table rendering options for the given TRLC package, type and attribute.
+
+        The returned dictionary may contain the following optional keys:
+
+        - ``"border"`` (str): CSS style value applied to the ``<table>`` element's ``style``
+          attribute (e.g. ``"border: 1px solid black; border-collapse: collapse;"``).
+        - ``"headingStyle"`` (str): CSS style value applied to each ``<th>`` cell's ``style``
+          attribute (e.g. ``"background-color: #c0c0c0;"``).
+
+        Args:
+            trlc_package (str): The TRLC package.
+            trlc_type (str): The TRLC type.
+            trlc_type_attribute (str): The TRLC type attribute.
+
+        Returns:
+            dict: Table options dict, or empty dict if no table options are configured.
+        """
+        table_options = {}
+
+        if "renderCfg" in self._cfg:
+            for item in self._cfg["renderCfg"]:
+                match_list = []
+
+                match_list.append(self._is_package_match(item, trlc_package))
+                match_list.append(self._is_type_match(item, trlc_type))
+                match_list.append(self._is_type_attribute_match(item, trlc_type_attribute))
+
+                # All of the available ones must match!
+                if all(match_list):
+                    table_options = item.get("tableOptions", {})
+
+                    # First match wins.
+                    break
+
+        return table_options
 
     def is_format_plain(self, trlc_package: str, trlc_type: str, trlc_type_attribute: str) -> bool:
         """Checks if the given TRLC package, type and attribute should be rendered in plain text format.

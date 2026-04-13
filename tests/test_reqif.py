@@ -273,6 +273,57 @@ def test_tc_reqif_render_gfm(record_property, capsys, monkeypatch, tmp_path: Pat
     assert "I am strikethrough.</del>" in description_attribute.value
 
 
+def test_tc_reqif_render_gfm_table_options(record_property, capsys, monkeypatch, tmp_path: Path):
+    # lobster-trace: SwTests.tc_reqif_render_table_options
+    """The software shall apply table border and heading style options when rendering GFM to ReqIF XHTML.
+
+    Args:
+        record_property (Any): Used to inject the test case reference into the test results.
+        capsys (Any): Used to capture stdout and stderr.
+        monkeypatch (Any): Used to mock program arguments.
+        tmp_path (Path): Used to create a temporary output directory.
+    """
+    record_property("lobster-trace", "SwTests.tc_reqif_render_table_options")
+
+    # Mock program arguments with a GFM render configuration that includes table options.
+    monkeypatch.setattr("sys.argv", [
+        "pyTRLCConverter",
+        "--source", "./tests/utils/req.rsl",
+        "--source", "./tests/utils/single_req_description_gfm.trlc",
+        "--out", str(tmp_path),
+        "--renderCfg", "./tests/utils/renderCfgGfmTableOptions.json",
+        "reqif",
+        "--single-document"
+    ])
+
+    # Expect the program to run without any exceptions.
+    main()
+
+    # Capture stdout and stderr.
+    captured = capsys.readouterr()
+    # Check that no errors were reported.
+    assert captured.err == ""
+
+    # Parse the output file and locate the expected spec-object.
+    output_file = os.path.join(tmp_path, ReqifConverter.OUTPUT_FILE_NAME_DEFAULT)
+    bundle = _parse_reqif(output_file)
+
+    spec_object = _find_spec_object_by_long_name(bundle, "req_id_gfm")
+    assert spec_object is not None
+
+    description_identifier = _find_attribute_identifier(bundle, "description")
+    assert description_identifier is not None
+
+    description_attribute = _find_attribute_by_identifier(spec_object, description_identifier)
+    assert description_attribute is not None
+
+    # Verify that the table border style was applied to the <table> element.
+    assert 'style="border: 1px solid black; border-collapse: collapse;"' in description_attribute.value
+
+    # Verify that the heading style was applied to the <th> cells.
+    assert 'style="background-color: #c0c0c0;"' in description_attribute.value
+
+
 def test_tc_reqif_render_xhtml(record_property, capsys, monkeypatch, tmp_path: Path):
     # lobster-trace: SwTests.tc_reqif_render_xhtml
     """The software shall pass XHTML content through to ReqIF XHTML without modification.

@@ -1264,6 +1264,7 @@ class ReqifConverter(BaseConverter):
         # lobster-trace: SwRequirements.sw_req_reqif_render_gfm
         # lobster-trace: SwRequirements.sw_req_reqif_render_xhtml
         # lobster-trace: SwRequirements.sw_req_reqif_render_path
+        # lobster-trace: SwRequirements.sw_req_reqif_render_table_options
         """Render an attribute value to an XHTML-wrapped string based on the render configuration.
 
         If the attribute is configured as CommonMark Markdown, it is converted via marko.
@@ -1272,6 +1273,9 @@ class ReqifConverter(BaseConverter):
         If configured as path, the value is treated as a file path and converted to an XHTML
         ``<object>`` element; the file is scheduled for copying to the output folder.
         Otherwise plain text is HTML-escaped and wrapped.
+
+        For Markdown and GFM formats, optional table rendering options (``border``,
+        ``headingStyle``) from the render configuration are applied to the generated HTML.
 
         Args:
             package_name (str): TRLC package name of the record.
@@ -1283,10 +1287,12 @@ class ReqifConverter(BaseConverter):
             str: XHTML-wrapped content string.
         """
         if self._render_cfg.is_format_md(package_name, type_name, attribute_name) is True:
-            return self._markdown_to_xhtml(attribute_value, gfm_mode=False)
+            table_options = self._render_cfg.get_table_options(package_name, type_name, attribute_name)
+            return self._markdown_to_xhtml(attribute_value, gfm_mode=False, table_options=table_options)
 
         if self._render_cfg.is_format_gfm(package_name, type_name, attribute_name) is True:
-            return self._markdown_to_xhtml(attribute_value, gfm_mode=True)
+            table_options = self._render_cfg.get_table_options(package_name, type_name, attribute_name)
+            return self._markdown_to_xhtml(attribute_value, gfm_mode=True, table_options=table_options)
 
         if self._render_cfg.is_format_xhtml(package_name, type_name, attribute_name) is True:
             if "<" in attribute_value:
@@ -1321,14 +1327,21 @@ class ReqifConverter(BaseConverter):
 
         return self._wrap_xhtml("".join(paragraph_list))
 
-    def _markdown_to_xhtml(self, markdown_text: str, gfm_mode: bool) -> str:
+    def _markdown_to_xhtml(self, markdown_text: str, gfm_mode: bool,
+                           table_options: Optional[dict] = None) -> str:
         # lobster-trace: SwRequirements.sw_req_reqif_render_md
         # lobster-trace: SwRequirements.sw_req_reqif_render_gfm
+        # lobster-trace: SwRequirements.sw_req_reqif_render_table_options
         """Convert Markdown text to an XHTML-wrapped string using marko.
+
+        If ``table_options`` is provided and non-empty, table styling is applied to the
+        generated HTML before wrapping (see :meth:`_apply_table_options`).
 
         Args:
             markdown_text (str): Markdown source text.
             gfm_mode (bool): If True, use the GFM extension; otherwise use CommonMark.
+            table_options (Optional[dict]): Optional table rendering options with keys
+                ``"border"`` and/or ``"headingStyle"``.
 
         Returns:
             str: XHTML-wrapped HTML string.
@@ -1339,7 +1352,45 @@ class ReqifConverter(BaseConverter):
         if len(html_text) == 0:
             html_text = "<p></p>"
 
+        if table_options:
+            html_text = self._apply_table_options(html_text, table_options)
+
         return self._wrap_xhtml(html_text)
+
+    @staticmethod
+    def _apply_table_options(html_text: str, table_options: dict) -> str:
+        # lobster-trace: SwRequirements.sw_req_reqif_render_table_options
+        """Apply table rendering options to generated HTML.
+
+        Replaces the plain ``<table>`` tag with one carrying a ``style`` attribute when
+        ``"border"`` is set, and injects a ``style`` attribute into every ``<th>`` tag
+        when ``"headingStyle"`` is set.  Values are HTML-escaped before insertion.
+
+        Args:
+            html_text (str): HTML string produced by the Markdown renderer.
+            table_options (dict): Table options with optional keys ``"border"`` (str) and
+                ``"headingStyle"`` (str), both interpreted as CSS style values.
+
+        Returns:
+            str: HTML string with table styling applied.
+        """
+        result = html_text
+
+        table_border = table_options.get("border", "")
+        if table_border:
+            escaped = html.escape(table_border, quote=True)
+            result = result.replace("<table>", f'<table style="{escaped}">')
+
+        heading_style = table_options.get("headingStyle", "")
+        if heading_style:
+            escaped = html.escape(heading_style, quote=True)
+            result = re.sub(
+                r'<th((?:\s+align="[^"]*")?)>',
+                lambda m: f'<th{m.group(1)} style="{escaped}">',
+                result
+            )
+
+        return result
 
     def _path_to_xhtml(self, file_path: str) -> str:
         # lobster-trace: SwRequirements.sw_req_reqif_render_path

@@ -67,6 +67,36 @@ Example for writting MyReqType::description in GitHub Flavored Markdown:
 }
 ```
 
+#### Style GFM Tables
+
+When an attribute is rendered in GitHub Flavored Markdown (`"format": "gfm"`), tables contained in that attribute are converted to XHTML. You can control the visual style of those tables by adding the optional `tableOptions` key to the render configuration item.
+
+| Key | Description | Example value |
+| --- | --- | --- |
+| `border` | CSS style applied to the `<table>` element's `style` attribute | `"border: 1px solid black; border-collapse: collapse;"` |
+| `headingStyle` | CSS style applied to every `<th>` cell's `style` attribute | `"background-color: #c0c0c0;"` |
+
+Both keys are optional. If `tableOptions` is omitted entirely, no inline style is added to the generated table elements.
+
+Example — render `MyReqType::description` as GFM with a bordered table and a grey header row:
+
+```json
+{
+    "renderCfg": [
+        {
+            "package": ".*",
+            "type": "MyReqType",
+            "attribute": "description",
+            "format": "gfm",
+            "tableOptions": {
+                "border": "border: 1px solid black; border-collapse: collapse;",
+                "headingStyle": "background-color: #c0c0c0;"
+            }
+        }
+    ]
+}
+```
+
 #### Attach External Files
 
 TRLC doesn't know out of the box how to deal with attachments, images and etc. Therefore the render configuration provides the format "path". It is assumed that the attribute value contains the path to related artifcat. It will be provided in the ReqIF format as XHTML and the artifact will be part of the reqifz file.

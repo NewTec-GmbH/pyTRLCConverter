@@ -5,9 +5,16 @@ and produces four files ready for use with pyTRLCConverter:
 
 - <package>.rsl        TRLC type definitions (one ``type`` per SPEC-OBJECT-TYPE)
 - <package>.trlc       TRLC requirement instances, following the SPEC-HIERARCHY
-- renderCfg.json       Render configuration: emits ``"xhtml"`` format entries for every
-                       XHTML-typed attribute so pyTRLCConverter passes those values through
-                       unchanged on the round-trip conversion
+- renderCfg.json       Render configuration:
+
+  - By default, emits ``"xhtml"`` format entries for every XHTML-typed attribute
+    so pyTRLCConverter passes those values through unchanged on the round-trip
+    conversion.
+  - With ``--gfm``, additionally emits ``"gfm"`` format entries (with a simple
+    table border and heading style) for every plain string attribute, so that
+    string attributes containing GitHub Flavored Markdown are rendered to XHTML
+    with styled tables when pyTRLCConverter converts back to ReqIF.
+
 - translation.json     Maps sanitised TRLC attribute names back to their ReqIF LONG-NAMEs
 
 Round-trip fidelity
@@ -105,6 +112,10 @@ _REQIF_MANDATORY_LONG_NAMES: frozenset[str] = frozenset({
     "ReqIF.Text",
     "ReqIF.Description",
 })
+
+# Default CSS values applied to GFM-rendered tables when --gfm is used.
+_GFM_TABLE_BORDER: str = "border: 1px solid black; border-collapse: collapse;"
+_GFM_TABLE_HEADING_STYLE: str = "background-color: #c0c0c0;"
 
 
 # Classes **********************************************************************
@@ -1031,20 +1042,29 @@ def _write_trlc(trlc_path: str, package_name: str, content: Any,
         fh.write("\n".join(lines) + "\n")
 
 
-def _write_render_config(cfg_path: str, type_info: dict[str, Any]) -> None:
-    """Write a renderCfg.json with ``"xhtml"`` entries for every XHTML-typed attribute.
+def _write_render_config(cfg_path: str, type_info: dict[str, Any],
+                         gfm_format: bool = False) -> None:
+    """Write a renderCfg.json for pyTRLCConverter.
 
-    The entries instruct pyTRLCConverter to pass XHTML attribute values through
-    verbatim so that the round-trip output preserves the original XHTML content.
+    XHTML-typed attributes always receive a ``"xhtml"`` (or ``"path"``) entry so
+    that pyTRLCConverter passes the content through verbatim on a round-trip
+    conversion.
+
+    When *gfm_format* is ``True``, every plain string attribute (not XHTML, not
+    path, not enum) additionally receives a ``"gfm"`` entry with
+    ``tableOptions`` so that string attributes containing GitHub Flavored
+    Markdown are rendered to XHTML with a simple table border and heading style.
 
     Args:
-        cfg_path:  Destination file path.
-        type_info: Type metadata as returned by ``_collect_type_info``.
+        cfg_path:   Destination file path.
+        type_info:  Type metadata as returned by ``_collect_type_info``.
+        gfm_format: When ``True``, emit ``"gfm"`` entries with ``tableOptions``
+                    for plain string attributes.
 
     Returns:
         None
     """
-    entries: list[dict[str, str]] = []
+    entries: list[dict[str, Any]] = []
     for type_data in type_info.values():
         if type_data["is_section"]:
             continue
@@ -1064,8 +1084,19 @@ def _write_render_config(cfg_path: str, type_info: dict[str, Any]) -> None:
                     "attribute": re.escape(attr["trlc_name"]),
                     "format": "xhtml",
                 })
+            elif gfm_format and not attr["is_enum"]:
+                entries.append({
+                    "package": ".*",
+                    "type": re.escape(trlc_type),
+                    "attribute": re.escape(attr["trlc_name"]),
+                    "format": "gfm",
+                    "tableOptions": {
+                        "border": _GFM_TABLE_BORDER,
+                        "headingStyle": _GFM_TABLE_HEADING_STYLE,
+                    },
+                })
 
-    config: dict[str, list[dict[str, str]]] = {"renderCfg": entries}
+    config: dict[str, list[dict[str, Any]]] = {"renderCfg": entries}
     with open(cfg_path, "w", encoding="utf-8") as fh:
         json.dump(config, fh, indent=4, ensure_ascii=False)
         fh.write("\n")
@@ -1107,13 +1138,16 @@ def _write_translation(trans_path: str, type_info: dict[str, Any]) -> None:
         fh.write("\n")
 
 
-def generate_output(reqif_path: str, output_dir: str, package_name: str) -> None:
+def generate_output(reqif_path: str, output_dir: str, package_name: str,
+                    gfm_format: bool = False) -> None:
     """Parse the ReqIF file and write all four output files to output_dir.
 
     Args:
         reqif_path:   Path to the .reqif or .reqifz file to analyse.
         output_dir:   Directory in which to write the generated files.
         package_name: TRLC package name used for .rsl, .trlc, and renderCfg entries.
+        gfm_format:   When ``True``, emit ``"gfm"`` render-config entries with table
+                      options for plain string attributes (see ``_write_render_config``).
 
     Returns:
         None
@@ -1151,7 +1185,7 @@ def generate_output(reqif_path: str, output_dir: str, package_name: str) -> None
     _write_trlc(trlc_path, package_name, content, ctx)
     print(f"Written: {trlc_path}")
 
-    _write_render_config(cfg_path, type_info)
+    _write_render_config(cfg_path, type_info, gfm_format=gfm_format)
     print(f"Written: {cfg_path}")
 
     _write_translation(trans_path, type_info)
@@ -1188,6 +1222,15 @@ def _parse_args() -> argparse.Namespace:
         default=None,
         help="TRLC package name.  Defaults to the sanitised input file basename.",
     )
+    parser.add_argument(
+        "--gfm",
+        action="store_true",
+        default=False,
+        help="Emit 'gfm' render-config entries with table border and heading style for "
+             "plain string attributes.  Use this when those attributes contain GitHub "
+             "Flavored Markdown that should be rendered with styled tables on the next "
+             "pyTRLCConverter run.",
+    )
     return parser.parse_args()
 
 
@@ -1215,7 +1258,7 @@ def main() -> None:
     output_dir = args.output or os.path.join(os.path.dirname(args.input),
                                               f"{basename}_trlc")
 
-    generate_output(args.input, output_dir, package_name)
+    generate_output(args.input, output_dir, package_name, gfm_format=args.gfm)
 
 
 if __name__ == "__main__":
