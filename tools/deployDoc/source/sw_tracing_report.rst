@@ -6,7 +6,7 @@
   
   .. image alignment: Comment needed for clearboth container to work, otherwise the image overlaps with the text 
 
-Software Tracing Report
+SW Tracing Report
 -----------------------
 
 .. raw:: html

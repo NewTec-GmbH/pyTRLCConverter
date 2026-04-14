@@ -47,7 +47,8 @@ author = 'NewTec GmbH'
 extensions = [
     # https://www.sphinx-doc.org/en/master/usage/markdown.html
     'myst_parser',
-    'sphinx_rtd_theme',
+    # Extension for the Read the Docs theme, which provides a modern and responsive design for documentation. 
+    'sphinx_rtd_theme',    
     # https://github.com/sphinx-contrib/plantuml
     'sphinxcontrib.plantuml',
     # https://sphinx-autoapi.readthedocs.io/en/latest/tutorials.html#python
@@ -57,7 +58,13 @@ extensions = [
     # Extension to view source code in documentation.
     'sphinx.ext.viewcode',
     # Extension to generate inheritance diagrams.
-    'sphinx.ext.inheritance_diagram'
+    'sphinx.ext.inheritance_diagram',
+    # Extension to automatically generate documentation from docstrings in the code.
+    'sphinx.ext.autodoc',  
+    # extension to support favicon for html output
+    'sphinx_favicon',  
+    # crawls python files to extract content for autodoc and generates summary tables for modules and classes.
+    'sphinx.ext.autosummary',  
 ]
 
 templates_path = ['_templates']
@@ -86,7 +93,7 @@ autoapi_options = [
     'show-inheritance',         # Show base classes on class pages
     'show-inheritance-diagram', # Show inheritance diagrams for classes
     'show-module-summary'       # Summary table at the top of each module page
-]
+]    
 suppress_warnings = ['autoapi.python_import_resolution', 'autoapi.not_readable']
 
 # sphinx.ext.inheritance_diagram configuration
@@ -122,6 +129,7 @@ html_favicon = '../../../doc/images/favicon.ico'
 
 # Copy logo to static path.
 html_logo = '../../../doc/images/NewTec_Logo.png'
+
 
 # PlantUML is called OS depended and the java jar file is provided by environment variable.
 plantuml_env = os.getenv('PLANTUML')

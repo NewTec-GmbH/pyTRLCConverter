@@ -6,7 +6,7 @@
   
   .. image alignment: Comment needed for clearboth container to work, otherwise the image overlaps with the text 
 
-SW-Detailed Design
+SW Detailed Design
 ------------------
 
 This section provides a developer-focused view of the internal design of

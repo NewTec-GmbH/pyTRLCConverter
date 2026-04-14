@@ -34,8 +34,8 @@ an object-oriented manner.
    sw_detail_design
    sw_tests
    sw_tracing_report
-   coverage_resport
    sw_test_result_report
+   coverage_report
 
 License information
 -------------------
