@@ -51,7 +51,7 @@ Notes:
 
 To specify which attribute will be written e.g. in Markdown etc., a render configuration is required.
 
-Example for writting MyReqType::description in GitHub Flavored Markdown:
+Example for writing MyReqType::description in GitHub Flavored Markdown:
 
 ```json
 {
@@ -71,10 +71,10 @@ Example for writting MyReqType::description in GitHub Flavored Markdown:
 
 When an attribute is rendered in GitHub Flavored Markdown (`"format": "gfm"`), tables contained in that attribute are converted to XHTML. You can control the visual style of those tables by adding the optional `tableOptions` key to the render configuration item.
 
-| Key | Description | Example value |
-| --- | --- | --- |
-| `border` | CSS style applied to the `<table>` element's `style` attribute | `"border: 1px solid black; border-collapse: collapse;"` |
-| `headingStyle` | CSS style applied to every `<th>` cell's `style` attribute | `"background-color: #c0c0c0;"` |
+| Key            | Description                                                    | Example value                                           |
+| -------------- | -------------------------------------------------------------- | ------------------------------------------------------- |
+| `border`       | CSS style applied to the `<table>` element's `style` attribute | `"border: 1px solid black; border-collapse: collapse;"` |
+| `headingStyle` | CSS style applied to every `<th>` cell's `style` attribute     | `"background-color: #c0c0c0;"`                          |
 
 Both keys are optional. If `tableOptions` is omitted entirely, no inline style is added to the generated table elements.
 
