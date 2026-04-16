@@ -58,6 +58,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#command-line-arguments">Command Line Arguments</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#markdown">Markdown</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#restructuredtext">reStructuredText</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#reqif">ReqIF</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#docx">Docx</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#dump">Dump</a></li>
 </ul>
@@ -1120,6 +1121,297 @@ when the render configuration is set to “gfm”.</p></td>
 <tr class="row-odd"><td><p>Verifies</p></td>
 <td><ul class="simple">
 <li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-rst-render-gfm"><span class="std std-ref">SwRequirements.sw_req_rst_render_gfm</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="reqif">
+<span id="swe-test-rst-reqif"></span><h2>ReqIF<a class="headerlink" href="#reqif" title="Link to this heading"></a></h2>
+<div class="admonition-tc-reqif admonition" id="swe-test-rst-tc-reqif">
+<p class="admonition-title">tc_reqif</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether the conversion to ReqIF format works.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-reqif"><span class="std std-ref">SwRequirements.sw_req_reqif</span></a></p></li>
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-reqif-record"><span class="std std-ref">SwRequirements.sw_req_reqif_record</span></a></p></li>
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-no-prj-spec"><span class="std std-ref">SwRequirements.sw_req_no_prj_spec</span></a></p></li>
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-cli-out"><span class="std std-ref">SwRequirements.sw_req_cli_out</span></a></p></li>
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-reqif-single-doc-mode"><span class="std std-ref">SwRequirements.sw_req_reqif_single_doc_mode</span></a></p></li>
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-reqif-out-file-name-default"><span class="std std-ref">SwRequirements.sw_req_reqif_out_file_name_default</span></a></p></li>
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-reqif-top-level-default"><span class="std std-ref">SwRequirements.sw_req_reqif_top_level_default</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-reqif-section admonition" id="swe-test-rst-tc-reqif-section">
+<p class="admonition-title">tc_reqif_section</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether a TRLC section produces a SPEC-HIERARCHY node referencing the preceding record’s SPEC-OBJECT, and that a warning is emitted when no preceding record exists.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-reqif-section"><span class="std std-ref">SwRequirements.sw_req_reqif_section</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-reqif-single-doc-custom admonition" id="swe-test-rst-tc-reqif-single-doc-custom">
+<p class="admonition-title">tc_reqif_single_doc_custom</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether the conversion to ReqIF in single document mode is customizable.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-reqif-out-file-name-custom"><span class="std std-ref">SwRequirements.sw_req_reqif_out_file_name_custom</span></a></p></li>
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-reqif-top-level-custom"><span class="std std-ref">SwRequirements.sw_req_reqif_top_level_custom</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-reqif-render-md admonition" id="swe-test-rst-tc-reqif-render-md">
+<p class="admonition-title">tc_reqif_render_md</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether CommonMark Markdown content in requirement attributes is rendered correctly
+when the render configuration is set to “md”.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-reqif-render-md"><span class="std std-ref">SwRequirements.sw_req_reqif_render_md</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-reqif-render-gfm admonition" id="swe-test-rst-tc-reqif-render-gfm">
+<p class="admonition-title">tc_reqif_render_gfm</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether GitHub Flavored Markdown content in requirement attributes is rendered correctly
+when the render configuration is set to “gfm”.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-reqif-render-gfm"><span class="std std-ref">SwRequirements.sw_req_reqif_render_gfm</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-reqif-render-xhtml admonition" id="swe-test-rst-tc-reqif-render-xhtml">
+<p class="admonition-title">tc_reqif_render_xhtml</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether XHTML content in requirement attributes is passed through without modification
+when the render configuration is set to “xhtml”.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-reqif-render-xhtml"><span class="std std-ref">SwRequirements.sw_req_reqif_render_xhtml</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-reqif-render-table-options admonition" id="swe-test-rst-tc-reqif-render-table-options">
+<p class="admonition-title">tc_reqif_render_table_options</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether GFM table rendering options (`border` and `headingStyle`) from the render
+configuration are applied to the generated ReqIF XHTML, producing a `&lt;table&gt;` with the configured `style` and `&lt;th&gt;`
+cells with the configured `style`.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-reqif-render-table-options"><span class="std std-ref">SwRequirements.sw_req_reqif_render_table_options</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-reqif-render-path admonition" id="swe-test-rst-tc-reqif-render-path">
+<p class="admonition-title">tc_reqif_render_path</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether a file path attribute is rendered as a ReqIF XHTML &lt;object&gt; element with the
+correct MIME type and local file reference, and that the referenced file is copied to the output folder.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-reqif-render-path"><span class="std std-ref">SwRequirements.sw_req_reqif_render_path</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-reqif-render-path-reqifz admonition" id="swe-test-rst-tc-reqif-render-path-reqifz">
+<p class="admonition-title">tc_reqif_render_path_reqifz</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether the external file referenced by a path format attribute is included in the
+.reqifz archive when the --reqifz option is used.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-reqif-render-path"><span class="std std-ref">SwRequirements.sw_req_reqif_render_path</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-reqif-enum admonition" id="swe-test-rst-tc-reqif-enum">
+<p class="admonition-title">tc_reqif_enum</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether a TRLC enumeration attribute is converted to a DATATYPE-DEFINITION-ENUMERATION with 0-based consecutive ENUM-VALUE keys and emitted as ATTRIBUTE-VALUE-ENUMERATION in the spec-object.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-reqif-enum"><span class="std std-ref">SwRequirements.sw_req_reqif_enum</span></a></p></li>
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-reqif-enum-key-order"><span class="std std-ref">SwRequirements.sw_req_reqif_enum_key_order</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-reqif-enum-null admonition" id="swe-test-rst-tc-reqif-enum-null">
+<p class="admonition-title">tc_reqif_enum_null</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether an optional TRLC enumeration attribute with a null value is omitted from the generated ReqIF spec-object.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-reqif-enum-null"><span class="std std-ref">SwRequirements.sw_req_reqif_enum_null</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-reqif-relation admonition" id="swe-test-rst-tc-reqif-relation">
+<p class="admonition-title">tc_reqif_relation</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether TRLC record reference attributes are converted to ReqIF SPEC-RELATION entries, and that array record reference attributes produce one SPEC-RELATION per element.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-reqif-relation"><span class="std std-ref">SwRequirements.sw_req_reqif_relation</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-reqif-reqifz admonition" id="swe-test-rst-tc-reqif-reqifz">
+<p class="admonition-title">tc_reqif_reqifz</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether the ReqIF converter archives the generated output as a .reqifz ZIP file when the --reqifz flag is given.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-reqif-reqifz"><span class="std std-ref">SwRequirements.sw_req_reqif_reqifz</span></a></p></li>
 </ul>
 </td>
 </tr>

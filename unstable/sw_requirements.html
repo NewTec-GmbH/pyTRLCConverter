@@ -66,6 +66,15 @@
 <li class="toctree-l4"><a class="reference internal" href="#restructuredtext-render-configuration">ReStructuredText Render Configuration</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="#reqif">ReqIF</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#reqif-multiple-documents-mode">ReqIF Multiple Documents Mode</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#reqif-single-document-mode">ReqIF Single Document Mode</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#reqif-spec-relations">ReqIF Spec Relations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#reqif-archive">ReqIF Archive</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#reqif-enumeration">ReqIF Enumeration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#reqif-render-configuration">ReqIF Render Configuration</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#docx">Docx</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#docx-render-configuration">Docx Render Configuration</a></li>
 </ul>
@@ -1971,6 +1980,553 @@
 </tr>
 <tr class="row-even"><td><p>Verification Criteria</p></td>
 <td><p>Verify by using strings in Markdown format according to GitHub Flavored Markdown spec, that are converted.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+<section id="reqif">
+<span id="swe-req-rst-reqif"></span><h3>ReqIF<a class="headerlink" href="#reqif" title="Link to this heading"></a></h3>
+<p>The following requirements describe the ReqIF destination format supported by the software.</p>
+<div class="admonition-sw-req-reqif admonition" id="swe-req-rst-sw-req-reqif">
+<p class="admonition-title">sw_req_reqif</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>The software shall support the conversion into ReqIF format v1.2.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Valid Status</p></td>
+<td><p>VALID_STATUS.valid</p></td>
+</tr>
+<tr class="row-even"><td><p>Note</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-odd"><td><p>Derived</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-even"><td><p>Verification Criteria</p></td>
+<td><p>Verify by converting one or more TRLC files into ReqIF format.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-sw-req-reqif-section admonition" id="swe-req-rst-sw-req-reqif-section">
+<p class="admonition-title">sw_req_reqif_section</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>The ReqIF converter shall convert a TRLC section into a SPEC-HIERARCHY node (no SPEC-OBJECT created) by reusing the last preceding TRLC record’s SPEC-OBJECT as the mandatory SPEC-OBJECT-REF. If no preceding record exists, a warning shall be emitted and the section shall be omitted from the hierarchy.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Valid Status</p></td>
+<td><p>VALID_STATUS.valid</p></td>
+</tr>
+<tr class="row-even"><td><p>Note</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-odd"><td><p>Derived</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-even"><td><p>Verification Criteria</p></td>
+<td><p>Verify by converting TRLC sections into ReqIF and checking that section names appear only as hierarchy LONG-NAMEs, not in SPEC-OBJECTS, and that the SPEC-OBJECT-REF points to the preceding record.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-sw-req-reqif-record admonition" id="swe-req-rst-sw-req-reqif-record">
+<p class="admonition-title">sw_req_reqif_record</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>The ReqIF converter shall convert the attributes of a TRLC record into ReqIF SpecObject attributes.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Valid Status</p></td>
+<td><p>VALID_STATUS.valid</p></td>
+</tr>
+<tr class="row-even"><td><p>Note</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-odd"><td><p>Derived</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-even"><td><p>Verification Criteria</p></td>
+<td><p>Verify by converting one or more TRLC records and checking generated ReqIF SpecObjects.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<section id="reqif-multiple-documents-mode">
+<span id="swe-req-rst-reqif-multiple-documents-mode"></span><h4>ReqIF Multiple Documents Mode<a class="headerlink" href="#reqif-multiple-documents-mode" title="Link to this heading"></a></h4>
+<div class="admonition-sw-req-reqif-multiple-doc-mode admonition" id="swe-req-rst-sw-req-reqif-multiple-doc-mode">
+<p class="admonition-title">sw_req_reqif_multiple_doc_mode</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>The software shall create a ReqIF file for each TRLC file by default.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Valid Status</p></td>
+<td><p>VALID_STATUS.valid</p></td>
+</tr>
+<tr class="row-even"><td><p>Note</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-odd"><td><p>Derived</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-even"><td><p>Verification Criteria</p></td>
+<td><p>Verify by converting one or more TRLC files into ReqIF and checking one ReqIF file is created for each TRLC file.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="reqif-single-document-mode">
+<span id="swe-req-rst-reqif-single-document-mode"></span><h4>ReqIF Single Document Mode<a class="headerlink" href="#reqif-single-document-mode" title="Link to this heading"></a></h4>
+<div class="admonition-sw-req-reqif-single-doc-mode admonition" id="swe-req-rst-sw-req-reqif-single-doc-mode">
+<p class="admonition-title">sw_req_reqif_single_doc_mode</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>The software shall create a single ReqIF file which combines all TRLC files if requested by command line arguments.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Valid Status</p></td>
+<td><p>VALID_STATUS.valid</p></td>
+</tr>
+<tr class="row-even"><td><p>Note</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-odd"><td><p>Derived</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-even"><td><p>Verification Criteria</p></td>
+<td><p>Verify by converting one or more TRLC files into ReqIF and checking a single ReqIF file is created.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-sw-req-reqif-out-file-name-default admonition" id="swe-req-rst-sw-req-reqif-out-file-name-default">
+<p class="admonition-title">sw_req_reqif_out_file_name_default</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>The output file name shall be ‘output.reqif’ by default.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Valid Status</p></td>
+<td><p>VALID_STATUS.valid</p></td>
+</tr>
+<tr class="row-even"><td><p>Note</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-odd"><td><p>Derived</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-even"><td><p>Verification Criteria</p></td>
+<td><p>Verify by converting one or more TRLC files into ReqIF and check if the output file name is ‘output.reqif’.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-sw-req-reqif-out-file-name-custom admonition" id="swe-req-rst-sw-req-reqif-out-file-name-custom">
+<p class="admonition-title">sw_req_reqif_out_file_name_custom</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>The output file name shall be customizable by command line arguments.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Valid Status</p></td>
+<td><p>VALID_STATUS.valid</p></td>
+</tr>
+<tr class="row-even"><td><p>Note</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-odd"><td><p>Derived</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-even"><td><p>Verification Criteria</p></td>
+<td><p>Verify by converting one or more TRLC files into ReqIF and check if the output file name is customizable.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-sw-req-reqif-top-level-default admonition" id="swe-req-rst-sw-req-reqif-top-level-default">
+<p class="admonition-title">sw_req_reqif_top_level_default</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>The top level heading shall be ‘Specification’ by default.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Valid Status</p></td>
+<td><p>VALID_STATUS.valid</p></td>
+</tr>
+<tr class="row-even"><td><p>Note</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-odd"><td><p>Derived</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-even"><td><p>Verification Criteria</p></td>
+<td><p>Verify the top level heading in the ReqIF file in single doc mode.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-sw-req-reqif-top-level-custom admonition" id="swe-req-rst-sw-req-reqif-top-level-custom">
+<p class="admonition-title">sw_req_reqif_top_level_custom</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>The top level heading shall be customizable by command line arguments.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Valid Status</p></td>
+<td><p>VALID_STATUS.valid</p></td>
+</tr>
+<tr class="row-even"><td><p>Note</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-odd"><td><p>Derived</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-even"><td><p>Verification Criteria</p></td>
+<td><p>Verify by specifying a custom top level heading in the ReqIF file in single doc mode.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="reqif-spec-relations">
+<span id="swe-req-rst-reqif-spec-relations"></span><h4>ReqIF Spec Relations<a class="headerlink" href="#reqif-spec-relations" title="Link to this heading"></a></h4>
+<div class="admonition-sw-req-reqif-relation admonition" id="swe-req-rst-sw-req-reqif-relation">
+<p class="admonition-title">sw_req_reqif_relation</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>The ReqIF converter shall convert a TRLC record reference attribute into a ReqIF SPEC-RELATION between the source and target spec-objects. Array record reference attributes shall produce one SPEC-RELATION per element. The field name shall be used as the relation type long-name.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Valid Status</p></td>
+<td><p>VALID_STATUS.valid</p></td>
+</tr>
+<tr class="row-even"><td><p>Note</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-odd"><td><p>Derived</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="#swe-req-rst-sw-req-reqif-record"><span class="std std-ref">SwRequirements.sw_req_reqif_record</span></a></p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td><p>Verification Criteria</p></td>
+<td><p>Verify by converting TRLC records with record reference fields and checking that the generated ReqIF document contains SPEC-RELATION entries linking source and target spec-objects with the correct relation type.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="reqif-archive">
+<span id="swe-req-rst-reqif-archive"></span><h4>ReqIF Archive<a class="headerlink" href="#reqif-archive" title="Link to this heading"></a></h4>
+<div class="admonition-sw-req-reqif-reqifz admonition" id="swe-req-rst-sw-req-reqif-reqifz">
+<p class="admonition-title">sw_req_reqif_reqifz</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>The ReqIF converter shall optionally archive the generated .reqif output when --reqifz is given. For each document a subfolder named after the document shall be created inside the output folder, the .reqif file shall be written there, and all files inside that subfolder shall be bundled into a .reqifz ZIP archive placed in the output folder. Each document produces one .reqifz file.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Valid Status</p></td>
+<td><p>VALID_STATUS.valid</p></td>
+</tr>
+<tr class="row-even"><td><p>Note</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-odd"><td><p>Derived</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="#swe-req-rst-sw-req-reqif"><span class="std std-ref">SwRequirements.sw_req_reqif</span></a></p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td><p>Verification Criteria</p></td>
+<td><p>Verify by converting TRLC files with --reqifz, checking that each document yields one .reqifz archive in the output folder whose contents include the generated .reqif file and any other files in the document subfolder.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="reqif-enumeration">
+<span id="swe-req-rst-reqif-enumeration"></span><h4>ReqIF Enumeration<a class="headerlink" href="#reqif-enumeration" title="Link to this heading"></a></h4>
+<div class="admonition-sw-req-reqif-enum admonition" id="swe-req-rst-sw-req-reqif-enum">
+<p class="admonition-title">sw_req_reqif_enum</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>The ReqIF converter shall convert a TRLC enumeration type attribute into a DATATYPE-DEFINITION-ENUMERATION and emit ATTRIBUTE-VALUE-ENUMERATION for the corresponding spec-object attribute.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Valid Status</p></td>
+<td><p>VALID_STATUS.valid</p></td>
+</tr>
+<tr class="row-even"><td><p>Note</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-odd"><td><p>Derived</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-even"><td><p>Verification Criteria</p></td>
+<td><p>Verify by converting a TRLC record with an enumeration field and checking that the generated ReqIF document contains a DATATYPE-DEFINITION-ENUMERATION and the spec-object contains an ATTRIBUTE-VALUE-ENUMERATION with the correct enum value reference.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-sw-req-reqif-enum-key-order admonition" id="swe-req-rst-sw-req-reqif-enum-key-order">
+<p class="admonition-title">sw_req_reqif_enum_key_order</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>The ENUM-VALUE keys inside a DATATYPE-DEFINITION-ENUMERATION shall start at 0 and be consecutive integers following the declaration order of the literals in the RSL enumeration.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Valid Status</p></td>
+<td><p>VALID_STATUS.valid</p></td>
+</tr>
+<tr class="row-even"><td><p>Note</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-odd"><td><p>Derived</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="#swe-req-rst-sw-req-reqif-enum"><span class="std std-ref">SwRequirements.sw_req_reqif_enum</span></a></p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td><p>Verification Criteria</p></td>
+<td><p>Verify that ENUM-VALUE KEY attributes in the generated ReqIF file are 0-based consecutive integers ordered as declared in the RSL model.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-sw-req-reqif-enum-null admonition" id="swe-req-rst-sw-req-reqif-enum-null">
+<p class="admonition-title">sw_req_reqif_enum_null</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>An optional TRLC enumeration attribute whose value is null shall be omitted from the generated ReqIF spec-object.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Valid Status</p></td>
+<td><p>VALID_STATUS.valid</p></td>
+</tr>
+<tr class="row-even"><td><p>Note</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-odd"><td><p>Derived</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="#swe-req-rst-sw-req-reqif-enum"><span class="std std-ref">SwRequirements.sw_req_reqif_enum</span></a></p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td><p>Verification Criteria</p></td>
+<td><p>Verify by converting a TRLC record with a null optional enumeration field and checking that the spec-object contains no ATTRIBUTE-VALUE-ENUMERATION for that field.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="reqif-render-configuration">
+<span id="swe-req-rst-reqif-render-configuration"></span><h4>ReqIF Render Configuration<a class="headerlink" href="#reqif-render-configuration" title="Link to this heading"></a></h4>
+<div class="admonition-sw-req-reqif-render-md admonition" id="swe-req-rst-sw-req-reqif-render-md">
+<p class="admonition-title">sw_req_reqif_render_md</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>The software shall convert strings in [CommonMark’s spec v0.31.2](<a class="reference external" href="https://spec.commonmark.org/0.31.2/">https://spec.commonmark.org/0.31.2/</a>) Markdown format to ReqIF XHTML if specified in the render configuration.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Valid Status</p></td>
+<td><p>VALID_STATUS.valid</p></td>
+</tr>
+<tr class="row-even"><td><p>Note</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-odd"><td><p>Derived</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-even"><td><p>Verification Criteria</p></td>
+<td><p>Verify by using strings in Markdown format according to CommonMark’s spec, that are converted to ReqIF XHTML.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-sw-req-reqif-render-gfm admonition" id="swe-req-rst-sw-req-reqif-render-gfm">
+<p class="admonition-title">sw_req_reqif_render_gfm</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>The software shall convert strings in [GitHub Flavored Markdown spec v0.29-gfm](<a class="reference external" href="https://github.github.com/gfm">https://github.github.com/gfm</a>) Markdown format to ReqIF XHTML if specified in the render configuration.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Valid Status</p></td>
+<td><p>VALID_STATUS.valid</p></td>
+</tr>
+<tr class="row-even"><td><p>Note</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-odd"><td><p>Derived</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-even"><td><p>Verification Criteria</p></td>
+<td><p>Verify by using strings in Markdown format according to GitHub Flavored Markdown spec, that are converted to ReqIF XHTML.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-sw-req-reqif-render-xhtml admonition" id="swe-req-rst-sw-req-reqif-render-xhtml">
+<p class="admonition-title">sw_req_reqif_render_xhtml</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>The software shall pass XHTML content through to the ReqIF XHTML attribute value without modification when the render configuration specifies the `xhtml` format.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Valid Status</p></td>
+<td><p>VALID_STATUS.valid</p></td>
+</tr>
+<tr class="row-even"><td><p>Note</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-odd"><td><p>Derived</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-even"><td><p>Verification Criteria</p></td>
+<td><p>Verify that XHTML content in a requirement attribute is included unchanged (inside the ReqIF XHTML wrapper) in the generated ReqIF output.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-sw-req-reqif-render-path admonition" id="swe-req-rst-sw-req-reqif-render-path">
+<p class="admonition-title">sw_req_reqif_render_path</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>The software shall convert a file path string attribute to a ReqIF XHTML `&lt;object&gt;` element with the MIME type derived from the file extension and a local reference to the file basename when the render configuration specifies the `path` format. The referenced file shall be copied to the output folder so that it is bundled into the .reqifz archive when the `--reqifz` option is used.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Valid Status</p></td>
+<td><p>VALID_STATUS.valid</p></td>
+</tr>
+<tr class="row-even"><td><p>Note</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-odd"><td><p>Derived</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-even"><td><p>Verification Criteria</p></td>
+<td><p>Verify that a requirement attribute configured with the `path` format generates a ReqIF XHTML attribute containing an `&lt;object&gt;` element with a correct `type` (MIME type) and `data` (local file basename) attributes, and that the referenced file is present in the output folder.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-sw-req-reqif-render-table-options admonition" id="swe-req-rst-sw-req-reqif-render-table-options">
+<p class="admonition-title">sw_req_reqif_render_table_options</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>The software shall apply optional table rendering options from the render configuration when converting Markdown (CommonMark or GFM) to ReqIF XHTML. Supported options are `border` (a CSS style value applied to the `&lt;table&gt;` element’s `style` attribute) and `headingStyle` (a CSS style value applied to each `&lt;th&gt;` cell’s `style` attribute).</p></td>
+</tr>
+<tr class="row-odd"><td><p>Valid Status</p></td>
+<td><p>VALID_STATUS.valid</p></td>
+</tr>
+<tr class="row-even"><td><p>Note</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-odd"><td><p>Derived</p></td>
+<td><p>N/A</p></td>
+</tr>
+<tr class="row-even"><td><p>Verification Criteria</p></td>
+<td><p>Verify that a GFM attribute configured with `tableOptions` containing `border` and `headingStyle` generates a ReqIF XHTML `&lt;table&gt;` with the specified `style` and `&lt;th&gt;` cells with the specified `style`.</p></td>
 </tr>
 </tbody>
 </table>

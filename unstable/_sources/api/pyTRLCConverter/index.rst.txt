@@ -25,6 +25,7 @@ Submodules
    /api/pyTRLCConverter/markdown_converter/index
    /api/pyTRLCConverter/plantuml/index
    /api/pyTRLCConverter/render_config/index
+   /api/pyTRLCConverter/reqif_converter/index
    /api/pyTRLCConverter/ret/index
    /api/pyTRLCConverter/rst_converter/index
    /api/pyTRLCConverter/translator/index
