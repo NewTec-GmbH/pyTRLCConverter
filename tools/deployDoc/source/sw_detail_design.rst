@@ -1,4 +1,12 @@
-SW-Detailed Design
+.. figure:: ../../../doc/images/NewTec_Logo_Slogan.png
+   :align: right
+   :figwidth: 350px
+ 
+.. container:: clearboth
+  
+  .. image alignment: Comment needed for clearboth container to work, otherwise the image overlaps with the text 
+
+SW Detailed Design
 ------------------
 
 This section provides a developer-focused view of the internal design of

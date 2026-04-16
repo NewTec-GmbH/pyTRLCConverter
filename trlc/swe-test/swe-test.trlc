@@ -3,7 +3,7 @@ package SwTests
 import Generic
 import SwRequirements
 
-section "SW-Test Cases" {
+section "SW Test Cases" {
 
     Generic.Info sw_test_info_about_sw_test {
         description = "This file contains the software test cases for the pyTRLCConverter tool."
