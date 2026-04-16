@@ -1,0 +1,12 @@
+{
+    "renderCfg": [{
+        "package": ".*",
+        "type": ".*",
+        "attribute": "description",
+        "format": "gfm",
+        "tableOptions": {
+            "border": "border: 1px solid black; border-collapse: collapse;",
+            "headingStyle": "background-color: #c0c0c0;"
+        }
+    }]
+}

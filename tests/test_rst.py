@@ -463,13 +463,12 @@ def test_tc_rst_single_doc_exclude(record_property, capsys, monkeypatch, tmp_pat
     output_file_name = "myReq.rst"
     monkeypatch.setattr("sys.argv", [
         "pyTRLCConverter",
-        "--source", "./tests/utils",
+        "--source", "./tests/utils/req.rsl",
+        "--source", "./tests/utils/single_req_no_section.trlc",
+        "--source", "./tests/utils/single_req_with_link.trlc",
+        "--source", "./tests/utils/single_req_with_section.trlc",
         "--exclude", "./tests/utils/single_req_no_section.trlc",
         "--exclude", "./tests/utils/single_req_with_section.trlc",
-        "--exclude", "./tests/utils/single_req_description_md.trlc",
-        "--exclude", "./tests/utils/single_req_description_gfm.trlc",
-        "--exclude", "./tests/utils/single_req_description_rst.trlc",
-        "--exclude", "./tests/utils/multi_req_with_link.trlc",
         "--out", str(tmp_path),
         "rst",
         "--single-document",
@@ -528,7 +527,10 @@ def test_tc_rst_multi_doc(record_property, capsys, monkeypatch, tmp_path):
     # Mock program arguments to simulate running the script with inbuild reStructuredText converter.
     monkeypatch.setattr("sys.argv", [
         "pyTRLCConverter",
-        "--source", "./tests/utils",
+        "--source", "./tests/utils/req.rsl",
+        "--source", "./tests/utils/single_req_no_section.trlc",
+        "--source", "./tests/utils/single_req_with_link.trlc",
+        "--source", "./tests/utils/single_req_with_section.trlc",
         "--out", str(tmp_path),
         "rst"
     ])

@@ -1,0 +1,29 @@
+{
+    "renderCfg": 
+    [
+        {
+            "package": ".*",
+            "type": "Image",
+            "attribute": "caption",
+            "format": "gfm"
+        },
+        {
+            "package": ".*",
+            "type": "Image",
+            "attribute": "file_path",
+            "format": "path"
+        },
+        {
+            "package": ".*",
+            "type": "Information",
+            "attribute": "description",
+            "format": "gfm"
+        },
+        {
+            "package": ".*",
+            "type": "Requirement",
+            "attribute": "description",
+            "format": "gfm"
+        }
+    ]   
+}

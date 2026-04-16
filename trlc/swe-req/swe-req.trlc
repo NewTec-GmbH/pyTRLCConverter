@@ -465,6 +465,147 @@ section "SW Requirements" {
             }
         }
 
+        section "ReqIF" {
+
+            Generic.Info sw_req_info_reqif {
+                description = "The following requirements describe the ReqIF destination format supported by the software."
+            }
+
+            SwReq sw_req_reqif {
+                description = "The software shall support the conversion into ReqIF format v1.2."
+                verification_criteria = "Verify by converting one or more TRLC files into ReqIF format."
+                valid_status = AbstractRequirements.VALID_STATUS.valid
+            }
+
+            SwReq sw_req_reqif_section {
+                description = "The ReqIF converter shall convert a TRLC section into a SPEC-HIERARCHY node (no SPEC-OBJECT created) by reusing the last preceding TRLC record's SPEC-OBJECT as the mandatory SPEC-OBJECT-REF. If no preceding record exists, a warning shall be emitted and the section shall be omitted from the hierarchy."
+                verification_criteria = "Verify by converting TRLC sections into ReqIF and checking that section names appear only as hierarchy LONG-NAMEs, not in SPEC-OBJECTS, and that the SPEC-OBJECT-REF points to the preceding record."
+                valid_status = AbstractRequirements.VALID_STATUS.valid
+            }
+
+            SwReq sw_req_reqif_record {
+                description = "The ReqIF converter shall convert the attributes of a TRLC record into ReqIF SpecObject attributes."
+                verification_criteria = "Verify by converting one or more TRLC records and checking generated ReqIF SpecObjects."
+                valid_status = AbstractRequirements.VALID_STATUS.valid
+            }
+
+            section "ReqIF Multiple Documents Mode" {
+                SwReq sw_req_reqif_multiple_doc_mode {
+                    description = "The software shall create a ReqIF file for each TRLC file by default."
+                    verification_criteria = "Verify by converting one or more TRLC files into ReqIF and checking one ReqIF file is created for each TRLC file."
+                    valid_status = AbstractRequirements.VALID_STATUS.valid
+                }
+            }
+
+            section "ReqIF Single Document Mode" {
+                SwReq sw_req_reqif_single_doc_mode {
+                    description = "The software shall create a single ReqIF file which combines all TRLC files if requested by command line arguments."
+                    verification_criteria = "Verify by converting one or more TRLC files into ReqIF and checking a single ReqIF file is created."
+                    valid_status = AbstractRequirements.VALID_STATUS.valid
+                }
+
+                SwReq sw_req_reqif_out_file_name_default {
+                    description = "The output file name shall be 'output.reqif' by default."
+                    verification_criteria = "Verify by converting one or more TRLC files into ReqIF and check if the output file name is 'output.reqif'."
+                    valid_status = AbstractRequirements.VALID_STATUS.valid
+                }
+
+                SwReq sw_req_reqif_out_file_name_custom {
+                    description = "The output file name shall be customizable by command line arguments."
+                    verification_criteria = "Verify by converting one or more TRLC files into ReqIF and check if the output file name is customizable."
+                    valid_status = AbstractRequirements.VALID_STATUS.valid
+                }
+
+                SwReq sw_req_reqif_top_level_default {
+                    description = "The top level heading shall be 'Specification' by default."
+                    verification_criteria = "Verify the top level heading in the ReqIF file in single doc mode."
+                    valid_status = AbstractRequirements.VALID_STATUS.valid
+                }
+
+                SwReq sw_req_reqif_top_level_custom {
+                    description = "The top level heading shall be customizable by command line arguments."
+                    verification_criteria = "Verify by specifying a custom top level heading in the ReqIF file in single doc mode."
+                    valid_status = AbstractRequirements.VALID_STATUS.valid
+                }
+            }
+
+            section "ReqIF Spec Relations" {
+
+                SwReq sw_req_reqif_relation {
+                    description = "The ReqIF converter shall convert a TRLC record reference attribute into a ReqIF SPEC-RELATION between the source and target spec-objects. Array record reference attributes shall produce one SPEC-RELATION per element. The field name shall be used as the relation type long-name."
+                    verification_criteria = "Verify by converting TRLC records with record reference fields and checking that the generated ReqIF document contains SPEC-RELATION entries linking source and target spec-objects with the correct relation type."
+                    valid_status = AbstractRequirements.VALID_STATUS.valid
+                    derived = [sw_req_reqif_record]
+                }
+            }
+
+            section "ReqIF Archive" {
+
+                SwReq sw_req_reqif_reqifz {
+                    description = "The ReqIF converter shall optionally archive the generated .reqif output when --reqifz is given. For each document a subfolder named after the document shall be created inside the output folder, the .reqif file shall be written there, and all files inside that subfolder shall be bundled into a .reqifz ZIP archive placed in the output folder. Each document produces one .reqifz file."
+                    verification_criteria = "Verify by converting TRLC files with --reqifz, checking that each document yields one .reqifz archive in the output folder whose contents include the generated .reqif file and any other files in the document subfolder."
+                    valid_status = AbstractRequirements.VALID_STATUS.valid
+                    derived = [sw_req_reqif]
+                }
+            }
+
+            section "ReqIF Enumeration" {
+
+                SwReq sw_req_reqif_enum {
+                    description = "The ReqIF converter shall convert a TRLC enumeration type attribute into a DATATYPE-DEFINITION-ENUMERATION and emit ATTRIBUTE-VALUE-ENUMERATION for the corresponding spec-object attribute."
+                    verification_criteria = "Verify by converting a TRLC record with an enumeration field and checking that the generated ReqIF document contains a DATATYPE-DEFINITION-ENUMERATION and the spec-object contains an ATTRIBUTE-VALUE-ENUMERATION with the correct enum value reference."
+                    valid_status = AbstractRequirements.VALID_STATUS.valid
+                }
+
+                SwReq sw_req_reqif_enum_key_order {
+                    description = "The ENUM-VALUE keys inside a DATATYPE-DEFINITION-ENUMERATION shall start at 0 and be consecutive integers following the declaration order of the literals in the RSL enumeration."
+                    verification_criteria = "Verify that ENUM-VALUE KEY attributes in the generated ReqIF file are 0-based consecutive integers ordered as declared in the RSL model."
+                    valid_status = AbstractRequirements.VALID_STATUS.valid
+                    derived = [sw_req_reqif_enum]
+                }
+
+                SwReq sw_req_reqif_enum_null {
+                    description = "An optional TRLC enumeration attribute whose value is null shall be omitted from the generated ReqIF spec-object."
+                    verification_criteria = "Verify by converting a TRLC record with a null optional enumeration field and checking that the spec-object contains no ATTRIBUTE-VALUE-ENUMERATION for that field."
+                    valid_status = AbstractRequirements.VALID_STATUS.valid
+                    derived = [sw_req_reqif_enum]
+                }
+            }
+
+            section "ReqIF Render Configuration" {
+
+                SwReq sw_req_reqif_render_md {
+                    description = "The software shall convert strings in [CommonMark's spec v0.31.2](https://spec.commonmark.org/0.31.2/) Markdown format to ReqIF XHTML if specified in the render configuration."
+                    verification_criteria = "Verify by using strings in Markdown format according to CommonMark's spec, that are converted to ReqIF XHTML."
+                    valid_status = AbstractRequirements.VALID_STATUS.valid
+                }
+
+                SwReq sw_req_reqif_render_gfm {
+                    description = "The software shall convert strings in [GitHub Flavored Markdown spec v0.29-gfm](https://github.github.com/gfm) Markdown format to ReqIF XHTML if specified in the render configuration."
+                    verification_criteria = "Verify by using strings in Markdown format according to GitHub Flavored Markdown spec, that are converted to ReqIF XHTML."
+                    valid_status = AbstractRequirements.VALID_STATUS.valid
+                }
+
+                SwReq sw_req_reqif_render_xhtml {
+                    description = "The software shall pass XHTML content through to the ReqIF XHTML attribute value without modification when the render configuration specifies the `xhtml` format."
+                    verification_criteria = "Verify that XHTML content in a requirement attribute is included unchanged (inside the ReqIF XHTML wrapper) in the generated ReqIF output."
+                    valid_status = AbstractRequirements.VALID_STATUS.valid
+                }
+
+                SwReq sw_req_reqif_render_path {
+                    description = "The software shall convert a file path string attribute to a ReqIF XHTML `<object>` element with the MIME type derived from the file extension and a local reference to the file basename when the render configuration specifies the `path` format. The referenced file shall be copied to the output folder so that it is bundled into the .reqifz archive when the `--reqifz` option is used."
+                    verification_criteria = "Verify that a requirement attribute configured with the `path` format generates a ReqIF XHTML attribute containing an `<object>` element with a correct `type` (MIME type) and `data` (local file basename) attributes, and that the referenced file is present in the output folder."
+                    valid_status = AbstractRequirements.VALID_STATUS.valid
+                }
+
+                SwReq sw_req_reqif_render_table_options {
+                    description = "The software shall apply optional table rendering options from the render configuration when converting Markdown (CommonMark or GFM) to ReqIF XHTML. Supported options are `border` (a CSS style value applied to the `<table>` element's `style` attribute) and `headingStyle` (a CSS style value applied to each `<th>` cell's `style` attribute)."
+                    verification_criteria = "Verify that a GFM attribute configured with `tableOptions` containing `border` and `headingStyle` generates a ReqIF XHTML `<table>` with the specified `style` and `<th>` cells with the specified `style`."
+                    valid_status = AbstractRequirements.VALID_STATUS.valid
+                }
+            }
+        }
+
         section "Docx" {
 
             Generic.Info sw_req_info_docx {

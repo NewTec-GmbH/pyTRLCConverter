@@ -1,0 +1,5 @@
+package Requirements
+
+Requirement req_id_xhtml {
+    description = "<p>XHTML passthrough content with <strong>bold</strong> and <em>italic</em> text.</p>"
+}

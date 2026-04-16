@@ -1,0 +1,6 @@
+package Requirements
+
+type RequirementWithPath {
+    description String
+    file_path   String
+}

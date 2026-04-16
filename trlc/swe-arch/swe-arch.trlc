@@ -359,6 +359,50 @@ section "SW Architecture" {
                 ]
             }
         }
+        section "ReqIF Converter" {
+            Generic.PlantUML sw_arch_comp_reqif_converter_diagram {
+                    caption = "Class Diagram for ReqIF-Converter"
+                    file_path ="../../doc/architecture/components/comp_reqif_converter.puml"
+            }
+            SwArchSpec sw_arch_component_reqif_converter {
+                description =
+                    """
+                    The ReqIF Converter implements the ReqIF output format conversion.
+
+                    * Registers the `reqif` output format and options.
+                    * Creates sections and records in ReqIF format.
+                    * Converts configured CommonMark and GFM fields into ReqIF XHTML.
+                    * Passes configured XHTML fields through to ReqIF XHTML without modification.
+                    * Converts TRLC enumeration type attributes to DATATYPE-DEFINITION-ENUMERATION with 0-based consecutive ENUM-VALUE keys in RSL declaration order.
+                    * Omits optional enumeration attributes with null value from the generated spec-object.
+                    * Converts TRLC record reference attributes to ReqIF SPEC-RELATION entries.
+                    * Optionally archives the generated .reqif output as a .reqifz ZIP archive.
+                    """
+                verification_criteria = "Call the tool using the `pyTRLCConverter` frontend with reqif output format."
+                satisfies = [
+                    SwRequirements.sw_req_reqif,
+                    SwRequirements.sw_req_reqif_section,
+                    SwRequirements.sw_req_reqif_record,
+                    SwRequirements.sw_req_reqif_multiple_doc_mode,
+                    SwRequirements.sw_req_reqif_single_doc_mode,
+                    SwRequirements.sw_req_reqif_out_file_name_default,
+                    SwRequirements.sw_req_reqif_out_file_name_custom,
+                    SwRequirements.sw_req_reqif_top_level_default,
+                    SwRequirements.sw_req_reqif_top_level_custom,
+                    SwRequirements.sw_req_reqif_render_md,
+                    SwRequirements.sw_req_reqif_render_gfm,
+                    SwRequirements.sw_req_reqif_render_xhtml,
+                    SwRequirements.sw_req_reqif_render_path,
+                    SwRequirements.sw_req_reqif_render_table_options,
+                    SwRequirements.sw_req_reqif_enum,
+                    SwRequirements.sw_req_reqif_enum_key_order,
+                    SwRequirements.sw_req_reqif_enum_null,
+                    SwRequirements.sw_req_reqif_relation,
+                    SwRequirements.sw_req_reqif_reqifz,
+                    SwRequirements.sw_req_destination_format
+                ]
+            }
+        }
         section "DocX Converter" {
             Generic.PlantUML sw_arch_comp_docx_converter_diagram {
                     caption = "Class Diagram for DocX-Converter"

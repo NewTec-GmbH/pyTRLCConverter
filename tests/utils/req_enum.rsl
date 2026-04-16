@@ -1,0 +1,12 @@
+package Requirements
+
+enum Status {
+    Draft
+    Approved
+    Rejected
+}
+
+type Requirement {
+    description         String
+    status  optional    Status
+}

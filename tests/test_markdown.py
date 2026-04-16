@@ -491,13 +491,12 @@ def test_tc_markdown_single_doc_exclude(record_property, capsys, monkeypatch, tm
     output_file_name = "myReq.md"
     monkeypatch.setattr("sys.argv", [
         "pyTRLCConverter",
-        "--source", "./tests/utils",
+        "--source", "./tests/utils/req.rsl",
+        "--source", "./tests/utils/single_req_no_section.trlc",
+        "--source", "./tests/utils/single_req_with_link.trlc",
+        "--source", "./tests/utils/single_req_with_section.trlc",
         "--exclude", "./tests/utils/single_req_no_section.trlc",
         "--exclude", "./tests/utils/single_req_with_section.trlc",
-        "--exclude", "./tests/utils/single_req_description_md.trlc",
-        "--exclude", "./tests/utils/single_req_description_gfm.trlc",
-        "--exclude", "./tests/utils/single_req_description_rst.trlc",
-        "--exclude", "./tests/utils/multi_req_with_link.trlc",
         "--out", str(tmp_path),
         "markdown",
         "--single-document",
@@ -594,7 +593,10 @@ def test_tc_markdown_multi_doc(record_property, capsys, monkeypatch, tmp_path):
     # Mock program arguments to simulate running the script with inbuild Markdown converter.
     monkeypatch.setattr("sys.argv", [
         "pyTRLCConverter",
-        "--source", "./tests/utils",
+        "--source", "./tests/utils/req.rsl",
+        "--source", "./tests/utils/single_req_no_section.trlc",
+        "--source", "./tests/utils/single_req_with_link.trlc",
+        "--source", "./tests/utils/single_req_with_section.trlc",
         "--out", str(tmp_path),
         "markdown"
     ])

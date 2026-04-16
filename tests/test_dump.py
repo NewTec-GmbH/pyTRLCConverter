@@ -43,11 +43,10 @@ def test_tc_ascii_conversion(record_property, capsys, monkeypatch):
     # Mock program arguments to simulate running the script with inbuild reStructuredText converter.
     monkeypatch.setattr("sys.argv", [
         "pyTRLCConverter",
-        "--source", "./tests/utils",
-        "--exclude", "./tests/utils/single_req_description_md.trlc",
-        "--exclude", "./tests/utils/single_req_description_gfm.trlc",
-        "--exclude", "./tests/utils/single_req_description_rst.trlc",
-        "--exclude", "./tests/utils/multi_req_with_link.trlc",
+        "--source", "./tests/utils/req.rsl",
+        "--source", "./tests/utils/single_req_no_section.trlc",
+        "--source", "./tests/utils/single_req_with_link.trlc",
+        "--source", "./tests/utils/single_req_with_section.trlc",
         "dump"
     ])
 

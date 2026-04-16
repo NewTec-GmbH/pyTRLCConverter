@@ -21,11 +21,12 @@ classifiers = [
 ]
 
 dependencies = [
-    "toml >= 0.10.2",
-    "requests >= 2.32.0",
-    "python-docx >= 1.2.0",
-    "trlc == 2.0.*",
-    "marko >= 2.2.1"
+  "toml >= 0.10.2",
+  "requests >= 2.32.0",
+  "python-docx >= 1.2.0",
+  "trlc == 2.0.*",
+  "marko >= 2.2.1",
+  "reqif >= 0.0.48"
 ]
 
 [project.optional-dependencies]
@@ -43,7 +44,8 @@ dev = [
   "sphinxcontrib-plantuml >= 0.30",
   "sphinx-autoapi >= 0.5.0",
   "m2r >= 0.3.1",
-  "bmw-lobster == 1.0.*"
+  "bmw-lobster == 1.0.*",
+  "reqif >= 0.0.48"
 ]
 
 [project.urls]
