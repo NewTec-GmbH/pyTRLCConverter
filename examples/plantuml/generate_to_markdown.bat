@@ -30,7 +30,7 @@ if %errorlevel% equ 0 goto skip_download_plantuml
 
 if not exist "%PLANTUML%" (
     echo Download PlantUML java program...
-    powershell -Command "Invoke-WebRequest https://github.com/plantuml/plantuml/releases/download/v1.2024.8/plantuml-1.2024.8.jar -OutFile %PLANTUML%"
+    powershell -Command "Invoke-WebRequest https://github.com/plantuml/plantuml/releases/download/v1.2026.1/plantuml-1.2026.1.jar -OutFile %PLANTUML%"
 )
 :skip_download_plantuml
 

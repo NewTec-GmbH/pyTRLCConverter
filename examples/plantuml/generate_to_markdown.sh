@@ -29,7 +29,7 @@ then
     if [ ! -f "$PLANTUML" ]
     then
         echo "Download PlantUML java program..."
-        wget https://github.com/plantuml/plantuml/releases/download/v1.2024.8/plantuml-1.2024.8.jar -O $PLANTUML
+        wget https://github.com/plantuml/plantuml/releases/download/v1.2026.1/plantuml-1.2026.1.jar -O $PLANTUML
     fi
 fi
 
