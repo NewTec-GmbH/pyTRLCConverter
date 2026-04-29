@@ -1,0 +1,442 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pyTRLCConverter.render_config &mdash; pyTRLCConverter  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=563f12fe" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/version_selector.js?v=02fa0f40"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="pyTRLCConverter.reqif_converter" href="../reqif_converter/index.html" />
+    <link rel="prev" title="pyTRLCConverter.plantuml" href="../plantuml/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #0C2C40" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            pyTRLCConverter
+              <img src="../../../_static/NewTec_Logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../sw_requirements.html">SW Requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../sw_architecture.html">SW Architecture</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../sw_detail_design.html">SW Detailed Design</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../sw_detail_design.html#api-reference">API Reference</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../index.html">pyTRLCConverter</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../index.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../sw_tests.html">SW Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../sw_tracing_report.html">SW Tracing Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../sw_test_result_report.html">SW Test Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../coverage_report.html">Coverage Report</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../license_include.html">License information</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #0C2C40" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">pyTRLCConverter</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../sw_detail_design.html">SW Detailed Design</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">pyTRLCConverter</a></li>
+      <li class="breadcrumb-item active">pyTRLCConverter.render_config</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/api/pyTRLCConverter/render_config/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-pyTRLCConverter.render_config">
+<span id="pytrlcconverter-render-config"></span><h1>pyTRLCConverter.render_config<a class="headerlink" href="#module-pyTRLCConverter.render_config" title="Link to this heading"></a></h1>
+<p>Provides the render configuration to all converters.</p>
+<p>Author: Andreas Merkle (<a class="reference external" href="mailto:andreas&#46;merkle&#37;&#52;&#48;newtec&#46;de">andreas<span>&#46;</span>merkle<span>&#64;</span>newtec<span>&#46;</span>de</a>)</p>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyTRLCConverter.render_config.RenderConfig" title="pyTRLCConverter.render_config.RenderConfig"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RenderConfig</span></code></a></p></td>
+<td><p>Render configuration provider.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyTRLCConverter.render_config.RenderConfig">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyTRLCConverter.render_config.</span></span><span class="sig-name descname"><span class="pre">RenderConfig</span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/render_config.html#RenderConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.render_config.RenderConfig" title="Link to this definition"></a></dt>
+<dd><p>Render configuration provider.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.render_config.RenderConfig._is_package_match">
+<span class="sig-name descname"><span class="pre">_is_package_match</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trlc_package</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/render_config.html#RenderConfig._is_package_match"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.render_config.RenderConfig._is_package_match" title="Link to this definition"></a></dt>
+<dd><p>Checks if the given TRLC package matches the package pattern in the given item.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>item</strong> (<em>dict</em>) – Single render configuration item.</p></li>
+<li><p><strong>trlc_package</strong> (<em>str</em>) – The TRLC package.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>If the given TRLC package matches the package pattern in the given item.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.render_config.RenderConfig._is_type_attribute_match">
+<span class="sig-name descname"><span class="pre">_is_type_attribute_match</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trlc_type_attribute</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/render_config.html#RenderConfig._is_type_attribute_match"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.render_config.RenderConfig._is_type_attribute_match" title="Link to this definition"></a></dt>
+<dd><p>Checks if the given TRLC type attribute matches the type attribute pattern in the given item.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>item</strong> (<em>dict</em>) – Single render configuration item.</p></li>
+<li><p><strong>trlc_type</strong> (<em>str</em>) – The TRLC type attribute.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>If the given TRLC type attribute matches the type attribute pattern in the given item.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.render_config.RenderConfig._is_type_match">
+<span class="sig-name descname"><span class="pre">_is_type_match</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trlc_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/render_config.html#RenderConfig._is_type_match"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.render_config.RenderConfig._is_type_match" title="Link to this definition"></a></dt>
+<dd><p>Checks if the given TRLC type matches the type pattern in the given item.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>item</strong> (<em>dict</em>) – Single render configuration item.</p></li>
+<li><p><strong>trlc_type</strong> (<em>str</em>) – The TRLC type.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>If the given TRLC type matches the type pattern in the given item.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.render_config.RenderConfig.get_format_specifier">
+<span class="sig-name descname"><span class="pre">get_format_specifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trlc_package</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trlc_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trlc_type_attribute</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/render_config.html#RenderConfig.get_format_specifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.render_config.RenderConfig.get_format_specifier" title="Link to this definition"></a></dt>
+<dd><p>Returns the format specifier for the given TRLC package, type and attribute.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>trlc_package</strong> (<em>str</em>) – The TRLC package.</p></li>
+<li><p><strong>trlc_type</strong> (<em>str</em>) – The TRLC type.</p></li>
+<li><p><strong>trlc_type_attribute</strong> (<em>str</em>) – The TRLC type attribute.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The format specifier for the given TRLC package, type and attribute.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.render_config.RenderConfig.get_table_options">
+<span class="sig-name descname"><span class="pre">get_table_options</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trlc_package</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trlc_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trlc_type_attribute</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/render_config.html#RenderConfig.get_table_options"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.render_config.RenderConfig.get_table_options" title="Link to this definition"></a></dt>
+<dd><p>Returns the table rendering options for the given TRLC package, type and attribute.</p>
+<p>The returned dictionary may contain the following optional keys:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;border&quot;</span></code> (str): CSS style value applied to the <code class="docutils literal notranslate"><span class="pre">&lt;table&gt;</span></code> element’s <code class="docutils literal notranslate"><span class="pre">style</span></code>
+attribute (e.g. <code class="docutils literal notranslate"><span class="pre">&quot;border:</span> <span class="pre">1px</span> <span class="pre">solid</span> <span class="pre">black;</span> <span class="pre">border-collapse:</span> <span class="pre">collapse;&quot;</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;headingStyle&quot;</span></code> (str): CSS style value applied to each <code class="docutils literal notranslate"><span class="pre">&lt;th&gt;</span></code> cell’s <code class="docutils literal notranslate"><span class="pre">style</span></code>
+attribute (e.g. <code class="docutils literal notranslate"><span class="pre">&quot;background-color:</span> <span class="pre">#c0c0c0;&quot;</span></code>).</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>trlc_package</strong> (<em>str</em>) – The TRLC package.</p></li>
+<li><p><strong>trlc_type</strong> (<em>str</em>) – The TRLC type.</p></li>
+<li><p><strong>trlc_type_attribute</strong> (<em>str</em>) – The TRLC type attribute.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Table options dict, or empty dict if no table options are configured.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.render_config.RenderConfig.is_format_gfm">
+<span class="sig-name descname"><span class="pre">is_format_gfm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trlc_package</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trlc_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trlc_type_attribute</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/render_config.html#RenderConfig.is_format_gfm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.render_config.RenderConfig.is_format_gfm" title="Link to this definition"></a></dt>
+<dd><p>Checks if the given TRLC package, type and attribute should be rendered in GitHub Flavored Markdown format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>trlc_package</strong> (<em>str</em>) – The TRLC package.</p></li>
+<li><p><strong>trlc_type</strong> (<em>str</em>) – The TRLC type.</p></li>
+<li><p><strong>trlc_type_attribute</strong> (<em>str</em>) – The TRLC type attribute.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the given TRLC attribute has GitHub Flavored Markdown format, otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.render_config.RenderConfig.is_format_md">
+<span class="sig-name descname"><span class="pre">is_format_md</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trlc_package</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trlc_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trlc_type_attribute</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/render_config.html#RenderConfig.is_format_md"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.render_config.RenderConfig.is_format_md" title="Link to this definition"></a></dt>
+<dd><p>Checks if the given TRLC package, type and attribute should be rendered in markdown format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>trlc_package</strong> (<em>str</em>) – The TRLC package.</p></li>
+<li><p><strong>trlc_type</strong> (<em>str</em>) – The TRLC type.</p></li>
+<li><p><strong>trlc_type_attribute</strong> (<em>str</em>) – The TRLC type attribute.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the given TRLC attribute has Markdown format, otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.render_config.RenderConfig.is_format_path">
+<span class="sig-name descname"><span class="pre">is_format_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trlc_package</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trlc_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trlc_type_attribute</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/render_config.html#RenderConfig.is_format_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.render_config.RenderConfig.is_format_path" title="Link to this definition"></a></dt>
+<dd><p>Checks if the given TRLC package, type and attribute should be rendered as a file path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>trlc_package</strong> (<em>str</em>) – The TRLC package.</p></li>
+<li><p><strong>trlc_type</strong> (<em>str</em>) – The TRLC type.</p></li>
+<li><p><strong>trlc_type_attribute</strong> (<em>str</em>) – The TRLC type attribute.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the given TRLC attribute has path format, otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.render_config.RenderConfig.is_format_plain">
+<span class="sig-name descname"><span class="pre">is_format_plain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trlc_package</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trlc_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trlc_type_attribute</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/render_config.html#RenderConfig.is_format_plain"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.render_config.RenderConfig.is_format_plain" title="Link to this definition"></a></dt>
+<dd><p>Checks if the given TRLC package, type and attribute should be rendered in plain text format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>trlc_package</strong> (<em>str</em>) – The TRLC package.</p></li>
+<li><p><strong>trlc_type</strong> (<em>str</em>) – The TRLC type.</p></li>
+<li><p><strong>trlc_type_attribute</strong> (<em>str</em>) – The TRLC type attribute.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the given TRLC attribute has plain text format, otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.render_config.RenderConfig.is_format_rst">
+<span class="sig-name descname"><span class="pre">is_format_rst</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trlc_package</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trlc_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trlc_type_attribute</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/render_config.html#RenderConfig.is_format_rst"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.render_config.RenderConfig.is_format_rst" title="Link to this definition"></a></dt>
+<dd><p>Checks if the given TRLC package, type and attribute should be rendered in reStructuredText format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>trlc_package</strong> (<em>str</em>) – The TRLC package.</p></li>
+<li><p><strong>trlc_type</strong> (<em>str</em>) – The TRLC type.</p></li>
+<li><p><strong>trlc_type_attribute</strong> (<em>str</em>) – The TRLC type attribute.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the given TRLC attribute has reStructuredText format, otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.render_config.RenderConfig.is_format_xhtml">
+<span class="sig-name descname"><span class="pre">is_format_xhtml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trlc_package</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trlc_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trlc_type_attribute</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/render_config.html#RenderConfig.is_format_xhtml"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.render_config.RenderConfig.is_format_xhtml" title="Link to this definition"></a></dt>
+<dd><p>Checks if the given TRLC package, type and attribute should be rendered in XHTML format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>trlc_package</strong> (<em>str</em>) – The TRLC package.</p></li>
+<li><p><strong>trlc_type</strong> (<em>str</em>) – The TRLC type.</p></li>
+<li><p><strong>trlc_type_attribute</strong> (<em>str</em>) – The TRLC type attribute.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the given TRLC attribute has XHTML format, otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.render_config.RenderConfig.load">
+<span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/render_config.html#RenderConfig.load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.render_config.RenderConfig.load" title="Link to this definition"></a></dt>
+<dd><p>Loads the render configuration from the given file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file_name</strong> (<em>str</em>) – Path to the render configuration file.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if successful, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.render_config.RenderConfig.FORMAT_SPECIFIER_GFM">
+<span class="sig-name descname"><span class="pre">FORMAT_SPECIFIER_GFM</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'gfm'</span></span><a class="headerlink" href="#pyTRLCConverter.render_config.RenderConfig.FORMAT_SPECIFIER_GFM" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.render_config.RenderConfig.FORMAT_SPECIFIER_MD">
+<span class="sig-name descname"><span class="pre">FORMAT_SPECIFIER_MD</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'md'</span></span><a class="headerlink" href="#pyTRLCConverter.render_config.RenderConfig.FORMAT_SPECIFIER_MD" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.render_config.RenderConfig.FORMAT_SPECIFIER_PATH">
+<span class="sig-name descname"><span class="pre">FORMAT_SPECIFIER_PATH</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'path'</span></span><a class="headerlink" href="#pyTRLCConverter.render_config.RenderConfig.FORMAT_SPECIFIER_PATH" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.render_config.RenderConfig.FORMAT_SPECIFIER_PLAIN">
+<span class="sig-name descname"><span class="pre">FORMAT_SPECIFIER_PLAIN</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'plain'</span></span><a class="headerlink" href="#pyTRLCConverter.render_config.RenderConfig.FORMAT_SPECIFIER_PLAIN" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.render_config.RenderConfig.FORMAT_SPECIFIER_RST">
+<span class="sig-name descname"><span class="pre">FORMAT_SPECIFIER_RST</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'rst'</span></span><a class="headerlink" href="#pyTRLCConverter.render_config.RenderConfig.FORMAT_SPECIFIER_RST" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.render_config.RenderConfig.FORMAT_SPECIFIER_XHTML">
+<span class="sig-name descname"><span class="pre">FORMAT_SPECIFIER_XHTML</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'xhtml'</span></span><a class="headerlink" href="#pyTRLCConverter.render_config.RenderConfig.FORMAT_SPECIFIER_XHTML" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.render_config.RenderConfig._cfg">
+<span class="sig-name descname"><span class="pre">_cfg</span></span><a class="headerlink" href="#pyTRLCConverter.render_config.RenderConfig._cfg" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../plantuml/index.html" class="btn btn-neutral float-left" title="pyTRLCConverter.plantuml" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../reqif_converter/index.html" class="btn btn-neutral float-right" title="pyTRLCConverter.reqif_converter" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024 - 2026, NewTec GmbH.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

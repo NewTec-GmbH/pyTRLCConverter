@@ -1,0 +1,855 @@
+pyTRLCConverter.reqif_converter
+===============================
+
+.. py:module:: pyTRLCConverter.reqif_converter
+
+.. autoapi-nested-parse::
+
+   Converter to ReqIF format.
+
+   Author: Andreas Merkle (andreas.merkle@newtec.de)
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   pyTRLCConverter.reqif_converter.ReqifConverter
+
+
+Module Contents
+---------------
+
+.. py:class:: ReqifConverter(args: Any)
+
+   Bases: :py:obj:`pyTRLCConverter.base_converter.BaseConverter`
+
+   .. autoapi-inheritance-diagram:: pyTRLCConverter.reqif_converter.ReqifConverter
+      :parts: 1
+      :private-bases:
+
+
+   ReqifConverter provides functionality for converting to ReqIF format.
+
+
+   .. py:method:: _append_hierarchy(spec_object_identifier: str, level: int, long_name: str, is_container: bool) -> None
+
+      Append a new ReqIFSpecHierarchy node at the given nesting level.
+
+      The internal hierarchy stack is pruned so the new node is correctly
+      attached either as a child of the current parent or as a root entry.
+
+      :param spec_object_identifier: Identifier of the spec-object this hierarchy node references.
+      :type spec_object_identifier: str
+      :param level: TRLC nesting level (0 = top-level).
+      :type level: int
+      :param long_name: Display name for the hierarchy node.
+      :type long_name: str
+      :param is_container: If True, keep the new hierarchy node on the stack as a parent.
+      :type is_container: bool
+
+
+
+   .. py:method:: _apply_table_options(html_text: str, table_options: dict) -> str
+      :staticmethod:
+
+
+      Apply table rendering options to generated HTML.
+
+      Replaces the plain ``<table>`` tag with one carrying a ``style`` attribute when
+      ``"border"`` is set, and injects a ``style`` attribute into every ``<th>`` tag
+      when ``"headingStyle"`` is set.  Values are HTML-escaped before insertion.
+
+      :param html_text: HTML string produced by the Markdown renderer.
+      :type html_text: str
+      :param table_options: Table options with optional keys ``"border"`` (str) and
+                            ``"headingStyle"`` (str), both interpreted as CSS style values.
+      :type table_options: dict
+
+      :returns: HTML string with table styling applied.
+      :rtype: str
+
+
+
+   .. py:method:: _build_reqif_bundle() -> reqif.reqif_bundle.ReqIFBundle
+
+      Assemble a complete ReqIFBundle from the accumulated spec objects, hierarchies and attribute definitions.
+
+      :returns: The assembled ReqIF bundle ready for unparsing.
+      :rtype: ReqIFBundle
+
+
+
+   .. py:method:: _build_spec_relations() -> list[reqif.models.reqif_spec_relation.ReqIFSpecRelation]
+
+      Build ReqIF spec relations from queued TRLC record references.
+
+      :returns: Resolved ReqIF spec relations.
+      :rtype: list[ReqIFSpecRelation]
+
+
+
+   .. py:method:: _bundle_as_reqifz(doc_name: str, reqif_xml: str) -> None
+
+      Create the document subfolder, write the .reqif, and bundle into a .reqifz archive.
+
+      The subfolder is named after the document and placed inside the output folder.
+      All files inside the subfolder are included in the archive with paths relative
+      to the subfolder root.
+
+      :param doc_name: Document base name (no extension).
+      :type doc_name: str
+      :param reqif_xml: Serialised ReqIF XML content.
+      :type reqif_xml: str
+
+
+
+   .. py:method:: _collect_enum_values_from_expression(value: trlc.ast.Expression) -> Optional[list]
+      :staticmethod:
+
+
+      Collect TRLC enumeration literal names from a field expression.
+
+      :param value: The TRLC field expression.
+      :type value: Expression
+
+      :returns: List of literal name strings, or None if the expression is null or unsupported.
+      :rtype: Optional[list]
+
+
+
+   .. py:method:: _copy_external_files(dest_dir: str) -> None
+
+      Copy all collected external files to the given destination directory.
+
+      Each file is copied using its basename as the destination file name.  Duplicate
+      source paths are copied only once.  If a source file cannot be read, an error
+      is logged and the file is skipped.
+
+      :param dest_dir: Destination directory path.
+      :type dest_dir: str
+
+
+
+   .. py:method:: _create_enum_attribute(type_key: str, definition_key: str, long_name: str, literal_names: list, enum_type: trlc.ast.Enumeration_Type) -> reqif.models.reqif_spec_object.SpecObjectAttribute
+
+      Create a SpecObjectAttribute of type ENUMERATION for the given ReqIF spec-object type.
+
+      :param type_key: Internal key of the owning ReqIF spec-object type.
+      :type type_key: str
+      :param definition_key: Internal dictionary key used to look up or create the attribute definition.
+      :type definition_key: str
+      :param long_name: Human-readable attribute name registered in the spec-object type.
+      :type long_name: str
+      :param literal_names: List of TRLC enumeration literal names for the attribute value.
+      :type literal_names: list
+      :param enum_type: The TRLC enumeration type.
+      :type enum_type: Enumeration_Type
+
+      :returns: The created attribute.
+      :rtype: SpecObjectAttribute
+
+
+
+   .. py:method:: _create_spec_object(item_name: str, type_key: str, type_long_name: str, attribute_value_map: dict[str, dict[str, Any]]) -> reqif.models.reqif_spec_object.ReqIFSpecObject
+
+      Create a ReqIFSpecObject for the given ReqIF type and field attributes.
+
+      :param item_name: Name of the TRLC item used as the spec-object long-name.
+      :type item_name: str
+      :param type_key: Internal key of the ReqIF spec-object type.
+      :type type_key: str
+      :param type_long_name: Human-readable long-name of the ReqIF spec-object type.
+      :type type_long_name: str
+      :param attribute_value_map: Mapping from field key to
+                                  ``{"long_name": ..., "value": ...}`` for each dynamic field attribute.
+      :type attribute_value_map: dict[str, dict[str, Any]]
+
+      :returns: The created and registered spec-object.
+      :rtype: ReqIFSpecObject
+
+
+
+   .. py:method:: _create_string_attribute(type_key: str, definition_key: str, long_name: str, value: str) -> reqif.models.reqif_spec_object.SpecObjectAttribute
+
+      Create a SpecObjectAttribute of type STRING for the given ReqIF spec-object type.
+
+      :param type_key: Internal key of the owning ReqIF spec-object type.
+      :type type_key: str
+      :param definition_key: Internal dictionary key used to look up or create the attribute definition.
+      :type definition_key: str
+      :param long_name: Human-readable attribute name registered in the spec-object type.
+      :type long_name: str
+      :param value: String attribute value.
+      :type value: str
+
+      :returns: The created attribute.
+      :rtype: SpecObjectAttribute
+
+
+
+   .. py:method:: _create_xhtml_attribute(type_key: str, definition_key: str, long_name: str, xhtml_value: str) -> reqif.models.reqif_spec_object.SpecObjectAttribute
+
+      Create a SpecObjectAttribute of type XHTML, ensuring the corresponding attribute definition exists.
+
+      :param type_key: Internal key of the owning ReqIF spec-object type.
+      :type type_key: str
+      :param definition_key: Internal dictionary key used to look up or create the attribute definition.
+      :type definition_key: str
+      :param long_name: Human-readable attribute name registered in the spec-object type.
+      :type long_name: str
+      :param xhtml_value: XHTML-wrapped content string.
+      :type xhtml_value: str
+
+      :returns: The created attribute.
+      :rtype: SpecObjectAttribute
+
+
+
+   .. py:method:: _ensure_attribute_definition(type_key: str, definition_key: str, long_name: str, attribute_type: reqif.models.reqif_types.SpecObjectAttributeType) -> str
+
+      Return the identifier of an existing attribute definition, or create and register a new one.
+
+      :param type_key: Internal key of the owning ReqIF spec-object type.
+      :type type_key: str
+      :param definition_key: Internal dictionary key for the attribute definition.
+      :type definition_key: str
+      :param long_name: Human-readable name to assign when creating a new definition.
+      :type long_name: str
+      :param attribute_type: ReqIF attribute type.
+      :type attribute_type: SpecObjectAttributeType
+
+      :returns: The attribute definition identifier.
+      :rtype: str
+
+
+
+   .. py:method:: _ensure_enum_attribute_definition(type_key: str, definition_key: str, long_name: str, enum_type: trlc.ast.Enumeration_Type) -> str
+
+      Return the identifier of an existing ATTRIBUTE-DEFINITION-ENUMERATION, or create and register a new one.
+
+      :param type_key: Internal key of the owning ReqIF spec-object type.
+      :type type_key: str
+      :param definition_key: Internal dictionary key for the attribute definition.
+      :type definition_key: str
+      :param long_name: Human-readable name to assign when creating a new definition.
+      :type long_name: str
+      :param enum_type: The TRLC enumeration type.
+      :type enum_type: Enumeration_Type
+
+      :returns: The attribute definition identifier.
+      :rtype: str
+
+
+
+   .. py:method:: _ensure_enum_datatype(enum_type: trlc.ast.Enumeration_Type) -> str
+
+      Return the identifier of an existing DATATYPE-DEFINITION-ENUMERATION, or create and register a new one.
+
+      ENUM-VALUE keys are assigned as consecutive integers starting at 0,
+      in the order the literals are declared in the RSL enumeration.
+
+      :param enum_type: The TRLC enumeration type.
+      :type enum_type: Enumeration_Type
+
+      :returns: The datatype definition identifier.
+      :rtype: str
+
+
+
+   .. py:method:: _ensure_spec_object_type(type_key: str, long_name: str) -> str
+
+      Return the identifier of an existing ReqIF spec-object type, or create and register a new one.
+
+      :param type_key: Internal dictionary key for the spec-object type.
+      :type type_key: str
+      :param long_name: Human-readable name to assign when creating a new type.
+      :type long_name: str
+
+      :returns: The spec-object type identifier.
+      :rtype: str
+
+
+
+   .. py:method:: _ensure_spec_relation_type(relation_type_key: str, long_name: str) -> str
+
+      Return the identifier of an existing ReqIF spec-relation type, or create and register a new one.
+
+      :param relation_type_key: Internal dictionary key for the spec-relation type.
+      :type relation_type_key: str
+      :param long_name: Human-readable relation type name.
+      :type long_name: str
+
+      :returns: The spec-relation type identifier.
+      :rtype: str
+
+
+
+   .. py:method:: _file_name_trlc_to_reqif(file_name_trlc: str) -> str
+
+      Convert a TRLC file name to a ReqIF file name.
+
+      :param file_name_trlc: TRLC file name
+      :type file_name_trlc: str
+
+      :returns: ReqIF file name
+      :rtype: str
+
+
+
+   .. py:method:: _flush_pending_hierarchy() -> None
+
+      Flush a deferred record hierarchy node as a standalone leaf.
+
+      When a record is processed its hierarchy insertion is deferred so that a
+      following section can promote it to a container instead.  Call this method
+      before inserting any new node (record or section) that must not consume the
+      pending record.
+
+
+
+   .. py:method:: _get_datatype_identifier(attribute_type: reqif.models.reqif_types.SpecObjectAttributeType) -> str
+      :staticmethod:
+
+
+      Return the datatype definition identifier for the given ReqIF attribute type.
+
+      :param attribute_type: ReqIF attribute type.
+      :type attribute_type: SpecObjectAttributeType
+
+      :returns: Matching datatype definition identifier.
+      :rtype: str
+
+
+
+   .. py:method:: _get_field_enum_type(record: trlc.ast.Record_Object, field_name: str) -> Optional[trlc.ast.Enumeration_Type]
+      :staticmethod:
+
+
+      Return the TRLC Enumeration_Type for the named field, or None if it is not an enum field.
+
+      Traverses the component hierarchy including inherited components.
+
+      :param record: The TRLC record object.
+      :type record: Record_Object
+      :param field_name: The field name to look up.
+      :type field_name: str
+
+      :returns: The enumeration type, or None.
+      :rtype: Optional[Enumeration_Type]
+
+
+
+   .. py:method:: _get_record_type_key(record: trlc.ast.Record_Object) -> str
+
+      Return the ReqIF type key for the given TRLC record.
+
+      :param record: The record object.
+      :type record: Record_Object
+
+      :returns: ReqIF type key derived from the TRLC record type.
+      :rtype: str
+
+
+
+   .. py:method:: _get_reqif_timestamp() -> str
+      :staticmethod:
+
+
+      Return the current UTC time as a ReqIF-compatible ISO 8601 timestamp.
+
+      :returns: ISO 8601 timestamp string (UTC, no microseconds).
+      :rtype: str
+
+
+
+   .. py:method:: _get_spec_object_type_identifier(type_key: str) -> str
+
+      Return the identifier of the requested ReqIF spec-object type.
+
+      :param type_key: Internal dictionary key for the spec-object type.
+      :type type_key: str
+
+      :returns: The spec-object type identifier.
+      :rtype: str
+
+
+
+   .. py:method:: _get_trlc_ast_walker() -> pyTRLCConverter.trlc_helper.TrlcAstWalker
+
+      Create and configure a TrlcAstWalker for traversing TRLC record field values.
+
+      :returns: The configured TRLC AST walker.
+      :rtype: TrlcAstWalker
+
+
+
+   .. py:method:: _markdown_to_xhtml(markdown_text: str, gfm_mode: bool, table_options: Optional[dict] = None) -> str
+
+      Convert Markdown text to an XHTML-wrapped string using marko.
+
+      If ``table_options`` is provided and non-empty, table styling is applied to the
+      generated HTML before wrapping (see :meth:`_apply_table_options`).
+
+      :param markdown_text: Markdown source text.
+      :type markdown_text: str
+      :param gfm_mode: If True, use the GFM extension; otherwise use CommonMark.
+      :type gfm_mode: bool
+      :param table_options: Optional table rendering options with keys
+                            ``"border"`` and/or ``"headingStyle"``.
+      :type table_options: Optional[dict]
+
+      :returns: XHTML-wrapped HTML string.
+      :rtype: str
+
+
+
+   .. py:method:: _new_identifier(prefix: str) -> str
+
+      Generate a unique identifier by combining the given prefix with an auto-incrementing counter.
+
+      :param prefix: Identifier prefix (e.g. ``"spec-object"`` or ``"hierarchy"``)
+      :type prefix: str
+
+      :returns: Unique identifier string.
+      :rtype: str
+
+
+
+   .. py:method:: _on_implict_null(_: trlc.ast.Implicit_Null) -> str
+
+      Process the given implicit null value.
+
+      :returns: The configured empty attribute value.
+      :rtype: str
+
+
+
+   .. py:method:: _on_record_reference(record_reference: trlc.ast.Record_Reference) -> str
+
+      Process the given record reference value.
+
+      :param record_reference: The record reference value.
+      :type record_reference: Record_Reference
+
+      :returns: String representation of the referenced record.
+      :rtype: str
+
+
+
+   .. py:method:: _on_string_literal(string_literal: trlc.ast.String_Literal) -> str
+
+      Process the given string literal value.
+
+      :param string_literal: The string literal value.
+      :type string_literal: String_Literal
+
+      :returns: The string literal value.
+      :rtype: str
+
+
+
+   .. py:method:: _other_dispatcher(expression: trlc.ast.Expression) -> str
+
+      Dispatcher for all other expressions.
+
+      :param expression: The expression to process.
+      :type expression: Expression
+
+      :returns: The processed expression.
+      :rtype: str
+
+
+
+   .. py:method:: _path_to_xhtml(file_path: str) -> str
+
+      Convert a file path to a ReqIF XHTML ``<object>`` element and schedule the file for copying.
+
+      The file is referenced locally by its basename.  The MIME type is determined from
+      the file extension; if unknown, ``application/octet-stream`` is used.  If ``file_path``
+      is empty the value is rendered as plain text instead.
+
+      :param file_path: Path to the external file (may be relative or absolute).
+      :type file_path: str
+
+      :returns: XHTML-wrapped ``<object>`` element string.
+      :rtype: str
+
+
+
+   .. py:method:: _plain_text_to_xhtml(plain_text: str) -> str
+
+      Convert plain text to an XHTML-wrapped string.
+
+      Blank-line-separated paragraphs are wrapped in ``<p>`` tags; single
+      newlines within a paragraph become ``<br/>`` elements.
+
+      :param plain_text: Plain text to convert.
+      :type plain_text: str
+
+      :returns: XHTML-wrapped content string.
+      :rtype: str
+
+
+
+   .. py:method:: _queue_spec_relation(source_record: trlc.ast.Record_Object, record_reference: trlc.ast.Record_Reference, relation_name: str) -> None
+
+      Queue a ReqIF spec relation derived from a TRLC record reference.
+
+      :param source_record: Source record containing the reference.
+      :type source_record: Record_Object
+      :param record_reference: Referenced target record.
+      :type record_reference: Record_Reference
+      :param relation_name: TRLC field name that defines the relation type.
+      :type relation_name: str
+
+
+
+   .. py:method:: _queue_spec_relations_from_expression(source_record: trlc.ast.Record_Object, expression: trlc.ast.Expression, relation_name: str) -> bool
+
+      Queue ReqIF spec relations from a TRLC expression if it consists of record references.
+
+      :param source_record: Source record containing the reference expression.
+      :type source_record: Record_Object
+      :param expression: TRLC field expression to inspect.
+      :type expression: Expression
+      :param relation_name: TRLC field name that defines the relation type.
+      :type relation_name: str
+
+      :returns: True if the expression was handled as one or more record references.
+      :rtype: bool
+
+
+
+   .. py:method:: _render(package_name: str, type_name: str, attribute_name: str, attribute_value: str) -> str
+
+      Render an attribute value to an XHTML-wrapped string based on the render configuration.
+
+      If the attribute is configured as CommonMark Markdown, it is converted via marko.
+      If configured as GFM, it is converted with the GFM extension.
+      If configured as XHTML, the value is passed through as-is inside the XHTML wrapper.
+      If configured as path, the value is treated as a file path and converted to an XHTML
+      ``<object>`` element; the file is scheduled for copying to the output folder.
+      Otherwise plain text is HTML-escaped and wrapped.
+
+      For Markdown and GFM formats, optional table rendering options (``border``,
+      ``headingStyle``) from the render configuration are applied to the generated HTML.
+
+      :param package_name: TRLC package name of the record.
+      :type package_name: str
+      :param type_name: TRLC type name of the record.
+      :type type_name: str
+      :param attribute_name: Attribute field name.
+      :type attribute_name: str
+      :param attribute_value: Raw attribute value string.
+      :type attribute_value: str
+
+      :returns: XHTML-wrapped content string.
+      :rtype: str
+
+
+
+   .. py:method:: _reset_document_state(title: str) -> None
+
+      Reset all per-document state.
+
+      :param title: The document title used as the specification long-name.
+      :type title: str
+
+
+
+   .. py:method:: _sanitize_identifier_token(value: str) -> str
+      :staticmethod:
+
+
+      Sanitize an identifier token for stable ReqIF identifiers.
+
+      :param value: Raw identifier token.
+      :type value: str
+
+      :returns: Sanitized lowercase token.
+      :rtype: str
+
+
+
+   .. py:method:: _wrap_xhtml(fragment: str) -> str
+      :staticmethod:
+
+
+      Wrap an HTML fragment in a ReqIF-compatible XHTML div element.
+
+      :param fragment: Inner HTML fragment.
+      :type fragment: str
+
+      :returns: XHTML-wrapped string.
+      :rtype: str
+
+
+
+   .. py:method:: _write_document(file_name: str) -> pyTRLCConverter.ret.Ret
+
+      Build the ReqIF bundle and write it to the output file.
+
+      Without --reqifz the .reqif file is written directly into the output folder.
+      With --reqifz a subfolder named after the document is created inside the
+      output folder, the .reqif file is placed there, and all files inside that
+      subfolder are bundled into a .reqifz archive in the output folder.
+
+      :param file_name: Output file name (without path prefix).
+      :type file_name: str
+
+      :returns: Status
+      :rtype: Ret
+
+
+
+   .. py:method:: begin() -> pyTRLCConverter.ret.Ret
+
+      Begin the conversion process.
+
+      :returns: Status
+      :rtype: Ret
+
+
+
+   .. py:method:: convert_record_object_generic(record: trlc.ast.Record_Object, level: int, translation: Optional[dict]) -> pyTRLCConverter.ret.Ret
+
+      Convert a record object generically to a ReqIF spec-object.
+
+      :param record: The record object.
+      :type record: Record_Object
+      :param level: The record level.
+      :type level: int
+      :param translation: Translation dictionary for the record object.
+                          If None, no translation is applied.
+      :type translation: Optional[dict]
+
+      :returns: Status
+      :rtype: Ret
+
+
+
+   .. py:method:: convert_section(section: str, level: int) -> pyTRLCConverter.ret.Ret
+
+      Process the given section item as a named SPEC-HIERARCHY container.
+
+      The section reuses the last processed TRLC record's SPEC-OBJECT as the mandatory
+      SPEC-OBJECT-REF in the SPEC-HIERARCHY node (the ReqIF v1.2 schema requires
+      minOccurs=1). The section title is carried by the hierarchy node's LONG-NAME.
+      No dedicated section SPEC-OBJECT is created.
+
+      If no record has been processed yet, the section name is used as the document
+      title (specification long-name) for the very first such section.  Any further
+      section without a preceding record emits a warning and is skipped.
+
+      :param section: The section name
+      :type section: str
+      :param level: The section indentation level
+      :type level: int
+
+      :returns: Status
+      :rtype: Ret
+
+
+
+   .. py:method:: enter_file(file_name: str) -> pyTRLCConverter.ret.Ret
+
+      Enter a file and reset document state in multiple document mode.
+
+      :param file_name: File name
+      :type file_name: str
+
+      :returns: Status
+      :rtype: Ret
+
+
+
+   .. py:method:: finish() -> pyTRLCConverter.ret.Ret
+
+      Finish the conversion process and write the output in single document mode.
+
+      :returns: Status
+      :rtype: Ret
+
+
+
+   .. py:method:: get_description() -> str
+      :staticmethod:
+
+
+      Return converter description.
+
+      :returns: Converter description
+      :rtype: str
+
+
+
+   .. py:method:: get_subcommand() -> str
+      :staticmethod:
+
+
+      Return subcommand token for this converter.
+
+      :returns: Parser subcommand token
+      :rtype: str
+
+
+
+   .. py:method:: leave_file(file_name: str) -> pyTRLCConverter.ret.Ret
+
+      Leave a file and write the ReqIF document in multiple document mode.
+
+      :param file_name: File name
+      :type file_name: str
+
+      :returns: Status
+      :rtype: Ret
+
+
+
+   .. py:method:: register(args_parser: Any) -> None
+      :classmethod:
+
+
+      Register converter specific argument parser.
+
+      :param args_parser: Argument parser
+      :type args_parser: Any
+
+
+
+   .. py:attribute:: ATTRIBUTE_KEY_RECORD_FOREIGN_ID
+      :value: 'foreignID'
+
+
+
+   .. py:attribute:: DATATYPE_STRING_IDENTIFIER
+      :value: 'datatype-string'
+
+
+
+   .. py:attribute:: DATATYPE_XHTML_IDENTIFIER
+      :value: 'datatype-xhtml'
+
+
+
+   .. py:attribute:: EMPTY_ATTRIBUTE_DEFAULT
+      :value: ''
+
+
+
+   .. py:attribute:: OUTPUT_FILE_NAME_DEFAULT
+      :value: 'output.reqif'
+
+
+
+   .. py:attribute:: REQIF_VERSION
+      :value: '1.0'
+
+
+
+   .. py:attribute:: SPECIFICATION_TYPE_IDENTIFIER
+      :value: 'specification-type-trlc'
+
+
+
+   .. py:attribute:: SYSTEM_ATTRIBUTE_PREFIX
+      :value: 'ReqIF.'
+
+
+
+   .. py:attribute:: TOP_LEVEL_DEFAULT
+      :value: 'Specification'
+
+
+
+   .. py:attribute:: XSI_NAMESPACE
+      :value: 'http://www.w3.org/2001/XMLSchema-instance'
+
+
+
+   .. py:attribute:: _attribute_definitions_by_type
+
+
+   .. py:attribute:: _document_title
+      :value: 'Specification'
+
+
+
+   .. py:attribute:: _enum_datatype_registry
+
+
+   .. py:attribute:: _external_files
+      :type:  list
+      :value: []
+
+
+
+   .. py:attribute:: _hierarchy_stack
+      :value: []
+
+
+
+   .. py:attribute:: _id_counter
+      :value: 0
+
+
+
+   .. py:attribute:: _last_spec_object_identifier
+      :type:  Optional[str]
+      :value: None
+
+
+
+   .. py:attribute:: _markdown_renderer_gfm
+
+
+   .. py:attribute:: _markdown_renderer_md
+
+
+   .. py:attribute:: _out_path
+
+
+   .. py:attribute:: _pending_hierarchy_args
+      :type:  Optional[tuple]
+      :value: None
+
+
+
+   .. py:attribute:: _pending_relations
+      :value: []
+
+
+
+   .. py:attribute:: _root_hierarchies
+      :value: []
+
+
+
+   .. py:attribute:: _spec_object_identifier_by_record
+
+
+   .. py:attribute:: _spec_object_type_info
+
+
+   .. py:attribute:: _spec_objects
+      :value: []
+
+
+
+   .. py:attribute:: _spec_relation_type_info
+
+
+   .. py:attribute:: _spec_relations
+      :value: []
+
+
+
+   .. py:attribute:: _spec_title_captured
+      :type:  bool
+      :value: False
+
+
+

@@ -1,0 +1,427 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pyTRLCConverter.base_converter &mdash; pyTRLCConverter  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=563f12fe" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/version_selector.js?v=02fa0f40"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #0C2C40" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            pyTRLCConverter
+              <img src="../../_static/NewTec_Logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../sw_requirements.html">SW Requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sw_architecture.html">SW Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sw_detail_design.html">SW Detailed Design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sw_tests.html">SW Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sw_tracing_report.html">SW Tracing Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sw_test_result_report.html">SW Test Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../coverage_report.html">Coverage Report</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../license_include.html">License information</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #0C2C40" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pyTRLCConverter</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">pyTRLCConverter.base_converter</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pyTRLCConverter.base_converter</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot; Converter base class which does the argparser handling and provides helper functions.</span>
+
+<span class="sd">    Author: Norbert Schulz (norbert.schulz@newtec.de)</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># pyTRLCConverter - A tool to convert TRLC files to specific formats.</span>
+<span class="c1"># Copyright (c) 2024 - 2026 NewTec GmbH</span>
+<span class="c1">#</span>
+<span class="c1"># This file is part of pyTRLCConverter program.</span>
+<span class="c1">#</span>
+<span class="c1"># The pyTRLCConverter program is free software: you can redistribute it and/or modify it under</span>
+<span class="c1"># the terms of the GNU General Public License as published by the Free Software Foundation,</span>
+<span class="c1"># either version 3 of the License, or (at your option) any later version.</span>
+<span class="c1">#</span>
+<span class="c1"># The pyTRLCConverter program is distributed in the hope that it will be useful, but</span>
+<span class="c1"># WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or</span>
+<span class="c1"># FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1"># You should have received a copy of the GNU General Public License along with pyTRLCConverter.</span>
+<span class="c1"># If not, see &lt;https://www.gnu.org/licenses/&gt;.</span>
+
+<span class="c1"># Imports **********************************************************************</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyTRLCConverter.abstract_converter</span><span class="w"> </span><span class="kn">import</span> <span class="n">AbstractConverter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyTRLCConverter.ret</span><span class="w"> </span><span class="kn">import</span> <span class="n">Ret</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyTRLCConverter.trlc_helper</span><span class="w"> </span><span class="kn">import</span> <span class="n">Record_Object</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyTRLCConverter.translator</span><span class="w"> </span><span class="kn">import</span> <span class="n">Translator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyTRLCConverter.logger</span><span class="w"> </span><span class="kn">import</span> <span class="n">log_error</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyTRLCConverter.render_config</span><span class="w"> </span><span class="kn">import</span> <span class="n">RenderConfig</span>
+
+<span class="c1"># Variables ********************************************************************</span>
+
+<span class="c1"># Classes **********************************************************************</span>
+
+
+<div class="viewcode-block" id="RecordsPolicy">
+<a class="viewcode-back" href="../../api/pyTRLCConverter/base_converter/index.html#pyTRLCConverter.base_converter.RecordsPolicy">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">RecordsPolicy</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Enum class to define policies for handling records during conversion.&quot;&quot;&quot;</span>
+
+    <span class="n">RECORD_CONVERT_ALL</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert all records, including undefined ones using convert_record_object_generic().&quot;&quot;&quot;</span>
+
+    <span class="n">RECORD_SKIP_UNDEFINED</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Skip record types that are not linked to a handler.&quot;&quot;&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="BaseConverter">
+<a class="viewcode-back" href="../../api/pyTRLCConverter/base_converter/index.html#pyTRLCConverter.base_converter.BaseConverter">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">BaseConverter</span><span class="p">(</span><span class="n">AbstractConverter</span><span class="p">):</span>
+    <span class="c1"># lobster-trace: SwRequirements.sw_req_destination_format</span>
+    <span class="c1"># lobster-trace: SwRequirements.sw_req_translation</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Base converter with empty method implementations and helper functions </span>
+<span class="sd">    for subclassing converters.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Converter specific sub parser</span>
+    <span class="n">_parser</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="c1"># Default value used to replace empty attribute values.</span>
+    <span class="n">EMPTY_ATTRIBUTE_DEFAULT</span> <span class="o">=</span> <span class="s2">&quot;N/A&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the converter with the given arguments.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            args (Any): The parsed program arguments.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Store the command line arguments.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_args</span> <span class="o">=</span> <span class="n">args</span>
+
+        <span class="c1"># Record handler dictionary for project specific record handlers.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_record_handler_dict</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># type: dict[str, Callable]</span>
+
+        <span class="c1"># Set the default policy for handling records.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_record_policy</span> <span class="o">=</span> <span class="n">RecordsPolicy</span><span class="o">.</span><span class="n">RECORD_CONVERT_ALL</span>
+
+        <span class="c1"># Set the default value for empty attributes.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_empty_attribute_value</span> <span class="o">=</span> <span class="n">BaseConverter</span><span class="o">.</span><span class="n">EMPTY_ATTRIBUTE_DEFAULT</span>
+
+        <span class="c1"># Requirement type attribute translator.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_translator</span> <span class="o">=</span> <span class="n">Translator</span><span class="p">()</span>
+
+        <span class="c1"># Render configuration used to know how to interprete the attribute value.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_render_cfg</span> <span class="o">=</span> <span class="n">RenderConfig</span><span class="p">()</span>
+
+<div class="viewcode-block" id="BaseConverter.register">
+<a class="viewcode-back" href="../../api/pyTRLCConverter/base_converter/index.html#pyTRLCConverter.base_converter.BaseConverter.register">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">register</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">args_parser</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Register converter specific argument parser.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            args_parser (Any): Argument parser</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">BaseConverter</span><span class="o">.</span><span class="n">_parser</span> <span class="o">=</span> <span class="n">args_parser</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">get_subcommand</span><span class="p">(),</span>
+            <span class="n">help</span><span class="o">=</span><span class="bp">cls</span><span class="o">.</span><span class="n">get_description</span><span class="p">()</span>
+        <span class="p">)</span>
+        <span class="n">BaseConverter</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="n">converter_class</span><span class="o">=</span><span class="bp">cls</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="BaseConverter.set_render_cfg">
+<a class="viewcode-back" href="../../api/pyTRLCConverter/base_converter/index.html#pyTRLCConverter.base_converter.BaseConverter.set_render_cfg">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_render_cfg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">render_cfg</span><span class="p">:</span> <span class="n">RenderConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the render configuration.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            render_cfg (RenderConfig): Render configuration</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_render_cfg</span> <span class="o">=</span> <span class="n">render_cfg</span></div>
+
+
+<div class="viewcode-block" id="BaseConverter.begin">
+<a class="viewcode-back" href="../../api/pyTRLCConverter/base_converter/index.html#pyTRLCConverter.base_converter.BaseConverter.begin">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">begin</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Ret</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Begin the conversion process.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Ret: Status</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">Ret</span><span class="o">.</span><span class="n">OK</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_args</span><span class="o">.</span><span class="n">translation</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_translator</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_args</span><span class="o">.</span><span class="n">translation</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">Ret</span><span class="o">.</span><span class="n">ERROR</span>
+
+        <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="BaseConverter.enter_file">
+<a class="viewcode-back" href="../../api/pyTRLCConverter/base_converter/index.html#pyTRLCConverter.base_converter.BaseConverter.enter_file">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">enter_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Ret</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Enter a file.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            file_name (str): File name</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Ret: Status</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Ret</span><span class="o">.</span><span class="n">OK</span></div>
+
+
+<div class="viewcode-block" id="BaseConverter.leave_file">
+<a class="viewcode-back" href="../../api/pyTRLCConverter/base_converter/index.html#pyTRLCConverter.base_converter.BaseConverter.leave_file">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">leave_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Ret</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Leave a file.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            file_name (str): File name</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Ret: Status</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Ret</span><span class="o">.</span><span class="n">OK</span></div>
+
+
+<div class="viewcode-block" id="BaseConverter.convert_section">
+<a class="viewcode-back" href="../../api/pyTRLCConverter/base_converter/index.html#pyTRLCConverter.base_converter.BaseConverter.convert_section">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">convert_section</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">section</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Ret</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Process the given section item.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            section (str): The section name</span>
+<span class="sd">            level (int): The section indentation level</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Ret: Status</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Ret</span><span class="o">.</span><span class="n">OK</span></div>
+
+
+<div class="viewcode-block" id="BaseConverter.convert_record_object">
+<a class="viewcode-back" href="../../api/pyTRLCConverter/base_converter/index.html#pyTRLCConverter.base_converter.BaseConverter.convert_record_object">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">convert_record_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">:</span> <span class="n">Record_Object</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Ret</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Process the given record object.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            record (Record_Object): The record object</span>
+<span class="sd">            level (int): The record level</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Ret: Status</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Get the record attribute translation dictionary.</span>
+        <span class="n">translation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_translator</span><span class="o">.</span><span class="n">get_translation</span><span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">n_typ</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="c1"># Check for a specific record handler.</span>
+        <span class="n">record_handler</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_record_handler_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">n_typ</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">record_handler</span><span class="p">):</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">record_handler</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">translation</span><span class="p">)</span>
+
+            <span class="c1"># Don&#39;t trust project specific handlers to return a valid status.</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">Ret</span><span class="p">):</span>
+                <span class="n">log_error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid return value from record handler for record </span><span class="si">{</span><span class="n">record</span><span class="o">.</span><span class="n">n_typ</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">Ret</span><span class="o">.</span><span class="n">ERROR</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_record_policy</span> <span class="o">==</span> <span class="n">RecordsPolicy</span><span class="o">.</span><span class="n">RECORD_CONVERT_ALL</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert_record_object_generic</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">translation</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">Ret</span><span class="o">.</span><span class="n">OK</span>
+
+        <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="BaseConverter.finish">
+<a class="viewcode-back" href="../../api/pyTRLCConverter/base_converter/index.html#pyTRLCConverter.base_converter.BaseConverter.finish">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">finish</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Finish the conversion process.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Ret</span><span class="o">.</span><span class="n">OK</span></div>
+
+
+    <span class="c1"># helpers **************************************************************</span>
+
+<div class="viewcode-block" id="BaseConverter.convert_record_object_generic">
+<a class="viewcode-back" href="../../api/pyTRLCConverter/base_converter/index.html#pyTRLCConverter.base_converter.BaseConverter.convert_record_object_generic">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">convert_record_object_generic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">:</span> <span class="n">Record_Object</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">translation</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Ret</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert a record object generically.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            record (Record_Object): The record object.</span>
+<span class="sd">            level (int): The record level.</span>
+<span class="sd">            translation (Optional[dict]): Translation dictionary for the record object.</span>
+<span class="sd">                                            If None, no translation is applied.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Ret: Status</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
+<div class="viewcode-block" id="BaseConverter._set_project_record_handler">
+<a class="viewcode-back" href="../../api/pyTRLCConverter/base_converter/index.html#pyTRLCConverter.base_converter.BaseConverter._set_project_record_handler">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_set_project_record_handler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">handler</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set a project specific record handler.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            record_type (str): The record type</span>
+<span class="sd">            handler (Callable): The handler function</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_record_handler_dict</span><span class="p">[</span><span class="n">record_type</span><span class="p">]</span> <span class="o">=</span> <span class="n">handler</span></div>
+
+
+<div class="viewcode-block" id="BaseConverter._set_project_record_handlers">
+<a class="viewcode-back" href="../../api/pyTRLCConverter/base_converter/index.html#pyTRLCConverter.base_converter.BaseConverter._set_project_record_handlers">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_set_project_record_handlers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">handlers</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set project specific record handlers.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            handler (dict[str, Callable]): List of record type and handler function tuples</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">record_type</span><span class="p">,</span> <span class="n">handler</span> <span class="ow">in</span> <span class="n">handlers</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_set_project_record_handler</span><span class="p">(</span><span class="n">record_type</span><span class="p">,</span> <span class="n">handler</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="BaseConverter._get_attribute">
+<a class="viewcode-back" href="../../api/pyTRLCConverter/base_converter/index.html#pyTRLCConverter.base_converter.BaseConverter._get_attribute">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_attribute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">:</span> <span class="n">Record_Object</span><span class="p">,</span> <span class="n">attribute_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the attribute value from the record object.</span>
+<span class="sd">            If the attribute is not found or empty, return the default value.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            record (Record_Object): The record object</span>
+<span class="sd">            attribute_name (str): The attribute name to get the value from.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: The attribute value.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">record_dict</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">to_python_dict</span><span class="p">()</span>
+        <span class="n">attribute_value</span> <span class="o">=</span> <span class="n">record_dict</span><span class="p">[</span><span class="n">attribute_name</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">attribute_value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">attribute_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_empty_attribute_value</span>
+        <span class="k">elif</span> <span class="n">attribute_value</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+            <span class="n">attribute_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_empty_attribute_value</span>
+
+        <span class="k">return</span> <span class="n">attribute_value</span></div>
+
+
+<div class="viewcode-block" id="BaseConverter._translate_attribute_name">
+<a class="viewcode-back" href="../../api/pyTRLCConverter/base_converter/index.html#pyTRLCConverter.base_converter.BaseConverter._translate_attribute_name">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_translate_attribute_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">translation</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">],</span> <span class="n">attribute_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Translate attribute name on demand.</span>
+<span class="sd">            If no translation is provided, the attribute name will be returned as is.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            translation (Optional[dict]): The translation dictionary.</span>
+<span class="sd">            attribute_name (str): The attribute name to translate.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: The translated attribute name.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">translation</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">attribute_name</span> <span class="ow">in</span> <span class="n">translation</span><span class="p">:</span>
+                <span class="n">attribute_name</span> <span class="o">=</span> <span class="n">translation</span><span class="p">[</span><span class="n">attribute_name</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">attribute_name</span></div>
+</div>
+
+
+<span class="c1"># Functions ********************************************************************</span>
+
+<span class="c1"># Main *************************************************************************</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024 - 2026, NewTec GmbH.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

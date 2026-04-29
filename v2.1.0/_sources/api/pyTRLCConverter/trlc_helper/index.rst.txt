@@ -1,0 +1,229 @@
+pyTRLCConverter.trlc_helper
+===========================
+
+.. py:module:: pyTRLCConverter.trlc_helper
+
+.. autoapi-nested-parse::
+
+   TRLC helper functions.
+
+   Author: Andreas Merkle (andreas.merkle@newtec.de)
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   pyTRLCConverter.trlc_helper.TrlcAstWalker
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   pyTRLCConverter.trlc_helper.get_file_dict_from_symbols
+   pyTRLCConverter.trlc_helper.get_trlc_symbols
+   pyTRLCConverter.trlc_helper.is_item_file_name
+   pyTRLCConverter.trlc_helper.is_item_record
+   pyTRLCConverter.trlc_helper.is_item_section
+
+
+Module Contents
+---------------
+
+.. py:class:: TrlcAstWalker
+
+   This class helps to walk through the TRLC AST. It uses a dispatcher map to handle
+   the different AST nodes.
+
+   It contains three dispatcher maps: begin, process and finish.
+
+   The begin map is used to handle the node when it is entered, the process map is used to
+   handle the node when it is processed and the finish map is used to handle the node when
+   it is finished.
+
+   The dispatcher map is a dictionary with the type name as key and the handler as value.
+
+   By default the walker contains a dispatcher map only for the Array_Aggregate node. The other
+   nodes are handled by the other dispatcher. If no other dispatcher is set, the node is
+   converted to a string.
+
+
+   .. py:method:: _dispatch(dispatcher_map: dict, expression: trlc.ast.Expression, handle_other: bool) -> Union[list[Any], Any]
+
+      Dispatch the expression to the dispatcher map.
+
+      :param dispatcher_map: The dispatcher map.
+      :type dispatcher_map: dict
+      :param expression: The AST node.
+      :type expression: Expression
+      :param handle_other: If True, the other dispatcher is called when no dispatcher is found.
+      :type handle_other: bool
+
+      :returns: The result of the dispatcher.
+      :rtype: Union[list[Any],Any]
+
+
+
+   .. py:method:: _on_array_aggregate(array_aggregate: trlc.ast.Array_Aggregate) -> list[Any]
+
+      Handle the Array_Aggregate node.
+
+      :param array_aggregate: The AST node.
+      :type array_aggregate: Array_Aggregate
+
+      :returns: The result of the handling.
+      :rtype: list[Any]
+
+
+
+   .. py:method:: _on_general(expression: trlc.ast.Expression) -> Union[list[Any], Any]
+
+      Handle the general case.
+
+      :param expression: The AST node.
+      :type expression: Expression
+
+      :returns: The result of the handling.
+      :rtype: Union[list[str],str]
+
+
+
+   .. py:method:: _on_other(expression: trlc.ast.Expression) -> Union[list[Any], str]
+
+      Handle the other case.
+
+      :param expression: The AST node.
+      :type expression: Expression
+
+      :returns: The result of the handling.
+      :rtype: Union[list[Any],str]
+
+
+
+   .. py:method:: add_dispatcher(type_name: type, begin: Optional[Callable], process: Optional[Callable], finish: Optional[Callable]) -> None
+
+      Add a dispatcher to the walker.
+
+      :param type_name: The type name
+      :type type_name: type
+      :param begin: The begin handler
+      :type begin: Optional[Callable]
+      :param process: The process handler
+      :type process: Optional[Callable]
+      :param finish: The finish handler
+      :type finish: Optional[Callable]
+
+
+
+   .. py:method:: set_list_item_dispatcher(dispatcher: Callable) -> None
+
+      Set the list item dispatcher. This dispatcher is called when a list item is processed.
+
+      :param dispatcher: The list item dispatcher.
+      :type dispatcher: Callable
+
+
+
+   .. py:method:: set_other_dispatcher(dispatcher: Callable) -> None
+
+      Set the other dispatcher. This dispatcher is called when no dispatcher is found for the node.
+
+      :param dispatcher: The other dispatcher
+      :type dispatcher: Callable
+
+
+
+   .. py:method:: walk(expression: trlc.ast.Expression) -> Union[list[Any], Any]
+
+      Walk through the TRLC AST.
+
+      :param expression: The AST node.
+      :type expression: Expression
+
+      :returns: The result of the walking as string or list of strings.
+      :rtype: Union[list[Any],Any]
+
+
+
+   .. py:attribute:: _dispatcher_map_begin
+
+
+   .. py:attribute:: _dispatcher_map_finish
+
+
+   .. py:attribute:: _dispatcher_map_process
+
+
+   .. py:attribute:: _list_item_dispatcher
+      :type:  Optional[Callable]
+      :value: None
+
+
+
+   .. py:attribute:: _other_dispatcher
+      :type:  Optional[Callable]
+      :value: None
+
+
+
+.. py:function:: get_file_dict_from_symbols(symbols)
+
+   Get a dictionary with the file names and their content.
+
+   :param symbols: The TRLC symbols to dump.
+   :type symbols: Symbol_Table
+
+   :returns: A dictionary with the file names and their content.
+   :rtype: dict
+
+
+.. py:function:: get_trlc_symbols(source_items, includes)
+
+   Get the TRLC symbol table by parsing the given folder.
+
+   :param source_items: One or more paths to folder with TRLC files                                   or a single path to a TRLC file.
+   :type source_items: [str]|str
+   :param includes: Path for automatically file inclusion.
+   :type includes: str|None
+
+   :returns: TRLC symbol table
+   :rtype: Symbol_Table
+
+
+.. py:function:: is_item_file_name(item)
+
+   Check if the item is a file name.
+
+   :param item: The item to check.
+   :type item: str|tuple
+
+   :returns: True if the item is a file name, otherwise False.
+   :rtype: bool
+
+
+.. py:function:: is_item_record(item)
+
+   Check if the item is a record.
+
+   :param item: The item to check.
+   :type item: str|tuple
+
+   :returns: True if the item is a record, otherwise False.
+   :rtype: bool
+
+
+.. py:function:: is_item_section(item)
+
+   Check if the item is a section.
+
+   :param item: The item to check.
+   :type item: str|tuple
+
+   :returns: True if the item is a section, otherwise False.
+   :rtype: bool
+
+

@@ -1,0 +1,156 @@
+pyTRLCConverter.plantuml
+========================
+
+.. py:module:: pyTRLCConverter.plantuml
+
+.. autoapi-nested-parse::
+
+   PlantUML to image file converter.
+
+   Author: Andreas Merkle (andreas.merkle@newtec.de)
+
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   pyTRLCConverter.plantuml.BASE64_ENCODE_CHARS
+   pyTRLCConverter.plantuml.PLANTUML_ENCODE_CHARS
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   pyTRLCConverter.plantuml.PlantUML
+
+
+Module Contents
+---------------
+
+.. py:class:: PlantUML
+
+   PlantUML image generator.
+
+
+
+   .. py:method:: _generate_local(diagram_type, diagram_path, dst_path)
+
+      Generate image local call to plantuml.jar.
+
+      :param diagram_type: Diagram type, e.g. svg. See PlantUML -t options.
+      :type diagram_type: str
+      :param diagram_path: Path to the PlantUML diagram.
+      :type diagram_path: str
+      :param dst_path: Path to the destination of the generated image.
+      :type dst_path: str
+
+      :raises FileNotFoundError: PlantUML java jar file not found.
+      :raises OSError: Destination path does not exist.
+
+
+
+   .. py:method:: _generate_server(diagram_type: str, diagram_path: str, dst_path: str) -> None
+
+      Generate image using a plantuml server.
+
+      This is does not require java installed and is usually a lot faster
+      as no java startup time needed when using the plantuml.jar file.
+
+      :param diagram_type: Diagram type, e.g. svg. See PlantUML -t options.
+      :type diagram_type: str
+      :param diagram_path: Path to the PlantUML diagram.
+      :type diagram_path: str
+      :param dst_path: Path to the destination of the generated image.
+      :type dst_path: str
+
+       Raises:
+          FileNotFoundError: PlantUML diagram file not found.
+          OSError: Destination path does not exist.
+          requests.exceptions.RequestException: Error during GET request to PlantUML server.
+
+
+
+   .. py:method:: _get_absolute_path(path)
+
+      Get absolute path to the diagram.
+          This is required by PlantUML java program for the output path.
+
+      :param path: _description_
+      :type path: _type_
+
+      :returns: _description_
+      :rtype: _type_
+
+
+
+   .. py:method:: _make_server_url(diagram_type: str, diagram_path: str) -> str
+
+      Generate a plantuml server GET URL from a diagram data file.
+
+      :param diagram_type: Diagram type, e.g. svg. See PlantUML -t options.
+      :type diagram_type: str
+      :param diagram_path: Path to the PlantUML diagram.
+      :type diagram_path: str
+
+      :raises FileNotFoundError: PlantUML diagram file not found.
+
+
+
+   .. py:method:: generate(diagram_type: str, diagram_path: str, dst_path: str) -> None
+
+      Generate plantuml image.
+
+      :param diagram_type: Diagram type, e.g. svg. See PlantUML -t options.
+      :type diagram_type: str
+      :param diagram_path: Path to the PlantUML diagram.
+      :type diagram_path: str
+      :param dst_path: Path to the destination of the generated image.
+      :type dst_path: str
+
+      :raises FileNotFoundError: PlantUML java jar file not found in local mode.
+      :raises FileNotFoundError: PlantUML diagram file not found.
+      :raises requests.exceptions.RequestException: Error during GET request to PlantUML server.
+      :raises OSError: Destination path does not exist.
+
+
+
+   .. py:method:: is_plantuml_file(diagram_path)
+
+      Is the diagram a PlantUML file?
+          Only the file extension will be checked.
+
+      :param diagram_path: Diagram path.
+      :type diagram_path: str
+
+      :returns: If file is a PlantUML file, it will return True otherwise False.
+      :rtype: bool
+
+
+
+   .. py:attribute:: _plantuml_jar
+      :value: None
+
+
+
+   .. py:attribute:: _server_url
+      :value: None
+
+
+
+   .. py:attribute:: _working_directory
+      :value: b'.'
+
+
+
+.. py:data:: BASE64_ENCODE_CHARS
+   :value: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
+
+
+.. py:data:: PLANTUML_ENCODE_CHARS
+   :value: '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_'
+
+

@@ -1,0 +1,281 @@
+pyTRLCConverter.docx_converter
+==============================
+
+.. py:module:: pyTRLCConverter.docx_converter
+
+.. autoapi-nested-parse::
+
+   Converter to Word docx format.
+
+   Author: Norbert Schulz (norbert.schulz@newtec.de)
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   pyTRLCConverter.docx_converter.DocxConverter
+
+
+Module Contents
+---------------
+
+.. py:class:: DocxConverter(args: Any)
+
+   Bases: :py:obj:`pyTRLCConverter.base_converter.BaseConverter`
+
+   .. autoapi-inheritance-diagram:: pyTRLCConverter.docx_converter.DocxConverter
+      :parts: 1
+      :private-bases:
+
+
+   Converter to docx format.
+
+   The following Word docx objects are used:
+
+   - **Document**: Represents the entire Word document.
+   - **Paragraph**: A block of text in the document with its own formatting properties.
+   - **Run**: A contiguous run of text with the same formatting within a paragraph.
+   - **Table**: A two-dimensional structure for presenting data in rows and columns.
+
+
+   .. py:method:: _convert_record_object(record: trlc.ast.Record_Object, level: int, translation: Optional[dict]) -> pyTRLCConverter.ret.Ret
+
+      Process the given record object.
+
+      :param record: The record object.
+      :type record: Record_Object
+      :param level: The record level.
+      :type level: int
+      :param translation: Translation dictionary for the record object.
+                          If None, no translation is applied.
+      :type translation: Optional[dict]
+
+      :returns: Status
+      :rtype: Ret
+
+
+
+   .. py:method:: _get_trlc_ast_walker() -> pyTRLCConverter.trlc_helper.TrlcAstWalker
+
+      If a record object contains a record reference, the record reference will be converted to
+      a hyperlink.
+      If a record object contains an array of record references, the array will be converted to
+      a list of links.
+      Otherwise the record object fields attribute values will be written to the table.
+
+      :returns: The TRLC AST walker.
+      :rtype: TrlcAstWalker
+
+
+
+   .. py:method:: _on_array_aggregate_begin(array_aggregate: trlc.ast.Array_Aggregate) -> None
+
+      Handle the beginning of a list.
+
+      :param array_aggregate: The AST node.
+      :type array_aggregate: Array_Aggregate
+
+
+
+   .. py:method:: _on_array_aggregate_finish(array_aggregate: trlc.ast.Array_Aggregate) -> None
+
+      Handle the end of a list.
+
+      :param array_aggregate: The AST node.
+      :type array_aggregate: Array_Aggregate
+
+
+
+   .. py:method:: _on_implict_null(_: trlc.ast.Implicit_Null) -> None
+
+      Process the given implicit null value.
+
+
+
+   .. py:method:: _on_list_item(expression: trlc.ast.Expression, item_result: Any) -> Any
+
+      Handle the list item by adding a bullet point.
+
+      :param expression: The AST node.
+      :type expression: Expression
+      :param item_result: The result of processing the list item.
+      :type item_result: Union[list[DocumentObject],DocumentObject]
+
+      :returns: The processed list item.
+      :rtype: Any
+
+
+
+   .. py:method:: _on_record_reference(record_reference: trlc.ast.Record_Reference) -> None
+
+      Process the given record reference value and return a hyperlink paragraph.
+
+      :param record_reference: The record reference value.
+      :type record_reference: Record_Reference
+
+
+
+   .. py:method:: _on_string_literal(string_literal: trlc.ast.String_Literal) -> None
+
+      Process the given string literal value.
+
+      :param string_literal: The string literal value.
+      :type string_literal: String_Literal
+
+
+
+   .. py:method:: _other_dispatcher(expression: trlc.ast.Expression) -> None
+
+      Dispatcher for all other expressions.
+
+      :param expression: The expression to process.
+      :type expression: Expression
+
+
+
+   .. py:method:: _render(package_name: str, type_name: str, attribute_name: str, attribute_value: str) -> None
+
+      Render the attribute value depened on its format.
+
+      :param package_name: The package name.
+      :type package_name: str
+      :param type_name: The type name.
+      :type type_name: str
+      :param attribute_name: The attribute name.
+      :type attribute_name: str
+      :param attribute_value: The attribute value.
+      :type attribute_value: str
+
+
+
+   .. py:method:: convert_record_object_generic(record: trlc.ast.Record_Object, level: int, translation: Optional[dict]) -> pyTRLCConverter.ret.Ret
+
+      Process the given record object in a generic way.
+
+      The handler is called by the base converter if no specific handler is
+      defined for the record type.
+
+      :param record: The record object.
+      :type record: Record_Object
+      :param level: The record level.
+      :type level: int
+      :param translation: Translation dictionary for the record object.
+                          If None, no translation is applied.
+      :type translation: Optional[dict]
+
+      :returns: Status
+      :rtype: Ret
+
+
+
+   .. py:method:: convert_section(section: str, level: int) -> pyTRLCConverter.ret.Ret
+
+      Process the given section item.
+
+      :param section: The section name
+      :type section: str
+      :param level: The section indentation level
+      :type level: int
+
+      :returns: Status
+      :rtype: Ret
+
+
+
+   .. py:method:: docx_add_bookmark(paragraph: docx.text.paragraph.Paragraph, bookmark_name: str) -> None
+      :staticmethod:
+
+
+      Adds a bookmark to a paragraph.
+
+      :param paragraph: The paragraph to add the bookmark to.
+      :type paragraph: Paragraph
+      :param bookmark_name: The name of the bookmark.
+      :type bookmark_name: str
+
+
+
+   .. py:method:: docx_add_link_to_bookmark(paragraph: docx.text.paragraph.Paragraph, bookmark_name: str, link_text: str) -> None
+      :staticmethod:
+
+
+      Add a hyperlink to a bookmark in a paragraph.
+
+      :param paragraph: The paragraph to add the hyperlink to.
+      :type paragraph: Paragraph
+      :param bookmark_name: The name of the bookmark.
+      :type bookmark_name: str
+      :param link_text: The text to display for the hyperlink.
+      :type link_text: str
+
+
+
+   .. py:method:: finish() -> pyTRLCConverter.ret.Ret
+
+      Finish the conversion.
+
+      :returns: Status
+      :rtype: Ret
+
+
+
+   .. py:method:: get_description() -> str
+      :staticmethod:
+
+
+      Return converter description.
+
+      :returns: Status
+      :rtype: Ret
+
+
+
+   .. py:method:: get_subcommand() -> str
+      :staticmethod:
+
+
+      Return subcommand token for this converter.
+
+      :returns: Status
+      :rtype: Ret
+
+
+
+   .. py:method:: register(args_parser: Any) -> None
+      :classmethod:
+
+
+      Register converter specific argument parser.
+
+      :param args_parser: Argument parser
+      :type args_parser: Any
+
+
+
+   .. py:attribute:: OUTPUT_FILE_NAME_DEFAULT
+      :value: 'output.docx'
+
+
+
+   .. py:attribute:: _ast_meta_data
+      :value: None
+
+
+
+   .. py:attribute:: _block_item_container
+      :type:  Optional[docx.blkcntnr.BlockItemContainer]
+      :value: None
+
+
+
+   .. py:attribute:: _docx
+
+
+   .. py:attribute:: _list_item_indent_level
+      :value: 0
+
+
+

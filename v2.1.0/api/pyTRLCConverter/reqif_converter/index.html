@@ -1,0 +1,1171 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pyTRLCConverter.reqif_converter &mdash; pyTRLCConverter  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=563f12fe" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/version_selector.js?v=02fa0f40"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="pyTRLCConverter.ret" href="../ret/index.html" />
+    <link rel="prev" title="pyTRLCConverter.render_config" href="../render_config/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #0C2C40" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            pyTRLCConverter
+              <img src="../../../_static/NewTec_Logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../sw_requirements.html">SW Requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../sw_architecture.html">SW Architecture</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../sw_detail_design.html">SW Detailed Design</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../sw_detail_design.html#api-reference">API Reference</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../index.html">pyTRLCConverter</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../index.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../sw_tests.html">SW Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../sw_tracing_report.html">SW Tracing Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../sw_test_result_report.html">SW Test Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../coverage_report.html">Coverage Report</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../license_include.html">License information</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #0C2C40" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">pyTRLCConverter</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../sw_detail_design.html">SW Detailed Design</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">pyTRLCConverter</a></li>
+      <li class="breadcrumb-item active">pyTRLCConverter.reqif_converter</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/api/pyTRLCConverter/reqif_converter/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-pyTRLCConverter.reqif_converter">
+<span id="pytrlcconverter-reqif-converter"></span><h1>pyTRLCConverter.reqif_converter<a class="headerlink" href="#module-pyTRLCConverter.reqif_converter" title="Link to this heading"></a></h1>
+<p>Converter to ReqIF format.</p>
+<p>Author: Andreas Merkle (<a class="reference external" href="mailto:andreas&#46;merkle&#37;&#52;&#48;newtec&#46;de">andreas<span>&#46;</span>merkle<span>&#64;</span>newtec<span>&#46;</span>de</a>)</p>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyTRLCConverter.reqif_converter.ReqifConverter" title="pyTRLCConverter.reqif_converter.ReqifConverter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ReqifConverter</span></code></a></p></td>
+<td><p>ReqifConverter provides functionality for converting to ReqIF format.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyTRLCConverter.reqif_converter.</span></span><span class="sig-name descname"><span class="pre">ReqifConverter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/pyTRLCConverter/reqif_converter.html#ReqifConverter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="../base_converter/index.html#pyTRLCConverter.base_converter.BaseConverter" title="pyTRLCConverter.base_converter.BaseConverter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pyTRLCConverter.base_converter.BaseConverter</span></code></a></p>
+<div class="graphviz"><img src="../../../_images/inheritance-37d6efa355378137ad8955d5dd1cb273f1e72b0e.png" alt="Inheritance diagram of pyTRLCConverter.reqif_converter.ReqifConverter" usemap="#inheritancee95aab3a57" class="inheritance graphviz" /></div>
+<map id="inheritancee95aab3a57" name="inheritancee95aab3a57">
+<area shape="rect" id="node2" href="../abstract_converter/index.html#pyTRLCConverter.abstract_converter.AbstractConverter" target="_top" title="Abstract converter interface." alt="" coords="5,79,145,104"/>
+<area shape="rect" id="node3" href="../base_converter/index.html#pyTRLCConverter.base_converter.BaseConverter" target="_top" title="Base converter with empty method implementations and helper functions " alt="" coords="16,152,135,177"/>
+<area shape="rect" id="node4" href="#pyTRLCConverter.reqif_converter.ReqifConverter" target="_top" title="ReqifConverter provides functionality for converting to ReqIF format." alt="" coords="15,225,135,251"/>
+</map><p>ReqifConverter provides functionality for converting to ReqIF format.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter._append_hierarchy">
+<span class="sig-name descname"><span class="pre">_append_hierarchy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spec_object_identifier</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">long_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_container</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/reqif_converter.html#ReqifConverter._append_hierarchy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter._append_hierarchy" title="Link to this definition"></a></dt>
+<dd><p>Append a new ReqIFSpecHierarchy node at the given nesting level.</p>
+<p>The internal hierarchy stack is pruned so the new node is correctly
+attached either as a child of the current parent or as a root entry.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>spec_object_identifier</strong> (<em>str</em>) – Identifier of the spec-object this hierarchy node references.</p></li>
+<li><p><strong>level</strong> (<em>int</em>) – TRLC nesting level (0 = top-level).</p></li>
+<li><p><strong>long_name</strong> (<em>str</em>) – Display name for the hierarchy node.</p></li>
+<li><p><strong>is_container</strong> (<em>bool</em>) – If True, keep the new hierarchy node on the stack as a parent.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter._apply_table_options">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">_apply_table_options</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">html_text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">table_options</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/reqif_converter.html#ReqifConverter._apply_table_options"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter._apply_table_options" title="Link to this definition"></a></dt>
+<dd><p>Apply table rendering options to generated HTML.</p>
+<p>Replaces the plain <code class="docutils literal notranslate"><span class="pre">&lt;table&gt;</span></code> tag with one carrying a <code class="docutils literal notranslate"><span class="pre">style</span></code> attribute when
+<code class="docutils literal notranslate"><span class="pre">&quot;border&quot;</span></code> is set, and injects a <code class="docutils literal notranslate"><span class="pre">style</span></code> attribute into every <code class="docutils literal notranslate"><span class="pre">&lt;th&gt;</span></code> tag
+when <code class="docutils literal notranslate"><span class="pre">&quot;headingStyle&quot;</span></code> is set.  Values are HTML-escaped before insertion.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>html_text</strong> (<em>str</em>) – HTML string produced by the Markdown renderer.</p></li>
+<li><p><strong>table_options</strong> (<em>dict</em>) – Table options with optional keys <code class="docutils literal notranslate"><span class="pre">&quot;border&quot;</span></code> (str) and
+<code class="docutils literal notranslate"><span class="pre">&quot;headingStyle&quot;</span></code> (str), both interpreted as CSS style values.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>HTML string with table styling applied.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter._build_reqif_bundle">
+<span class="sig-name descname"><span class="pre">_build_reqif_bundle</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">reqif.reqif_bundle.ReqIFBundle</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/reqif_converter.html#ReqifConverter._build_reqif_bundle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter._build_reqif_bundle" title="Link to this definition"></a></dt>
+<dd><p>Assemble a complete ReqIFBundle from the accumulated spec objects, hierarchies and attribute definitions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The assembled ReqIF bundle ready for unparsing.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>ReqIFBundle</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter._build_spec_relations">
+<span class="sig-name descname"><span class="pre">_build_spec_relations</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">reqif.models.reqif_spec_relation.ReqIFSpecRelation</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/reqif_converter.html#ReqifConverter._build_spec_relations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter._build_spec_relations" title="Link to this definition"></a></dt>
+<dd><p>Build ReqIF spec relations from queued TRLC record references.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Resolved ReqIF spec relations.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list[ReqIFSpecRelation]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter._bundle_as_reqifz">
+<span class="sig-name descname"><span class="pre">_bundle_as_reqifz</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doc_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reqif_xml</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/reqif_converter.html#ReqifConverter._bundle_as_reqifz"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter._bundle_as_reqifz" title="Link to this definition"></a></dt>
+<dd><p>Create the document subfolder, write the .reqif, and bundle into a .reqifz archive.</p>
+<p>The subfolder is named after the document and placed inside the output folder.
+All files inside the subfolder are included in the archive with paths relative
+to the subfolder root.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>doc_name</strong> (<em>str</em>) – Document base name (no extension).</p></li>
+<li><p><strong>reqif_xml</strong> (<em>str</em>) – Serialised ReqIF XML content.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter._collect_enum_values_from_expression">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">_collect_enum_values_from_expression</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">trlc.ast.Expression</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/reqif_converter.html#ReqifConverter._collect_enum_values_from_expression"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter._collect_enum_values_from_expression" title="Link to this definition"></a></dt>
+<dd><p>Collect TRLC enumeration literal names from a field expression.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>value</strong> (<em>Expression</em>) – The TRLC field expression.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of literal name strings, or None if the expression is null or unsupported.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Optional[list]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter._copy_external_files">
+<span class="sig-name descname"><span class="pre">_copy_external_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dest_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/reqif_converter.html#ReqifConverter._copy_external_files"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter._copy_external_files" title="Link to this definition"></a></dt>
+<dd><p>Copy all collected external files to the given destination directory.</p>
+<p>Each file is copied using its basename as the destination file name.  Duplicate
+source paths are copied only once.  If a source file cannot be read, an error
+is logged and the file is skipped.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dest_dir</strong> (<em>str</em>) – Destination directory path.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter._create_enum_attribute">
+<span class="sig-name descname"><span class="pre">_create_enum_attribute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">definition_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">long_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">literal_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enum_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">trlc.ast.Enumeration_Type</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">reqif.models.reqif_spec_object.SpecObjectAttribute</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/reqif_converter.html#ReqifConverter._create_enum_attribute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter._create_enum_attribute" title="Link to this definition"></a></dt>
+<dd><p>Create a SpecObjectAttribute of type ENUMERATION for the given ReqIF spec-object type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>type_key</strong> (<em>str</em>) – Internal key of the owning ReqIF spec-object type.</p></li>
+<li><p><strong>definition_key</strong> (<em>str</em>) – Internal dictionary key used to look up or create the attribute definition.</p></li>
+<li><p><strong>long_name</strong> (<em>str</em>) – Human-readable attribute name registered in the spec-object type.</p></li>
+<li><p><strong>literal_names</strong> (<em>list</em>) – List of TRLC enumeration literal names for the attribute value.</p></li>
+<li><p><strong>enum_type</strong> (<em>Enumeration_Type</em>) – The TRLC enumeration type.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The created attribute.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>SpecObjectAttribute</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter._create_spec_object">
+<span class="sig-name descname"><span class="pre">_create_spec_object</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_long_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attribute_value_map</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">reqif.models.reqif_spec_object.ReqIFSpecObject</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/reqif_converter.html#ReqifConverter._create_spec_object"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter._create_spec_object" title="Link to this definition"></a></dt>
+<dd><p>Create a ReqIFSpecObject for the given ReqIF type and field attributes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>item_name</strong> (<em>str</em>) – Name of the TRLC item used as the spec-object long-name.</p></li>
+<li><p><strong>type_key</strong> (<em>str</em>) – Internal key of the ReqIF spec-object type.</p></li>
+<li><p><strong>type_long_name</strong> (<em>str</em>) – Human-readable long-name of the ReqIF spec-object type.</p></li>
+<li><p><strong>attribute_value_map</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em><em>]</em>) – Mapping from field key to
+<code class="docutils literal notranslate"><span class="pre">{&quot;long_name&quot;:</span> <span class="pre">...,</span> <span class="pre">&quot;value&quot;:</span> <span class="pre">...}</span></code> for each dynamic field attribute.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The created and registered spec-object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ReqIFSpecObject</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter._create_string_attribute">
+<span class="sig-name descname"><span class="pre">_create_string_attribute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">definition_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">long_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">reqif.models.reqif_spec_object.SpecObjectAttribute</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/reqif_converter.html#ReqifConverter._create_string_attribute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter._create_string_attribute" title="Link to this definition"></a></dt>
+<dd><p>Create a SpecObjectAttribute of type STRING for the given ReqIF spec-object type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>type_key</strong> (<em>str</em>) – Internal key of the owning ReqIF spec-object type.</p></li>
+<li><p><strong>definition_key</strong> (<em>str</em>) – Internal dictionary key used to look up or create the attribute definition.</p></li>
+<li><p><strong>long_name</strong> (<em>str</em>) – Human-readable attribute name registered in the spec-object type.</p></li>
+<li><p><strong>value</strong> (<em>str</em>) – String attribute value.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The created attribute.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>SpecObjectAttribute</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter._create_xhtml_attribute">
+<span class="sig-name descname"><span class="pre">_create_xhtml_attribute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">definition_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">long_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xhtml_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">reqif.models.reqif_spec_object.SpecObjectAttribute</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/reqif_converter.html#ReqifConverter._create_xhtml_attribute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter._create_xhtml_attribute" title="Link to this definition"></a></dt>
+<dd><p>Create a SpecObjectAttribute of type XHTML, ensuring the corresponding attribute definition exists.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>type_key</strong> (<em>str</em>) – Internal key of the owning ReqIF spec-object type.</p></li>
+<li><p><strong>definition_key</strong> (<em>str</em>) – Internal dictionary key used to look up or create the attribute definition.</p></li>
+<li><p><strong>long_name</strong> (<em>str</em>) – Human-readable attribute name registered in the spec-object type.</p></li>
+<li><p><strong>xhtml_value</strong> (<em>str</em>) – XHTML-wrapped content string.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The created attribute.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>SpecObjectAttribute</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter._ensure_attribute_definition">
+<span class="sig-name descname"><span class="pre">_ensure_attribute_definition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">definition_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">long_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attribute_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">reqif.models.reqif_types.SpecObjectAttributeType</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/reqif_converter.html#ReqifConverter._ensure_attribute_definition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter._ensure_attribute_definition" title="Link to this definition"></a></dt>
+<dd><p>Return the identifier of an existing attribute definition, or create and register a new one.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>type_key</strong> (<em>str</em>) – Internal key of the owning ReqIF spec-object type.</p></li>
+<li><p><strong>definition_key</strong> (<em>str</em>) – Internal dictionary key for the attribute definition.</p></li>
+<li><p><strong>long_name</strong> (<em>str</em>) – Human-readable name to assign when creating a new definition.</p></li>
+<li><p><strong>attribute_type</strong> (<em>SpecObjectAttributeType</em>) – ReqIF attribute type.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The attribute definition identifier.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter._ensure_enum_attribute_definition">
+<span class="sig-name descname"><span class="pre">_ensure_enum_attribute_definition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">definition_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">long_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enum_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">trlc.ast.Enumeration_Type</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/reqif_converter.html#ReqifConverter._ensure_enum_attribute_definition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter._ensure_enum_attribute_definition" title="Link to this definition"></a></dt>
+<dd><p>Return the identifier of an existing ATTRIBUTE-DEFINITION-ENUMERATION, or create and register a new one.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>type_key</strong> (<em>str</em>) – Internal key of the owning ReqIF spec-object type.</p></li>
+<li><p><strong>definition_key</strong> (<em>str</em>) – Internal dictionary key for the attribute definition.</p></li>
+<li><p><strong>long_name</strong> (<em>str</em>) – Human-readable name to assign when creating a new definition.</p></li>
+<li><p><strong>enum_type</strong> (<em>Enumeration_Type</em>) – The TRLC enumeration type.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The attribute definition identifier.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter._ensure_enum_datatype">
+<span class="sig-name descname"><span class="pre">_ensure_enum_datatype</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">enum_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">trlc.ast.Enumeration_Type</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/reqif_converter.html#ReqifConverter._ensure_enum_datatype"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter._ensure_enum_datatype" title="Link to this definition"></a></dt>
+<dd><p>Return the identifier of an existing DATATYPE-DEFINITION-ENUMERATION, or create and register a new one.</p>
+<p>ENUM-VALUE keys are assigned as consecutive integers starting at 0,
+in the order the literals are declared in the RSL enumeration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>enum_type</strong> (<em>Enumeration_Type</em>) – The TRLC enumeration type.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The datatype definition identifier.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter._ensure_spec_object_type">
+<span class="sig-name descname"><span class="pre">_ensure_spec_object_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">long_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/reqif_converter.html#ReqifConverter._ensure_spec_object_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter._ensure_spec_object_type" title="Link to this definition"></a></dt>
+<dd><p>Return the identifier of an existing ReqIF spec-object type, or create and register a new one.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>type_key</strong> (<em>str</em>) – Internal dictionary key for the spec-object type.</p></li>
+<li><p><strong>long_name</strong> (<em>str</em>) – Human-readable name to assign when creating a new type.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The spec-object type identifier.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter._ensure_spec_relation_type">
+<span class="sig-name descname"><span class="pre">_ensure_spec_relation_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">relation_type_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">long_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/reqif_converter.html#ReqifConverter._ensure_spec_relation_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter._ensure_spec_relation_type" title="Link to this definition"></a></dt>
+<dd><p>Return the identifier of an existing ReqIF spec-relation type, or create and register a new one.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>relation_type_key</strong> (<em>str</em>) – Internal dictionary key for the spec-relation type.</p></li>
+<li><p><strong>long_name</strong> (<em>str</em>) – Human-readable relation type name.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The spec-relation type identifier.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter._file_name_trlc_to_reqif">
+<span class="sig-name descname"><span class="pre">_file_name_trlc_to_reqif</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_name_trlc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/reqif_converter.html#ReqifConverter._file_name_trlc_to_reqif"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter._file_name_trlc_to_reqif" title="Link to this definition"></a></dt>
+<dd><p>Convert a TRLC file name to a ReqIF file name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file_name_trlc</strong> (<em>str</em>) – TRLC file name</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>ReqIF file name</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter._flush_pending_hierarchy">
+<span class="sig-name descname"><span class="pre">_flush_pending_hierarchy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/reqif_converter.html#ReqifConverter._flush_pending_hierarchy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter._flush_pending_hierarchy" title="Link to this definition"></a></dt>
+<dd><p>Flush a deferred record hierarchy node as a standalone leaf.</p>
+<p>When a record is processed its hierarchy insertion is deferred so that a
+following section can promote it to a container instead.  Call this method
+before inserting any new node (record or section) that must not consume the
+pending record.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter._get_datatype_identifier">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">_get_datatype_identifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">attribute_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">reqif.models.reqif_types.SpecObjectAttributeType</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/reqif_converter.html#ReqifConverter._get_datatype_identifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter._get_datatype_identifier" title="Link to this definition"></a></dt>
+<dd><p>Return the datatype definition identifier for the given ReqIF attribute type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>attribute_type</strong> (<em>SpecObjectAttributeType</em>) – ReqIF attribute type.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Matching datatype definition identifier.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter._get_field_enum_type">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">_get_field_enum_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">trlc.ast.Record_Object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">trlc.ast.Enumeration_Type</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/reqif_converter.html#ReqifConverter._get_field_enum_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter._get_field_enum_type" title="Link to this definition"></a></dt>
+<dd><p>Return the TRLC Enumeration_Type for the named field, or None if it is not an enum field.</p>
+<p>Traverses the component hierarchy including inherited components.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>record</strong> (<em>Record_Object</em>) – The TRLC record object.</p></li>
+<li><p><strong>field_name</strong> (<em>str</em>) – The field name to look up.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The enumeration type, or None.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Optional[Enumeration_Type]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter._get_record_type_key">
+<span class="sig-name descname"><span class="pre">_get_record_type_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">trlc.ast.Record_Object</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/reqif_converter.html#ReqifConverter._get_record_type_key"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter._get_record_type_key" title="Link to this definition"></a></dt>
+<dd><p>Return the ReqIF type key for the given TRLC record.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>record</strong> (<em>Record_Object</em>) – The record object.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>ReqIF type key derived from the TRLC record type.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter._get_reqif_timestamp">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">_get_reqif_timestamp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/reqif_converter.html#ReqifConverter._get_reqif_timestamp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter._get_reqif_timestamp" title="Link to this definition"></a></dt>
+<dd><p>Return the current UTC time as a ReqIF-compatible ISO 8601 timestamp.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ISO 8601 timestamp string (UTC, no microseconds).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter._get_spec_object_type_identifier">
+<span class="sig-name descname"><span class="pre">_get_spec_object_type_identifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/reqif_converter.html#ReqifConverter._get_spec_object_type_identifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter._get_spec_object_type_identifier" title="Link to this definition"></a></dt>
+<dd><p>Return the identifier of the requested ReqIF spec-object type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>type_key</strong> (<em>str</em>) – Internal dictionary key for the spec-object type.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The spec-object type identifier.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter._get_trlc_ast_walker">
+<span class="sig-name descname"><span class="pre">_get_trlc_ast_walker</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../trlc_helper/index.html#pyTRLCConverter.trlc_helper.TrlcAstWalker" title="pyTRLCConverter.trlc_helper.TrlcAstWalker"><span class="pre">pyTRLCConverter.trlc_helper.TrlcAstWalker</span></a></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/reqif_converter.html#ReqifConverter._get_trlc_ast_walker"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter._get_trlc_ast_walker" title="Link to this definition"></a></dt>
+<dd><p>Create and configure a TrlcAstWalker for traversing TRLC record field values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The configured TRLC AST walker.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../trlc_helper/index.html#pyTRLCConverter.trlc_helper.TrlcAstWalker" title="pyTRLCConverter.trlc_helper.TrlcAstWalker">TrlcAstWalker</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter._markdown_to_xhtml">
+<span class="sig-name descname"><span class="pre">_markdown_to_xhtml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">markdown_text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gfm_mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">table_options</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/reqif_converter.html#ReqifConverter._markdown_to_xhtml"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter._markdown_to_xhtml" title="Link to this definition"></a></dt>
+<dd><p>Convert Markdown text to an XHTML-wrapped string using marko.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">table_options</span></code> is provided and non-empty, table styling is applied to the
+generated HTML before wrapping (see <a class="reference internal" href="#pyTRLCConverter.reqif_converter.ReqifConverter._apply_table_options" title="pyTRLCConverter.reqif_converter.ReqifConverter._apply_table_options"><code class="xref py py-meth docutils literal notranslate"><span class="pre">_apply_table_options()</span></code></a>).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>markdown_text</strong> (<em>str</em>) – Markdown source text.</p></li>
+<li><p><strong>gfm_mode</strong> (<em>bool</em>) – If True, use the GFM extension; otherwise use CommonMark.</p></li>
+<li><p><strong>table_options</strong> (<em>Optional</em><em>[</em><em>dict</em><em>]</em>) – Optional table rendering options with keys
+<code class="docutils literal notranslate"><span class="pre">&quot;border&quot;</span></code> and/or <code class="docutils literal notranslate"><span class="pre">&quot;headingStyle&quot;</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>XHTML-wrapped HTML string.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter._new_identifier">
+<span class="sig-name descname"><span class="pre">_new_identifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/reqif_converter.html#ReqifConverter._new_identifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter._new_identifier" title="Link to this definition"></a></dt>
+<dd><p>Generate a unique identifier by combining the given prefix with an auto-incrementing counter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>prefix</strong> (<em>str</em>) – Identifier prefix (e.g. <code class="docutils literal notranslate"><span class="pre">&quot;spec-object&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;hierarchy&quot;</span></code>)</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Unique identifier string.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter._on_implict_null">
+<span class="sig-name descname"><span class="pre">_on_implict_null</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">_</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">trlc.ast.Implicit_Null</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/reqif_converter.html#ReqifConverter._on_implict_null"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter._on_implict_null" title="Link to this definition"></a></dt>
+<dd><p>Process the given implicit null value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The configured empty attribute value.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter._on_record_reference">
+<span class="sig-name descname"><span class="pre">_on_record_reference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record_reference</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">trlc.ast.Record_Reference</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/reqif_converter.html#ReqifConverter._on_record_reference"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter._on_record_reference" title="Link to this definition"></a></dt>
+<dd><p>Process the given record reference value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>record_reference</strong> (<em>Record_Reference</em>) – The record reference value.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>String representation of the referenced record.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter._on_string_literal">
+<span class="sig-name descname"><span class="pre">_on_string_literal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string_literal</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">trlc.ast.String_Literal</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/reqif_converter.html#ReqifConverter._on_string_literal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter._on_string_literal" title="Link to this definition"></a></dt>
+<dd><p>Process the given string literal value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>string_literal</strong> (<em>String_Literal</em>) – The string literal value.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The string literal value.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter._other_dispatcher">
+<span class="sig-name descname"><span class="pre">_other_dispatcher</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">expression</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">trlc.ast.Expression</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/reqif_converter.html#ReqifConverter._other_dispatcher"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter._other_dispatcher" title="Link to this definition"></a></dt>
+<dd><p>Dispatcher for all other expressions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>expression</strong> (<em>Expression</em>) – The expression to process.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The processed expression.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter._path_to_xhtml">
+<span class="sig-name descname"><span class="pre">_path_to_xhtml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/reqif_converter.html#ReqifConverter._path_to_xhtml"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter._path_to_xhtml" title="Link to this definition"></a></dt>
+<dd><p>Convert a file path to a ReqIF XHTML <code class="docutils literal notranslate"><span class="pre">&lt;object&gt;</span></code> element and schedule the file for copying.</p>
+<p>The file is referenced locally by its basename.  The MIME type is determined from
+the file extension; if unknown, <code class="docutils literal notranslate"><span class="pre">application/octet-stream</span></code> is used.  If <code class="docutils literal notranslate"><span class="pre">file_path</span></code>
+is empty the value is rendered as plain text instead.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file_path</strong> (<em>str</em>) – Path to the external file (may be relative or absolute).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>XHTML-wrapped <code class="docutils literal notranslate"><span class="pre">&lt;object&gt;</span></code> element string.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter._plain_text_to_xhtml">
+<span class="sig-name descname"><span class="pre">_plain_text_to_xhtml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">plain_text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/reqif_converter.html#ReqifConverter._plain_text_to_xhtml"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter._plain_text_to_xhtml" title="Link to this definition"></a></dt>
+<dd><p>Convert plain text to an XHTML-wrapped string.</p>
+<p>Blank-line-separated paragraphs are wrapped in <code class="docutils literal notranslate"><span class="pre">&lt;p&gt;</span></code> tags; single
+newlines within a paragraph become <code class="docutils literal notranslate"><span class="pre">&lt;br/&gt;</span></code> elements.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>plain_text</strong> (<em>str</em>) – Plain text to convert.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>XHTML-wrapped content string.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter._queue_spec_relation">
+<span class="sig-name descname"><span class="pre">_queue_spec_relation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source_record</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">trlc.ast.Record_Object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">record_reference</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">trlc.ast.Record_Reference</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">relation_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/reqif_converter.html#ReqifConverter._queue_spec_relation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter._queue_spec_relation" title="Link to this definition"></a></dt>
+<dd><p>Queue a ReqIF spec relation derived from a TRLC record reference.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source_record</strong> (<em>Record_Object</em>) – Source record containing the reference.</p></li>
+<li><p><strong>record_reference</strong> (<em>Record_Reference</em>) – Referenced target record.</p></li>
+<li><p><strong>relation_name</strong> (<em>str</em>) – TRLC field name that defines the relation type.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter._queue_spec_relations_from_expression">
+<span class="sig-name descname"><span class="pre">_queue_spec_relations_from_expression</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source_record</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">trlc.ast.Record_Object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expression</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">trlc.ast.Expression</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">relation_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/reqif_converter.html#ReqifConverter._queue_spec_relations_from_expression"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter._queue_spec_relations_from_expression" title="Link to this definition"></a></dt>
+<dd><p>Queue ReqIF spec relations from a TRLC expression if it consists of record references.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source_record</strong> (<em>Record_Object</em>) – Source record containing the reference expression.</p></li>
+<li><p><strong>expression</strong> (<em>Expression</em>) – TRLC field expression to inspect.</p></li>
+<li><p><strong>relation_name</strong> (<em>str</em>) – TRLC field name that defines the relation type.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the expression was handled as one or more record references.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter._render">
+<span class="sig-name descname"><span class="pre">_render</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">package_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attribute_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attribute_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/reqif_converter.html#ReqifConverter._render"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter._render" title="Link to this definition"></a></dt>
+<dd><p>Render an attribute value to an XHTML-wrapped string based on the render configuration.</p>
+<p>If the attribute is configured as CommonMark Markdown, it is converted via marko.
+If configured as GFM, it is converted with the GFM extension.
+If configured as XHTML, the value is passed through as-is inside the XHTML wrapper.
+If configured as path, the value is treated as a file path and converted to an XHTML
+<code class="docutils literal notranslate"><span class="pre">&lt;object&gt;</span></code> element; the file is scheduled for copying to the output folder.
+Otherwise plain text is HTML-escaped and wrapped.</p>
+<p>For Markdown and GFM formats, optional table rendering options (<code class="docutils literal notranslate"><span class="pre">border</span></code>,
+<code class="docutils literal notranslate"><span class="pre">headingStyle</span></code>) from the render configuration are applied to the generated HTML.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>package_name</strong> (<em>str</em>) – TRLC package name of the record.</p></li>
+<li><p><strong>type_name</strong> (<em>str</em>) – TRLC type name of the record.</p></li>
+<li><p><strong>attribute_name</strong> (<em>str</em>) – Attribute field name.</p></li>
+<li><p><strong>attribute_value</strong> (<em>str</em>) – Raw attribute value string.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>XHTML-wrapped content string.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter._reset_document_state">
+<span class="sig-name descname"><span class="pre">_reset_document_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/reqif_converter.html#ReqifConverter._reset_document_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter._reset_document_state" title="Link to this definition"></a></dt>
+<dd><p>Reset all per-document state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>title</strong> (<em>str</em>) – The document title used as the specification long-name.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter._sanitize_identifier_token">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">_sanitize_identifier_token</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/reqif_converter.html#ReqifConverter._sanitize_identifier_token"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter._sanitize_identifier_token" title="Link to this definition"></a></dt>
+<dd><p>Sanitize an identifier token for stable ReqIF identifiers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>value</strong> (<em>str</em>) – Raw identifier token.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Sanitized lowercase token.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter._wrap_xhtml">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">_wrap_xhtml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fragment</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/reqif_converter.html#ReqifConverter._wrap_xhtml"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter._wrap_xhtml" title="Link to this definition"></a></dt>
+<dd><p>Wrap an HTML fragment in a ReqIF-compatible XHTML div element.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>fragment</strong> (<em>str</em>) – Inner HTML fragment.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>XHTML-wrapped string.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter._write_document">
+<span class="sig-name descname"><span class="pre">_write_document</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../ret/index.html#pyTRLCConverter.ret.Ret" title="pyTRLCConverter.ret.Ret"><span class="pre">pyTRLCConverter.ret.Ret</span></a></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/reqif_converter.html#ReqifConverter._write_document"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter._write_document" title="Link to this definition"></a></dt>
+<dd><p>Build the ReqIF bundle and write it to the output file.</p>
+<p>Without –reqifz the .reqif file is written directly into the output folder.
+With –reqifz a subfolder named after the document is created inside the
+output folder, the .reqif file is placed there, and all files inside that
+subfolder are bundled into a .reqifz archive in the output folder.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file_name</strong> (<em>str</em>) – Output file name (without path prefix).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Status</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../ret/index.html#pyTRLCConverter.ret.Ret" title="pyTRLCConverter.ret.Ret">Ret</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter.begin">
+<span class="sig-name descname"><span class="pre">begin</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../ret/index.html#pyTRLCConverter.ret.Ret" title="pyTRLCConverter.ret.Ret"><span class="pre">pyTRLCConverter.ret.Ret</span></a></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/reqif_converter.html#ReqifConverter.begin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter.begin" title="Link to this definition"></a></dt>
+<dd><p>Begin the conversion process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Status</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../ret/index.html#pyTRLCConverter.ret.Ret" title="pyTRLCConverter.ret.Ret">Ret</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter.convert_record_object_generic">
+<span class="sig-name descname"><span class="pre">convert_record_object_generic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">trlc.ast.Record_Object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../ret/index.html#pyTRLCConverter.ret.Ret" title="pyTRLCConverter.ret.Ret"><span class="pre">pyTRLCConverter.ret.Ret</span></a></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/reqif_converter.html#ReqifConverter.convert_record_object_generic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter.convert_record_object_generic" title="Link to this definition"></a></dt>
+<dd><p>Convert a record object generically to a ReqIF spec-object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>record</strong> (<em>Record_Object</em>) – The record object.</p></li>
+<li><p><strong>level</strong> (<em>int</em>) – The record level.</p></li>
+<li><p><strong>translation</strong> (<em>Optional</em><em>[</em><em>dict</em><em>]</em>) – Translation dictionary for the record object.
+If None, no translation is applied.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Status</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../ret/index.html#pyTRLCConverter.ret.Ret" title="pyTRLCConverter.ret.Ret">Ret</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter.convert_section">
+<span class="sig-name descname"><span class="pre">convert_section</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">section</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../ret/index.html#pyTRLCConverter.ret.Ret" title="pyTRLCConverter.ret.Ret"><span class="pre">pyTRLCConverter.ret.Ret</span></a></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/reqif_converter.html#ReqifConverter.convert_section"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter.convert_section" title="Link to this definition"></a></dt>
+<dd><p>Process the given section item as a named SPEC-HIERARCHY container.</p>
+<p>The section reuses the last processed TRLC record’s SPEC-OBJECT as the mandatory
+SPEC-OBJECT-REF in the SPEC-HIERARCHY node (the ReqIF v1.2 schema requires
+minOccurs=1). The section title is carried by the hierarchy node’s LONG-NAME.
+No dedicated section SPEC-OBJECT is created.</p>
+<p>If no record has been processed yet, the section name is used as the document
+title (specification long-name) for the very first such section.  Any further
+section without a preceding record emits a warning and is skipped.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>section</strong> (<em>str</em>) – The section name</p></li>
+<li><p><strong>level</strong> (<em>int</em>) – The section indentation level</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Status</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../ret/index.html#pyTRLCConverter.ret.Ret" title="pyTRLCConverter.ret.Ret">Ret</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter.enter_file">
+<span class="sig-name descname"><span class="pre">enter_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../ret/index.html#pyTRLCConverter.ret.Ret" title="pyTRLCConverter.ret.Ret"><span class="pre">pyTRLCConverter.ret.Ret</span></a></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/reqif_converter.html#ReqifConverter.enter_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter.enter_file" title="Link to this definition"></a></dt>
+<dd><p>Enter a file and reset document state in multiple document mode.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file_name</strong> (<em>str</em>) – File name</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Status</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../ret/index.html#pyTRLCConverter.ret.Ret" title="pyTRLCConverter.ret.Ret">Ret</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter.finish">
+<span class="sig-name descname"><span class="pre">finish</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../ret/index.html#pyTRLCConverter.ret.Ret" title="pyTRLCConverter.ret.Ret"><span class="pre">pyTRLCConverter.ret.Ret</span></a></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/reqif_converter.html#ReqifConverter.finish"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter.finish" title="Link to this definition"></a></dt>
+<dd><p>Finish the conversion process and write the output in single document mode.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Status</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../ret/index.html#pyTRLCConverter.ret.Ret" title="pyTRLCConverter.ret.Ret">Ret</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter.get_description">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">get_description</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/reqif_converter.html#ReqifConverter.get_description"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter.get_description" title="Link to this definition"></a></dt>
+<dd><p>Return converter description.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Converter description</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter.get_subcommand">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">get_subcommand</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/reqif_converter.html#ReqifConverter.get_subcommand"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter.get_subcommand" title="Link to this definition"></a></dt>
+<dd><p>Return subcommand token for this converter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Parser subcommand token</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter.leave_file">
+<span class="sig-name descname"><span class="pre">leave_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../ret/index.html#pyTRLCConverter.ret.Ret" title="pyTRLCConverter.ret.Ret"><span class="pre">pyTRLCConverter.ret.Ret</span></a></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/reqif_converter.html#ReqifConverter.leave_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter.leave_file" title="Link to this definition"></a></dt>
+<dd><p>Leave a file and write the ReqIF document in multiple document mode.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file_name</strong> (<em>str</em>) – File name</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Status</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../ret/index.html#pyTRLCConverter.ret.Ret" title="pyTRLCConverter.ret.Ret">Ret</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter.register">
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">register</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args_parser</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/reqif_converter.html#ReqifConverter.register"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter.register" title="Link to this definition"></a></dt>
+<dd><p>Register converter specific argument parser.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>args_parser</strong> (<em>Any</em>) – Argument parser</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter.ATTRIBUTE_KEY_RECORD_FOREIGN_ID">
+<span class="sig-name descname"><span class="pre">ATTRIBUTE_KEY_RECORD_FOREIGN_ID</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'foreignID'</span></span><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter.ATTRIBUTE_KEY_RECORD_FOREIGN_ID" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter.DATATYPE_STRING_IDENTIFIER">
+<span class="sig-name descname"><span class="pre">DATATYPE_STRING_IDENTIFIER</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'datatype-string'</span></span><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter.DATATYPE_STRING_IDENTIFIER" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter.DATATYPE_XHTML_IDENTIFIER">
+<span class="sig-name descname"><span class="pre">DATATYPE_XHTML_IDENTIFIER</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'datatype-xhtml'</span></span><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter.DATATYPE_XHTML_IDENTIFIER" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter.EMPTY_ATTRIBUTE_DEFAULT">
+<span class="sig-name descname"><span class="pre">EMPTY_ATTRIBUTE_DEFAULT</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></span><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter.EMPTY_ATTRIBUTE_DEFAULT" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter.OUTPUT_FILE_NAME_DEFAULT">
+<span class="sig-name descname"><span class="pre">OUTPUT_FILE_NAME_DEFAULT</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'output.reqif'</span></span><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter.OUTPUT_FILE_NAME_DEFAULT" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter.REQIF_VERSION">
+<span class="sig-name descname"><span class="pre">REQIF_VERSION</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'1.0'</span></span><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter.REQIF_VERSION" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter.SPECIFICATION_TYPE_IDENTIFIER">
+<span class="sig-name descname"><span class="pre">SPECIFICATION_TYPE_IDENTIFIER</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'specification-type-trlc'</span></span><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter.SPECIFICATION_TYPE_IDENTIFIER" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter.SYSTEM_ATTRIBUTE_PREFIX">
+<span class="sig-name descname"><span class="pre">SYSTEM_ATTRIBUTE_PREFIX</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'ReqIF.'</span></span><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter.SYSTEM_ATTRIBUTE_PREFIX" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter.TOP_LEVEL_DEFAULT">
+<span class="sig-name descname"><span class="pre">TOP_LEVEL_DEFAULT</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Specification'</span></span><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter.TOP_LEVEL_DEFAULT" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter.XSI_NAMESPACE">
+<span class="sig-name descname"><span class="pre">XSI_NAMESPACE</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'http://www.w3.org/2001/XMLSchema-instance'</span></span><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter.XSI_NAMESPACE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter._attribute_definitions_by_type">
+<span class="sig-name descname"><span class="pre">_attribute_definitions_by_type</span></span><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter._attribute_definitions_by_type" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter._document_title">
+<span class="sig-name descname"><span class="pre">_document_title</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Specification'</span></span><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter._document_title" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter._enum_datatype_registry">
+<span class="sig-name descname"><span class="pre">_enum_datatype_registry</span></span><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter._enum_datatype_registry" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter._external_files">
+<span class="sig-name descname"><span class="pre">_external_files</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></span><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter._external_files" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter._hierarchy_stack">
+<span class="sig-name descname"><span class="pre">_hierarchy_stack</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></span><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter._hierarchy_stack" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter._id_counter">
+<span class="sig-name descname"><span class="pre">_id_counter</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></span><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter._id_counter" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter._last_spec_object_identifier">
+<span class="sig-name descname"><span class="pre">_last_spec_object_identifier</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter._last_spec_object_identifier" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter._markdown_renderer_gfm">
+<span class="sig-name descname"><span class="pre">_markdown_renderer_gfm</span></span><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter._markdown_renderer_gfm" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter._markdown_renderer_md">
+<span class="sig-name descname"><span class="pre">_markdown_renderer_md</span></span><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter._markdown_renderer_md" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter._out_path">
+<span class="sig-name descname"><span class="pre">_out_path</span></span><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter._out_path" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter._pending_hierarchy_args">
+<span class="sig-name descname"><span class="pre">_pending_hierarchy_args</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">tuple</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter._pending_hierarchy_args" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter._pending_relations">
+<span class="sig-name descname"><span class="pre">_pending_relations</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></span><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter._pending_relations" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter._root_hierarchies">
+<span class="sig-name descname"><span class="pre">_root_hierarchies</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></span><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter._root_hierarchies" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter._spec_object_identifier_by_record">
+<span class="sig-name descname"><span class="pre">_spec_object_identifier_by_record</span></span><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter._spec_object_identifier_by_record" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter._spec_object_type_info">
+<span class="sig-name descname"><span class="pre">_spec_object_type_info</span></span><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter._spec_object_type_info" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter._spec_objects">
+<span class="sig-name descname"><span class="pre">_spec_objects</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></span><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter._spec_objects" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter._spec_relation_type_info">
+<span class="sig-name descname"><span class="pre">_spec_relation_type_info</span></span><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter._spec_relation_type_info" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter._spec_relations">
+<span class="sig-name descname"><span class="pre">_spec_relations</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></span><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter._spec_relations" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter._spec_title_captured">
+<span class="sig-name descname"><span class="pre">_spec_title_captured</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></span><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter._spec_title_captured" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../render_config/index.html" class="btn btn-neutral float-left" title="pyTRLCConverter.render_config" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../ret/index.html" class="btn btn-neutral float-right" title="pyTRLCConverter.ret" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024 - 2026, NewTec GmbH.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

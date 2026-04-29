@@ -1,0 +1,311 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pyTRLCConverter.item_walker &mdash; pyTRLCConverter  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=563f12fe" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/version_selector.js?v=02fa0f40"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #0C2C40" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            pyTRLCConverter
+              <img src="../../_static/NewTec_Logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../sw_requirements.html">SW Requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sw_architecture.html">SW Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sw_detail_design.html">SW Detailed Design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sw_tests.html">SW Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sw_tracing_report.html">SW Tracing Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sw_test_result_report.html">SW Test Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../coverage_report.html">Coverage Report</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../license_include.html">License information</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #0C2C40" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pyTRLCConverter</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">pyTRLCConverter.item_walker</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pyTRLCConverter.item_walker</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module implements a TRLC items walker over the loaded model.</span>
+
+<span class="sd">Author: Norbert Schulz (norbert.schulz@newtec.de)</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># pyTRLCConverter - A tool to convert TRLC files to specific formats.</span>
+<span class="c1"># Copyright (c) 2024 - 2026 NewTec GmbH</span>
+<span class="c1">#</span>
+<span class="c1"># This file is part of pyTRLCConverter program.</span>
+<span class="c1">#</span>
+<span class="c1"># The pyTRLCConverter program is free software: you can redistribute it and/or modify it under</span>
+<span class="c1"># the terms of the GNU General Public License as published by the Free Software Foundation,</span>
+<span class="c1"># either version 3 of the License, or (at your option) any later version.</span>
+<span class="c1">#</span>
+<span class="c1"># The pyTRLCConverter program is distributed in the hope that it will be useful, but</span>
+<span class="c1"># WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or</span>
+<span class="c1"># FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1"># You should have received a copy of the GNU General Public License along with pyTRLCConverter.</span>
+<span class="c1"># If not, see &lt;https://www.gnu.org/licenses/&gt;.</span>
+
+<span class="c1"># Imports **********************************************************************</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">traceback</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">trlc.ast</span><span class="w"> </span><span class="kn">import</span> <span class="n">Symbol_Table</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyTRLCConverter.abstract_converter</span><span class="w"> </span><span class="kn">import</span> <span class="n">AbstractConverter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyTRLCConverter.logger</span><span class="w"> </span><span class="kn">import</span> <span class="n">log_verbose</span><span class="p">,</span> <span class="n">log_error</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyTRLCConverter.trlc_helper</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_file_dict_from_symbols</span><span class="p">,</span> <span class="n">is_item_record</span><span class="p">,</span> <span class="n">is_item_section</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyTRLCConverter.ret</span><span class="w"> </span><span class="kn">import</span> <span class="n">Ret</span>
+
+<span class="c1"># Variables ********************************************************************</span>
+
+<span class="c1"># Classes **********************************************************************</span>
+
+
+<span class="c1"># pylint: disable-next=too-few-public-methods</span>
+<div class="viewcode-block" id="ItemWalker">
+<a class="viewcode-back" href="../../api/pyTRLCConverter/item_walker/index.html#pyTRLCConverter.item_walker.ItemWalker">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ItemWalker</span><span class="p">:</span>
+    <span class="c1"># lobster-trace: SwRequirements.sw_req_process_trlc_symbols</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A walker that traverses through the TRLC items in the given symbol table.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        _converter (AbstractConverter): The converter used for processing items.</span>
+<span class="sd">        _exclude_files (list): List of file paths to exclude from processing.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">converter</span><span class="p">:</span> <span class="n">AbstractConverter</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the TrlcWalker with the given arguments and converter.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            args (Any): Arguments containing the exclude file paths.</span>
+<span class="sd">            converter (AbstractConverter): The converter used for processing items.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_converter</span> <span class="o">=</span> <span class="n">converter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_exclude_files</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">exclude</span>
+
+<div class="viewcode-block" id="ItemWalker.walk_symbols">
+<a class="viewcode-back" href="../../api/pyTRLCConverter/item_walker/index.html#pyTRLCConverter.item_walker.ItemWalker.walk_symbols">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">walk_symbols</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">symbol_table</span><span class="p">:</span> <span class="n">Symbol_Table</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Ret</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Walks through the items in the given symbol table and processes them.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            symbol_table (Symbol_Table): The symbol table containing items to be walked through.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Ret: Status of the walk operation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_converter</span><span class="o">.</span><span class="n">begin</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">result</span> <span class="o">==</span> <span class="n">Ret</span><span class="o">.</span><span class="n">OK</span><span class="p">:</span>
+            <span class="n">files_dict</span> <span class="o">=</span> <span class="n">get_file_dict_from_symbols</span><span class="p">(</span><span class="n">symbol_table</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">file_name</span><span class="p">,</span> <span class="n">item_list</span> <span class="ow">in</span> <span class="n">files_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">skip_it</span> <span class="o">=</span> <span class="kc">False</span>
+
+                <span class="c1"># Normalize the file name to make it comparable.</span>
+                <span class="n">file_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_exclude_files</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">excluded_path</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_exclude_files</span><span class="p">:</span>
+
+                        <span class="c1"># Normalize the excluded path to make it comparable.</span>
+                        <span class="n">excluded_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">excluded_path</span><span class="p">)</span>
+
+                        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">commonpath</span><span class="p">([</span><span class="n">excluded_path</span><span class="p">,</span> <span class="n">file_name</span><span class="p">])</span> <span class="o">==</span> <span class="n">excluded_path</span><span class="p">:</span>
+                            <span class="n">skip_it</span> <span class="o">=</span> <span class="kc">True</span>
+                            <span class="k">break</span>
+
+                <span class="k">if</span> <span class="n">skip_it</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+                    <span class="n">log_verbose</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Skipping file </span><span class="si">{</span><span class="n">file_name</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">log_verbose</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Processing file </span><span class="si">{</span><span class="n">file_name</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+                    <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_walk_file</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="n">item_list</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">result</span> <span class="o">!=</span> <span class="n">Ret</span><span class="o">.</span><span class="n">OK</span><span class="p">:</span>
+                    <span class="k">break</span>
+
+        <span class="k">if</span> <span class="n">result</span> <span class="o">==</span> <span class="n">Ret</span><span class="o">.</span><span class="n">OK</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_converter</span><span class="o">.</span><span class="n">finish</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="ItemWalker._walk_file">
+<a class="viewcode-back" href="../../api/pyTRLCConverter/item_walker/index.html#pyTRLCConverter.item_walker.ItemWalker._walk_file">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_walk_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">item_list</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Ret</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Walks through the items in the given file.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            file_name (str): The name of the file.</span>
+<span class="sd">            item_list (Any): The list of trlc items in the file.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Ret: The result of the walk operation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">Ret</span><span class="o">.</span><span class="n">ERROR</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">Ret</span><span class="o">.</span><span class="n">OK</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_converter</span><span class="o">.</span><span class="n">enter_file</span><span class="p">(</span><span class="n">file_name</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">Ret</span><span class="o">.</span><span class="n">OK</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_walk_items</span><span class="p">(</span><span class="n">item_list</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">Ret</span><span class="o">.</span><span class="n">OK</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_converter</span><span class="o">.</span><span class="n">leave_file</span><span class="p">(</span><span class="n">file_name</span><span class="p">):</span>
+                        <span class="n">result</span> <span class="o">=</span> <span class="n">Ret</span><span class="o">.</span><span class="n">OK</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>  <span class="c1"># pylint: disable=broad-except</span>
+            <span class="n">log_error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error processing file </span><span class="si">{</span><span class="n">file_name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="ItemWalker._walk_items">
+<a class="viewcode-back" href="../../api/pyTRLCConverter/item_walker/index.html#pyTRLCConverter.item_walker.ItemWalker._walk_items">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_walk_items</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Ret</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Walks through the given list of items.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            item_list (list): The list of items to walk through.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Ret: The result of the walk operation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="n">Ret</span><span class="o">.</span><span class="n">OK</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">item_list</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_visit_item</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">result</span> <span class="o">!=</span> <span class="n">Ret</span><span class="o">.</span><span class="n">OK</span><span class="p">:</span>
+                    <span class="k">break</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>  <span class="c1"># pylint: disable=broad-except</span>
+            <span class="n">log_error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error processing item </span><span class="si">{</span><span class="n">item</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">traceback</span><span class="o">.</span><span class="n">print_exc</span><span class="p">()</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">Ret</span><span class="o">.</span><span class="n">ERROR</span>
+
+        <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="ItemWalker._visit_item">
+<a class="viewcode-back" href="../../api/pyTRLCConverter/item_walker/index.html#pyTRLCConverter.item_walker.ItemWalker._visit_item">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_visit_item</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Ret</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Visits the given item and processes it based on its type.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            item (Any): The item to visit.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Ret: The result of the visit.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">Ret</span><span class="o">.</span><span class="n">OK</span>
+
+        <span class="k">if</span> <span class="n">is_item_section</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_converter</span><span class="o">.</span><span class="n">convert_section</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">elif</span> <span class="n">is_item_record</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_converter</span><span class="o">.</span><span class="n">convert_record_object</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">log_error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unrecognized item type </span><span class="si">{</span><span class="n">item</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">Ret</span><span class="o">.</span><span class="n">ERROR</span>
+
+        <span class="k">return</span> <span class="n">result</span></div>
+</div>
+
+
+<span class="c1"># Functions ********************************************************************</span>
+
+
+<span class="c1"># Main *************************************************************************</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024 - 2026, NewTec GmbH.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
