@@ -2,7 +2,7 @@
 """
 
 # pyTRLCConverter - A tool to convert TRLC files to specific formats.
-# Copyright (c) 2024 - 2025 NewTec GmbH
+# Copyright (c) 2024 - 2026 NewTec GmbH
 #
 # This file is part of pyTRLCConverter program.
 #
@@ -43,6 +43,7 @@ def test_tc_cli_no_arguments(record_property, capsys, monkeypatch):
         monkeypatch (Any): Used to mock program arguments.
     """
     record_property("lobster-trace", "SwTests.tc_cli")
+    record_property("lobster-trace", "SwTests.tc_error")
 
     # Mock program arguments to simulate running the script without any arguments.
     monkeypatch.setattr("sys.argv", ["pyTRLCConverter"])

@@ -1,0 +1,58 @@
+@startuml
+
+class BaseConverter {
+}
+
+class RstConverter extends BaseConverter {
+    +get_subcommand() : str
+    +get_description() : str
+    +register(args_parser: Any) : None
+    +begin() : Ret
+    +enter_file(file_name: str) : Ret
+    +leave_file(file_name: str) : Ret
+    +convert_section(section: str, level: int) : Ret
+    +convert_record_object_generic(record: Record_Object, level: int, translation: Optional[dict]) : Ret
+}
+
+' Define external dependencies
+package "Dependencies" {
+
+    class trlc <<(M ,lightblue) module>>{
+    }
+
+    note bottom of trlc
+        Use TRLC ast items:
+        * Implicit_Null
+        * Record_Object
+        * Record_Reference
+        * String_Literal
+        * Expression
+    end note
+
+    class TrlcAstWalker {
+        + walk(ast: Any) : None
+    }
+
+    class Md2RstRenderer {
+        + render(ast: Any) : str
+    }
+
+    class Gfm2RstRenderer {
+        + render(ast: Any) : str
+    }
+
+    class marko <<(M ,lightblue) module>> {
+    }
+    note bottom of marko
+        Markdown Parser
+    end note
+}
+
+' Relationships
+RstConverter ..> trlc
+RstConverter ..> TrlcAstWalker
+RstConverter ..> Md2RstRenderer
+RstConverter ..> Gfm2RstRenderer
+RstConverter ..> marko
+
+@enduml

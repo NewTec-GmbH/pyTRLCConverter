@@ -2,7 +2,7 @@
 """
 
 # pyTRLCConverter - A tool to convert TRLC files to specific formats.
-# Copyright (c) 2024 - 2025 NewTec GmbH
+# Copyright (c) 2024 - 2026 NewTec GmbH
 #
 # This file is part of pyTRLCConverter program.
 #
@@ -20,6 +20,7 @@
 # Imports **********************************************************************
 
 import re
+import shutil
 import pytest
 
 from pyTRLCConverter.__main__ import main
@@ -106,9 +107,11 @@ def test_tc_cli_exclude(record_property, capsys, monkeypatch):
     # Mock program arguments to simulate running the script with two test requirement files.
     monkeypatch.setattr("sys.argv", [
         "pyTRLCConverter",
-        "--source", "./tests/utils",
+        "--source", "./tests/utils/req.rsl",
+        "--source", "./tests/utils/single_req_no_section.trlc",
+        "--source", "./tests/utils/single_req_with_link.trlc",
+        "--source", "./tests/utils/single_req_with_section.trlc",
         "--exclude", "./tests/utils/single_req_with_link.trlc",
-        "--exclude", "./tests/utils/single_req_description_md.trlc",
         "--project", "./tests/utils/psc_simple",
         "simple"
     ])
@@ -132,7 +135,7 @@ def test_tc_cli_exclude(record_property, capsys, monkeypatch):
     assert lines[4] == "req_id_2"
     assert lines[5] == "description: Test description"
 
-def test_tc_cli_include(record_property, capsys, monkeypatch):
+def test_tc_cli_include(record_property, capsys, monkeypatch, tmp_path):
     # lobster-trace: SwTests.tc_cli_include
     """
     This test case checks whether a TRLC file can be included as on demand context in the conversion.
@@ -141,16 +144,20 @@ def test_tc_cli_include(record_property, capsys, monkeypatch):
         record_property (Any): Used to inject the test case reference into the test results.
         capsys (Any): Used to capture stdout and stderr.
         monkeypatch (Any): Used to mock program arguments.
+        tmp_path (Path): Used to create a temporary include directory.
     """
     record_property("lobster-trace", "SwTests.tc_cli_include")
+
+    include_dir = tmp_path / "include"
+    include_dir.mkdir()
+    shutil.copy("./tests/utils/single_req_with_section.trlc", include_dir / "single_req_with_section.trlc")
 
     # Mock program arguments to simulate running the script with two test requirement files.
     monkeypatch.setattr("sys.argv", [
         "pyTRLCConverter",
         "--source", "./tests/utils/req.rsl",
         "--source", "./tests/utils/single_req_with_link.trlc",  # Linking to req_2 in single_req_with_section.trlc
-        "--exclude", "./tests/utils/single_req_description_md.trlc",
-        "--include", "./tests/utils",
+        "--include", str(include_dir),
         "--project", "./tests/utils/psc_simple",
         "simple"
     ])
@@ -166,10 +173,47 @@ def test_tc_cli_include(record_property, capsys, monkeypatch):
 
     # Check if the expected output. TRLC will include all inlcude files in the symbol table.
     lines = captured.out.splitlines()
-    assert len(lines) == 8
-    assert "req_id_1" in lines
+    assert len(lines) == 6
     assert "req_id_2" in lines
     assert "req_id_3" in lines
+
+def test_tc_cli_render_cfg(record_property, capsys, monkeypatch):
+    # lobster-trace: SwTests.tc_cli_render_cfg
+    """
+    Check whether a render configuration can be provided via CLI.
+
+    Args:
+        record_property (Any): Used to inject the test case reference into the test results.
+        capsys (Any): Used to capture stdout and stderr.
+        monkeypatch (Any): Used to mock program arguments.
+    """
+    record_property("lobster-trace", "SwTests.tc_cli_render_cfg")
+
+    config_path = "./tests/utils/renderCfg.json"
+
+    # Mock program arguments to simulate running the script with a project specific converter.
+    monkeypatch.setattr("sys.argv", [
+        "pyTRLCConverter",
+        "--source", "./tests/utils/req.rsl",
+        "--source", "./tests/utils/single_req_no_section.trlc",
+        "--project", "./tests/utils/psc_simple.py",
+        "--renderCfg", f"{config_path}",
+        "--verbose",
+        "simple"
+    ])
+
+    # Expecting the programm to run without any exceptions.
+    main()
+
+    # Capture stdout and stderr.
+    captured = capsys.readouterr()
+
+    # No error output expected.
+    assert captured.err == ""
+
+    # Check if the expected output.
+    lines = captured.out.splitlines()
+    assert f"Loading render configuration {config_path}." in lines
 
 
 # Main *************************************************************************

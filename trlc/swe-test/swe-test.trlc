@@ -3,7 +3,7 @@ package SwTests
 import Generic
 import SwRequirements
 
-section "SW-Tests" {
+section "SW Test Cases" {
 
     Generic.Info sw_test_info_about_sw_test {
         description = "This file contains the software test cases for the pyTRLCConverter tool."
@@ -96,6 +96,11 @@ section "SW-Tests" {
             description = "This test case checks whether a translation file can be configured via the command line."
             verifies = [SwRequirements.sw_req_cli_translation]
         }
+
+        SwTestCase tc_cli_render_cfg {
+            description = "This test case checks whether a render configuration file can be configured via the command line."
+            verifies = [SwRequirements.sw_req_cli_render_cfg]
+        }
     }
 
     section "Markdown" {
@@ -181,9 +186,15 @@ section "SW-Tests" {
         }
 
         SwTestCase tc_markdown_render_md {
-            description = '''This test case checks whether Markdown content in requirement attributes is rendered correctly
+            description = '''This test case checks whether CommonMark Markdown content in requirement attributes is rendered correctly
              when the render configuration is set to "md".'''
-            verifies = [SwRequirements.sw_req_markdown_render_md]
+            verifies = [SwRequirements.sw_req_markdown_render_md, SwRequirements.sw_req_markdown_string_format]
+        }
+
+        SwTestCase tc_markdown_render_gfm {
+            description = '''This test case checks whether GitHub Flavored Markdown content in requirement attributes is rendered correctly
+             when the render configuration is set to "gfm".'''
+            verifies = [SwRequirements.sw_req_markdown_render_gfm, SwRequirements.sw_req_markdown_string_format]
         }
     }
 
@@ -193,12 +204,12 @@ section "SW-Tests" {
             description = "This test case checks whether the conversion to reStructuredText format works."
             verifies = [
                 SwRequirements.sw_req_rst,
-                SwRequirements.sw_req_rst_record, 
-                SwRequirements.sw_req_no_prj_spec, 
-                SwRequirements.sw_req_cli_out, 
-                SwRequirements.sw_req_rst_single_doc_mode, 
-                SwRequirements.sw_req_rst_out_file_name_default, 
-                SwRequirements.sw_req_rst_sd_top_level, 
+                SwRequirements.sw_req_rst_record,
+                SwRequirements.sw_req_no_prj_spec,
+                SwRequirements.sw_req_cli_out,
+                SwRequirements.sw_req_rst_single_doc_mode,
+                SwRequirements.sw_req_rst_out_file_name_default,
+                SwRequirements.sw_req_rst_sd_top_level,
                 SwRequirements.sw_req_rst_sd_top_level_default]
         }
 
@@ -270,10 +281,103 @@ section "SW-Tests" {
             verifies = [SwRequirements.sw_req_rst_multiple_doc_mode]
         }
 
+        SwTestCase tc_rst_string_format {
+            description = "This test case checks that strings already in reStructuredText format are not escaped."
+            verifies = [SwRequirements.sw_req_rst_string_format]
+        }
+
         SwTestCase tc_rst_render_md {
-            description = '''This test case checks whether Markdown content in requirement attributes is rendered correctly
+            description = '''This test case checks whether CommonMark Markdown content in requirement attributes is rendered correctly
              when the render configuration is set to "md".'''
             verifies = [SwRequirements.sw_req_rst_render_md]
+        }
+
+        SwTestCase tc_rst_render_gfm {
+            description = '''This test case checks whether GitHub Flavored Markdown content in requirement attributes is rendered correctly
+             when the render configuration is set to "gfm".'''
+            verifies = [SwRequirements.sw_req_rst_render_gfm]
+        }
+    }
+
+    section "ReqIF" {
+
+        SwTestCase tc_reqif {
+            description = "This test case checks whether the conversion to ReqIF format works."
+            verifies = [
+                SwRequirements.sw_req_reqif,
+                SwRequirements.sw_req_reqif_record,
+                SwRequirements.sw_req_no_prj_spec,
+                SwRequirements.sw_req_cli_out,
+                SwRequirements.sw_req_reqif_single_doc_mode,
+                SwRequirements.sw_req_reqif_out_file_name_default,
+                SwRequirements.sw_req_reqif_top_level_default]
+        }
+
+        SwTestCase tc_reqif_section {
+            description = "This test case checks whether a TRLC section produces a SPEC-HIERARCHY node referencing the preceding record's SPEC-OBJECT, and that a warning is emitted when no preceding record exists."
+            verifies = [SwRequirements.sw_req_reqif_section]
+        }
+
+        SwTestCase tc_reqif_single_doc_custom {
+            description = "This test case checks whether the conversion to ReqIF in single document mode is customizable."
+            verifies = [SwRequirements.sw_req_reqif_out_file_name_custom, SwRequirements.sw_req_reqif_top_level_custom]
+        }
+
+        SwTestCase tc_reqif_render_md {
+            description = '''This test case checks whether CommonMark Markdown content in requirement attributes is rendered correctly
+             when the render configuration is set to "md".'''
+            verifies = [SwRequirements.sw_req_reqif_render_md]
+        }
+
+        SwTestCase tc_reqif_render_gfm {
+            description = '''This test case checks whether GitHub Flavored Markdown content in requirement attributes is rendered correctly
+             when the render configuration is set to "gfm".'''
+            verifies = [SwRequirements.sw_req_reqif_render_gfm]
+        }
+
+        SwTestCase tc_reqif_render_xhtml {
+            description = '''This test case checks whether XHTML content in requirement attributes is passed through without modification
+             when the render configuration is set to "xhtml".'''
+            verifies = [SwRequirements.sw_req_reqif_render_xhtml]
+        }
+
+        SwTestCase tc_reqif_render_table_options {
+            description = '''This test case checks whether GFM table rendering options (`border` and `headingStyle`) from the render
+             configuration are applied to the generated ReqIF XHTML, producing a `<table>` with the configured `style` and `<th>`
+             cells with the configured `style`.'''
+            verifies = [SwRequirements.sw_req_reqif_render_table_options]
+        }
+
+        SwTestCase tc_reqif_render_path {
+            description = '''This test case checks whether a file path attribute is rendered as a ReqIF XHTML <object> element with the
+             correct MIME type and local file reference, and that the referenced file is copied to the output folder.'''
+            verifies = [SwRequirements.sw_req_reqif_render_path]
+        }
+
+        SwTestCase tc_reqif_render_path_reqifz {
+            description = '''This test case checks whether the external file referenced by a path format attribute is included in the
+             .reqifz archive when the --reqifz option is used.'''
+            verifies = [SwRequirements.sw_req_reqif_render_path]
+        }
+
+        SwTestCase tc_reqif_enum {
+            description = "This test case checks whether a TRLC enumeration attribute is converted to a DATATYPE-DEFINITION-ENUMERATION with 0-based consecutive ENUM-VALUE keys and emitted as ATTRIBUTE-VALUE-ENUMERATION in the spec-object."
+            verifies = [SwRequirements.sw_req_reqif_enum, SwRequirements.sw_req_reqif_enum_key_order]
+        }
+
+        SwTestCase tc_reqif_enum_null {
+            description = "This test case checks whether an optional TRLC enumeration attribute with a null value is omitted from the generated ReqIF spec-object."
+            verifies = [SwRequirements.sw_req_reqif_enum_null]
+        }
+
+        SwTestCase tc_reqif_relation {
+            description = "This test case checks whether TRLC record reference attributes are converted to ReqIF SPEC-RELATION entries, and that array record reference attributes produce one SPEC-RELATION per element."
+            verifies = [SwRequirements.sw_req_reqif_relation]
+        }
+
+        SwTestCase tc_reqif_reqifz {
+            description = "This test case checks whether the ReqIF converter archives the generated output as a .reqifz ZIP file when the --reqifz flag is given."
+            verifies = [SwRequirements.sw_req_reqif_reqifz]
         }
     }
 
@@ -282,6 +386,11 @@ section "SW-Tests" {
         SwTestCase tc_docx {
             description = "This test case checks whether the conversion to docx format works."
             verifies = [SwRequirements.sw_req_docx, SwRequirements.sw_req_docx_record]
+        }
+
+        SwTestCase tc_docx_multiple {
+            description = "This test case checks whether the conversion of multiple records containing record_references to docx format works."
+            verifies = [SwRequirements.sw_req_docx_record, SwRequirements.sw_req_docx_reference]
         }
 
         SwTestCase tc_docx_section {
@@ -297,6 +406,11 @@ section "SW-Tests" {
         SwTestCase tc_docx_template {
             description = "This test case checks whether the conversion using a template works correctly."
             verifies = [SwRequirements.sw_req_docx_template]
+        }
+
+        SwTestCase tc_docx_render_md {
+            description = "this test case checks whether the conversion from CommonMark Markdown strings to docx works correctly."
+            verifies = [SwRequirements.sw_req_docx_render_md]
         }
 
     }

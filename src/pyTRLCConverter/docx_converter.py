@@ -4,7 +4,7 @@
 """
 
 # pyTRLCConverter - A tool to convert TRLC files to specific formats.
-# Copyright (c) 2024 - 2025 NewTec GmbH
+# Copyright (c) 2024 - 2026 NewTec GmbH
 #
 # This file is part of pyTRLCConverter program.
 #
@@ -31,7 +31,7 @@ from docx.enum.style import WD_STYLE_TYPE
 from marko import Markdown
 from trlc.ast import Implicit_Null, Record_Object, Record_Reference, String_Literal, Array_Aggregate, Expression
 from pyTRLCConverter.base_converter import BaseConverter
-from pyTRLCConverter.marko.docx_renderer import DocxRenderer
+from pyTRLCConverter.marko.md2docx_renderer import Md2DocxRenderer
 from pyTRLCConverter.ret import Ret
 from pyTRLCConverter.trlc_helper import TrlcAstWalker
 from pyTRLCConverter.logger import log_verbose
@@ -41,15 +41,14 @@ from pyTRLCConverter.logger import log_verbose
 # Classes **********************************************************************
 
 class DocxConverter(BaseConverter):
-    """
-    Converter to docx format.
+    """Converter to docx format.
 
     The following Word docx objects are used:
-    - Document: Represents the entire Word document. You can create a new document or load an existing one.
-    - Paragraph: A block of text in the document. It has its own formatting properties.
-    - Run: A contiguous run of text with the same formatting. You can change the formatting of a run
-            independently within a paragraph.
-    - Table: A two-dimensional structure for presenting data in rows and columns.
+
+    - **Document**: Represents the entire Word document.
+    - **Paragraph**: A block of text in the document with its own formatting properties.
+    - **Run**: A contiguous run of text with the same formatting within a paragraph.
+    - **Table**: A two-dimensional structure for presenting data in rows and columns.
     """
 
     OUTPUT_FILE_NAME_DEFAULT = "output.docx"
@@ -203,6 +202,7 @@ class DocxConverter(BaseConverter):
 
     def _on_record_reference(self, record_reference: Record_Reference) -> None:
         # lobster-trace: SwRequirements.sw_req_docx_record
+        # lobster-trace: SwRequirements.sw_req_docx_reference
         """
         Process the given record reference value and return a hyperlink paragraph.
 
@@ -219,7 +219,6 @@ class DocxConverter(BaseConverter):
                                                 f"{record_reference.package.name}.{record_reference.target.name}")
 
     def _on_string_literal(self, string_literal: String_Literal) -> None:
-        # lobster-trace: SwRequirements.sw_req_docx_string_format
         # lobster-trace: SwRequirements.sw_req_docx_render_md
         """
         Process the given string literal value.
@@ -244,6 +243,7 @@ class DocxConverter(BaseConverter):
 
     # pylint: disable-next=unused-argument
     def _on_array_aggregate_begin(self, array_aggregate: Array_Aggregate) -> None:
+        # lobster-trace: SwRequirements.sw_req_docx_record
         """
         Handle the beginning of a list.
 
@@ -281,6 +281,7 @@ class DocxConverter(BaseConverter):
 
     # pylint: disable-next=unused-argument
     def _on_array_aggregate_finish(self, array_aggregate: Array_Aggregate) -> None:
+        # lobster-trace: SwRequirements.sw_req_docx_record
         """
         Handle the end of a list.
 
@@ -290,6 +291,7 @@ class DocxConverter(BaseConverter):
         self._list_item_indent_level -= 1
 
     def _other_dispatcher(self, expression: Expression) -> None:
+        # lobster-trace: SwRequirements.sw_req_docx_record
         """
         Dispatcher for all other expressions.
 
@@ -301,7 +303,6 @@ class DocxConverter(BaseConverter):
 
     def _get_trlc_ast_walker(self) -> TrlcAstWalker:
         # lobster-trace: SwRequirements.sw_req_docx_record
-        # lobster-trace: SwRequirements.sw_req_docx_string_format
         """
         If a record object contains a record reference, the record reference will be converted to
         a hyperlink.
@@ -343,7 +344,6 @@ class DocxConverter(BaseConverter):
         return trlc_ast_walker
 
     def _render(self, package_name: str, type_name: str, attribute_name: str, attribute_value: str) -> None:
-        # lobster-trace: SwRequirements.sw_req_rst_string_format
         # lobster-trace: SwRequirements.sw_req_docx_render_md
         """Render the attribute value depened on its format.
 
@@ -355,10 +355,10 @@ class DocxConverter(BaseConverter):
         """
         assert self._block_item_container is not None
 
-        # If the attribute is marked as markdown format, convert it.
+        # If the attribute is marked as CommonMark Markdown format, convert it.
         if self._render_cfg.is_format_md(package_name, type_name, attribute_name) is True:
-            DocxRenderer.block_item_container = self._block_item_container
-            markdown = Markdown(renderer=DocxRenderer)
+            Md2DocxRenderer.block_item_container = self._block_item_container
+            markdown = Markdown(renderer=Md2DocxRenderer)
             markdown.convert(attribute_value)
         else:
             self._block_item_container.add_paragraph(attribute_value)
@@ -425,6 +425,7 @@ class DocxConverter(BaseConverter):
 
     @staticmethod
     def docx_add_bookmark(paragraph: Paragraph, bookmark_name: str) -> None:
+        # lobster-trace: SwRequirements.sw_req_docx_record
         """
         Adds a bookmark to a paragraph.
 
@@ -449,6 +450,7 @@ class DocxConverter(BaseConverter):
 
     @staticmethod
     def docx_add_link_to_bookmark(paragraph: Paragraph, bookmark_name: str, link_text: str) -> None:
+        # lobster-trace: SwRequirements.sw_req_docx_reference
         """
         Add a hyperlink to a bookmark in a paragraph.
 

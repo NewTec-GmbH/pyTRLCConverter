@@ -4,7 +4,7 @@
 """
 
 # pyTRLCConverter - A tool to convert TRLC files to specific formats.
-# Copyright (c) 2024 - 2025 NewTec GmbH
+# Copyright (c) 2024 - 2026 NewTec GmbH
 #
 # This file is part of pyTRLCConverter program.
 #
@@ -32,6 +32,7 @@ from pyTRLCConverter.base_converter import BaseConverter
 
 
 class SimpleConverter(BaseConverter):
+    # lobster-exclude: Simple test utility that does not directly test any requirements.
     """
     Custom project specific converter for testing purposes only.
     

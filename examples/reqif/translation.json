@@ -1,0 +1,16 @@
+{
+    "Heading": {
+        "description": "ReqIF.Text"
+    },
+    "Image": {
+        "file_path": "ReqIF.Text",
+        "caption": "ReqIF.Name"
+    },
+    "Information": {
+        "description": "ReqIF.Text"
+    },
+    "Requirement": {
+        "name": "ReqIF.Name",
+        "description": "ReqIF.Text"
+    }
+}

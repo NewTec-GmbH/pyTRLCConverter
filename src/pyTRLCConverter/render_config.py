@@ -4,7 +4,7 @@
 """
 
 # pyTRLCConverter - A tool to convert TRLC files to specific formats.
-# Copyright (c) 2024 - 2025 NewTec GmbH
+# Copyright (c) 2024 - 2026 NewTec GmbH
 #
 # This file is part of pyTRLCConverter program.
 #
@@ -35,9 +35,12 @@ class RenderConfig():
     """Render configuration provider.
     """
 
-    FORMAT_SPECIFIER_PLAIN = "plain"
-    FORMAT_SPECIFIER_MD = "md"
-    FORMAT_SPECIFIER_RST = "rst"
+    FORMAT_SPECIFIER_PLAIN = "plain"    # Plain text format; no special formatting, e.g. for line breaks, lists, etc.
+    FORMAT_SPECIFIER_MD = "md"          # CommonMark Markdown format; https://spec.commonmark.org/0.31.2/
+    FORMAT_SPECIFIER_RST = "rst"        # ReStructuredText format; https://docutils.sourceforge.io/rst.html
+    FORMAT_SPECIFIER_GFM = "gfm"        # GitHub Flavored Markdown format; https://github.github.com/gfm/
+    FORMAT_SPECIFIER_XHTML = "xhtml"    # XHTML format; https://www.w3.org/TR/xhtml1/
+    FORMAT_SPECIFIER_PATH = "path"      # File path format; the value is a path to an external file.
 
     def __init__(self):
         """Constructs the render configuration provider.
@@ -45,7 +48,8 @@ class RenderConfig():
         # The render configuration as dict.
         #
         # Example in JSON format:
-        # { "renderCfg": [{ "package": "XX", "type": "YY", "attribute": "ZZ", "format": "md" }] }
+        # { "renderCfg": [{ "package": "XX", "type": "YY", "attribute": "ZZ", "format": "md",
+        #   "tableOptions": { "border": "<css-style>", "headingStyle": "<css-style>" } }] }
         self._cfg = {}
 
     def load(self, file_name: str) -> bool:
@@ -156,6 +160,44 @@ class RenderConfig():
 
         return format_specifier
 
+    def get_table_options(self, trlc_package: str, trlc_type: str, trlc_type_attribute: str) -> dict:
+        # lobster-trace: SwRequirements.sw_req_reqif_render_table_options
+        """Returns the table rendering options for the given TRLC package, type and attribute.
+
+        The returned dictionary may contain the following optional keys:
+
+        - ``"border"`` (str): CSS style value applied to the ``<table>`` element's ``style``
+          attribute (e.g. ``"border: 1px solid black; border-collapse: collapse;"``).
+        - ``"headingStyle"`` (str): CSS style value applied to each ``<th>`` cell's ``style``
+          attribute (e.g. ``"background-color: #c0c0c0;"``).
+
+        Args:
+            trlc_package (str): The TRLC package.
+            trlc_type (str): The TRLC type.
+            trlc_type_attribute (str): The TRLC type attribute.
+
+        Returns:
+            dict: Table options dict, or empty dict if no table options are configured.
+        """
+        table_options = {}
+
+        if "renderCfg" in self._cfg:
+            for item in self._cfg["renderCfg"]:
+                match_list = []
+
+                match_list.append(self._is_package_match(item, trlc_package))
+                match_list.append(self._is_type_match(item, trlc_type))
+                match_list.append(self._is_type_attribute_match(item, trlc_type_attribute))
+
+                # All of the available ones must match!
+                if all(match_list):
+                    table_options = item.get("tableOptions", {})
+
+                    # First match wins.
+                    break
+
+        return table_options
+
     def is_format_plain(self, trlc_package: str, trlc_type: str, trlc_type_attribute: str) -> bool:
         """Checks if the given TRLC package, type and attribute should be rendered in plain text format.
 
@@ -194,6 +236,46 @@ class RenderConfig():
            bool: True if the given TRLC attribute has reStructuredText format, otherwise False.
         """
         return self.get_format_specifier(trlc_package, trlc_type, trlc_type_attribute) == self.FORMAT_SPECIFIER_RST
+
+    def is_format_gfm(self, trlc_package: str, trlc_type: str, trlc_type_attribute: str) -> bool:
+        """Checks if the given TRLC package, type and attribute should be rendered in GitHub Flavored Markdown format.
+
+        Args:
+            trlc_package (str): The TRLC package.
+            trlc_type (str): The TRLC type.
+            trlc_type_attribute (str): The TRLC type attribute.
+        
+        Returns:
+           bool: True if the given TRLC attribute has GitHub Flavored Markdown format, otherwise False.
+        """
+        return self.get_format_specifier(trlc_package, trlc_type, trlc_type_attribute) == self.FORMAT_SPECIFIER_GFM
+
+    def is_format_xhtml(self, trlc_package: str, trlc_type: str, trlc_type_attribute: str) -> bool:
+        """Checks if the given TRLC package, type and attribute should be rendered in XHTML format.
+
+        Args:
+            trlc_package (str): The TRLC package.
+            trlc_type (str): The TRLC type.
+            trlc_type_attribute (str): The TRLC type attribute.
+
+        Returns:
+           bool: True if the given TRLC attribute has XHTML format, otherwise False.
+        """
+        return self.get_format_specifier(trlc_package, trlc_type, trlc_type_attribute) == self.FORMAT_SPECIFIER_XHTML
+
+    def is_format_path(self, trlc_package: str, trlc_type: str, trlc_type_attribute: str) -> bool:
+        """Checks if the given TRLC package, type and attribute should be rendered as a file path.
+
+        Args:
+            trlc_package (str): The TRLC package.
+            trlc_type (str): The TRLC type.
+            trlc_type_attribute (str): The TRLC type attribute.
+
+        Returns:
+           bool: True if the given TRLC attribute has path format, otherwise False.
+        """
+        return self.get_format_specifier(trlc_package, trlc_type, trlc_type_attribute) == self.FORMAT_SPECIFIER_PATH
+
 
 # Functions ********************************************************************
 

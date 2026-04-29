@@ -1,0 +1,8 @@
+{
+    "renderCfg": [{
+        "package": ".*",
+        "type": ".*",
+        "attribute": "file_path",
+        "format": "path"
+    }]
+}

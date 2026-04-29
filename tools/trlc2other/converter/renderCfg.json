@@ -1,0 +1,17 @@
+{
+    "renderCfg": 
+    [
+        {
+            "package": ".*",
+            "type": "Info",
+            "attribute": "description",
+            "format": "gfm"
+        },
+        {
+            "package": ".*",
+            "type": "SwArchSpec",
+            "attribute": "description",
+            "format": "gfm"
+        }
+    ]   
+}

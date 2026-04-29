@@ -3,13 +3,14 @@
 [![License](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://github.com/NewTec-GmbH/pyTRLCConverter/blob/main/LICENSE) [![Repo Status](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip) [![CI](https://github.com/NewTec-GmbH/pyTRLCConverter/actions/workflows/test.yml/badge.svg)](https://github.com/NewTec-GmbH/pyTRLCConverter/actions/workflows/test.yml)
 [![Repo Status](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 
-pyTRLCConverter is a command-line tool to convert [TRLC (Treat Requiremnts Like Code)](https://github.com/bmw-software-engineering/trlc) files to different output formats. Since the definition of TRLC types is project-specific, the built-in converters can be extended in an object-oriented manner.
+pyTRLCConverter is a command-line tool to convert [TRLC (Treat Requirements Like Code)](https://github.com/bmw-software-engineering/trlc) files to different output formats. Since the definition of TRLC types is project-specific, the built-in converters can be extended in an object-oriented manner.
 
 Currently out of the box supported formats:
 
 * Markdown
 * docx
 * reStructuredText
+* ReqIF
 * dump
 
 Find the requirements, test cases, coverage and etc. on the [github pages](https://newtec-gmbh.github.io/pyTRLCConverter/).
@@ -25,6 +26,7 @@ Find the requirements, test cases, coverage and etc. on the [github pages](https
   - [Conversion to Markdown format](#conversion-to-markdown-format)
   - [Conversion to docx format](#conversion-to-docx-format)
   - [Conversion to reStructuredText format](#conversion-to-restructuredtext-format)
+  - [Conversion to ReqIF format](#conversion-to-reqif-format)
   - [Dump TRLC item list to console](#dump-trlc-item-list-to-console)
   - [Apply attribute name translation](#apply-attribute-name-translation)
   - [Requirement description in Markdown](#requirement-description-in-markdown)
@@ -70,10 +72,12 @@ Note:
 
 ### Tool Installation
 
-The *developers* might like to install it in editable mode.
+The *developers* might like to install it in editable mode together with additional needed
+development tools like `pytest`.
 
 ```bash
 pip install -e .
+pip install -r requirements-dev.txt
 ```
 
 The *users* of the tool install it as usual.
@@ -170,6 +174,66 @@ options:
 
 More examples are shown in the [examples folder](./examples/).
 
+### Conversion to ReqIF format
+
+The tool requires two kinds of TRLC input sources for the conversion. These are the requirements (*.trlc) files and the model (*.tls) files. These input files are specified using one or more --source or -s options followed by a file name or directory path. If a path is given, all files with a .trlc or .tls extension are read by the tool.
+
+```bash
+pyTRLCConverter --source trlc/model --source trlc/swe-req reqif
+```
+
+If the requirements are split into several files (*.trlc), a ReqIF file will be created for each. To generate a single ReqIF file the argument --single-document can be used, which will create an `output.reqif` file by default.
+
+The converter supports additional arguments that are shown by adding the --help option after the ReqIF subcommand.
+
+```bash
+pyTRLCConverter reqif --help
+
+usage: pyTRLCConverter reqif [-h] [-e EMPTY] [-n NAME] [-sd] [-tl TOP_LEVEL]
+
+options:
+  -h, --help            show this help message and exit
+  -e EMPTY, --empty EMPTY
+                        Every attribute value which is empty will output the string (default = N/A).
+  -n NAME, --name NAME  Name of the generated output file inside the output folder (default = output.reqif) in case a single document is generated.
+  -sd, --single-document
+                        Generate a single document instead of multiple files. The default is to generate multiple files.
+  -tl TOP_LEVEL, --top-level TOP_LEVEL
+                        Name of the top level section, required in single document mode (default = Specification).
+```
+
+Markdown-formatted requirement attributes configured via `--renderCfg` are automatically converted to ReqIF-compatible XHTML content.
+
+Conversion rules:
+
+**Types and spec-objects:**
+
+* Each distinct TRLC record type is mapped to one `SPEC-OBJECT-TYPE`. The type's attributes are reflected as `ATTRIBUTE-DEFINITION-*` entries on the type.
+* TRLC `section` headings are mapped to a dedicated `SPEC-OBJECT-TYPE` named `Section` and produce a container `SPEC-OBJECT` in the hierarchy.
+* Every TRLC record object produces one `SPEC-OBJECT` of the matching `SPEC-OBJECT-TYPE`.
+
+**Attribute mapping by field type:**
+
+| TRLC field type                        | ReqIF datatype                    | ReqIF attribute value                                                                                                |
+| -------------------------------------- | --------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| String / Integer / Boolean / Decimal   | `DATATYPE-DEFINITION-XHTML`       | `ATTRIBUTE-VALUE-XHTML` — plain text is HTML-escaped and wrapped in `<p>` tags                                       |
+| String with Markdown render config     | `DATATYPE-DEFINITION-XHTML`       | `ATTRIBUTE-VALUE-XHTML` — Markdown is converted to XHTML via `marko`                                                 |
+| Enumeration                            | `DATATYPE-DEFINITION-ENUMERATION` | `ATTRIBUTE-VALUE-ENUMERATION` — enum value keys start at 0 and follow the literal declaration order in the RSL model |
+| Record reference / array of references | —                                 | Converted to `SPEC-RELATION` entries (see below)                                                                     |
+| Optional field with `null` value       | —                                 | Attribute is omitted from the `SPEC-OBJECT`                                                                          |
+
+**Record name:**
+
+- The TRLC record name is mapped to an explicit `ATTRIBUTE-VALUE-STRING` attribute named `ReqIF.ForeignID` on the owning `SPEC-OBJECT-TYPE`.
+
+**Record references:**
+
+- TRLC record reference fields (single or array) are converted to `SPEC-RELATION-TYPE` and `SPEC-RELATION` entries.
+- The relation type name is the TRLC attribute name, for example `derived`.
+- The reference field is not emitted as a regular object attribute.
+- This preserves traceability links in a form that can be imported by DOORS Next.
+- The source and target records must be part of the same generated ReqIF document. Use `--single-document` when references span multiple TRLC files.
+
 ### Dump TRLC item list to console
 
 Mainly for development all TRLC items can be dumped to the console.
@@ -199,6 +263,23 @@ See the [example](./examples/simple_req_translation/) for more information.
 ### Requirement description in Markdown
 
 When requirements include lists or need bold/italic emphasis, TRLC currently supports plain text only. pyTRLCConverter lets you write requirement descriptions in Markdown and converts them to the chosen target format (e.g., reStructuredText). To enable this, you must explicitly specify in a JSON configuration which attribute contains Markdown-formatted content.
+
+Two Markdown specifications are supported:
+
+- "md": [CommonMark's spec v0.31.2](https://spec.commonmark.org/0.31.2/)
+- "gfm": [GitHub Flavored Markdown spec v0.29-gfm](https://github.github.com/gfm)
+
+Supported by the formats:
+
+| Format           | CommonMark               | GitHub Flavored          | XHTML |
+| ---------------- | ------------------------ | ------------------------ | ----- |
+| docx             | X                        | Output as string literal | -     |
+| dump             | Output as string literal | Output as string literal | -     |
+| markdown         | X                        | X                        | -     |
+| reStructuredText | X                        | X                        | -     |
+| reqif            | X                        | X                        | X     |
+
+The `reqif` format additionally supports `"xhtml"` as a format specifier in the render configuration. When set, the attribute value is treated as already-valid XHTML and is embedded in the ReqIF output without any conversion. This allows requirement authors to write raw XHTML markup directly in their TRLC string attributes.
 
 Configuration example:
 
@@ -259,14 +340,16 @@ Tools used for development or automations, see [Tools](./tools/README.md).
 
 Used 3rd party libraries which are not part of the standard Python package:
 
-| Library | Description | License |
-| ------- | ----------- | ------- |
-| [PlantUML](https://github.com/plantuml/plantuml) | Generate UML diagrams. | GPL-3.0 |
-| [python-docx](https://github.com/python-openxml/python-docx) | Creation of Microsoft Word 2007+ (.docx) files. | MIT |
-| [requests](https://github.com/psf/requests) | HTTP processing | Apache-2.0 |
-| [sphinx](https://github.com/sphinx-doc/sphinx) | Using Sphinx for documentation deployment. | BSD |
-| [toml](https://github.com/uiri/toml) | Parsing [TOML](https://en.wikipedia.org/wiki/TOML) | MIT |
-| [trlc](https://github.com/bmw-software-engineering/trlc) | Treat Requirements Like Code | GPL-3.0 |
+| Library                                                      | Description                                              | License    |
+| ------------------------------------------------------------ | -------------------------------------------------------- | ---------- |
+| [Marko](https://github.com/frostming/marko)                  | A markdown parser with high extensibility.               | MIT        |
+| [ReqIF](https://github.com/strictdoc-project/reqif)          | ReqIF is a Python library for working with ReqIF format. | Apache-2.0 |
+| [PlantUML](https://github.com/plantuml/plantuml)             | Generate UML diagrams.                                   | GPL-3.0    |
+| [python-docx](https://github.com/python-openxml/python-docx) | Creation of Microsoft Word 2007+ (.docx) files.          | MIT        |
+| [requests](https://github.com/psf/requests)                  | HTTP processing                                          | Apache-2.0 |
+| [sphinx](https://github.com/sphinx-doc/sphinx)               | Using Sphinx for documentation deployment.               | BSD        |
+| [toml](https://github.com/uiri/toml)                         | Parsing [TOML](https://en.wikipedia.org/wiki/TOML)       | MIT        |
+| [trlc](https://github.com/bmw-software-engineering/trlc)     | Treat Requirements Like Code                             | GPL-3.0    |
 
 see also [requirements.txt](requirements.txt)
 

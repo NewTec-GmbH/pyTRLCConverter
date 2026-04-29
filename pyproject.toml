@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pyTRLCConverter"
-version = "2.0.0"
+version = "2.1.0"
 description = "Supports the conversion from TRLC files to other formats."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -16,15 +16,17 @@ classifiers = [
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12"
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13"
 ]
 
 dependencies = [
-    "toml >= 0.10.2",
-    "requests >= 2.32.0",
-    "python-docx >= 1.2.0",
-    "trlc == 2.0.*",
-    "marko >= 2.2.1"
+  "toml >= 0.10.2",
+  "requests >= 2.32.0",
+  "python-docx >= 1.2.0",
+  "trlc == 2.0.*",
+  "marko >= 2.2.1",
+  "reqif >= 0.0.48"
 ]
 
 [project.optional-dependencies]
@@ -40,8 +42,10 @@ dev = [
   "pytest-cov >= 6.0.0",
   "myst-parser >= 4.0.0",
   "sphinxcontrib-plantuml >= 0.30",
+  "sphinx-autoapi >= 0.5.0",
   "m2r >= 0.3.1",
-  "bmw-lobster == 1.0.*"
+  "bmw-lobster == 1.0.*",
+  "reqif >= 0.0.48"
 ]
 
 [project.urls]

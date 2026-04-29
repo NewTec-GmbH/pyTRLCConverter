@@ -2,7 +2,7 @@
 """
 
 # pyTRLCConverter - A tool to convert TRLC files to specific formats.
-# Copyright (c) 2024 - 2025 NewTec GmbH
+# Copyright (c) 2024 - 2026 NewTec GmbH
 #
 # This file is part of pyTRLCConverter program.
 #
@@ -463,10 +463,12 @@ def test_tc_rst_single_doc_exclude(record_property, capsys, monkeypatch, tmp_pat
     output_file_name = "myReq.rst"
     monkeypatch.setattr("sys.argv", [
         "pyTRLCConverter",
-        "--source", "./tests/utils",
+        "--source", "./tests/utils/req.rsl",
+        "--source", "./tests/utils/single_req_no_section.trlc",
+        "--source", "./tests/utils/single_req_with_link.trlc",
+        "--source", "./tests/utils/single_req_with_section.trlc",
         "--exclude", "./tests/utils/single_req_no_section.trlc",
         "--exclude", "./tests/utils/single_req_with_section.trlc",
-        "--exclude", "./tests/utils/single_req_description_md.trlc",
         "--out", str(tmp_path),
         "rst",
         "--single-document",
@@ -525,7 +527,10 @@ def test_tc_rst_multi_doc(record_property, capsys, monkeypatch, tmp_path):
     # Mock program arguments to simulate running the script with inbuild reStructuredText converter.
     monkeypatch.setattr("sys.argv", [
         "pyTRLCConverter",
-        "--source", "./tests/utils",
+        "--source", "./tests/utils/req.rsl",
+        "--source", "./tests/utils/single_req_no_section.trlc",
+        "--source", "./tests/utils/single_req_with_link.trlc",
+        "--source", "./tests/utils/single_req_with_section.trlc",
         "--out", str(tmp_path),
         "rst"
     ])
@@ -593,10 +598,10 @@ def test_tc_rst_multi_doc(record_property, capsys, monkeypatch, tmp_path):
         assert lines[14] == "    | link           | N/A              |\n"
         assert lines[15] == "    +----------------+------------------+\n"
 
-def test_tc_rst_render_md(record_property, capsys, monkeypatch, tmp_path):
-    # lobster-trace: SwTests.tc_rst_render_md
+def test_tc_rst_string_format(record_property, capsys, monkeypatch, tmp_path):
+    # lobster-trace: SwTests.tc_rst_string_format
     """
-    The software shall support rendering requirement attributes containing Markdown syntax.
+    The forstare shall not escape stings that are already in reStructuredText format.
 
     Args:
         record_property (Any): Used to inject the test case reference into the test results.
@@ -604,7 +609,55 @@ def test_tc_rst_render_md(record_property, capsys, monkeypatch, tmp_path):
         monkeypatch (Any): Used to mock program arguments.
         tmp_path (Path): Used to create a temporary output directory.
     """
-    record_property("lobster-trace", "SwTests.tc_cli_exclude")
+    record_property("lobster-trace", "SwTests.tc_rst_string_format")
+
+    # Mock program arguments to specify an output folder.
+    output_file_name = "myReq.rst"
+    monkeypatch.setattr("sys.argv", [
+        "pyTRLCConverter",
+        "--source", "./tests/utils/req.rsl",
+        "--source", "./tests/utils/single_req_description_rst.trlc",
+        "--out", str(tmp_path),
+        "--renderCfg", "./tests/utils/renderCfgRst.json",
+        "rst",
+        "--single-document",
+        "--name", output_file_name
+    ])
+
+    # Expect the program to run without any exceptions.
+    main()
+
+    # Capture stdout and stderr.
+    captured = capsys.readouterr()
+    # Check that no errors were reported.
+    assert captured.err == ""
+
+    # Verify
+    with open(os.path.join(tmp_path, output_file_name), "r", encoding='utf-8') as generated_md:
+        lines = generated_md.readlines()
+        assert "| description    | Heading 1           " in lines[12]
+        assert "|                | =========           " in lines[13]
+        assert "|                |                     " in lines[14]
+        assert "|                | Heading 2           " in lines[15]
+        assert "|                | ---------           " in lines[16]
+        assert "|                |                     " in lines[17]
+        assert "|                | - Bullet point 1    " in lines[18]
+        assert "|                | - Bullet point 2    " in lines[19]
+        assert "|                |   - Sub bullet point" in lines[20]
+
+# pylint: disable-next=too-many-statements
+def test_tc_rst_render_md(record_property, capsys, monkeypatch, tmp_path):
+    # lobster-trace: SwTests.tc_rst_render_md
+    """
+    The software shall support rendering requirement attributes containing CommonMark Markdown syntax.
+
+    Args:
+        record_property (Any): Used to inject the test case reference into the test results.
+        capsys (Any): Used to capture stdout and stderr.
+        monkeypatch (Any): Used to mock program arguments.
+        tmp_path (Path): Used to create a temporary output directory.
+    """
+    record_property("lobster-trace", "SwTests.tc_rst_render_md")
 
     # Mock program arguments to specify an output folder.
     output_file_name = "myReq.rst"
@@ -635,9 +688,9 @@ def test_tc_rst_render_md(record_property, capsys, monkeypatch, tmp_path):
         assert lines[2] == "Specification\n"
         assert lines[3] == "=============\n"
         assert lines[4] == "\n"
-        assert lines[5] == ".. _myReq.rst-req\\_id\\_4:\n"
+        assert lines[5] == ".. _myReq.rst-req\\_id\\_md:\n"
         assert lines[6] == "\n"
-        assert lines[7] == ".. admonition:: req\\_id\\_4\n"
+        assert lines[7] == ".. admonition:: req\\_id\\_md\n"
         assert lines[8] == "\n"
         # pylint: disable=line-too-long
         assert lines[9] == "    +----------------+-----------------------------------------------------------------------------+\n"
@@ -704,3 +757,126 @@ def test_tc_rst_render_md(record_property, capsys, monkeypatch, tmp_path):
         assert lines[70] == "    +----------------+-----------------------------------------------------------------------------+\n"
         assert lines[71] == "    | valid          | N/A                                                                         |\n"
         assert lines[72] == "    +----------------+-----------------------------------------------------------------------------+\n"
+
+# pylint: disable-next=too-many-statements
+def test_tc_rst_render_gfm(record_property, capsys, monkeypatch, tmp_path):
+    # lobster-trace: SwTests.tc_rst_render_gfm
+    """
+    The software shall support rendering requirement attributes containing GitHub Flavored Markdown syntax.
+
+    Args:
+        record_property (Any): Used to inject the test case reference into the test results.
+        capsys (Any): Used to capture stdout and stderr.
+        monkeypatch (Any): Used to mock program arguments.
+        tmp_path (Path): Used to create a temporary output directory.
+    """
+    record_property("lobster-trace", "SwTests.tc_rst_render_gfm")
+
+    # Mock program arguments to specify an output folder.
+    output_file_name = "myReq.rst"
+    monkeypatch.setattr("sys.argv", [
+        "pyTRLCConverter",
+        "--source", "./tests/utils/req.rsl",
+        "--source", "./tests/utils/single_req_description_gfm.trlc",
+        "--out", str(tmp_path),
+        "--renderCfg", "./tests/utils/renderCfgGfm.json",
+        "rst",
+        "--single-document",
+        "--name", output_file_name
+    ])
+
+    # Expect the program to run without any exceptions.
+    main()
+
+    # Capture stdout and stderr.
+    captured = capsys.readouterr()
+    # Check that no errors were reported.
+    assert captured.err == ""
+
+    # Verify
+    with open(os.path.join(tmp_path, output_file_name), "r", encoding='utf-8') as generated_md:
+        lines = generated_md.readlines()
+        assert lines[0] == ".. _myReq.rst-specification:\n"
+        assert lines[1] == "\n"
+        assert lines[2] == "Specification\n"
+        assert lines[3] == "=============\n"
+        assert lines[4] == "\n"
+        assert lines[5] == ".. _myReq.rst-req\\_id\\_gfm:\n"
+        assert lines[6] == "\n"
+        assert lines[7] == ".. admonition:: req\\_id\\_gfm\n"
+        assert lines[8] == "\n"
+        # pylint: disable=line-too-long
+        assert lines[9] == "    +----------------+-----------------------------------------------------------------------------+\n"
+        assert lines[10] == "    | Attribute Name | Attribute Value                                                             |\n"
+        assert lines[11] == "    +================+=============================================================================+\n"
+        assert lines[12] == "    | description    | Heading 1                                                                   |\n"
+        assert lines[13] == "    |                | =========                                                                   |\n"
+        assert lines[14] == "    |                |                                                                             |\n"
+        assert lines[15] == "    |                |                                                                             |\n"
+        assert lines[16] == "    |                | Heading 2                                                                   |\n"
+        assert lines[17] == "    |                | ---------                                                                   |\n"
+        assert lines[18] == "    |                |                                                                             |\n"
+        assert lines[19] == "    |                |                                                                             |\n"
+        assert lines[20] == "    |                | - Bullet point 1                                                            |\n"
+        assert lines[21] == "    |                |                                                                             |\n"
+        assert lines[22] == "    |                |                                                                             |\n"
+        assert lines[23] == "    |                | - Bullet point 2                                                            |\n"
+        assert lines[24] == "    |                |                                                                             |\n"
+        assert lines[25] == "    |                |   - Sub bullet point 1                                                      |\n"
+        assert lines[26] == "    |                |                                                                             |\n"
+        assert lines[27] == "    |                |                                                                             |\n"
+        assert lines[28] == "    |                |   - Sub bullet point 2                                                      |\n"
+        assert lines[29] == "    |                |                                                                             |\n"
+        assert lines[30] == "    |                |                                                                             |\n"
+        assert lines[31] == "    |                |                                                                             |\n"
+        assert lines[32] == "    |                |                                                                             |\n"
+        assert lines[33] == "    |                | 1. Numbered point 1                                                         |\n"
+        assert lines[34] == "    |                |                                                                             |\n"
+        assert lines[35] == "    |                |                                                                             |\n"
+        assert lines[36] == "    |                | 2. Numbered point 2                                                         |\n"
+        assert lines[37] == "    |                |                                                                             |\n"
+        assert lines[38] == "    |                |   1. Sub numbered point 1                                                   |\n"
+        assert lines[39] == "    |                |                                                                             |\n"
+        assert lines[40] == "    |                |                                                                             |\n"
+        assert lines[41] == "    |                |   2. Sub numbered point 2                                                   |\n"
+        assert lines[42] == "    |                |                                                                             |\n"
+        assert lines[43] == "    |                |                                                                             |\n"
+        assert lines[44] == "    |                |                                                                             |\n"
+        assert lines[45] == "    |                |                                                                             |\n"
+        assert lines[46] == "    |                | **Bold text**, *italic text* and **underlined text**.                       |\n"
+        assert lines[47] == "    |                |                                                                             |\n"
+        assert lines[48] == "    |                |                                                                             |\n"
+        assert lines[49] == "    |                | .. code-block::                                                             |\n"
+        assert lines[50] == "    |                |                                                                             |\n"
+        assert lines[51] == "    |                |     Code block example                                                      |\n"
+        assert lines[52] == "    |                |                                                                             |\n"
+        assert lines[53] == "    |                |                                                                             |\n"
+        assert lines[54] == "    |                | --- Divider ---                                                             |\n"
+        assert lines[55] == "    |                |                                                                             |\n"
+        assert lines[56] == "    |                |                                                                             |\n"
+        assert lines[57] == "    |                |   Blockquote example                                                        |\n"
+        assert lines[58] == "    |                |                                                                             |\n"
+        assert lines[59] == "    |                |                                                                             |\n"
+        assert lines[60] == "    |                |                                                                             |\n"
+        assert lines[61] == "    |                | `Link to pyTRLCConverter <https://github.com/NewTec-GmbH/pyTRLCConverter>`_ |\n"
+        assert lines[62] == "    |                |                                                                             |\n"
+        assert lines[63] == "    |                |                                                                             |\n"
+        assert lines[64] == "    |                | +-------+-------+                                                           |\n"
+        assert lines[65] == "    |                | | Col 0 | Col 1 |                                                           |\n"
+        assert lines[66] == "    |                | +=======+=======+                                                           |\n"
+        assert lines[67] == "    |                | | A     | B     |                                                           |\n"
+        assert lines[68] == "    |                | +-------+-------+                                                           |\n"
+        assert lines[69] == "    |                |                                                                             |\n"
+        assert lines[70] == "    |                |                                                                             |\n"
+        assert lines[71] == "    |                | ~~I am strikethrough.~~                                                     |\n"
+        assert lines[72] == "    |                |                                                                             |\n"
+        assert lines[73] == "    |                |                                                                             |\n"
+        assert lines[74] == "    +----------------+-----------------------------------------------------------------------------+\n"
+        assert lines[75] == "    | link           | N/A                                                                         |\n"
+        assert lines[76] == "    +----------------+-----------------------------------------------------------------------------+\n"
+        assert lines[77] == "    | index          | N/A                                                                         |\n"
+        assert lines[78] == "    +----------------+-----------------------------------------------------------------------------+\n"
+        assert lines[79] == "    | precision      | N/A                                                                         |\n"
+        assert lines[80] == "    +----------------+-----------------------------------------------------------------------------+\n"
+        assert lines[81] == "    | valid          | N/A                                                                         |\n"
+        assert lines[82] == "    +----------------+-----------------------------------------------------------------------------+\n"

@@ -4,7 +4,7 @@
 """
 
 # pyTRLCConverter - A tool to convert TRLC files to specific formats.
-# Copyright (c) 2024 - 2025 NewTec GmbH
+# Copyright (c) 2024 - 2026 NewTec GmbH
 #
 # This file is part of pyTRLCConverter program.
 #
@@ -20,7 +20,7 @@
 # If not, see <https://www.gnu.org/licenses/>.
 
 # Imports **********************************************************************
-from typing import Optional
+from typing import Optional, Any
 
 from pyTRLCConverter.base_converter import RecordsPolicy
 from pyTRLCConverter.ret import Ret
@@ -37,12 +37,12 @@ class CustomMarkdownConverter(MarkdownConverter):
     """Custom Project specific Markdown Converter.
     """
 
-    def __init__(self, args: any) -> None:
+    def __init__(self, args: Any) -> None:
         """
         Initialize the custom markdown converter.
 
         Args:
-            args (any): The parsed program arguments.
+            args (Any): The parsed program arguments.
         """
         super().__init__(args)
 

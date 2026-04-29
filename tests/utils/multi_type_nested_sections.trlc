@@ -1,0 +1,17 @@
+package Requirements
+
+section "System" {
+    section "Functional" {
+        SwReq sw_req_1 {
+            description = "The system shall provide a functional capability."
+            verification = "Test"
+        }
+    }
+
+    section "Non-Functional" {
+        SwReqNonFunc sw_req_nf_1 {
+            constraint = "The system shall respond within 5 seconds."
+            rationale = "User interaction must remain responsive."
+        }
+    }
+}

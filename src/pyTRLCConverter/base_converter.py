@@ -4,7 +4,7 @@
 """
 
 # pyTRLCConverter - A tool to convert TRLC files to specific formats.
-# Copyright (c) 2024 - 2025 NewTec GmbH
+# Copyright (c) 2024 - 2026 NewTec GmbH
 #
 # This file is part of pyTRLCConverter program.
 #
@@ -35,16 +35,13 @@ from pyTRLCConverter.render_config import RenderConfig
 
 
 class RecordsPolicy(Enum):
-    """
-    Enum class to define policies for handling records during conversion.
+    """Enum class to define policies for handling records during conversion."""
 
-    Attributes:
-        RECORD_CONVERT_ALL (int): Convert all records, including undefined ones
-                                  using convert_record_object_generic().
-        RECORD_SKIP_UNDEFINED (int): Skip records types that are not linked to a handler.
-    """
-    RECORD_CONVERT_ALL= 1
+    RECORD_CONVERT_ALL = 1
+    """Convert all records, including undefined ones using convert_record_object_generic()."""
+
     RECORD_SKIP_UNDEFINED = 2
+    """Skip record types that are not linked to a handler."""
 
 
 class BaseConverter(AbstractConverter):

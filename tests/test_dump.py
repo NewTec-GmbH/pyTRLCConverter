@@ -2,7 +2,7 @@
 """
 
 # pyTRLCConverter - A tool to convert TRLC files to specific formats.
-# Copyright (c) 2024 - 2025 NewTec GmbH
+# Copyright (c) 2024 - 2026 NewTec GmbH
 #
 # This file is part of pyTRLCConverter program.
 #
@@ -27,6 +27,7 @@ from pyTRLCConverter.__main__ import main
 
 # Functions ********************************************************************
 
+# pylint: disable-next=too-many-statements
 def test_tc_ascii_conversion(record_property, capsys, monkeypatch):
     # lobster-trace: SwTests.tc_ascii_conversion
     """
@@ -42,8 +43,10 @@ def test_tc_ascii_conversion(record_property, capsys, monkeypatch):
     # Mock program arguments to simulate running the script with inbuild reStructuredText converter.
     monkeypatch.setattr("sys.argv", [
         "pyTRLCConverter",
-        "--source", "./tests/utils",
-        "--exclude", "./tests/utils/single_req_description_md.trlc",
+        "--source", "./tests/utils/req.rsl",
+        "--source", "./tests/utils/single_req_no_section.trlc",
+        "--source", "./tests/utils/single_req_with_link.trlc",
+        "--source", "./tests/utils/single_req_with_section.trlc",
         "dump"
     ])
 
@@ -103,7 +106,7 @@ def test_tc_ascii_conversion(record_property, capsys, monkeypatch):
     assert lines[42] == "      Field index"
     assert lines[43] == "         Implicit_Null"
     assert lines[44] == "      Field precision"
-    assert lines[45] == "         Decimal Literal 0"  # Current bug in TRLC will incorrectly dump Decimals.
+    assert lines[45] == "         Decimal Literal 1/100"
     assert lines[46] == "      Field valid"
     assert lines[47] == "         Implicit_Null"
     assert lines[48] == "      Section Test section"

@@ -4,7 +4,7 @@
 """
 
 # pyTRLCConverter - A tool to convert TRLC files to specific formats.
-# Copyright (c) 2024 - 2025 NewTec GmbH
+# Copyright (c) 2024 - 2026 NewTec GmbH
 #
 # This file is part of pyTRLCConverter program.
 #
@@ -79,12 +79,19 @@ def init_from_toml():
     toml_file = resource_path("pyproject.toml")
     data = toml.load(toml_file)
 
+    # Handle license as either a string or a dictionary
+    license_field = data["project"]["license"]
+    if isinstance(license_field, dict):
+        license_text = license_field.get("text", "???")
+    else:
+        license_text = license_field
+
     return \
         data["project"]["version"], \
         data["project"]["authors"][0]["name"], \
         data["project"]["authors"][0]["email"], \
         data["project"]["urls"]["repository"], \
-        data["project"]["license"]["text"]
+        license_text
 
 # Main *************************************************************************
 
