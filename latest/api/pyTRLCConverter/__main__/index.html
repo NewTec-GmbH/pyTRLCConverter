@@ -1,0 +1,319 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pyTRLCConverter.__main__ &mdash; pyTRLCConverter  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=563f12fe" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/version_selector.js?v=02fa0f40"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="pyTRLCConverter.abstract_converter" href="../abstract_converter/index.html" />
+    <link rel="prev" title="pyTRLCConverter" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #0C2C40" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            pyTRLCConverter
+              <img src="../../../_static/NewTec_Logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../sw_requirements.html">SW Requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../sw_architecture.html">SW Architecture</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../sw_detail_design.html">SW Detailed Design</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../sw_detail_design.html#api-reference">API Reference</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../index.html">pyTRLCConverter</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../index.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../sw_tests.html">SW Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../sw_tracing_report.html">SW Tracing Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../sw_test_result_report.html">SW Test Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../coverage_report.html">Coverage Report</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../license_include.html">License information</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #0C2C40" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">pyTRLCConverter</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../sw_detail_design.html">SW Detailed Design</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">pyTRLCConverter</a></li>
+      <li class="breadcrumb-item active">pyTRLCConverter.__main__</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/api/pyTRLCConverter/__main__/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-pyTRLCConverter.__main__">
+<span id="pytrlcconverter-main"></span><h1>pyTRLCConverter.__main__<a class="headerlink" href="#module-pyTRLCConverter.__main__" title="Link to this heading"></a></h1>
+<p>The main module with the program entry point.
+The main task is to convert requirements, diagrams and etc. which are defined
+by TRLC into markdown format.</p>
+<p>Author: Andreas Merkle (<a class="reference external" href="mailto:andreas&#46;merkle&#37;&#52;&#48;newtec&#46;de">andreas<span>&#46;</span>merkle<span>&#64;</span>newtec<span>&#46;</span>de</a>)</p>
+<section id="attributes">
+<h2>Attributes<a class="headerlink" href="#attributes" title="Link to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyTRLCConverter.__main__.BUILD_IN_CONVERTER_LIST" title="pyTRLCConverter.__main__.BUILD_IN_CONVERTER_LIST"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BUILD_IN_CONVERTER_LIST</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyTRLCConverter.__main__.PROG_COPYRIGHT" title="pyTRLCConverter.__main__.PROG_COPYRIGHT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PROG_COPYRIGHT</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyTRLCConverter.__main__.PROG_DESC" title="pyTRLCConverter.__main__.PROG_DESC"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PROG_DESC</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyTRLCConverter.__main__.PROG_EPILOG" title="pyTRLCConverter.__main__.PROG_EPILOG"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PROG_EPILOG</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyTRLCConverter.__main__.PROG_GITHUB" title="pyTRLCConverter.__main__.PROG_GITHUB"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PROG_GITHUB</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyTRLCConverter.__main__.PROG_NAME" title="pyTRLCConverter.__main__.PROG_NAME"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PROG_NAME</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyTRLCConverter.__main__._create_args_parser" title="pyTRLCConverter.__main__._create_args_parser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_create_args_parser</span></code></a>(→ argparse.ArgumentParser)</p></td>
+<td><p>Creates parser for command line arguments.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyTRLCConverter.__main__._create_out_folder" title="pyTRLCConverter.__main__._create_out_folder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_create_out_folder</span></code></a>(→ None)</p></td>
+<td><p>Create output folder if it doesn't exist.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyTRLCConverter.__main__._get_project_converter" title="pyTRLCConverter.__main__._get_project_converter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_get_project_converter</span></code></a>(...)</p></td>
+<td><p>Get the project specific converter class from a --project or -p argument.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyTRLCConverter.__main__._setup_converters" title="pyTRLCConverter.__main__._setup_converters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_setup_converters</span></code></a>(→ pyTRLCConverter.ret.Ret)</p></td>
+<td><p>Setup the converters.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyTRLCConverter.__main__._setup_render_configuration" title="pyTRLCConverter.__main__._setup_render_configuration"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_setup_render_configuration</span></code></a>(...)</p></td>
+<td><p>Setup render configuration.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyTRLCConverter.__main__._show_program_arguments" title="pyTRLCConverter.__main__._show_program_arguments"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_show_program_arguments</span></code></a>(→ None)</p></td>
+<td><p>Show program arguments in verbose mode to the user.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyTRLCConverter.__main__.main" title="pyTRLCConverter.__main__.main"><code class="xref py py-obj docutils literal notranslate"><span class="pre">main</span></code></a>(→ int)</p></td>
+<td><p>Main program entry point.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="pyTRLCConverter.__main__._create_args_parser">
+<span class="sig-prename descclassname"><span class="pre">pyTRLCConverter.__main__.</span></span><span class="sig-name descname"><span class="pre">_create_args_parser</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">argparse.ArgumentParser</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/__main__.html#_create_args_parser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.__main__._create_args_parser" title="Link to this definition"></a></dt>
+<dd><p>Creates parser for command line arguments.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The parser object for command line arguments.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>argparse.ArgumentParser</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyTRLCConverter.__main__._create_out_folder">
+<span class="sig-prename descclassname"><span class="pre">pyTRLCConverter.__main__.</span></span><span class="sig-name descname"><span class="pre">_create_out_folder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/__main__.html#_create_out_folder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.__main__._create_out_folder" title="Link to this definition"></a></dt>
+<dd><p>Create output folder if it doesn’t exist.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – The output folder path which to create.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyTRLCConverter.__main__._get_project_converter">
+<span class="sig-prename descclassname"><span class="pre">pyTRLCConverter.__main__.</span></span><span class="sig-name descname"><span class="pre">_get_project_converter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../abstract_converter/index.html#pyTRLCConverter.abstract_converter.AbstractConverter" title="pyTRLCConverter.abstract_converter.AbstractConverter"><span class="pre">pyTRLCConverter.abstract_converter.AbstractConverter</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/__main__.html#_get_project_converter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.__main__._get_project_converter" title="Link to this definition"></a></dt>
+<dd><p>Get the project specific converter class from a –project or -p argument.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The project specific converter or None if not found.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../abstract_converter/index.html#pyTRLCConverter.abstract_converter.AbstractConverter" title="pyTRLCConverter.abstract_converter.AbstractConverter">AbstractConverter</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyTRLCConverter.__main__._setup_converters">
+<span class="sig-prename descclassname"><span class="pre">pyTRLCConverter.__main__.</span></span><span class="sig-name descname"><span class="pre">_setup_converters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args_sub_parser</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">argparse._SubParsersAction</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../ret/index.html#pyTRLCConverter.ret.Ret" title="pyTRLCConverter.ret.Ret"><span class="pre">pyTRLCConverter.ret.Ret</span></a></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/__main__.html#_setup_converters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.__main__._setup_converters" title="Link to this definition"></a></dt>
+<dd><p>Setup the converters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Status of the setup.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../ret/index.html#pyTRLCConverter.ret.Ret" title="pyTRLCConverter.ret.Ret">Ret</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyTRLCConverter.__main__._setup_render_configuration">
+<span class="sig-prename descclassname"><span class="pre">pyTRLCConverter.__main__.</span></span><span class="sig-name descname"><span class="pre">_setup_render_configuration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../render_config/index.html#pyTRLCConverter.render_config.RenderConfig" title="pyTRLCConverter.render_config.RenderConfig"><span class="pre">pyTRLCConverter.render_config.RenderConfig</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/__main__.html#_setup_render_configuration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.__main__._setup_render_configuration" title="Link to this definition"></a></dt>
+<dd><p>Setup render configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file_name</strong> (<em>str</em><em>|</em><em>None</em>) – File name of the render configuration file.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Render configuration or None if render configuration file could not be loaded.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../render_config/index.html#pyTRLCConverter.render_config.RenderConfig" title="pyTRLCConverter.render_config.RenderConfig">RenderConfig</a>|None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyTRLCConverter.__main__._show_program_arguments">
+<span class="sig-prename descclassname"><span class="pre">pyTRLCConverter.__main__.</span></span><span class="sig-name descname"><span class="pre">_show_program_arguments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">argparse.Namespace</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/__main__.html#_show_program_arguments"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.__main__._show_program_arguments" title="Link to this definition"></a></dt>
+<dd><p>Show program arguments in verbose mode to the user.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>args</strong> (<em>argparse.Namespace</em>) – Program arguments</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyTRLCConverter.__main__.main">
+<span class="sig-prename descclassname"><span class="pre">pyTRLCConverter.__main__.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/__main__.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.__main__.main" title="Link to this definition"></a></dt>
+<dd><p>Main program entry point.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Program status</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="pyTRLCConverter.__main__.BUILD_IN_CONVERTER_LIST">
+<span class="sig-prename descclassname"><span class="pre">pyTRLCConverter.__main__.</span></span><span class="sig-name descname"><span class="pre">BUILD_IN_CONVERTER_LIST</span></span><a class="headerlink" href="#pyTRLCConverter.__main__.BUILD_IN_CONVERTER_LIST" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="pyTRLCConverter.__main__.PROG_COPYRIGHT">
+<span class="sig-prename descclassname"><span class="pre">pyTRLCConverter.__main__.</span></span><span class="sig-name descname"><span class="pre">PROG_COPYRIGHT</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Copyright</span> <span class="pre">(c)</span> <span class="pre">2024</span> <span class="pre">-</span> <span class="pre">2026</span> <span class="pre">NewTec</span> <span class="pre">GmbH</span> <span class="pre">-</span> <span class="pre">???'</span></span><a class="headerlink" href="#pyTRLCConverter.__main__.PROG_COPYRIGHT" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="pyTRLCConverter.__main__.PROG_DESC">
+<span class="sig-prename descclassname"><span class="pre">pyTRLCConverter.__main__.</span></span><span class="sig-name descname"><span class="pre">PROG_DESC</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'A</span> <span class="pre">CLI</span> <span class="pre">tool</span> <span class="pre">to</span> <span class="pre">convert</span> <span class="pre">TRLC</span> <span class="pre">into</span> <span class="pre">different</span> <span class="pre">formats.'</span></span><a class="headerlink" href="#pyTRLCConverter.__main__.PROG_DESC" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="pyTRLCConverter.__main__.PROG_EPILOG">
+<span class="sig-prename descclassname"><span class="pre">pyTRLCConverter.__main__.</span></span><span class="sig-name descname"><span class="pre">PROG_EPILOG</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Copyright</span> <span class="pre">(c)</span> <span class="pre">2024</span> <span class="pre">-</span> <span class="pre">2026</span> <span class="pre">NewTec</span> <span class="pre">GmbH</span> <span class="pre">-</span> <span class="pre">???</span> <span class="pre">-</span> <span class="pre">Find</span> <span class="pre">the</span> <span class="pre">project</span> <span class="pre">on</span> <span class="pre">GitHub:</span> <span class="pre">???'</span></span><a class="headerlink" href="#pyTRLCConverter.__main__.PROG_EPILOG" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="pyTRLCConverter.__main__.PROG_GITHUB">
+<span class="sig-prename descclassname"><span class="pre">pyTRLCConverter.__main__.</span></span><span class="sig-name descname"><span class="pre">PROG_GITHUB</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Find</span> <span class="pre">the</span> <span class="pre">project</span> <span class="pre">on</span> <span class="pre">GitHub:</span> <span class="pre">???'</span></span><a class="headerlink" href="#pyTRLCConverter.__main__.PROG_GITHUB" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="pyTRLCConverter.__main__.PROG_NAME">
+<span class="sig-prename descclassname"><span class="pre">pyTRLCConverter.__main__.</span></span><span class="sig-name descname"><span class="pre">PROG_NAME</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'pyTRLCConverter'</span></span><a class="headerlink" href="#pyTRLCConverter.__main__.PROG_NAME" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../index.html" class="btn btn-neutral float-left" title="pyTRLCConverter" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../abstract_converter/index.html" class="btn btn-neutral float-right" title="pyTRLCConverter.abstract_converter" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024 - 2026, NewTec GmbH.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,173 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SW Detailed Design &mdash; pyTRLCConverter  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=563f12fe" />
+
+  
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="_static/version_selector.js?v=02fa0f40"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="pyTRLCConverter" href="api/pyTRLCConverter/index.html" />
+    <link rel="prev" title="SW Architecture" href="sw_architecture.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #0C2C40" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            pyTRLCConverter
+              <img src="_static/NewTec_Logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="sw_requirements.html">SW Requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sw_architecture.html">SW Architecture</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">SW Detailed Design</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#api-reference">API Reference</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/pyTRLCConverter/index.html">pyTRLCConverter</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sw_tests.html">SW Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sw_tracing_report.html">SW Tracing Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sw_test_result_report.html">SW Test Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="coverage_report.html">Coverage Report</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="license_include.html">License information</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #0C2C40" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">pyTRLCConverter</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">SW Detailed Design</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/sw_detail_design.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <figure class="align-right" style="width: 350px">
+<img alt="_images/NewTec_Logo_Slogan.png" src="_images/NewTec_Logo_Slogan.png" />
+</figure>
+<div class="clearboth docutils container">
+</div>
+<section id="sw-detailed-design">
+<h1>SW Detailed Design<a class="headerlink" href="#sw-detailed-design" title="Link to this heading"></a></h1>
+<p>This section provides a developer-focused view of the internal design of
+<code class="docutils literal notranslate"><span class="pre">pyTRLCConverter</span></code>. All API pages are generated automatically from the source
+code and docstrings by <a class="reference external" href="https://sphinx-autoapi.readthedocs.io">sphinx-autoapi</a>.</p>
+<p>The implementation follows a pipeline-oriented structure:</p>
+<ol class="arabic simple">
+<li><p>Input files and CLI options are collected and validated.</p></li>
+<li><p>TRLC model elements are traversed and normalised.</p></li>
+<li><p>A selected converter renders project-specific output.</p></li>
+<li><p>Optional translation and tracing information is applied.</p></li>
+</ol>
+<section id="api-reference">
+<h2>API Reference<a class="headerlink" href="#api-reference" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/pyTRLCConverter/index.html">pyTRLCConverter</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/pyTRLCConverter/index.html#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/pyTRLCConverter/__main__/index.html">pyTRLCConverter.__main__</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/pyTRLCConverter/abstract_converter/index.html">pyTRLCConverter.abstract_converter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/pyTRLCConverter/base_converter/index.html">pyTRLCConverter.base_converter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/pyTRLCConverter/docx_converter/index.html">pyTRLCConverter.docx_converter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/pyTRLCConverter/dump_converter/index.html">pyTRLCConverter.dump_converter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/pyTRLCConverter/item_walker/index.html">pyTRLCConverter.item_walker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/pyTRLCConverter/logger/index.html">pyTRLCConverter.logger</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/pyTRLCConverter/markdown_converter/index.html">pyTRLCConverter.markdown_converter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/pyTRLCConverter/plantuml/index.html">pyTRLCConverter.plantuml</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/pyTRLCConverter/render_config/index.html">pyTRLCConverter.render_config</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/pyTRLCConverter/reqif_converter/index.html">pyTRLCConverter.reqif_converter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/pyTRLCConverter/ret/index.html">pyTRLCConverter.ret</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/pyTRLCConverter/rst_converter/index.html">pyTRLCConverter.rst_converter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/pyTRLCConverter/translator/index.html">pyTRLCConverter.translator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/pyTRLCConverter/trlc_helper/index.html">pyTRLCConverter.trlc_helper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/pyTRLCConverter/version/index.html">pyTRLCConverter.version</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="sw_architecture.html" class="btn btn-neutral float-left" title="SW Architecture" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="api/pyTRLCConverter/index.html" class="btn btn-neutral float-right" title="pyTRLCConverter" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024 - 2026, NewTec GmbH.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

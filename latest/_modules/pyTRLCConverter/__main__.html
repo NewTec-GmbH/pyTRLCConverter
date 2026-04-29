@@ -1,0 +1,490 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pyTRLCConverter.__main__ &mdash; pyTRLCConverter  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=563f12fe" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/version_selector.js?v=02fa0f40"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #0C2C40" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            pyTRLCConverter
+              <img src="../../_static/NewTec_Logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../sw_requirements.html">SW Requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sw_architecture.html">SW Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sw_detail_design.html">SW Detailed Design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sw_tests.html">SW Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sw_tracing_report.html">SW Tracing Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sw_test_result_report.html">SW Test Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../coverage_report.html">Coverage Report</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../license_include.html">License information</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #0C2C40" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pyTRLCConverter</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">pyTRLCConverter.__main__</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pyTRLCConverter.__main__</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;The main module with the program entry point.</span>
+<span class="sd">    The main task is to convert requirements, diagrams and etc. which are defined</span>
+<span class="sd">    by TRLC into markdown format.</span>
+
+<span class="sd">    Author: Andreas Merkle (andreas.merkle@newtec.de)</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># pyTRLCConverter - A tool to convert TRLC files to specific formats.</span>
+<span class="c1"># Copyright (c) 2024 - 2026 NewTec GmbH</span>
+<span class="c1">#</span>
+<span class="c1"># This file is part of pyTRLCConverter program.</span>
+<span class="c1">#</span>
+<span class="c1"># The pyTRLCConverter program is free software: you can redistribute it and/or modify it under</span>
+<span class="c1"># the terms of the GNU General Public License as published by the Free Software Foundation,</span>
+<span class="c1"># either version 3 of the License, or (at your option) any later version.</span>
+<span class="c1">#</span>
+<span class="c1"># The pyTRLCConverter program is distributed in the hope that it will be useful, but</span>
+<span class="c1"># WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or</span>
+<span class="c1"># FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1"># You should have received a copy of the GNU General Public License along with pyTRLCConverter.</span>
+<span class="c1"># If not, see &lt;https://www.gnu.org/licenses/&gt;.</span>
+
+<span class="c1"># Imports **********************************************************************</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">importlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">inspect</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">argparse</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyTRLCConverter.abstract_converter</span><span class="w"> </span><span class="kn">import</span> <span class="n">AbstractConverter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyTRLCConverter.dump_converter</span><span class="w"> </span><span class="kn">import</span> <span class="n">DumpConverter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyTRLCConverter.item_walker</span><span class="w"> </span><span class="kn">import</span> <span class="n">ItemWalker</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyTRLCConverter.ret</span><span class="w"> </span><span class="kn">import</span> <span class="n">Ret</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyTRLCConverter.version</span><span class="w"> </span><span class="kn">import</span> <span class="n">__license__</span><span class="p">,</span> <span class="n">__repository__</span><span class="p">,</span> <span class="n">__version__</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyTRLCConverter.trlc_helper</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_trlc_symbols</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyTRLCConverter.markdown_converter</span><span class="w"> </span><span class="kn">import</span> <span class="n">MarkdownConverter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyTRLCConverter.docx_converter</span><span class="w"> </span><span class="kn">import</span> <span class="n">DocxConverter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyTRLCConverter.logger</span><span class="w"> </span><span class="kn">import</span> <span class="n">enable_verbose</span><span class="p">,</span> <span class="n">log_verbose</span><span class="p">,</span> <span class="n">is_verbose_enabled</span><span class="p">,</span> <span class="n">log_error</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyTRLCConverter.rst_converter</span><span class="w"> </span><span class="kn">import</span> <span class="n">RstConverter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyTRLCConverter.reqif_converter</span><span class="w"> </span><span class="kn">import</span> <span class="n">ReqifConverter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyTRLCConverter.render_config</span><span class="w"> </span><span class="kn">import</span> <span class="n">RenderConfig</span>
+
+<span class="c1"># Variables ********************************************************************</span>
+
+<span class="n">PROG_NAME</span> <span class="o">=</span> <span class="s2">&quot;pyTRLCConverter&quot;</span>
+<span class="n">PROG_DESC</span> <span class="o">=</span> <span class="s2">&quot;A CLI tool to convert TRLC into different formats.&quot;</span>
+<span class="n">PROG_COPYRIGHT</span> <span class="o">=</span> <span class="s2">&quot;Copyright (c) 2024 - 2026 NewTec GmbH - &quot;</span> <span class="o">+</span> <span class="n">__license__</span>
+<span class="n">PROG_GITHUB</span> <span class="o">=</span> <span class="s2">&quot;Find the project on GitHub: &quot;</span> <span class="o">+</span> <span class="n">__repository__</span>
+<span class="n">PROG_EPILOG</span> <span class="o">=</span> <span class="n">PROG_COPYRIGHT</span> <span class="o">+</span> <span class="s2">&quot; - &quot;</span> <span class="o">+</span> <span class="n">PROG_GITHUB</span>
+
+<span class="c1"># List of built-in converters to use or subclass by a project converter.</span>
+<span class="n">BUILD_IN_CONVERTER_LIST</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">MarkdownConverter</span><span class="p">,</span>
+    <span class="n">DocxConverter</span><span class="p">,</span>
+    <span class="n">DumpConverter</span><span class="p">,</span>
+    <span class="n">RstConverter</span><span class="p">,</span>
+    <span class="n">ReqifConverter</span>
+<span class="p">]</span>
+
+<span class="c1"># Classes **********************************************************************</span>
+
+<span class="c1"># Functions ********************************************************************</span>
+
+<div class="viewcode-block" id="_create_args_parser">
+<a class="viewcode-back" href="../../api/pyTRLCConverter/__main__/index.html#pyTRLCConverter.__main__._create_args_parser">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_create_args_parser</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">:</span>
+    <span class="c1"># lobster-trace: SwRequirements.sw_req_cli_help</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Creates parser for command line arguments.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        argparse.ArgumentParser:  The parser object for command line arguments.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">prog</span><span class="o">=</span><span class="n">PROG_NAME</span><span class="p">,</span>
+                                     <span class="n">description</span><span class="o">=</span><span class="n">PROG_DESC</span><span class="p">,</span>
+                                     <span class="n">epilog</span><span class="o">=</span><span class="n">PROG_EPILOG</span><span class="p">)</span>
+
+    <span class="c1"># lobster-trace: SwRequirements.sw_req_cli_version</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;--version&quot;</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;version&quot;</span><span class="p">,</span>
+        <span class="n">version</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%(prog)s</span><span class="s2"> &quot;</span> <span class="o">+</span> <span class="n">__version__</span>
+    <span class="p">)</span>
+
+    <span class="c1"># lobster-trace: SwRequirements.sw_req_cli_verbose</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-v&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--verbose&quot;</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Print full command details before executing the command.&quot;</span> \
+                <span class="s2">&quot;Enables logs of type INFO and WARNING.&quot;</span>
+    <span class="p">)</span>
+
+    <span class="c1"># lobster-trace: SwRequirements.sw_req_cli_include</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-i&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--include&quot;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;append&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Add additional directory which to include on demand. Can be specified several times.&quot;</span>
+    <span class="p">)</span>
+
+    <span class="c1"># lobster-trace: SwRequirements.sw_req_cli_source</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-s&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--source&quot;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+        <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;append&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The path to the TRLC files folder or a single TRLC file.&quot;</span>
+    <span class="p">)</span>
+
+    <span class="c1"># lobster-trace: SwRequirements.sw_req_cli_exclude</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-ex&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--exclude&quot;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;append&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Add source directory which shall not be considered for conversion. Can be specified several times.&quot;</span>
+    <span class="p">)</span>
+
+    <span class="c1"># lobster-trace: SwRequirements.sw_req_cli_out</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-o&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--out&quot;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Output path, e.g. /out/markdown.&quot;</span>
+    <span class="p">)</span>
+
+    <span class="c1"># lobster-trace: SwRequirements.sw_req_prj_spec_file</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-p&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--project&quot;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Python module with project specific conversion functions.&quot;</span>
+    <span class="p">)</span>
+
+    <span class="c1"># lobster-trace: SwRequirements.sw_req_cli_render_cfg</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-rc&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--renderCfg&quot;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Render configuration JSON file.&quot;</span>
+    <span class="p">)</span>
+
+    <span class="c1"># lobster-trace: SwRequirements.sw_req_cli_translation</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-tr&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--translation&quot;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Requirement attribute translation JSON file.&quot;</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">parser</span></div>
+
+
+<div class="viewcode-block" id="_setup_converters">
+<a class="viewcode-back" href="../../api/pyTRLCConverter/__main__/index.html#pyTRLCConverter.__main__._setup_converters">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_setup_converters</span><span class="p">(</span><span class="n">args_sub_parser</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">_SubParsersAction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Ret</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Setup the converters.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Ret: Status of the setup.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ret_status</span> <span class="o">=</span> <span class="n">Ret</span><span class="o">.</span><span class="n">OK</span>
+
+    <span class="c1"># Check if a project specific converter is given and load it.</span>
+    <span class="n">project_converter</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">project_converter</span> <span class="o">=</span> <span class="n">_get_project_converter</span><span class="p">()</span>
+    <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="n">log_error</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">exc</span><span class="p">))</span>
+        <span class="n">ret_status</span> <span class="o">=</span> <span class="n">Ret</span><span class="o">.</span><span class="n">ERROR</span>
+
+    <span class="k">if</span> <span class="n">ret_status</span> <span class="o">==</span> <span class="n">Ret</span><span class="o">.</span><span class="n">OK</span><span class="p">:</span>
+
+        <span class="n">project_converter_cmd</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">project_converter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">project_converter</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">args_sub_parser</span><span class="p">)</span>
+            <span class="n">project_converter_cmd</span> <span class="o">=</span> <span class="n">project_converter</span><span class="o">.</span><span class="n">get_subcommand</span><span class="p">()</span>
+
+        <span class="c1"># Load the built-in converters unless a project converter is replacing built-in.</span>
+        <span class="c1"># lobster-trace: SwRequirements.sw_req_no_prj_spec</span>
+        <span class="k">for</span> <span class="n">converter</span> <span class="ow">in</span> <span class="n">BUILD_IN_CONVERTER_LIST</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">converter</span><span class="o">.</span><span class="n">get_subcommand</span><span class="p">()</span> <span class="o">!=</span> <span class="n">project_converter_cmd</span><span class="p">:</span>
+                <span class="n">converter</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">args_sub_parser</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">ret_status</span></div>
+
+
+<div class="viewcode-block" id="_show_program_arguments">
+<a class="viewcode-back" href="../../api/pyTRLCConverter/__main__/index.html#pyTRLCConverter.__main__._show_program_arguments">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_show_program_arguments</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="n">argparse</span><span class="o">.</span><span class="n">Namespace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="c1"># lobster-trace: SwRequirements.sw_req_verbose_mode</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Show program arguments in verbose mode to the user.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        args (argparse.Namespace): Program arguments</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">is_verbose_enabled</span><span class="p">()</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">log_verbose</span><span class="p">(</span><span class="s2">&quot;Program arguments: &quot;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="nb">vars</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+            <span class="n">log_verbose</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;* </span><span class="si">{</span><span class="n">arg</span><span class="si">}</span><span class="s2"> = </span><span class="si">{</span><span class="nb">vars</span><span class="p">(</span><span class="n">args</span><span class="p">)[</span><span class="n">arg</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">log_verbose</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="_setup_render_configuration">
+<a class="viewcode-back" href="../../api/pyTRLCConverter/__main__/index.html#pyTRLCConverter.__main__._setup_render_configuration">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_setup_render_configuration</span><span class="p">(</span><span class="n">file_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">RenderConfig</span><span class="p">]:</span>
+    <span class="c1"># lobster-trace: SwRequirements.sw_req_render_configuration</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Setup render configuration.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        file_name (str|None): File name of the render configuration file.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        RenderConfig|None: Render configuration or None if render configuration file could not be loaded.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Load render configuration</span>
+    <span class="n">render_cfg</span> <span class="o">=</span> <span class="n">RenderConfig</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">file_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">render_cfg</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="n">render_cfg</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">return</span> <span class="n">render_cfg</span></div>
+
+
+<div class="viewcode-block" id="_get_project_converter">
+<a class="viewcode-back" href="../../api/pyTRLCConverter/__main__/index.html#pyTRLCConverter.__main__._get_project_converter">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_project_converter</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AbstractConverter</span><span class="p">]:</span>
+    <span class="c1"># lobster-trace: SwRequirements.sw_req_prj_spec</span>
+    <span class="c1"># lobster-trace: SwRequirements.sw_req_prj_spec_file</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the project specific converter class from a --project or -p argument.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        AbstractConverter: The project specific converter or None if not found.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">project_module_name</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="c1"># Check for project option (-p or --project).</span>
+    <span class="n">arglist</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">argval</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">arglist</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">argval</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;-p=&quot;</span><span class="p">):</span>
+            <span class="n">project_module_name</span> <span class="o">=</span> <span class="n">argval</span><span class="p">[</span><span class="mi">3</span><span class="p">:]</span>
+        <span class="k">elif</span> <span class="n">argval</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;--project=&quot;</span><span class="p">):</span>
+            <span class="n">project_module_name</span> <span class="o">=</span> <span class="n">argval</span><span class="p">[</span><span class="mi">10</span><span class="p">:]</span>
+        <span class="k">elif</span> <span class="n">argval</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;-p&#39;</span><span class="p">,</span> <span class="s1">&#39;--project&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">arglist</span><span class="p">):</span>
+            <span class="n">project_module_name</span> <span class="o">=</span> <span class="n">arglist</span><span class="p">[</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">project_module_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">break</span>
+
+    <span class="k">if</span> <span class="n">project_module_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Dynamically load the module and search for an AbstractConverter class definition</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">project_module_name</span><span class="p">))</span>
+        <span class="n">project_module_name_basename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">project_module_name</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.py&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">module</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">project_module_name_basename</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to import module </span><span class="si">{</span><span class="n">project_module_name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+
+        <span class="c1">#Filter classes that are defined in the module directly.</span>
+        <span class="n">classes</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getmembers</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isclass</span><span class="p">)</span>
+        <span class="n">classes</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="bp">cls</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="bp">cls</span> <span class="ow">in</span> <span class="n">classes</span> <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">==</span> <span class="n">project_module_name_basename</span><span class="p">}</span>
+
+        <span class="c1"># lobster-trace: SwRequirements.sw_req_prj_spec_interface</span>
+        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">class_def</span> <span class="ow">in</span> <span class="n">classes</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">class_def</span><span class="p">,</span> <span class="n">AbstractConverter</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">class_def</span>
+
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No AbstractConverter derived class found in </span><span class="si">{</span><span class="n">project_module_name_basename</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="_create_out_folder">
+<a class="viewcode-back" href="../../api/pyTRLCConverter/__main__/index.html#pyTRLCConverter.__main__._create_out_folder">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_create_out_folder</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="c1"># lobster-trace: SwRequirements.sw_req_markdown_out_folder</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create output folder if it doesn&#39;t exist.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        path (str): The output folder path which to create.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">log_error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to create folder </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">raise</span></div>
+
+
+<div class="viewcode-block" id="main">
+<a class="viewcode-back" href="../../api/pyTRLCConverter/__main__/index.html#pyTRLCConverter.__main__.main">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="c1"># lobster-trace: SwRequirements.sw_req_cli</span>
+    <span class="c1"># lobster-trace: SwRequirements.sw_req_destination_format</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Main program entry point.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        int: Program status</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ret_status</span> <span class="o">=</span> <span class="n">Ret</span><span class="o">.</span><span class="n">OK</span>
+
+    <span class="c1"># Create program arguments parser.</span>
+    <span class="n">args_parser</span> <span class="o">=</span> <span class="n">_create_args_parser</span><span class="p">()</span>
+    <span class="n">args_sub_parser</span> <span class="o">=</span> <span class="n">args_parser</span><span class="o">.</span><span class="n">add_subparsers</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">ret_status</span> <span class="o">=</span> <span class="n">_setup_converters</span><span class="p">(</span><span class="n">args_sub_parser</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">ret_status</span> <span class="o">==</span> <span class="n">Ret</span><span class="o">.</span><span class="n">OK</span><span class="p">:</span>
+
+        <span class="n">args</span> <span class="o">=</span> <span class="n">args_parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">args</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ret_status</span> <span class="o">=</span> <span class="n">Ret</span><span class="o">.</span><span class="n">ERROR</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">enable_verbose</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">)</span>
+            <span class="n">_show_program_arguments</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+
+            <span class="n">render_cfg</span> <span class="o">=</span> <span class="n">_setup_render_configuration</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">renderCfg</span><span class="p">)</span>
+
+            <span class="c1"># lobster-trace: SwRequirements.sw_req_process_trlc_symbols</span>
+            <span class="n">symbols</span> <span class="o">=</span> <span class="n">get_trlc_symbols</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">source</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">include</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">render_cfg</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">log_error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to load render configuration file </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">renderCfg</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+                <span class="n">ret_status</span> <span class="o">=</span> <span class="n">Ret</span><span class="o">.</span><span class="n">ERROR</span>
+            <span class="k">if</span> <span class="n">symbols</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">log_error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No items found at </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">source</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+                <span class="n">ret_status</span> <span class="o">=</span> <span class="n">Ret</span><span class="o">.</span><span class="n">ERROR</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">_create_out_folder</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">out</span><span class="p">)</span>
+
+                    <span class="c1"># Feed the items into the given converter.</span>
+                    <span class="n">log_verbose</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Using converter </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">converter_class</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">converter_class</span><span class="o">.</span><span class="n">get_description</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+                    <span class="n">converter</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">converter_class</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+                    <span class="n">converter</span><span class="o">.</span><span class="n">set_render_cfg</span><span class="p">(</span><span class="n">render_cfg</span><span class="p">)</span>
+
+                    <span class="n">walker</span> <span class="o">=</span> <span class="n">ItemWalker</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">converter</span><span class="p">)</span>
+                    <span class="n">ret_status</span> <span class="o">=</span> <span class="n">walker</span><span class="o">.</span><span class="n">walk_symbols</span><span class="p">(</span><span class="n">symbols</span><span class="p">)</span>
+
+                <span class="k">except</span> <span class="p">(</span><span class="ne">FileNotFoundError</span><span class="p">,</span> <span class="ne">OSError</span><span class="p">)</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                    <span class="n">log_error</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">exc</span><span class="p">))</span>
+                    <span class="n">ret_status</span> <span class="o">=</span> <span class="n">Ret</span><span class="o">.</span><span class="n">ERROR</span>
+
+    <span class="k">return</span> <span class="n">ret_status</span></div>
+
+
+<span class="c1"># Main *************************************************************************</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024 - 2026, NewTec GmbH.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

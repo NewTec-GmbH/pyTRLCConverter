@@ -1,0 +1,46 @@
+pyTRLCConverter.ret
+===================
+
+.. py:module:: pyTRLCConverter.ret
+
+.. autoapi-nested-parse::
+
+   Script to convert requirements to markdown format.
+
+   Author: Andreas Merkle (andreas.merkle@newtec.de)
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   pyTRLCConverter.ret.Ret
+
+
+Module Contents
+---------------
+
+.. py:class:: Ret
+
+   Bases: :py:obj:`enum.IntEnum`
+
+   .. autoapi-inheritance-diagram:: pyTRLCConverter.ret.Ret
+      :parts: 1
+      :private-bases:
+
+
+   The function return values.
+
+
+   .. py:attribute:: ERROR
+      :value: 1
+
+
+
+   .. py:attribute:: OK
+      :value: 0
+
+
+

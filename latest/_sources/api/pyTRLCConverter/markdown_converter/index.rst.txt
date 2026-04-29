@@ -1,0 +1,491 @@
+pyTRLCConverter.markdown_converter
+==================================
+
+.. py:module:: pyTRLCConverter.markdown_converter
+
+.. autoapi-nested-parse::
+
+   Converter to Markdown format.
+
+   Author: Andreas Merkle (andreas.merkle@newtec.de)
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   pyTRLCConverter.markdown_converter.MarkdownConverter
+
+
+Module Contents
+---------------
+
+.. py:class:: MarkdownConverter(args: Any)
+
+   Bases: :py:obj:`pyTRLCConverter.base_converter.BaseConverter`
+
+   .. autoapi-inheritance-diagram:: pyTRLCConverter.markdown_converter.MarkdownConverter
+      :parts: 1
+      :private-bases:
+
+
+   MarkdownConverter provides functionality for converting to a markdown format.
+
+
+   .. py:method:: _convert_record_object(record: trlc.ast.Record_Object, level: int, translation: Optional[dict]) -> pyTRLCConverter.ret.Ret
+
+      Process the given record object.
+
+      :param record: The record object.
+      :type record: Record_Object
+      :param level: The record level.
+      :type level: int
+      :param translation: Translation dictionary for the record object.
+                          If None, no translation is applied.
+      :type translation: Optional[dict]
+
+      :returns: Status
+      :rtype: Ret
+
+
+
+   .. py:method:: _create_markdown_link_from_record_object_reference(record_reference: trlc.ast.Record_Reference) -> str
+
+      Create a Markdown link from a record reference.
+      It considers the file name, the package name, and the record name.
+
+      :param record_reference: Record reference
+      :type record_reference: Record_Reference
+
+      :returns: Markdown link
+      :rtype: str
+
+
+
+   .. py:method:: _file_name_trlc_to_md(file_name_trlc: str) -> str
+
+      Convert a TRLC file name to a Markdown file name.
+
+      :param file_name_trlc: TRLC file name
+      :type file_name_trlc: str
+
+      :returns: Markdown file name
+      :rtype: str
+
+
+
+   .. py:method:: _generate_out_file(file_name: str) -> pyTRLCConverter.ret.Ret
+
+      Generate the output file.
+
+      :param file_name: The output file name without path.
+      :type file_name: str
+      :param item_list: List of elements.
+      :type item_list: [Element]
+
+      :returns: Status
+      :rtype: Ret
+
+
+
+   .. py:method:: _get_markdown_heading_level(level: int) -> int
+
+      Get the Markdown heading level from the TRLC object level.
+          Its mandatory to use this method to calculate the Markdown heading level.
+          Otherwise in single document mode the top level heading will be wrong.
+
+      :param level: The TRLC object level.
+      :type level: int
+
+      :returns: Markdown heading level
+      :rtype: int
+
+
+
+   .. py:method:: _get_trlc_ast_walker() -> pyTRLCConverter.trlc_helper.TrlcAstWalker
+
+      If a record object contains a record reference, the record reference will be converted to
+      a Markdown link.
+      If a record object contains an array of record references, the array will be converted to
+      a Markdown list of links.
+      Otherwise the record object fields attribute values will be written to the Markdown table.
+
+      :returns: The TRLC AST walker.
+      :rtype: TrlcAstWalker
+
+
+
+   .. py:method:: _on_implict_null(_: trlc.ast.Implicit_Null) -> str
+
+      Process the given implicit null value.
+
+      :returns: The implicit null value.
+      :rtype: str
+
+
+
+   .. py:method:: _on_record_reference(record_reference: trlc.ast.Record_Reference) -> str
+
+      Process the given record reference value and return a markdown link.
+
+      :param record_reference: The record reference value.
+      :type record_reference: Record_Reference
+
+      :returns: Markdown link to the record reference.
+      :rtype: str
+
+
+
+   .. py:method:: _on_string_literal(string_literal: trlc.ast.String_Literal) -> str
+
+      Process the given string literal value.
+
+      :param string_literal: The string literal value.
+      :type string_literal: String_Literal
+
+      :returns: The string literal value.
+      :rtype: str
+
+
+
+   .. py:method:: _other_dispatcher(expression: trlc.ast.Expression) -> str
+
+      Dispatcher for all other expressions.
+
+      :param expression: The expression to process.
+      :type expression: Expression
+
+      :returns: The processed expression.
+      :rtype: str
+
+
+
+   .. py:method:: _render(package_name: str, type_name: str, attribute_name: str, attribute_value: str) -> str
+
+      Render the attribute value depened on its format.
+
+      :param package_name: The package name.
+      :type package_name: str
+      :param type_name: The type name.
+      :type type_name: str
+      :param attribute_name: The attribute name.
+      :type attribute_name: str
+      :param attribute_value: The attribute value.
+      :type attribute_value: str
+
+      :returns: The rendered attribute value.
+      :rtype: str
+
+
+
+   .. py:method:: _write_empty_line_on_demand() -> None
+
+      Write an empty line if necessary.
+
+      For proper Markdown formatting, the first written part shall not have an empty
+      line before. But all following parts (heading, table, paragraph, image, etc.) shall
+      have an empty line before. And at the document bottom, there shall be just one empty
+      line.
+
+
+
+   .. py:method:: _write_top_level_heading_on_demand() -> None
+
+      Write the top level heading if necessary.
+
+
+
+
+   .. py:method:: begin() -> pyTRLCConverter.ret.Ret
+
+      Begin the conversion process.
+
+      :returns: Status
+      :rtype: Ret
+
+
+
+   .. py:method:: convert_record_object_generic(record: trlc.ast.Record_Object, level: int, translation: Optional[dict]) -> pyTRLCConverter.ret.Ret
+
+      Process the given record object in a generic way.
+
+      The handler is called by the base converter if no specific handler is
+      defined for the record type.
+
+      :param record: The record object.
+      :type record: Record_Object
+      :param level: The record level.
+      :type level: int
+      :param translation: Translation dictionary for the record object.
+                          If None, no translation is applied.
+      :type translation: Optional[dict]
+
+      :returns: Status
+      :rtype: Ret
+
+
+
+   .. py:method:: convert_section(section: str, level: int) -> pyTRLCConverter.ret.Ret
+
+      Process the given section item.
+      It will create a Markdown heading with the given section name and level.
+
+      :param section: The section name
+      :type section: str
+      :param level: The section indentation level
+      :type level: int
+
+      :returns: Status
+      :rtype: Ret
+
+
+
+   .. py:method:: enter_file(file_name: str) -> pyTRLCConverter.ret.Ret
+
+      Enter a file.
+
+      :param file_name: File name
+      :type file_name: str
+
+      :returns: Status
+      :rtype: Ret
+
+
+
+   .. py:method:: finish()
+
+      Finish the conversion process.
+
+
+
+   .. py:method:: get_description() -> str
+      :staticmethod:
+
+
+      Return converter description.
+
+      :returns: Converter description
+      :rtype: str
+
+
+
+   .. py:method:: get_subcommand() -> str
+      :staticmethod:
+
+
+      Return subcommand token for this converter.
+
+      :returns: Parser subcommand token
+      :rtype: str
+
+
+
+   .. py:method:: leave_file(file_name: str) -> pyTRLCConverter.ret.Ret
+
+      Leave a file.
+
+      :param file_name: File name
+      :type file_name: str
+
+      :returns: Status
+      :rtype: Ret
+
+
+
+   .. py:method:: markdown_create_diagram_link(diagram_file_name: str, diagram_caption: str, escape: bool = True) -> str
+      :staticmethod:
+
+
+      Create a Markdown diagram link.
+      The caption will be automatically escaped for Markdown if necessary.
+
+      :param diagram_file_name: Diagram file name
+      :type diagram_file_name: str
+      :param diagram_caption: Diagram caption
+      :type diagram_caption: str
+      :param escape: Escapes caption (default: True).
+      :type escape: bool
+
+      :returns: Markdown diagram link
+      :rtype: str
+
+
+
+   .. py:method:: markdown_create_heading(text: str, level: int, escape: bool = True) -> str
+      :staticmethod:
+
+
+      Create a Markdown heading.
+      The text will be automatically escaped for Markdown if necessary.
+
+      :param text: Heading text
+      :type text: str
+      :param level: Heading level [1; inf]
+      :type level: int
+      :param escape: Escape the text (default: True).
+      :type escape: bool
+
+      :returns: Markdown heading
+      :rtype: str
+
+
+
+   .. py:method:: markdown_create_link(text: str, url: str, escape: bool = True) -> str
+      :staticmethod:
+
+
+      Create a Markdown link.
+      The text will be automatically escaped for Markdown if necessary.
+      There will be no newline appended at the end.
+
+      :param text: Link text
+      :type text: str
+      :param url: Link URL
+      :type url: str
+      :param escape: Escapes text (default: True).
+      :type escape: bool
+
+      :returns: Markdown link
+      :rtype: str
+
+
+
+   .. py:method:: markdown_create_list(list_values: List[str], escape: bool = True) -> str
+      :staticmethod:
+
+
+      Create a unordered Markdown list.
+      The values will be automatically escaped for Markdown if necessary.
+
+      :param list_values: List of list values.
+      :type list_values: List[str]
+      :param escape: Escapes every list value (default: True).
+      :type escape: bool
+
+      :returns: Markdown list
+      :rtype: str
+
+
+
+   .. py:method:: markdown_create_table(column_titles: List[str], row_values_list: List[List[str]]) -> str
+      :staticmethod:
+
+
+      Create a complete Markdown table in HTML format to support multi-line cells and
+      other complex content.
+
+      :param column_titles: List of column titles.
+      :type column_titles: List[str]
+      :param row_values_list: List of row values.
+      :type row_values_list: List[List[str]]
+
+      :returns: Markdown table
+      :rtype: str
+
+
+
+   .. py:method:: markdown_escape(text: str) -> str
+      :staticmethod:
+
+
+      Escapes the text to be used in a Markdown document.
+
+      :param text: Text to escape
+      :type text: str
+
+      :returns: Escaped text
+      :rtype: str
+
+
+
+   .. py:method:: markdown_lf2soft_return(text: str) -> str
+      :staticmethod:
+
+
+      A single LF will be converted to backslash + LF.
+      Use it for paragraphs, but not for headings or tables.
+
+      :param text: Text
+      :type text: str
+
+      :returns: Handled text
+      :rtype: str
+
+
+
+   .. py:method:: markdown_text_color(text: str, color: str, escape: bool = True) -> str
+      :staticmethod:
+
+
+      Create colored text in Markdown.
+      The text will be automatically escaped for Markdown if necessary.
+      There will be no newline appended at the end.
+
+      :param text: Text
+      :type text: str
+      :param color: HTML color
+      :type color: str
+      :param escape: Escapes text (default: True).
+      :type escape: bool
+
+      :returns: Colored text
+      :rtype: str
+
+
+
+   .. py:method:: register(args_parser: Any) -> None
+      :classmethod:
+
+
+      Register converter specific argument parser.
+
+      :param args_parser: Argument parser
+      :type args_parser: Any
+
+
+
+   .. py:attribute:: OUTPUT_FILE_NAME_DEFAULT
+      :value: 'output.md'
+
+
+
+   .. py:attribute:: TOP_LEVEL_DEFAULT
+      :value: 'Specification'
+
+
+
+   .. py:attribute:: _ast_meta_data
+      :value: None
+
+
+
+   .. py:attribute:: _base_level
+      :value: 1
+
+
+
+   .. py:attribute:: _empty_line_required
+      :value: False
+
+
+
+   .. py:attribute:: _excluded_paths
+      :value: []
+
+
+
+   .. py:attribute:: _fd
+      :value: None
+
+
+
+   .. py:attribute:: _is_top_level_heading_req
+      :value: True
+
+
+
+   .. py:attribute:: _out_path
+
+
