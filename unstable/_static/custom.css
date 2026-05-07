@@ -46,3 +46,9 @@ p.admonition-title {
 .clearboth {
     clear: both;
 }
+
+/* Prevent embedded LOBSTER report styles from shrinking the sidebar logo. */
+.wy-side-nav-search .icon {
+    width: auto;
+    height: auto;
+}
