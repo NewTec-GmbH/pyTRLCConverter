@@ -9,7 +9,7 @@
 
 .. container:: clearboth
   
-  .. image alignment: Comment needed for clearboth container to work, otherwise the image overlaps with the text 
+    .. image alignment: Comment needed for clearboth container to work, otherwise the image overlaps with the text 
 
 pyTRLCConverter documentation
 =============================
