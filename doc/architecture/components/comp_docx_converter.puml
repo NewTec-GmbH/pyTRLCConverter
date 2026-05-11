@@ -33,7 +33,11 @@ package "Dependencies" {
         Library for generating .docx files
     end note
 
-    class DocxRenderer {
+    class Md2DocxRenderer {
+        + render(ast: Any) : str
+    }
+
+    class Gfm2DocxRenderer {
         + render(ast: Any) : str
     }
 
@@ -46,7 +50,8 @@ package "Dependencies" {
 
 DocxConverter ..> trlc
 DocxConverter ..> docx
-DocxConverter ..> DocxRenderer
+DocxConverter ..> Md2DocxRenderer
+DocxConverter ..> Gfm2DocxRenderer
 DocxConverter ..> marko
 
 @enduml
