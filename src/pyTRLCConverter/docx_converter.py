@@ -32,6 +32,7 @@ from marko import Markdown
 from trlc.ast import Implicit_Null, Record_Object, Record_Reference, String_Literal, Array_Aggregate, Expression
 from pyTRLCConverter.base_converter import BaseConverter
 from pyTRLCConverter.marko.md2docx_renderer import Md2DocxRenderer
+from pyTRLCConverter.marko.gfm2docx_renderer import Gfm2DocxRenderer
 from pyTRLCConverter.ret import Ret
 from pyTRLCConverter.trlc_helper import TrlcAstWalker
 from pyTRLCConverter.logger import log_verbose
@@ -220,6 +221,7 @@ class DocxConverter(BaseConverter):
 
     def _on_string_literal(self, string_literal: String_Literal) -> None:
         # lobster-trace: SwRequirements.sw_req_docx_render_md
+        # lobster-trace: SwRequirements.sw_req_docx_render_gfm
         """
         Process the given string literal value.
 
@@ -345,6 +347,7 @@ class DocxConverter(BaseConverter):
 
     def _render(self, package_name: str, type_name: str, attribute_name: str, attribute_value: str) -> None:
         # lobster-trace: SwRequirements.sw_req_docx_render_md
+        # lobster-trace: SwRequirements.sw_req_docx_render_gfm
         """Render the attribute value depened on its format.
 
         Args:
@@ -360,6 +363,13 @@ class DocxConverter(BaseConverter):
             Md2DocxRenderer.block_item_container = self._block_item_container
             markdown = Markdown(renderer=Md2DocxRenderer)
             markdown.convert(attribute_value)
+
+        # If the attribute is marked as GitHub Flavored Markdown format, convert it.
+        elif self._render_cfg.is_format_gfm(package_name, type_name, attribute_name) is True:
+            Gfm2DocxRenderer.block_item_container = self._block_item_container
+            markdown = Markdown(renderer=Gfm2DocxRenderer, extensions=['gfm'])
+            markdown.convert(attribute_value)
+
         else:
             self._block_item_container.add_paragraph(attribute_value)
 
