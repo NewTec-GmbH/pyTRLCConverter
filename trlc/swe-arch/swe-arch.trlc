@@ -425,6 +425,7 @@ section "SW Architecture" {
                     SwRequirements.sw_req_docx_record,
                     SwRequirements.sw_req_docx_reference,
                     SwRequirements.sw_req_docx_render_md,
+                    SwRequirements.sw_req_docx_render_gfm,
                     SwRequirements.sw_req_destination_format
                 ]
             }
