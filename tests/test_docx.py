@@ -43,7 +43,7 @@ def test_tc_docx(record_property, capsys, monkeypatch, tmp_path):
     """
     record_property("lobster-trace", "SwTests.tc_docx")
 
-    # Mock program arguments to simulate running the script with inbuild Markdown converter.
+    # Mock program arguments to simulate running the script with the built-in docx converter.
     monkeypatch.setattr("sys.argv", [
         "pyTRLCConverter",
         "--source", "./tests/utils/req.rsl",
@@ -86,7 +86,7 @@ def test_tc_docx_multiple(record_property, capsys, monkeypatch, tmp_path):
     """
     record_property("lobster-trace", "SwTests.tc_docx_multiple")
 
-    # Mock program arguments to simulate running the script with inbuild Markdown converter.
+    # Mock program arguments to simulate running the script with the built-in docx converter.
     monkeypatch.setattr("sys.argv", [
         "pyTRLCConverter",
         "--source", "./tests/utils/req.rsl",
@@ -130,7 +130,7 @@ def test_tc_docx_section(record_property, capsys, monkeypatch, tmp_path):
     """
     record_property("lobster-trace", "SwTests.tc_docx_section")
 
-    # Mock program arguments to simulate running the script with inbuild Markdown converter.
+    # Mock program arguments to simulate running the script with the built-in docx converter.
     monkeypatch.setattr("sys.argv", [
         "pyTRLCConverter",
         "--source", "./tests/utils/req.rsl",
@@ -169,7 +169,7 @@ def test_tc_docx_file(record_property, capsys, monkeypatch, tmp_path):
     """
     record_property("lobster-trace", "SwTests.tc_docx_file")
 
-    # Mock program arguments to simulate running the script with inbuild Markdown converter.
+    # Mock program arguments to simulate running the script with the built-in docx converter.
     monkeypatch.setattr("sys.argv", [
         "pyTRLCConverter",
         "--source", "./tests/utils/req.rsl",
@@ -210,7 +210,7 @@ def test_tc_docx_template(record_property, capsys, monkeypatch, tmp_path):
     """
     record_property("lobster-trace", "SwTests.tc_docx_template")
 
-    # Mock program arguments to simulate running the script with inbuild Markdown converter.
+    # Mock program arguments to simulate running the script with the built-in docx converter.
     monkeypatch.setattr("sys.argv", [
         "pyTRLCConverter",
         "--source", "./tests/utils/req.rsl",
@@ -248,9 +248,14 @@ def test_tc_docx_render_md(record_property, capsys, monkeypatch, tmp_path):
         monkeypatch (Any): Used to mock program arguments.
         tmp_path (Path): Used to create a temporary output directory.
     """
+    # NOTE: This test does NOT pass --renderCfg, so the CommonMark renderer is never invoked.
+    # The assertion below verifies that the raw Markdown string is preserved as-is in the docx
+    # record table cell — it does NOT verify that Markdown is rendered to native docx elements
+    # (paragraphs, bold runs, etc.). A dedicated test with --renderCfg and assertions against
+    # rendered docx structure is needed to actually verify sw_req_docx_render_md.
     record_property("lobster-trace", "SwTests.tc_docx_render_md")
 
-    # Mock program arguments to simulate running the script with inbuild Markdown converter.
+    # Mock program arguments to simulate running the script with the built-in docx converter.
     monkeypatch.setattr("sys.argv", [
         "pyTRLCConverter",
         "--source", "./tests/utils/req.rsl",
@@ -304,3 +309,73 @@ def test_tc_docx_render_md(record_property, capsys, monkeypatch, tmp_path):
         r'',
         r'[Link to pyTRLCConverter](https://github.com/NewTec-GmbH/pyTRLCConverter)',
   ]
+
+# pylint: disable-next=too-many-statements
+def test_tc_docx_render_gfm(record_property, capsys, monkeypatch, tmp_path):
+    # lobster-trace: SwTests.tc_docx_render_gfm
+    """
+    The test case checks whether strings in GitHub Flavored Markdown are correctly converted to docx.
+
+    Args:
+        record_property (Any): Used to inject the test case reference into the test results.
+        capsys (Any): Used to capture stdout and stderr.
+        monkeypatch (Any): Used to mock program arguments.
+        tmp_path (Path): Used to create a temporary output directory.
+    """
+    record_property("lobster-trace", "SwTests.tc_docx_render_gfm")
+
+    monkeypatch.setattr("sys.argv", [
+        "pyTRLCConverter",
+        "--source", "./tests/utils/req.rsl",
+        "--source", "./tests/utils/single_req_description_gfm.trlc",
+        "--out", str(tmp_path),
+        "--renderCfg", "./tests/utils/renderCfgDocxGfm.json",
+        "docx",
+        "--template", "./tests/utils/template.docx",
+    ])
+
+    main()
+
+    captured = capsys.readouterr()
+    assert captured.err == ""
+
+    created_docx = docx.Document(docx=str(tmp_path / DocxConverter.OUTPUT_FILE_NAME_DEFAULT))
+
+    # The rendered GFM content lives in the record attribute table, cell(1,1) — the description value cell.
+    record_table = created_docx.tables[0]
+    description_cell = record_table.rows[1].cells[1]
+    cell_texts = [p.text for p in description_cell.paragraphs]
+
+    # Headings rendered as paragraphs inside the cell.
+    assert "Heading 1" in cell_texts
+    assert "Heading 2" in cell_texts
+
+    # Bullet and numbered list items rendered.
+    assert "Bullet point 1" in cell_texts
+    assert "Bullet point 2" in cell_texts
+    assert "Numbered point 1" in cell_texts
+    assert "Numbered point 2" in cell_texts
+
+    # Bold text rendered with bold run property.
+    bold_run = None
+    for paragraph in description_cell.paragraphs:
+        for run in paragraph.runs:
+            if run.bold is True and run.text == "Bold text":
+                bold_run = run
+                break
+        if bold_run is not None:
+            break
+
+    assert bold_run is not None, "Bold run not found in docx output"
+
+    # Strikethrough rendered with strike font property.
+    strike_run = None
+    for paragraph in description_cell.paragraphs:
+        for run in paragraph.runs:
+            if run.font.strike is True and "strikethrough" in run.text:
+                strike_run = run
+                break
+        if strike_run is not None:
+            break
+
+    assert strike_run is not None, "Strikethrough run not found in docx output"
