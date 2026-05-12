@@ -15,14 +15,23 @@ section "SW Architecture" {
             A main challenge for pyTRLCConverter is the conversion of project-specific TRLC types. TRLC is a framework that gets adapted to
             project needs using "rsl" files. These files define TRLC types through derivations similar to classes in OOP.
             PyTRLCConverter uses built-in converter classes that convert to destination formats using a generic `attribute:value` style
-            result.  These built-in converter can be extended in an object-oriented manner to understand user defined types.
+            result. These built-in converter can be extended in an object-oriented manner to understand user defined types.
+
+            The following table gives an overview of the supported output formats:
+
+            | Format | Subcommand | GFM Support |
+            | ------ | ---------- | ----------- |
+            | Markdown | `markdown` | yes |
+            | reStructuredText | `rst` | yes |
+            | docx | `docx` | yes |
+            | ReqIF | `reqif` | yes |
 
             The following picture shows the overall tool flow:
             """
     }
 
     Generic.PlantUML sw_arch_flow_diagram {
-        caption = "PyTRLCConverter Tool Flow"
+        caption = "pyTRLCConverter Tool Flow"
         file_path ="../../doc/architecture/context_diagram.puml"
     }
 

@@ -413,6 +413,10 @@ section "SW Test Cases" {
             verifies = [SwRequirements.sw_req_docx_render_md]
         }
 
+        SwTestCase tc_docx_render_gfm {
+            description = "This test case checks whether GitHub Flavored Markdown content in requirement attributes is rendered correctly when the render configuration is set to \"gfm\"."
+            verifies = [SwRequirements.sw_req_docx_render_gfm]
+        }
     }
 
     section "Dump" {

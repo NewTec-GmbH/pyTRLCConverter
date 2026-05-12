@@ -5,12 +5,26 @@ import Generic
 section "SW Requirements" {
 
     Generic.Info sw_req_info_about_sw_req {
-        description = "This file contains the software requirements for the pyTRLCConverter tool."
+        description =
+        '''
+        This file contains the software requirements for the pyTRLCConverter tool.
+
+        The tool supports the following output formats:
+
+        | Format | Subcommand | GFM Support |
+        | ------ | ---------- | ----------- |
+        | Markdown | `markdown` | yes |
+        | reStructuredText | `rst` | yes |
+        | docx | `docx` | yes |
+        | ReqIF | `reqif` | yes |
+
+        The following picture shows the overall tool flow:
+        '''
     }
 
     Generic.PlantUML sw_req_tool_context_diagram {
         file_path = "../../doc/architecture/context_diagram.puml"
-        caption = "PyTRLCConverter Tool Flow"
+        caption = "pyTRLCConverter Tool Flow"
     }
 
     section "Functional Requirements" {
