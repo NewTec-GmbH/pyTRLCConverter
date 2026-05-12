@@ -97,8 +97,15 @@ class Md2DocxRenderer(Renderer, metaclass=Singleton):
         """
         assert self.block_item_container is not None
 
+        # The Singleton pattern means __init__ runs only once, so _current_paragraph persists
+        # across convert() calls. Each paragraph element must own exactly one docx paragraph for
+        # the duration of rendering its inline children — set it here and clear it after.
         self._current_paragraph = self.block_item_container.add_paragraph()
 
+        # Apply the paragraph style based on the context set by the enclosing block element.
+        # render_paragraph is called for any Paragraph node in the AST — including those nested
+        # inside headings, list items, and block quotes. The outer block renderers set state flags
+        # but do not create the docx paragraph themselves, so the style must be applied here.
         if self._is_heading is True:
             self._current_paragraph.style = f"Heading {self._heading_level}"
         elif self._is_list_item:
@@ -215,6 +222,9 @@ class Md2DocxRenderer(Renderer, metaclass=Singleton):
 
         self._is_heading = True
         self._heading_level = min(max(element.level, 1), 9)  # docx supports levels 1-9
+        # Heading inline children are direct children of the Heading node, not wrapped in a
+        # Paragraph node, so render_paragraph is never called — the docx paragraph must be
+        # created here directly.
         self._current_paragraph = self.block_item_container.add_paragraph(
             style=f"Heading {self._heading_level}"
         )
@@ -309,6 +319,9 @@ class Md2DocxRenderer(Renderer, metaclass=Singleton):
         if isinstance(element.children, str):
             assert self._current_paragraph is not None
             run = self._current_paragraph.add_run(element.children)
+            # Only set run properties to True when explicitly active. Setting them to False
+            # would override the paragraph style (e.g. Quote italic), breaking style inheritance.
+            # Leaving them as None lets the paragraph style apply instead.
             if self._is_bold:
                 run.bold = True
             if self._is_italic:
@@ -327,6 +340,11 @@ class Md2DocxRenderer(Renderer, metaclass=Singleton):
         """
         assert self._current_paragraph is not None
 
+        # python-docx has no high-level API for hyperlinks. The OOXML spec requires:
+        # 1. A relationship entry in the document part (rel_id) linking the URL.
+        # 2. A w:hyperlink element referencing that relationship by r:id.
+        # 3. A w:r run inside it with a w:rStyle "Hyperlink" for standard link styling.
+        # All three must be built via direct XML manipulation.
         rel_id = self.block_item_container.part.relate_to(
             element.dest,
             'http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink',
@@ -416,6 +434,7 @@ class Md2DocxRenderer(Renderer, metaclass=Singleton):
         assert self._current_paragraph is not None
 
         run = self._current_paragraph.add_run(element.children)
+        # Only set run properties to True when explicitly active — see render_plain_text.
         if self._is_bold:
             run.bold = True
         if self._is_italic:
