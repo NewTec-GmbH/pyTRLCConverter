@@ -75,6 +75,7 @@ class Md2DocxRenderer(Renderer, metaclass=Singleton):
         self._is_list_item = False
         self._list_style = []
         self._is_quote = False
+        self._current_paragraph = None
 
     def render_children(self, element: Any) -> None:
         """
@@ -94,7 +95,26 @@ class Md2DocxRenderer(Renderer, metaclass=Singleton):
         Args:
             element (block.Paragraph): The paragraph element to render.
         """
+        assert self.block_item_container is not None
+
+        # The Singleton pattern means __init__ runs only once, so _current_paragraph persists
+        # across convert() calls. Each paragraph element must own exactly one docx paragraph for
+        # the duration of rendering its inline children — set it here and clear it after.
+        self._current_paragraph = self.block_item_container.add_paragraph()
+
+        # Apply the paragraph style based on the context set by the enclosing block element.
+        # render_paragraph is called for any Paragraph node in the AST — including those nested
+        # inside headings, list items, and block quotes. The outer block renderers set state flags
+        # but do not create the docx paragraph themselves, so the style must be applied here.
+        if self._is_heading is True:
+            self._current_paragraph.style = f"Heading {self._heading_level}"
+        elif self._is_list_item:
+            self._current_paragraph.style = self._list_style[-1]
+        elif self._is_quote:
+            self._current_paragraph.style = "Quote"
+
         self.render_children(element)
+        self._current_paragraph = None
 
     def render_list(self, element: block.List) -> None:
         """
@@ -202,9 +222,16 @@ class Md2DocxRenderer(Renderer, metaclass=Singleton):
 
         self._is_heading = True
         self._heading_level = min(max(element.level, 1), 9)  # docx supports levels 1-9
+        # Heading inline children are direct children of the Heading node, not wrapped in a
+        # Paragraph node, so render_paragraph is never called — the docx paragraph must be
+        # created here directly.
+        self._current_paragraph = self.block_item_container.add_paragraph(
+            style=f"Heading {self._heading_level}"
+        )
 
         self.render_children(element)
 
+        self._current_paragraph = None
         self._is_heading = False
         self._heading_level = 0
 
@@ -227,16 +254,7 @@ class Md2DocxRenderer(Renderer, metaclass=Singleton):
         """
         assert self.block_item_container is not None
 
-        paragraph = self.block_item_container.add_paragraph()
-        run = paragraph.add_run("")
-        run.bold = self._is_bold
-        run.italic = self._is_italic
-        run.underline = self._is_underline
-
-        if self._is_heading is True:
-            paragraph.style = f"Heading {self._heading_level}"
-        elif self._is_list_item:
-            paragraph.style = self._list_style[-1]
+        self.block_item_container.add_paragraph()
 
     # pylint: disable-next=unused-argument
     def render_link_ref_def(self, element: block.LinkRefDef) -> None:
@@ -286,10 +304,9 @@ class Md2DocxRenderer(Renderer, metaclass=Singleton):
         Args:
             element (inline.InlineHTML): The inline HTML element to render.
         """
-        assert self.block_item_container is not None
+        assert self._current_paragraph is not None
 
-        paragraph = self.block_item_container.add_paragraph()
-        run = paragraph.add_run(element.children)
+        run = self._current_paragraph.add_run(element.children)
         run.font.name = "Consolas"
 
     def render_plain_text(self, element: Any) -> None:
@@ -299,31 +316,76 @@ class Md2DocxRenderer(Renderer, metaclass=Singleton):
         Args:
             element (Any): The element to render.
         """
-        assert self.block_item_container is not None
-
         if isinstance(element.children, str):
-            paragraph = self.block_item_container.add_paragraph()
-            run = paragraph.add_run(element.children)
-            run.bold = self._is_bold
-            run.italic = self._is_italic
-            run.underline = self._is_underline
-
-            if self._is_heading is True:
-                paragraph.style = f"Heading {self._heading_level}"
-            elif self._is_list_item:
-                paragraph.style = self._list_style[-1]
+            assert self._current_paragraph is not None
+            run = self._current_paragraph.add_run(element.children)
+            # Only set run properties to True when explicitly active. Setting them to False
+            # would override the paragraph style (e.g. Quote italic), breaking style inheritance.
+            # Leaving them as None lets the paragraph style apply instead.
+            if self._is_bold:
+                run.bold = True
+            if self._is_italic:
+                run.italic = True
+            if self._is_underline:
+                run.underline = True
         else:
             self.render_children(element)
 
     def render_link(self, element: inline.Link) -> None:
         """
-        Renders a link element.
+        Renders a link element as a clickable hyperlink.
 
         Args:
             element (inline.Link): The link element to render.
         """
-        # Link handling in docx is non-trivial; for simplicity, render link text only.
-        self.render_children(element)
+        assert self._current_paragraph is not None
+
+        # python-docx has no high-level API for hyperlinks. The OOXML spec requires:
+        # 1. A relationship entry in the document part (rel_id) linking the URL.
+        # 2. A w:hyperlink element referencing that relationship by r:id.
+        # 3. A w:r run inside it with a w:rStyle "Hyperlink" for standard link styling.
+        # All three must be built via direct XML manipulation.
+        rel_id = self.block_item_container.part.relate_to(
+            element.dest,
+            'http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink',
+            is_external=True
+        )
+
+        hyperlink = OxmlElement('w:hyperlink')
+        hyperlink.set(qn('r:id'), rel_id)
+
+        r = OxmlElement('w:r')
+        r_pr = OxmlElement('w:rPr')
+        r_style = OxmlElement('w:rStyle')
+        r_style.set(qn('w:val'), 'Hyperlink')
+        r_pr.append(r_style)
+        r.append(r_pr)
+
+        t = OxmlElement('w:t')
+        t.text = self._collect_link_text(element)
+        r.append(t)
+
+        hyperlink.append(r)
+        self._current_paragraph._p.append(hyperlink)  # pylint: disable=protected-access
+
+    @staticmethod
+    def _collect_link_text(element: Any) -> str:
+        """Recursively collects the plain text label from a link element's children.
+
+        Args:
+            element (Any): The link element.
+
+        Returns:
+            str: The plain text of the link label.
+        """
+        if isinstance(element.children, str):
+            result = element.children
+        else:
+            result = "".join(
+                Md2DocxRenderer._collect_link_text(child) for child in element.children
+            )
+
+        return result
 
     def render_auto_link(self, element: inline.AutoLink) -> None:
         """
@@ -369,20 +431,16 @@ class Md2DocxRenderer(Renderer, metaclass=Singleton):
         Returns:
             DocxDocument: The rendered raw text as a docx document.
         """
-        assert self.block_item_container is not None
+        assert self._current_paragraph is not None
 
-        paragraph = self.block_item_container.add_paragraph()
-        run = paragraph.add_run(element.children)
-        run.bold = self._is_bold
-        run.italic = self._is_italic
-        run.underline = self._is_underline
-
-        if self._is_heading is True:
-            paragraph.style = f"Heading {self._heading_level}"
-        elif self._is_list_item is True:
-            paragraph.style = self._list_style[-1]
-        elif self._is_quote is True:
-            paragraph.style = "Quote"
+        run = self._current_paragraph.add_run(element.children)
+        # Only set run properties to True when explicitly active — see render_plain_text.
+        if self._is_bold:
+            run.bold = True
+        if self._is_italic:
+            run.italic = True
+        if self._is_underline:
+            run.underline = True
 
     # pylint: disable-next=unused-argument
     def render_line_break(self, element: inline.LineBreak) -> None:
@@ -395,11 +453,9 @@ class Md2DocxRenderer(Renderer, metaclass=Singleton):
         Returns:
             DocxDocument: The rendered line break as a docx document.
         """
-        assert self.block_item_container is not None
+        assert self._current_paragraph is not None
 
-        paragraph = self.block_item_container.add_paragraph()
-        run = paragraph.add_run()
-        run.add_break()
+        self._current_paragraph.add_run().add_break()
 
     def render_code_span(self, element: inline.CodeSpan) -> None:
         """
@@ -411,10 +467,9 @@ class Md2DocxRenderer(Renderer, metaclass=Singleton):
         Returns:
             DocxDocument: The rendered code span as a docx document.
         """
-        assert self.block_item_container is not None
+        assert self._current_paragraph is not None
 
-        paragraph = self.block_item_container.add_paragraph()
-        run = paragraph.add_run(cast(str, element.children))
+        run = self._current_paragraph.add_run(cast(str, element.children))
         run.font.name = "Consolas"
 
 # Functions ********************************************************************

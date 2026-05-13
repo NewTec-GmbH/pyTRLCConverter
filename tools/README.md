@@ -4,7 +4,7 @@ The following tools are available for this project:
 
 - [testReport](#testreport)
 - [traceReport](#tracereport)
-- [plantuml](#plantuml)
+- [plantUML](#plantuml)
 - [trlc2other](#trlc2other)
 - [deployDoc](#deploydoc)
 
@@ -23,7 +23,7 @@ Used to create the traceability report on code and requirements base.
 
 [Details](./traceReport/README.md)
 
-## plantuml
+## plantUML
 
 Used to download on demand the PlantUML java jar file, which is required by other tooling.
 

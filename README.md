@@ -273,7 +273,7 @@ Supported by the formats:
 
 | Format           | CommonMark               | GitHub Flavored          | XHTML |
 | ---------------- | ------------------------ | ------------------------ | ----- |
-| docx             | X                        | Output as string literal | -     |
+| docx             | X                        | X                        | -     |
 | dump             | Output as string literal | Output as string literal | -     |
 | markdown         | X                        | X                        | -     |
 | reStructuredText | X                        | X                        | -     |

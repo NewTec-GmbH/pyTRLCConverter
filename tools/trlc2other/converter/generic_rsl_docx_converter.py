@@ -94,7 +94,8 @@ class GenericRslDocxConverter(DocxConverter):
         image_file = convert_plantuml_to_image(
             self._get_attribute(record, "file_path"),
             self._args.out,
-            self._args.source
+            self._args.source,
+            "png"
         )
 
         if image_file is not None:
