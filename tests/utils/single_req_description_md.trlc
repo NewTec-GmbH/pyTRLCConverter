@@ -17,13 +17,13 @@ Requirement req_id_md {
         1. Sub numbered point 1
         2. Sub numbered point 2
 
-    **Bold text**, *italic text* and __underlined text__.
+    **Bold text** and *italic text*.
 
     ```
     Code block example
     ```
 
-    --- Divider ---
+    ---
 
     > Blockquote example
 
