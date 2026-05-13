@@ -49,7 +49,7 @@ git diff --cached --name-status
 git diff --cached --stat
 ```
 
-…and read the full diff in chunks rather than guessing. The commit message must reflect what actually changed.
+…and read the full diff in chunks rather than guessing. The commit message must reflect what actually changed. Do not take into consideration any unstaged changes for that. Treat unstaged changes as if they do not exist yet. This is needed to create compose the commit message from an atomic perspective.
 
 ### 3. Check recent history for style conventions
 
