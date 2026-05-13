@@ -123,12 +123,39 @@
 <p>A main challenge for pyTRLCConverter is the conversion of project-specific TRLC types. TRLC is a framework that gets adapted to
 project needs using “rsl” files. These files define TRLC types through derivations similar to classes in OOP.
 PyTRLCConverter uses built-in converter classes that convert to destination formats using a generic <code class="docutils literal notranslate"><span class="pre">attribute:value</span></code> style
-result.  These built-in converter can be extended in an object-oriented manner to understand user defined types.</p>
+result. These built-in converter can be extended in an object-oriented manner to understand user defined types.</p>
+<p>The following table gives an overview of the supported output formats:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Format</p></th>
+<th class="head"><p>Subcommand</p></th>
+<th class="head"><p>GFM Support</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Markdown</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">markdown</span></code></p></td>
+<td><p>yes</p></td>
+</tr>
+<tr class="row-odd"><td><p>reStructuredText</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">rst</span></code></p></td>
+<td><p>yes</p></td>
+</tr>
+<tr class="row-even"><td><p>docx</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">docx</span></code></p></td>
+<td><p>yes</p></td>
+</tr>
+<tr class="row-odd"><td><p>ReqIF</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">reqif</span></code></p></td>
+<td><p>yes</p></td>
+</tr>
+</tbody>
+</table>
 <p>The following picture shows the overall tool flow:</p>
 <figure class="align-default" id="id1">
-<img alt="PyTRLCConverter Tool Flow" src="context_diagram.svg" />
+<img alt="pyTRLCConverter Tool Flow" src="context_diagram.svg" />
 <figcaption>
-<p><span class="caption-text">PyTRLCConverter Tool Flow</span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
+<p><span class="caption-text">pyTRLCConverter Tool Flow</span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
 </figcaption>
 </figure>
 <section id="general">
@@ -750,6 +777,7 @@ that is common between all format specific converter implementations.</p>
 <li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-docx-record"><span class="std std-ref">SwRequirements.sw_req_docx_record</span></a></p></li>
 <li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-docx-reference"><span class="std std-ref">SwRequirements.sw_req_docx_reference</span></a></p></li>
 <li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-docx-render-md"><span class="std std-ref">SwRequirements.sw_req_docx_render_md</span></a></p></li>
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-docx-render-gfm"><span class="std std-ref">SwRequirements.sw_req_docx_render_gfm</span></a></p></li>
 <li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-destination-format"><span class="std std-ref">SwRequirements.sw_req_destination_format</span></a></p></li>
 </ul>
 </td>
