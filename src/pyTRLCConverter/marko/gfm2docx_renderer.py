@@ -42,9 +42,8 @@ class Gfm2DocxRenderer(Md2DocxRenderer, metaclass=Singleton):
 
     def __init__(self) -> None:
         """Initialize the renderer."""
-        self._checkbox_prefix: Optional[str] = None
         super().__init__()
-        self.reset()
+        self._checkbox_prefix: Optional[str] = None
 
     def reset(self) -> None:
         """Resets the renderer state before a new convert() call."""
