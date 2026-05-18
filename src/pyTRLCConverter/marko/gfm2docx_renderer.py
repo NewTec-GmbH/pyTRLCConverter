@@ -40,31 +40,65 @@ class Gfm2DocxRenderer(Md2DocxRenderer, metaclass=Singleton):
     # DOCX block item container to add content to.
     block_item_container: Optional[BlockItemContainer] = None
 
+    def __init__(self) -> None:
+        """Initialize the renderer."""
+        super().__init__()
+        self._checkbox_prefix: Optional[str] = None
+
+    def reset(self) -> None:
+        """Resets the renderer state before a new convert() call."""
+        super().reset()
+        self._checkbox_prefix = None
+
+    def render_paragraph(self, element: Any) -> None:
+        """Renders a paragraph element, prepending a checkbox prefix if set by render_list_item.
+
+        Args:
+            element (Any): The paragraph element to render.
+        """
+        assert self.block_item_container is not None
+
+        # If a checkbox prefix is pending, create the paragraph manually so we can add the
+        # prefix run before rendering inline children — super() would create the paragraph
+        # and immediately render children leaving no hook to insert the prefix first.
+        if self._checkbox_prefix is not None:
+            from docx.oxml import OxmlElement  # pylint: disable=import-outside-toplevel
+            from docx.oxml.ns import qn as qname  # pylint: disable=import-outside-toplevel
+
+            style = self._list_style[-1] if self._list_style else "List Bullet"
+            self._current_paragraph = self.block_item_container.add_paragraph(style=style)  # type: ignore
+
+            r = OxmlElement('w:r')
+            t = OxmlElement('w:t')
+            t.text = self._checkbox_prefix
+            t.set(qname('xml:space'), 'preserve')
+            r.append(t)
+            self._current_paragraph._p.append(r)  # pylint: disable=protected-access
+
+            self._checkbox_prefix = None
+            self.render_children(element)
+            self._current_paragraph = None
+        else:
+            super().render_paragraph(element)
+
     def render_list_item(self, element: Any) -> None:
         """Renders a list item element, prepending a checkbox prefix for GFM task list items.
 
         Args:
             element (Any): The list item element to render.
         """
-        assert self.block_item_container is not None
-
-        # GFM task-list items expose a "checked" flag on the first child paragraph.
-        checkbox_prefix = None
+        # GFM task-list items expose a "checked" flag on the first child Paragraph node.
+        # Store the prefix as state so render_paragraph can prepend it as a run, keeping
+        # the checkbox and text in the same paragraph rather than creating a separate one.
         if element.children:
             first_child = element.children[0]
             checked = getattr(first_child, "checked", None)
             if checked is True:
-                checkbox_prefix = "☑ "
+                self._checkbox_prefix = "☑ "
             elif checked is False:
-                checkbox_prefix = "☐ "
+                self._checkbox_prefix = "☐ "
 
-        if checkbox_prefix is not None:
-            style = self._list_style[-1] if self._list_style else "List Bullet"
-            paragraph = self.block_item_container.add_paragraph(style=style)
-            paragraph.add_run(checkbox_prefix)
-            self.render_children(element)
-        else:
-            self.render_children(element)
+        self.render_children(element)
 
     def render_table(self, element: Any) -> None:
         """Renders a GFM table as a python-docx table.
@@ -96,6 +130,14 @@ class Gfm2DocxRenderer(Md2DocxRenderer, metaclass=Singleton):
                 for col_idx, cell in enumerate(row.children):
                     cell_text = self._collect_text(cell)
                     table.rows[row_idx + 1].cells[col_idx].text = cell_text
+
+            # python-docx inserts an empty paragraph after every table added to a cell
+            # as an OOXML structural requirement. Remove it to avoid a spurious blank line
+            # between the table and the next content element.
+            tbl = table._tbl  # pylint: disable=protected-access
+            tbl_following = tbl.getnext()
+            if tbl_following is not None and tbl_following.tag.endswith("}p"):
+                tbl_following.getparent().remove(tbl_following)
 
     def render_table_row(self, element: Any) -> None:
         """No-op: table rows are handled inside render_table.
