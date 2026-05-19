@@ -158,6 +158,8 @@ class PlantUML():
         Returns:
             bytes: The raw image bytes.
         """
+        assert diagram_type in ("png", "svg")
+
         if self._server_url is not None:
             result = self._generate_to_bytes_server(diagram_type, diagram_source)
         else:
@@ -178,8 +180,6 @@ class PlantUML():
         Returns:
             bytes: The raw image bytes.
         """
-        import tempfile  # pylint: disable=import-outside-toplevel
-
         with tempfile.NamedTemporaryFile(suffix=".puml", mode='w',
                                         encoding='utf-8', delete=False) as tmp:
             tmp.write(diagram_source)
@@ -241,8 +241,7 @@ class PlantUML():
             )
         except FileNotFoundError as exc:
             raise FileNotFoundError(
-                "Java is not installed on this machine or not on PATH."
-                " Please check your java install to render PlantUML locally."
+                "Java not found. Ensure Java is installed and available on PATH."
             ) from exc
 
         if output.returncode != 0:
