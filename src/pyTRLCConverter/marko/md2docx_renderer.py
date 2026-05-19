@@ -76,6 +76,26 @@ class Md2DocxRenderer(Renderer, metaclass=Singleton):
         self._list_style = []
         self._is_quote = False
         self._current_paragraph = None
+        self.reset()
+
+    def reset(self) -> None:
+        """Resets the renderer state before a new convert() call.
+
+        The Singleton pattern means __init__ runs only once. Without an explicit reset,
+        stale state from a previous convert() call (e.g. _current_paragraph) would persist
+        into the next call and cause spurious empty paragraphs in the output.
+        """
+        self.root_node = None
+        self._list_indent_level = 0
+        self._is_italic = False
+        self._is_bold = False
+        self._is_underline = False
+        self._is_heading = False
+        self._heading_level = 0
+        self._is_list_item = False
+        self._list_style = []
+        self._is_quote = False
+        self._current_paragraph = None
 
     def render_children(self, element: Any) -> None:
         """
@@ -136,7 +156,7 @@ class Md2DocxRenderer(Renderer, metaclass=Singleton):
         self._list_style.append(style)
 
         for child in element.children:
-            self.render_children(child)
+            self.render(child)
 
         self._list_style.pop()
 
@@ -166,7 +186,9 @@ class Md2DocxRenderer(Renderer, metaclass=Singleton):
         assert self.block_item_container is not None
 
         paragraph = self.block_item_container.add_paragraph()
-        run = paragraph.add_run(element.children[0].children)
+        # Marko includes a trailing newline in the RawText content of code blocks - strip it
+        # to avoid an extra blank line appearing in the docx output after the code paragraph.
+        run = paragraph.add_run(element.children[0].children.rstrip("\n"))
         run.font.name = "Consolas"
 
     def render_code_block(self, element: block.CodeBlock) -> None:
@@ -196,6 +218,12 @@ class Md2DocxRenderer(Renderer, metaclass=Singleton):
             element (block.ThematicBreak): The thematic break element to render.
         """
         assert self.block_item_container is not None
+
+        # Remove the preceding blank paragraph if present — the BlankLine node before a
+        # thematic break is Markdown syntax spacing, not intended visual whitespace in docx.
+        paragraphs = self.block_item_container.paragraphs  # type: ignore
+        if paragraphs and paragraphs[-1].text == "" and not paragraphs[-1].runs:
+            paragraphs[-1]._p.getparent().remove(paragraphs[-1]._p)  # pylint: disable=protected-access
 
         # Add a horizontal rule by inserting a paragraph with a bottom border
         para = self.block_item_container.add_paragraph()

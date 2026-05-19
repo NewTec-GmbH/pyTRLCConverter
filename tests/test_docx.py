@@ -237,10 +237,11 @@ def test_tc_docx_template(record_property, capsys, monkeypatch, tmp_path):
     # Check that the requirement is present.
     assert created_docx.paragraphs[1].text == "req_id_1 (Requirement)"
 
+# pylint: disable-next=too-many-statements, too-many-locals, too-many-branches
 def test_tc_docx_render_md(record_property, capsys, monkeypatch, tmp_path):
     # lobster-trace: SwTests.tc_docx_render_md
     """
-    The test case checks whether strings in Markdown are correctly converted to docx.
+    The test case checks whether strings in CommonMark Markdown are correctly converted to docx.
 
     Args:
         record_property (Any): Used to inject the test case reference into the test results.
@@ -248,11 +249,6 @@ def test_tc_docx_render_md(record_property, capsys, monkeypatch, tmp_path):
         monkeypatch (Any): Used to mock program arguments.
         tmp_path (Path): Used to create a temporary output directory.
     """
-    # NOTE: This test does NOT pass --renderCfg, so the CommonMark renderer is never invoked.
-    # The assertion below verifies that the raw Markdown string is preserved as-is in the docx
-    # record table cell — it does NOT verify that Markdown is rendered to native docx elements
-    # (paragraphs, bold runs, etc.). A dedicated test with --renderCfg and assertions against
-    # rendered docx structure is needed to actually verify sw_req_docx_render_md.
     record_property("lobster-trace", "SwTests.tc_docx_render_md")
 
     # Mock program arguments to simulate running the script with the built-in docx converter.
@@ -261,56 +257,86 @@ def test_tc_docx_render_md(record_property, capsys, monkeypatch, tmp_path):
         "--source", "./tests/utils/req.rsl",
         "--source", "./tests/utils/single_req_description_md.trlc",
         "--out", str(tmp_path),
+        "--renderCfg", "./tests/utils/renderCfgDocxMd.json",
         "docx",
         "--template", "./tests/utils/template.docx",
     ])
 
-    # Expect the program to run without any exceptions.
     main()
 
-    # Capture stdout and stderr.
     captured = capsys.readouterr()
-    # Check that no errors were reported.
     assert captured.err == ""
 
-    # Check that the output file was created.
     created_docx = docx.Document(docx=str(tmp_path / DocxConverter.OUTPUT_FILE_NAME_DEFAULT))
 
-    # Check that the requirement is present.
-    assert created_docx.paragraphs[1].text == "req_id_md (Requirement)"
+    # The rendered CommonMark content lives in the record attribute table, cell(1,1).
+    record_table = created_docx.tables[0]
+    description_cell = record_table.rows[1].cells[1]
+    cell_texts = [p.text for p in description_cell.paragraphs]
 
-    # Check that the description was converted.
-    assert created_docx.tables[0].cell(1, 0).text == "description"
-    split_description = created_docx.tables[0].cell(1, 1).text.splitlines()
-    assert split_description == [
-        r'# Heading 1',
-        r'',
-        r'## Heading 2',
-        r'',
-        r'- Bullet point 1',
-        r'- Bullet point 2',
-        r'    - Sub bullet point 1',
-        r'    - Sub bullet point 2',
-        r'',
-        r'1. Numbered point 1',
-        r'2. Numbered point 2',
-        r'    1. Sub numbered point 1',
-        r'    2. Sub numbered point 2',
-        r'',
-        r'**Bold text**, *italic text* and __underlined text__.',
-        r'',
-        r'```',
-        r'Code block example',
-        r'```',
-        r'',
-        r'--- Divider ---',
-        r'',
-        r'> Blockquote example',
-        r'',
-        r'[Link to pyTRLCConverter](https://github.com/NewTec-GmbH/pyTRLCConverter)',
-  ]
+    # Headings rendered as paragraphs inside the cell.
+    assert "Heading 1" in cell_texts
+    assert "Heading 2" in cell_texts
 
-# pylint: disable-next=too-many-statements
+    # Bullet and numbered list items rendered.
+    assert "Bullet point 1" in cell_texts
+    assert "Bullet point 2" in cell_texts
+    assert "Numbered point 1" in cell_texts
+    assert "Numbered point 2" in cell_texts
+
+    # Bold text rendered with bold run property.
+    bold_run = None
+    for paragraph in description_cell.paragraphs:
+        for run in paragraph.runs:
+            if run.bold is True and run.text == "Bold text":
+                bold_run = run
+                break
+        if bold_run is not None:
+            break
+
+    assert bold_run is not None, "Bold run not found in docx output"
+
+    # Italic text rendered with italic run property.
+    italic_run = None
+    for paragraph in description_cell.paragraphs:
+        for run in paragraph.runs:
+            if run.italic is True and run.text == "italic text":
+                italic_run = run
+                break
+        if italic_run is not None:
+            break
+
+    assert italic_run is not None, "Italic run not found in docx output"
+
+    # Thematic break rendered as a paragraph with a bottom border (w:pBdr).
+    thematic_break_found = False
+    ns = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
+    for paragraph in description_cell.paragraphs:
+        if paragraph._p.findall(f'.//{{{ns}}}pBdr'):  # pylint: disable=protected-access
+            thematic_break_found = True
+            break
+
+    assert thematic_break_found, "Thematic break paragraph not found in docx output"
+
+    # Blockquote rendered with Quote paragraph style.
+    quote_paragraph = None
+    for paragraph in description_cell.paragraphs:
+        if paragraph.style and paragraph.style.name == "Quote" and paragraph.text == "Blockquote example":
+            quote_paragraph = paragraph
+            break
+
+    assert quote_paragraph is not None, "Quote paragraph not found in docx output"
+
+    # Hyperlink rendered for the link element.
+    hyperlink_found = False
+    for paragraph in description_cell.paragraphs:
+        if paragraph._p.findall(f'.//{{{ns}}}hyperlink'):  # pylint: disable=protected-access
+            hyperlink_found = True
+            break
+
+    assert hyperlink_found, "Hyperlink not found in docx output"
+
+# pylint: disable-next=too-many-statements, too-many-locals
 def test_tc_docx_render_gfm(record_property, capsys, monkeypatch, tmp_path):
     # lobster-trace: SwTests.tc_docx_render_gfm
     """
@@ -367,6 +393,29 @@ def test_tc_docx_render_gfm(record_property, capsys, monkeypatch, tmp_path):
             break
 
     assert bold_run is not None, "Bold run not found in docx output"
+
+    # Task list items rendered as list paragraphs with checkbox prefix.
+    assert any("☑" in t for t in cell_texts), "Checked task item not found in docx output"
+    assert any("☐" in t for t in cell_texts), "Unchecked task item not found in docx output"
+
+    # Thematic break rendered as a paragraph with a bottom border (w:pBdr).
+    thematic_break_found = False
+    ns = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
+    for paragraph in description_cell.paragraphs:
+        if paragraph._p.findall(f'.//{{{ns}}}pBdr'):  # pylint: disable=protected-access
+            thematic_break_found = True
+            break
+
+    assert thematic_break_found, "Thematic break paragraph not found in docx output"
+
+    # Bare URL rendered as a hyperlink.
+    bare_url_found = False
+    for paragraph in description_cell.paragraphs:
+        if paragraph._p.findall(f'.//{{{ns}}}hyperlink'):  # pylint: disable=protected-access
+            bare_url_found = True
+            break
+
+    assert bare_url_found, "Bare URL hyperlink not found in docx output"
 
     # Strikethrough rendered with strike font property.
     strike_run = None

@@ -1352,6 +1352,10 @@ class ReqifConverter(BaseConverter):
         if len(html_text) == 0:
             html_text = "<p></p>"
 
+        # Marko's GFM renderer outputs HTML void elements (e.g. <input ...>) for task list
+        # checkboxes. XHTML requires all void elements to be self-closed (<input ... />).
+        html_text = re.sub(r'<(input)(\s[^>]*)>', r'<\1\2/>', html_text)
+
         if table_options:
             html_text = self._apply_table_options(html_text, table_options)
 

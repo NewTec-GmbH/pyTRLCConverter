@@ -705,13 +705,13 @@ def test_tc_markdown_render_md(record_property, capsys, monkeypatch, tmp_path):
     1. Sub numbered point 1
     2. Sub numbered point 2
 
-**Bold text**, *italic text* and __underlined text__.
+**Bold text** and *italic text*.
 
 ```
 Code block example
 ```
 
---- Divider ---
+---
 
 > Blockquote example
 
@@ -782,13 +782,18 @@ def test_tc_markdown_render_gfm(record_property, capsys, monkeypatch, tmp_path):
     1. Sub numbered point 1
     2. Sub numbered point 2
 
-**Bold text**, *italic text* and __underlined text__.
+**Bold text** and *italic text*.
+
+- [x] Checked task
+- [ ] Unchecked task
 
 ```
 Code block example
 ```
 
---- Divider ---
+---
+
+https://github.com/NewTec-GmbH/pyTRLCConverter
 
 > Blockquote example
 

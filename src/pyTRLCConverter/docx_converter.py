@@ -361,12 +361,14 @@ class DocxConverter(BaseConverter):
         # If the attribute is marked as CommonMark Markdown format, convert it.
         if self._render_cfg.is_format_md(package_name, type_name, attribute_name) is True:
             Md2DocxRenderer.block_item_container = self._block_item_container
+            Md2DocxRenderer().reset()
             markdown = Markdown(renderer=Md2DocxRenderer)
             markdown.convert(attribute_value)
 
         # If the attribute is marked as GitHub Flavored Markdown format, convert it.
         elif self._render_cfg.is_format_gfm(package_name, type_name, attribute_name) is True:
             Gfm2DocxRenderer.block_item_container = self._block_item_container
+            Gfm2DocxRenderer().reset()
             markdown = Markdown(renderer=Gfm2DocxRenderer, extensions=['gfm'])
             markdown.convert(attribute_value)
 
