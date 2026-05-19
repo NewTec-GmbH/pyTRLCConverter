@@ -40,7 +40,6 @@ from pyTRLCConverter.logger import log_verbose, log_error
 BASE64_ENCODE_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
 PLANTUML_ENCODE_CHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_"
 PLANTUML_ENV_VAR = "PLANTUML"
-PLANTUML_VERIFY_SSL_ENV_VAR = "PLANTUML_VERIFY_SSL"
 
 # Classes **********************************************************************
 
@@ -66,10 +65,9 @@ class PlantUML():
                 if urllib.parse.urlparse(plantuml_access).scheme in ['http', 'https']:
                     self._server_url = plantuml_access
                 else:
-                    # Otherwise assume it's a local JAR.
-                    self._plantuml_jar = plantuml_access
+                    self._plantuml_jar = os.environ[PLANTUML_ENV_VAR]
             except ValueError:
-                self._plantuml_jar = plantuml_access
+                self._plantuml_jar = os.environ[PLANTUML_ENV_VAR]
 
     def _get_absolute_path(self, path):
         """Convert a relative path to an absolute path based on the working directory.
@@ -159,8 +157,6 @@ class PlantUML():
         Returns:
             bytes: The raw image bytes.
         """
-        assert diagram_type in ("png", "svg")
-
         if self._server_url is not None:
             result = self._generate_to_bytes_server(diagram_type, diagram_source)
         else:
@@ -181,13 +177,19 @@ class PlantUML():
         Returns:
             bytes: The raw image bytes.
         """
-        with tempfile.NamedTemporaryFile(suffix=".puml", mode='w', encoding='utf-8') as tmp:
-            tmp.write(diagram_source)
-            tmp.flush()
-            url = self._make_server_url(diagram_type, tmp.name)
+        import tempfile  # pylint: disable=import-outside-toplevel
 
-        log_verbose(f"Sending GET request {url}")
-        response = requests.get(url, timeout=10, verify=self._verify_ssl)
+        with tempfile.NamedTemporaryFile(suffix=".puml", mode='w',
+                                        encoding='utf-8', delete=False) as tmp:
+            tmp.write(diagram_source)
+            tmp_path = tmp.name
+
+        try:
+            url = self._make_server_url(diagram_type, tmp_path)
+            log_verbose(f"Sending GET request {url}")
+            response = requests.get(url, timeout=10)
+        finally:
+            os.remove(tmp_path)
 
         if response.status_code != 200:
             raise requests.exceptions.RequestException(
@@ -211,8 +213,7 @@ class PlantUML():
         """
         if self._plantuml_jar is None:
             raise FileNotFoundError(
-                f"PlantUML not found. Set the {PLANTUML_ENV_VAR} environment variable"
-                " to the path of plantuml.jar or a server URL."
+                "plantuml.jar not found, set PLANTUML environment variable."
             )
 
         if not os.path.isfile(self._plantuml_jar):
@@ -238,7 +239,8 @@ class PlantUML():
             )
         except FileNotFoundError as exc:
             raise FileNotFoundError(
-                "Java not found. Ensure Java is installed and available on PATH."
+                "Java is not installed on this machine or not on PATH."
+                " Please check your java install to render PlantUML locally."
             ) from exc
 
         if output.returncode != 0:
