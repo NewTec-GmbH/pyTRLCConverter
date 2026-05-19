@@ -65,6 +65,7 @@ class PlantUML():
                 if urllib.parse.urlparse(plantuml_access).scheme in ['http', 'https']:
                     self._server_url = plantuml_access
                 else:
+                    # Otherwise assume it's a local JAR.
                     self._plantuml_jar = os.environ[PLANTUML_ENV_VAR]
             except ValueError:
                 self._plantuml_jar = os.environ[PLANTUML_ENV_VAR]
@@ -213,7 +214,8 @@ class PlantUML():
         """
         if self._plantuml_jar is None:
             raise FileNotFoundError(
-                "plantuml.jar not found, set PLANTUML environment variable."
+                f"PlantUML not found. Set the {PLANTUML_ENV_VAR} environment variable"
+                " to the path of plantuml.jar or a server URL."
             )
 
         if not os.path.isfile(self._plantuml_jar):
