@@ -4,7 +4,7 @@ Requirement req_id_md {
     description =
     '''
     # Heading 1
-    
+
     ## Heading 2
 
     - Bullet point 1
@@ -21,6 +21,13 @@ Requirement req_id_md {
 
     ```
     Code block example
+    ```
+
+    ```plantuml
+    @startuml
+    Alice -> Bob: Hello
+    Bob --> Alice: Hi
+    @enduml
     ```
 
     ---

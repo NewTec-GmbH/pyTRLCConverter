@@ -711,6 +711,13 @@ def test_tc_markdown_render_md(record_property, capsys, monkeypatch, tmp_path):
 Code block example
 ```
 
+```plantuml
+@startuml
+Alice -> Bob: Hello
+Bob --> Alice: Hi
+@enduml
+```
+
 ---
 
 > Blockquote example
@@ -789,6 +796,13 @@ def test_tc_markdown_render_gfm(record_property, capsys, monkeypatch, tmp_path):
 
 ```
 Code block example
+```
+
+```plantuml
+@startuml
+Alice -> Bob: Hello
+Bob --> Alice: Hi
+@enduml
 ```
 
 ---

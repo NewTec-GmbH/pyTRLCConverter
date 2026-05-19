@@ -428,3 +428,12 @@ def test_tc_docx_render_gfm(record_property, capsys, monkeypatch, tmp_path):
             break
 
     assert strike_run is not None, "Strikethrough run not found in docx output"
+
+    # PlantUML block: if PlantUML is not installed, an error string paragraph is rendered
+    # as fallback. Either a picture run or the error string must be present.
+    plantuml_rendered = any(
+        any(run.element.findall(f'.//{{{ns}}}drawing') for run in p.runs)
+        or "[PlantUML error:" in p.text
+        for p in description_cell.paragraphs
+    )
+    assert plantuml_rendered, "PlantUML block not rendered (no image and no error string)"

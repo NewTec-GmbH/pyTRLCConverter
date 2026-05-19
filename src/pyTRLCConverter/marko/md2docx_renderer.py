@@ -23,11 +23,14 @@
 # Imports **********************************************************************
 
 from __future__ import annotations
+import io
+import tempfile
 from typing import TYPE_CHECKING, Any, cast, Optional
 from marko import Renderer
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 from docx.blkcntnr import BlockItemContainer
+from pyTRLCConverter.plantuml import PlantUML
 
 if TYPE_CHECKING:
     from . import block, inline
@@ -180,16 +183,58 @@ class Md2DocxRenderer(Renderer, metaclass=Singleton):
         """
         Renders a fenced code block element.
 
+        If the language tag is 'plantuml', the diagram source is rendered as an embedded
+        PNG image. If PlantUML is not available, an error string is inserted instead.
+        For all other language tags the block is rendered as plain Consolas text.
+
         Args:
             element (block.FencedCode): The fenced code block element to render.
         """
         assert self.block_item_container is not None
 
-        paragraph = self.block_item_container.add_paragraph()
-        # Marko includes a trailing newline in the RawText content of code blocks - strip it
-        # to avoid an extra blank line appearing in the docx output after the code paragraph.
-        run = paragraph.add_run(element.children[0].children.rstrip("\n"))
-        run.font.name = "Consolas"
+        if element.lang == "plantuml":
+            self._render_plantuml(element.children[0].children)
+        else:
+            paragraph = self.block_item_container.add_paragraph()
+            # Marko includes a trailing newline in the RawText content of code blocks - strip it
+            # to avoid an extra blank line appearing in the docx output after the code paragraph.
+            run = paragraph.add_run(element.children[0].children.rstrip("\n"))
+            run.font.name = "Consolas"
+
+    def _render_plantuml(self, diagram_source: str) -> None:
+        """Renders a PlantUML diagram as an embedded PNG in the docx document.
+
+        Generates PNG bytes via the PlantUML tool and embeds the image directly.
+        If PlantUML is not available, inserts an error string instead.
+
+        Args:
+            diagram_source (str): The PlantUML diagram source text.
+        """
+        assert self.block_item_container is not None
+
+        try:
+            plantuml = PlantUML()
+            with tempfile.TemporaryDirectory() as tmp_dir:
+                # Write the diagram source to a temp file so PlantUML can read it.
+                with tempfile.NamedTemporaryFile(
+                    dir=tmp_dir, suffix=".puml", mode='w',
+                    encoding='utf-8', delete=False
+                ) as src_file:
+                    src_file.write(diagram_source)
+                    src_name = src_file.name
+                # PNG is required: python-docx's add_picture() only accepts raster formats;
+                # SVG is not supported.
+                plantuml.generate("png", src_name, tmp_dir)
+                png_path = src_name.replace(".puml", ".png")
+                with open(png_path, 'rb') as png_file:
+                    png_bytes = png_file.read()
+
+            paragraph = self.block_item_container.add_paragraph()
+            run = paragraph.add_run()
+            run.add_picture(io.BytesIO(png_bytes))
+        except (FileNotFoundError, OSError) as exc:
+            paragraph = self.block_item_container.add_paragraph()
+            paragraph.add_run(f"[PlantUML error: {exc}]")
 
     def render_code_block(self, element: block.CodeBlock) -> None:
         """

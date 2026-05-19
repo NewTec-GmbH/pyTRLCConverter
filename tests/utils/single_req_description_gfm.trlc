@@ -26,6 +26,13 @@ Requirement req_id_gfm {
     Code block example
     ```
 
+    ```plantuml
+    @startuml
+    Alice -> Bob: Hello
+    Bob --> Alice: Hi
+    @enduml
+    ```
+
     ---
 
     https://github.com/NewTec-GmbH/pyTRLCConverter
