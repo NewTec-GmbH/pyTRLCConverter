@@ -14,7 +14,7 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel.
 jobs:
-  # The introduction just shows some useful informations.
+  # The introduction just shows some useful information.
   intro:
     # The type of runner that the job will run on.
     runs-on: ubuntu-latest
@@ -42,21 +42,19 @@ jobs:
           pip install -r requirements-dev.txt
           pip install "pyTRLCConverter>=2.0.0"
 
-      - name: Analysing all TRLC releated elements
+      - name: Analysing all TRLC related elements
         run: |
           trlc ./trlc
 
       - name: Prepare test report
         run: |
           pushd ./tools/testReport
-          chmod +x make_rst.sh
           ./make_rst.sh
           popd
 
       - name: Build tracing report
         run: |
           pushd ./tools/traceReport
-          chmod +x make.sh
           ./make.sh online
           rm -f ./out/*-lobster.json
           popd
@@ -68,10 +66,11 @@ jobs:
 
   lint:
     # The type of runner that the job will run on.
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     needs: intro
     strategy:
       matrix:
+        os: [ubuntu-latest, windows-latest]
         python-version: ["3.10", "3.11", "3.12", "3.13"]
 
     # Steps represent a sequence of tasks that will be executed as part of the job.
@@ -97,10 +96,11 @@ jobs:
 
   test:
     # The type of runner that the job will run on.
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     needs: intro
     strategy:
       matrix:
+        os: [ubuntu-latest, windows-latest]
         python-version: ["3.10", "3.11", "3.12", "3.13"]
 
     # Steps represent a sequence of tasks that will be executed as part of the job.
