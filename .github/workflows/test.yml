@@ -65,6 +65,14 @@ jobs:
           call make_rst.bat
           popd
 
+      - name: Install Graphviz (Linux)
+        if: matrix.os == 'ubuntu-latest'
+        run: sudo apt-get install -y graphviz
+
+      - name: Install Graphviz (Windows)
+        if: matrix.os == 'windows-latest'
+        run: choco install graphviz --no-progress -y
+
       - name: Build tracing report (Linux)
         if: matrix.os == 'ubuntu-latest'
         run: |
