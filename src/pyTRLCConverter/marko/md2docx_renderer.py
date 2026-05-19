@@ -66,16 +66,7 @@ class Md2DocxRenderer(Renderer, metaclass=Singleton):
     def __init__(self) -> None:
         """Initialize the renderer."""
         super().__init__()
-        self._list_indent_level = 0
-        self._is_italic = False
-        self._is_bold = False
-        self._is_underline = False
-        self._is_heading = False
-        self._heading_level = 0
-        self._is_list_item = False
-        self._list_style = []
-        self._is_quote = False
-        self._current_paragraph = None
+        self.reset()
 
     def reset(self) -> None:
         """Resets the renderer state before a new convert() call.
@@ -84,6 +75,7 @@ class Md2DocxRenderer(Renderer, metaclass=Singleton):
         stale state from a previous convert() call (e.g. _current_paragraph) would persist
         into the next call and cause spurious empty paragraphs in the output.
         """
+        self.root_node = None
         self._list_indent_level = 0
         self._is_italic = False
         self._is_bold = False
