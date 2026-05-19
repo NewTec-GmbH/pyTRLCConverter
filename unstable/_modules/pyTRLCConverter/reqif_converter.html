@@ -1564,6 +1564,10 @@
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">html_text</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">html_text</span> <span class="o">=</span> <span class="s2">&quot;&lt;p&gt;&lt;/p&gt;&quot;</span>
 
+        <span class="c1"># Marko&#39;s GFM renderer outputs HTML void elements (e.g. &lt;input ...&gt;) for task list</span>
+        <span class="c1"># checkboxes. XHTML requires all void elements to be self-closed (&lt;input ... /&gt;).</span>
+        <span class="n">html_text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;&lt;(input)(\s[^&gt;]*)&gt;&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;&lt;\1\2/&gt;&#39;</span><span class="p">,</span> <span class="n">html_text</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="n">table_options</span><span class="p">:</span>
             <span class="n">html_text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_apply_table_options</span><span class="p">(</span><span class="n">html_text</span><span class="p">,</span> <span class="n">table_options</span><span class="p">)</span>
 
