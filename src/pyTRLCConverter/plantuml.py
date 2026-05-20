@@ -23,6 +23,7 @@
 import os
 import subprocess
 import sys
+import tempfile
 import zlib
 import base64
 import urllib
@@ -37,6 +38,7 @@ from pyTRLCConverter.logger import log_verbose, log_error
 # See https://plantuml.com/de/text-encoding for differences to base64 in URL encode.
 BASE64_ENCODE_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
 PLANTUML_ENCODE_CHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_"
+PLANTUML_ENV_VAR = "PLANTUML"
 
 # Classes **********************************************************************
 
@@ -50,26 +52,28 @@ class PlantUML():
         self._plantuml_jar = None
         self._working_directory = os.path.abspath(os.getcwd())
 
-        if "PLANTUML" in os.environ:
-            plantuml_access = os.environ["PLANTUML"]
+        if PLANTUML_ENV_VAR in os.environ:
+            plantuml_access = os.environ[PLANTUML_ENV_VAR]
             try:
-                # Use server method if PLANTUML is a URL.
+                # Use server method if PLANTUML env var points to a URL.
                 if urllib.parse.urlparse(plantuml_access).scheme in ['http', 'https']:
                     self._server_url = plantuml_access
                 else:
-                    self._plantuml_jar = os.environ["PLANTUML"]
+                    # Otherwise assume it's a local JAR.
+                    self._plantuml_jar = plantuml_access
             except ValueError:
-                self._plantuml_jar = os.environ["PLANTUML"]
+                self._plantuml_jar = plantuml_access
 
     def _get_absolute_path(self, path):
-        """Get absolute path to the diagram.
-            This is required by PlantUML java program for the output path.
+        """Convert a relative path to an absolute path based on the working directory.
+
+        The plantuml.jar requires an absolute output path.
 
         Args:
-            path (_type_): _description_
+            path (str): Relative or absolute path.
 
         Returns:
-            _type_: _description_
+            str: Absolute path.
         """
         absolute_path = path
 
@@ -88,17 +92,17 @@ class PlantUML():
         Returns:
             bool: If file is a PlantUML file, it will return True otherwise False.
         """
-        is_valid = False
+        is_plantuml = False
 
         if diagram_path.endswith(".plantuml") or \
             diagram_path.endswith(".puml") or \
             diagram_path.endswith(".wsd"):
-            is_valid = True
+            is_plantuml = True
 
-        return is_valid
+        return is_plantuml
 
     def _make_server_url(self, diagram_type: str, diagram_path: str) -> str:
-        """Generate a plantuml server GET URL from a diagram data file.
+        """Generate a PlantUML server GET URL from a diagram data file.
 
         Args:
             diagram_type (str): Diagram type, e.g. svg. See PlantUML -t options.
@@ -112,7 +116,7 @@ class PlantUML():
             diagram_string = input_file.read().encode('utf-8')
 
         # Compress the data using deflate.
-        # Strib Zlib's 2 byte header and 4 byte checksum for raw deflate data.
+        # Strip Zlib's 2 byte header and 4 byte checksum for raw deflate data.
         compressed_data = zlib.compress(diagram_string)[2:-4]
 
         # Encode the compressed data using base64.
@@ -134,6 +138,107 @@ class PlantUML():
 
         return query_url
 
+    def generate_to_bytes(self, diagram_type: str, diagram_source: str) -> bytes:
+        """Generate a PlantUML image from source text and return the raw bytes.
+
+        Args:
+            diagram_type (str): Diagram type, e.g. png. See PlantUML -t options.
+            diagram_source (str): PlantUML diagram source text.
+
+        Raises:
+            FileNotFoundError: PlantUML jar file not found or Java not installed (local mode).
+            requests.exceptions.RequestException: HTTP error from PlantUML server (server mode).
+
+        Returns:
+            bytes: The raw image bytes.
+        """
+        assert diagram_type in ("png", "svg")
+
+        if self._server_url is not None:
+            result = self._generate_to_bytes_server(diagram_type, diagram_source)
+        else:
+            result = self._generate_to_bytes_local(diagram_type, diagram_source)
+
+        return result
+
+    def _generate_to_bytes_server(self, diagram_type: str, diagram_source: str) -> bytes:
+        """Generate image via PlantUML server and return raw bytes.
+
+        Args:
+            diagram_type (str): Diagram type, e.g. png.
+            diagram_source (str): PlantUML diagram source text.
+
+        Raises:
+            requests.exceptions.RequestException: HTTP error from PlantUML server.
+
+        Returns:
+            bytes: The raw image bytes.
+        """
+        with tempfile.NamedTemporaryFile(suffix=".puml", mode='w', encoding='utf-8') as tmp:
+            tmp.write(diagram_source)
+            tmp.flush()
+            url = self._make_server_url(diagram_type, tmp.name)
+
+        log_verbose(f"Sending GET request {url}")
+        response = requests.get(url, timeout=10)
+
+        if response.status_code != 200:
+            raise requests.exceptions.RequestException(
+                f"{response.status_code} - {response.text}"
+            )
+
+        return response.content
+
+    def _generate_to_bytes_local(self, diagram_type: str, diagram_source: str) -> bytes:
+        """Generate image via local plantuml.jar using -pipe mode and return raw bytes.
+
+        Args:
+            diagram_type (str): Diagram type, e.g. png.
+            diagram_source (str): PlantUML diagram source text.
+
+        Raises:
+            FileNotFoundError: Java not installed or plantuml.jar not found.
+
+        Returns:
+            bytes: The raw image bytes.
+        """
+        if self._plantuml_jar is None:
+            raise FileNotFoundError(
+                f"PlantUML not found. Set the {PLANTUML_ENV_VAR} environment variable"
+                " to the path of plantuml.jar or a server URL."
+            )
+
+        if not os.path.isfile(self._plantuml_jar):
+            raise FileNotFoundError(f"plantuml.jar at {self._plantuml_jar} not found.")
+
+        plantuml_cmd = ["java"]
+
+        if sys.platform.startswith("linux"):
+            plantuml_cmd.append("-Djava.awt.headless=true")
+
+        plantuml_cmd.extend([
+            "-jar", self._plantuml_jar,
+            f"-t{diagram_type}",
+            "-pipe"
+        ])
+
+        try:
+            output = subprocess.run(
+                plantuml_cmd,
+                input=diagram_source.encode("utf-8"),
+                capture_output=True,
+                check=False
+            )
+        except FileNotFoundError as exc:
+            raise FileNotFoundError(
+                "Java not found. Ensure Java is installed and available on PATH."
+            ) from exc
+
+        if output.returncode != 0:
+            output.check_returncode()
+
+        return output.stdout
+
     def generate(self, diagram_type: str, diagram_path: str, dst_path: str) -> None:
         """Generate plantuml image.
 
@@ -148,6 +253,8 @@ class PlantUML():
             requests.exceptions.RequestException: Error during GET request to PlantUML server.
             OSError: Destination path does not exist.
         """
+        assert diagram_type in ("png", "svg")
+
         if self._server_url is not None:
             self._generate_server(diagram_type, diagram_path, dst_path)
         else:
@@ -156,15 +263,15 @@ class PlantUML():
     def _generate_server(self, diagram_type: str, diagram_path: str, dst_path: str) -> None:
         """Generate image using a plantuml server.
 
-        This is does not require java installed and is usually a lot faster
-        as no java startup time needed when using the plantuml.jar file.
+        Does not require Java installed and is usually a lot faster
+        as no Java startup time is needed when using the plantuml.jar file.
 
         Args:
             diagram_type (str): Diagram type, e.g. svg. See PlantUML -t options.
             diagram_path (str): Path to the PlantUML diagram.
             dst_path (str): Path to the destination of the generated image.
 
-         Raises:
+        Raises:
             FileNotFoundError: PlantUML diagram file not found.
             OSError: Destination path does not exist.
             requests.exceptions.RequestException: Error during GET request to PlantUML server.
@@ -182,8 +289,8 @@ class PlantUML():
             output_file = os.path.splitext(os.path.basename(diagram_path))[0]
             output_file += "." + diagram_type
             output_file = os.path.join(dst_path, output_file)
-            with open(output_file, 'wb') as f:
-                f.write(response.content)
+            with open(output_file, 'wb') as image_file:
+                image_file.write(response.content)
 
             log_verbose(f"Diagram saved as {output_file}.")
         else:
@@ -206,7 +313,7 @@ class PlantUML():
             if not os.path.exists(dst_path):
                 os.makedirs(dst_path)
 
-            plantuml_cmd = ["java" ]
+            plantuml_cmd = ["java"]
 
             if sys.platform.startswith("linux"):
                 plantuml_cmd.append("-Djava.awt.headless=true")
@@ -223,23 +330,24 @@ class PlantUML():
             try:
                 output = subprocess.run(plantuml_cmd, capture_output=True, text=True, check=False)
             except FileNotFoundError as exc:
-                # Subprocess run() raising a FileNotFoundError is indicating that the java command could not be found.
-                raise FileNotFoundError("Java is not installed on this machine or not on PATH."\
-                                         " Please check your java install to render plantUML locally.") from exc
+                raise FileNotFoundError(
+                    "Java not found. Ensure Java is installed and available on PATH."
+                ) from exc
 
             if output.stderr:
                 log_error(output.stderr, True)
-            if 0 != output.returncode:
-                # An error in the subprocess indicates that the java command was found but did not complete sucessfully.
+            if output.returncode != 0:
                 if not os.path.isfile(self._plantuml_jar):
                     raise FileNotFoundError(f"plantuml.jar at {self._plantuml_jar} not found.")
                 if not os.path.isfile(diagram_path):
                     raise FileNotFoundError(f"Diagram at {diagram_path} not found.")
-                # Raise the error from the CompletedProcess.
                 output.check_returncode()
-            print(output.stdout)
+            log_verbose(output.stdout)
         else:
-            raise FileNotFoundError("plantuml.jar not found, set PLANTUML environment variable.")
+            raise FileNotFoundError(
+                f"PlantUML not found. Set the {PLANTUML_ENV_VAR} environment variable"
+                " to the path of plantuml.jar or a server URL."
+            )
 
 # Functions ********************************************************************
 
