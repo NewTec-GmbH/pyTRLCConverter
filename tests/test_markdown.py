@@ -149,7 +149,7 @@ def test_tc_markdown(record_property, capsys, monkeypatch, tmp_path):
     """
     record_property("lobster-trace", "SwTests.tc_markdown")
 
-    # Mock program arguments to simulate running the script with inbuild Markdown converter.
+    # Mock program arguments to simulate running the script with built-in Markdown converter.
     monkeypatch.setattr("sys.argv", [
         "pyTRLCConverter",
         "--source", "./tests/utils/req.rsl",
@@ -342,7 +342,7 @@ def test_tc_markdown_link(record_property, tmp_path):
 
     markdown_converter = MarkdownConverter(Namespace(out=str(tmp_path), exclude=None))
 
-    # Create a Markdown link. Escaoubg should only apply to the text, not the url.
+    # Create a Markdown link. Escaping should only apply to the text, not the url.
     assert markdown_converter.markdown_create_link("Link Text", "http://example.com") == \
         r"[Link Text](http://example.com)"
     assert markdown_converter.markdown_create_link("Another Link", "https://example.org") == \
@@ -590,7 +590,7 @@ def test_tc_markdown_multi_doc(record_property, capsys, monkeypatch, tmp_path):
     """
     record_property("lobster-trace", "SwTests.tc_markdown_multi_doc")
 
-    # Mock program arguments to simulate running the script with inbuild Markdown converter.
+    # Mock program arguments to simulate running the script with built-in Markdown converter.
     monkeypatch.setattr("sys.argv", [
         "pyTRLCConverter",
         "--source", "./tests/utils/req.rsl",

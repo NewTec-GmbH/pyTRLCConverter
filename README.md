@@ -339,7 +339,7 @@ in the folder `/doc/detailed-design/_build/html/index.html`
 
 ## Tools
 
-Tools used for development or automations, see [Tools](./tools/README.md).
+Tools used for development or automation, see [Tools](./tools/README.md).
 
 ## Used Libraries
 
