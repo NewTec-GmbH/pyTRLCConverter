@@ -28,6 +28,7 @@ import zlib
 import base64
 import urllib
 import urllib.parse
+import urllib3
 import requests
 
 from pyTRLCConverter.logger import log_verbose, log_error
@@ -55,6 +56,8 @@ class PlantUML():
         # Default to True; set PLANTUML_VERIFY_SSL=false to disable for internal servers
         # with self-signed or corporate CA certificates.
         self._verify_ssl = os.environ.get(PLANTUML_VERIFY_SSL_ENV_VAR, "true").lower() != "false"
+        if not self._verify_ssl:
+            urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
         if PLANTUML_ENV_VAR in os.environ:
             plantuml_access = os.environ[PLANTUML_ENV_VAR]
