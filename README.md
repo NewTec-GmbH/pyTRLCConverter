@@ -310,7 +310,12 @@ pyTRLCConverter --help
 
 With the PlantUML extension the tool supports the automatic diagram generation out of a PlantUML file.
 
-Activate the support by adding the path to the java jar file to the ```PLANTUML``` environment variable.
+Activate the support by setting the ```PLANTUML``` environment variable to either the path to a local `plantuml.jar` file or the URL of a PlantUML server.
+
+| Environment Variable  | Description                                                                                                                                                     | Default |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- |
+| `PLANTUML`            | Path to `plantuml.jar` or URL of PlantUML server.                                                                                                               | -       |
+| `PLANTUML_VERIFY_SSL` | Set to `false` to disable SSL certificate verification for PlantUML server requests. Useful for internal servers with self-signed or corporate CA certificates. | `true`  |
 
 ## Examples
 

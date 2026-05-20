@@ -184,3 +184,4 @@ examples/simple_req_proj_spec/out/
 examples/simple_req_translation/out/
 tools/plantUML/plantuml.jar
 tools/*/out/
+tests/out/

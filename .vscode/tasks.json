@@ -1,0 +1,129 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Generate MD docx test output",
+            "type": "shell",
+            "command": ".venv/Scripts/pyTRLCConverter",
+            "args": [
+                "--source", "tests/utils/req.rsl",
+                "--source", "tests/utils/single_req_description_md.trlc",
+                "--out", "tests/out",
+                "--renderCfg", "tests/utils/renderCfgDocxMd.json",
+                "docx",
+                "--template", "tests/utils/template.docx"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Generate GFM docx test output",
+            "type": "shell",
+            "command": ".venv/Scripts/pyTRLCConverter",
+            "args": [
+                "--source", "tests/utils/req.rsl",
+                "--source", "tests/utils/single_req_description_gfm.trlc",
+                "--out", "tests/out",
+                "--renderCfg", "tests/utils/renderCfgDocxGfm.json",
+                "docx",
+                "--template", "tests/utils/template.docx"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Generate RST rst test output",
+            "type": "shell",
+            "command": ".venv/Scripts/pyTRLCConverter",
+            "args": [
+                "--source", "tests/utils/req.rsl",
+                "--source", "tests/utils/single_req_description_rst.trlc",
+                "--out", "tests/out",
+                "--renderCfg", "tests/utils/renderCfgRst.json",
+                "rst",
+                "--single-document",
+                "--name", "rst_render_rst.rst"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Generate MD rst test output",
+            "type": "shell",
+            "command": ".venv/Scripts/pyTRLCConverter",
+            "args": [
+                "--source", "tests/utils/req.rsl",
+                "--source", "tests/utils/single_req_description_md.trlc",
+                "--out", "tests/out",
+                "--renderCfg", "tests/utils/renderCfg.json",
+                "rst",
+                "--single-document",
+                "--name", "rst_render_md.rst"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Generate GFM rst test output",
+            "type": "shell",
+            "command": ".venv/Scripts/pyTRLCConverter",
+            "args": [
+                "--source", "tests/utils/req.rsl",
+                "--source", "tests/utils/single_req_description_gfm.trlc",
+                "--out", "tests/out",
+                "--renderCfg", "tests/utils/renderCfgGfm.json",
+                "rst",
+                "--single-document",
+                "--name", "rst_render_gfm.rst"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Generate MD markdown test output",
+            "type": "shell",
+            "command": ".venv/Scripts/pyTRLCConverter",
+            "args": [
+                "--source", "tests/utils/req.rsl",
+                "--source", "tests/utils/single_req_description_md.trlc",
+                "--out", "tests/out",
+                "--renderCfg", "tests/utils/renderCfg.json",
+                "markdown",
+                "--single-document",
+                "--name", "markdown_render_md.md"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Generate GFM markdown test output",
+            "type": "shell",
+            "command": ".venv/Scripts/pyTRLCConverter",
+            "args": [
+                "--source", "tests/utils/req.rsl",
+                "--source", "tests/utils/single_req_description_gfm.trlc",
+                "--out", "tests/out",
+                "--renderCfg", "tests/utils/renderCfgGfm.json",
+                "markdown",
+                "--single-document",
+                "--name", "markdown_render_gfm.md"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": []
+        }
+    ]
+}
