@@ -7,11 +7,11 @@ pyTRLCConverter is a command-line tool to convert [TRLC (Treat Requirements Like
 
 Currently out of the box supported formats:
 
-* Markdown
-* docx
-* reStructuredText
-* ReqIF
-* dump
+- Markdown
+- docx
+- reStructuredText
+- ReqIF
+- dump
 
 Find the requirements, test cases, coverage and etc. on the [github pages](https://newtec-gmbh.github.io/pyTRLCConverter/).
 
@@ -22,6 +22,7 @@ Find the requirements, test cases, coverage and etc. on the [github pages](https
   - [Clone this Project](#clone-this-project)
   - [Setup a virtual Python Environment](#setup-a-virtual-python-environment)
   - [Tool Installation](#tool-installation)
+  - [Install from PyPI](#install-from-pypi)
 - [Usage](#usage)
   - [Conversion to Markdown format](#conversion-to-markdown-format)
   - [Conversion to docx format](#conversion-to-docx-format)
@@ -34,6 +35,7 @@ Find the requirements, test cases, coverage and etc. on the [github pages](https
   - [PlantUML](#plantuml)
 - [Examples](#examples)
 - [Compile into an executable](#compile-into-an-executable)
+- [Publish to PyPI](#publish-to-pypi)
 - [SW Documentation](#sw-documentation)
 - [Tools](#tools)
 - [Used Libraries](#used-libraries)
@@ -84,6 +86,14 @@ The *users* of the tool install it as usual.
 
 ```bash
 pip install .
+```
+
+### Install from PyPI
+
+End users can install the latest stable release directly from PyPI without cloning the repository:
+
+```bash
+pip install pyTRLCConverter
 ```
 
 ## Usage
@@ -208,9 +218,9 @@ Conversion rules:
 
 **Types and spec-objects:**
 
-* Each distinct TRLC record type is mapped to one `SPEC-OBJECT-TYPE`. The type's attributes are reflected as `ATTRIBUTE-DEFINITION-*` entries on the type.
-* TRLC `section` headings are mapped to a dedicated `SPEC-OBJECT-TYPE` named `Section` and produce a container `SPEC-OBJECT` in the hierarchy.
-* Every TRLC record object produces one `SPEC-OBJECT` of the matching `SPEC-OBJECT-TYPE`.
+- Each distinct TRLC record type is mapped to one `SPEC-OBJECT-TYPE`. The type's attributes are reflected as `ATTRIBUTE-DEFINITION-*` entries on the type.
+- TRLC `section` headings are mapped to a dedicated `SPEC-OBJECT-TYPE` named `Section` and produce a container `SPEC-OBJECT` in the hierarchy.
+- Every TRLC record object produces one `SPEC-OBJECT` of the matching `SPEC-OBJECT-TYPE`.
 
 **Attribute mapping by field type:**
 
@@ -328,6 +338,28 @@ Just run the following command on the root of the folder:
 
 ```cmd
 pyinstaller --noconfirm --onefile --console --name "pyTRLCConverter" --add-data "./pyproject.toml;."  "./src/pyTRLCConverter/__main__.py"
+```
+
+## Publish to PyPI
+
+Releasing a new version to [PyPI](https://pypi.org/project/pyTRLCConverter/) is automated via the `deploy.yml` GitHub Actions workflow. Creating and publishing a GitHub release triggers the following steps automatically:
+
+1. Build the source distribution and wheel with `python -m build`.
+2. Upload the artifacts to PyPI using OIDC trusted publishing (no API token required).
+
+> **One-time setup:** Before the first automated release, configure a Trusted Publisher on PyPI (no API token needed). Go to the `pyTRLCConverter` project on PyPI → Manage → Publishing → Add a new publisher, and set Owner `NewTec-GmbH`, Repository `pyTRLCConverter`, Workflow `deploy.yml`.
+
+To trigger a release:
+
+1. Create and push a version tag, then publish a GitHub release for that tag.
+2. The `publish-pypi` job in `deploy.yml` runs automatically and uploads the distribution to PyPI.
+
+To test the build locally before releasing:
+
+```bash
+python -m pip install build twine
+python -m build
+twine check dist/*.whl dist/*.tar.gz
 ```
 
 ## SW Documentation
