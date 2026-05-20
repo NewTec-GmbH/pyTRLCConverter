@@ -113,6 +113,7 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">base64</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">urllib</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">urllib.parse</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">urllib3</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">pyTRLCConverter.logger</span><span class="w"> </span><span class="kn">import</span> <span class="n">log_verbose</span><span class="p">,</span> <span class="n">log_error</span>
@@ -124,6 +125,7 @@
 <span class="n">BASE64_ENCODE_CHARS</span> <span class="o">=</span> <span class="s2">&quot;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/&quot;</span>
 <span class="n">PLANTUML_ENCODE_CHARS</span> <span class="o">=</span> <span class="s2">&quot;0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_&quot;</span>
 <span class="n">PLANTUML_ENV_VAR</span> <span class="o">=</span> <span class="s2">&quot;PLANTUML&quot;</span>
+<span class="n">PLANTUML_VERIFY_SSL_ENV_VAR</span> <span class="o">=</span> <span class="s2">&quot;PLANTUML_VERIFY_SSL&quot;</span>
 
 <span class="c1"># Classes **********************************************************************</span>
 
@@ -138,6 +140,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_server_url</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_plantuml_jar</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_working_directory</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span>
+        <span class="c1"># Default to True; set PLANTUML_VERIFY_SSL=false to disable for internal servers</span>
+        <span class="c1"># with self-signed or corporate CA certificates.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_verify_ssl</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">PLANTUML_VERIFY_SSL_ENV_VAR</span><span class="p">,</span> <span class="s2">&quot;true&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">!=</span> <span class="s2">&quot;false&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_verify_ssl</span><span class="p">:</span>
+            <span class="n">urllib3</span><span class="o">.</span><span class="n">disable_warnings</span><span class="p">(</span><span class="n">urllib3</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">InsecureRequestWarning</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">PLANTUML_ENV_VAR</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
             <span class="n">plantuml_access</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="n">PLANTUML_ENV_VAR</span><span class="p">]</span>
@@ -281,7 +288,7 @@
             <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_server_url</span><span class="p">(</span><span class="n">diagram_type</span><span class="p">,</span> <span class="n">tmp</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 
         <span class="n">log_verbose</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Sending GET request </span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_verify_ssl</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">requests</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">RequestException</span><span class="p">(</span>
@@ -392,7 +399,7 @@
         <span class="c1"># Send GET request to the PlantUML server.</span>
         <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_server_url</span><span class="p">(</span><span class="n">diagram_type</span><span class="p">,</span> <span class="n">diagram_path</span><span class="p">)</span>
         <span class="n">log_verbose</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Sending GET request </span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_verify_ssl</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
             <span class="c1"># Save the response content in image file.</span>

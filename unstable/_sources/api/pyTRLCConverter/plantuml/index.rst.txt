@@ -19,6 +19,7 @@ Attributes
    pyTRLCConverter.plantuml.BASE64_ENCODE_CHARS
    pyTRLCConverter.plantuml.PLANTUML_ENCODE_CHARS
    pyTRLCConverter.plantuml.PLANTUML_ENV_VAR
+   pyTRLCConverter.plantuml.PLANTUML_VERIFY_SSL_ENV_VAR
 
 
 Classes
@@ -191,6 +192,9 @@ Module Contents
 
 
 
+   .. py:attribute:: _verify_ssl
+
+
    .. py:attribute:: _working_directory
       :value: b'.'
 
@@ -206,5 +210,9 @@ Module Contents
 
 .. py:data:: PLANTUML_ENV_VAR
    :value: 'PLANTUML'
+
+
+.. py:data:: PLANTUML_VERIFY_SSL_ENV_VAR
+   :value: 'PLANTUML_VERIFY_SSL'
 
 
