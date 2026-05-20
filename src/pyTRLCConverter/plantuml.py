@@ -66,9 +66,9 @@ class PlantUML():
                     self._server_url = plantuml_access
                 else:
                     # Otherwise assume it's a local JAR.
-                    self._plantuml_jar = os.environ[PLANTUML_ENV_VAR]
+                    self._plantuml_jar = plantuml_access
             except ValueError:
-                self._plantuml_jar = os.environ[PLANTUML_ENV_VAR]
+                self._plantuml_jar = plantuml_access
 
     def _get_absolute_path(self, path):
         """Convert a relative path to an absolute path based on the working directory.
@@ -180,17 +180,13 @@ class PlantUML():
         Returns:
             bytes: The raw image bytes.
         """
-        with tempfile.NamedTemporaryFile(suffix=".puml", mode='w',
-                                        encoding='utf-8', delete=False) as tmp:
+        with tempfile.NamedTemporaryFile(suffix=".puml", mode='w', encoding='utf-8') as tmp:
             tmp.write(diagram_source)
-            tmp_path = tmp.name
+            tmp.flush()
+            url = self._make_server_url(diagram_type, tmp.name)
 
-        try:
-            url = self._make_server_url(diagram_type, tmp_path)
-            log_verbose(f"Sending GET request {url}")
-            response = requests.get(url, timeout=10)
-        finally:
-            os.remove(tmp_path)
+        log_verbose(f"Sending GET request {url}")
+        response = requests.get(url, timeout=10)
 
         if response.status_code != 200:
             raise requests.exceptions.RequestException(
