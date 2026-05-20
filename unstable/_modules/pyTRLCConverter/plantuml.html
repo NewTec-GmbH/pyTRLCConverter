@@ -108,6 +108,7 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">zlib</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">base64</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">urllib</span>
@@ -122,6 +123,7 @@
 <span class="c1"># See https://plantuml.com/de/text-encoding for differences to base64 in URL encode.</span>
 <span class="n">BASE64_ENCODE_CHARS</span> <span class="o">=</span> <span class="s2">&quot;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/&quot;</span>
 <span class="n">PLANTUML_ENCODE_CHARS</span> <span class="o">=</span> <span class="s2">&quot;0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_&quot;</span>
+<span class="n">PLANTUML_ENV_VAR</span> <span class="o">=</span> <span class="s2">&quot;PLANTUML&quot;</span>
 
 <span class="c1"># Classes **********************************************************************</span>
 
@@ -137,28 +139,30 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_plantuml_jar</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_working_directory</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span>
 
-        <span class="k">if</span> <span class="s2">&quot;PLANTUML&quot;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
-            <span class="n">plantuml_access</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;PLANTUML&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">PLANTUML_ENV_VAR</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
+            <span class="n">plantuml_access</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="n">PLANTUML_ENV_VAR</span><span class="p">]</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="c1"># Use server method if PLANTUML is a URL.</span>
+                <span class="c1"># Use server method if PLANTUML env var points to a URL.</span>
                 <span class="k">if</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">urlparse</span><span class="p">(</span><span class="n">plantuml_access</span><span class="p">)</span><span class="o">.</span><span class="n">scheme</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;http&#39;</span><span class="p">,</span> <span class="s1">&#39;https&#39;</span><span class="p">]:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_server_url</span> <span class="o">=</span> <span class="n">plantuml_access</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_plantuml_jar</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;PLANTUML&quot;</span><span class="p">]</span>
+                    <span class="c1"># Otherwise assume it&#39;s a local JAR.</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_plantuml_jar</span> <span class="o">=</span> <span class="n">plantuml_access</span>
             <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_plantuml_jar</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;PLANTUML&quot;</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_plantuml_jar</span> <span class="o">=</span> <span class="n">plantuml_access</span>
 
 <div class="viewcode-block" id="PlantUML._get_absolute_path">
 <a class="viewcode-back" href="../../api/pyTRLCConverter/plantuml/index.html#pyTRLCConverter.plantuml.PlantUML._get_absolute_path">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_get_absolute_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get absolute path to the diagram.</span>
-<span class="sd">            This is required by PlantUML java program for the output path.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert a relative path to an absolute path based on the working directory.</span>
+
+<span class="sd">        The plantuml.jar requires an absolute output path.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            path (_type_): _description_</span>
+<span class="sd">            path (str): Relative or absolute path.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            _type_: _description_</span>
+<span class="sd">            str: Absolute path.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">absolute_path</span> <span class="o">=</span> <span class="n">path</span>
 
@@ -180,20 +184,20 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            bool: If file is a PlantUML file, it will return True otherwise False.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">is_valid</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">is_plantuml</span> <span class="o">=</span> <span class="kc">False</span>
 
         <span class="k">if</span> <span class="n">diagram_path</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.plantuml&quot;</span><span class="p">)</span> <span class="ow">or</span> \
             <span class="n">diagram_path</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.puml&quot;</span><span class="p">)</span> <span class="ow">or</span> \
             <span class="n">diagram_path</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.wsd&quot;</span><span class="p">):</span>
-            <span class="n">is_valid</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">is_plantuml</span> <span class="o">=</span> <span class="kc">True</span>
 
-        <span class="k">return</span> <span class="n">is_valid</span></div>
+        <span class="k">return</span> <span class="n">is_plantuml</span></div>
 
 
 <div class="viewcode-block" id="PlantUML._make_server_url">
 <a class="viewcode-back" href="../../api/pyTRLCConverter/plantuml/index.html#pyTRLCConverter.plantuml.PlantUML._make_server_url">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_make_server_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">diagram_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">diagram_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate a plantuml server GET URL from a diagram data file.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate a PlantUML server GET URL from a diagram data file.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            diagram_type (str): Diagram type, e.g. svg. See PlantUML -t options.</span>
@@ -207,7 +211,7 @@
             <span class="n">diagram_string</span> <span class="o">=</span> <span class="n">input_file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
 
         <span class="c1"># Compress the data using deflate.</span>
-        <span class="c1"># Strib Zlib&#39;s 2 byte header and 4 byte checksum for raw deflate data.</span>
+        <span class="c1"># Strip Zlib&#39;s 2 byte header and 4 byte checksum for raw deflate data.</span>
         <span class="n">compressed_data</span> <span class="o">=</span> <span class="n">zlib</span><span class="o">.</span><span class="n">compress</span><span class="p">(</span><span class="n">diagram_string</span><span class="p">)[</span><span class="mi">2</span><span class="p">:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span>
 
         <span class="c1"># Encode the compressed data using base64.</span>
@@ -230,6 +234,116 @@
         <span class="k">return</span> <span class="n">query_url</span></div>
 
 
+<div class="viewcode-block" id="PlantUML.generate_to_bytes">
+<a class="viewcode-back" href="../../api/pyTRLCConverter/plantuml/index.html#pyTRLCConverter.plantuml.PlantUML.generate_to_bytes">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate_to_bytes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">diagram_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">diagram_source</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate a PlantUML image from source text and return the raw bytes.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            diagram_type (str): Diagram type, e.g. png. See PlantUML -t options.</span>
+<span class="sd">            diagram_source (str): PlantUML diagram source text.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            FileNotFoundError: PlantUML jar file not found or Java not installed (local mode).</span>
+<span class="sd">            requests.exceptions.RequestException: HTTP error from PlantUML server (server mode).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bytes: The raw image bytes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">diagram_type</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;png&quot;</span><span class="p">,</span> <span class="s2">&quot;svg&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_server_url</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_to_bytes_server</span><span class="p">(</span><span class="n">diagram_type</span><span class="p">,</span> <span class="n">diagram_source</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_to_bytes_local</span><span class="p">(</span><span class="n">diagram_type</span><span class="p">,</span> <span class="n">diagram_source</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="PlantUML._generate_to_bytes_server">
+<a class="viewcode-back" href="../../api/pyTRLCConverter/plantuml/index.html#pyTRLCConverter.plantuml.PlantUML._generate_to_bytes_server">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_generate_to_bytes_server</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">diagram_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">diagram_source</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate image via PlantUML server and return raw bytes.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            diagram_type (str): Diagram type, e.g. png.</span>
+<span class="sd">            diagram_source (str): PlantUML diagram source text.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            requests.exceptions.RequestException: HTTP error from PlantUML server.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bytes: The raw image bytes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;.puml&quot;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">tmp</span><span class="p">:</span>
+            <span class="n">tmp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">diagram_source</span><span class="p">)</span>
+            <span class="n">tmp</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+            <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_server_url</span><span class="p">(</span><span class="n">diagram_type</span><span class="p">,</span> <span class="n">tmp</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="n">log_verbose</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Sending GET request </span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">requests</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">RequestException</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">content</span></div>
+
+
+<div class="viewcode-block" id="PlantUML._generate_to_bytes_local">
+<a class="viewcode-back" href="../../api/pyTRLCConverter/plantuml/index.html#pyTRLCConverter.plantuml.PlantUML._generate_to_bytes_local">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_generate_to_bytes_local</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">diagram_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">diagram_source</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate image via local plantuml.jar using -pipe mode and return raw bytes.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            diagram_type (str): Diagram type, e.g. png.</span>
+<span class="sd">            diagram_source (str): PlantUML diagram source text.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            FileNotFoundError: Java not installed or plantuml.jar not found.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bytes: The raw image bytes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_plantuml_jar</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;PlantUML not found. Set the </span><span class="si">{</span><span class="n">PLANTUML_ENV_VAR</span><span class="si">}</span><span class="s2"> environment variable&quot;</span>
+                <span class="s2">&quot; to the path of plantuml.jar or a server URL.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_plantuml_jar</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;plantuml.jar at </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_plantuml_jar</span><span class="si">}</span><span class="s2"> not found.&quot;</span><span class="p">)</span>
+
+        <span class="n">plantuml_cmd</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;java&quot;</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;linux&quot;</span><span class="p">):</span>
+            <span class="n">plantuml_cmd</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;-Djava.awt.headless=true&quot;</span><span class="p">)</span>
+
+        <span class="n">plantuml_cmd</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span>
+            <span class="s2">&quot;-jar&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_plantuml_jar</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">&quot;-t</span><span class="si">{</span><span class="n">diagram_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;-pipe&quot;</span>
+        <span class="p">])</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+                <span class="n">plantuml_cmd</span><span class="p">,</span>
+                <span class="nb">input</span><span class="o">=</span><span class="n">diagram_source</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">),</span>
+                <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">check</span><span class="o">=</span><span class="kc">False</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">FileNotFoundError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
+                <span class="s2">&quot;Java not found. Ensure Java is installed and available on PATH.&quot;</span>
+            <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+
+        <span class="k">if</span> <span class="n">output</span><span class="o">.</span><span class="n">returncode</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">output</span><span class="o">.</span><span class="n">check_returncode</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">output</span><span class="o">.</span><span class="n">stdout</span></div>
+
+
 <div class="viewcode-block" id="PlantUML.generate">
 <a class="viewcode-back" href="../../api/pyTRLCConverter/plantuml/index.html#pyTRLCConverter.plantuml.PlantUML.generate">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">diagram_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">diagram_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">dst_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -246,6 +360,8 @@
 <span class="sd">            requests.exceptions.RequestException: Error during GET request to PlantUML server.</span>
 <span class="sd">            OSError: Destination path does not exist.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">diagram_type</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;png&quot;</span><span class="p">,</span> <span class="s2">&quot;svg&quot;</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_server_url</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_generate_server</span><span class="p">(</span><span class="n">diagram_type</span><span class="p">,</span> <span class="n">diagram_path</span><span class="p">,</span> <span class="n">dst_path</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -257,15 +373,15 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">_generate_server</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">diagram_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">diagram_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">dst_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate image using a plantuml server.</span>
 
-<span class="sd">        This is does not require java installed and is usually a lot faster</span>
-<span class="sd">        as no java startup time needed when using the plantuml.jar file.</span>
+<span class="sd">        Does not require Java installed and is usually a lot faster</span>
+<span class="sd">        as no Java startup time is needed when using the plantuml.jar file.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            diagram_type (str): Diagram type, e.g. svg. See PlantUML -t options.</span>
 <span class="sd">            diagram_path (str): Path to the PlantUML diagram.</span>
 <span class="sd">            dst_path (str): Path to the destination of the generated image.</span>
 
-<span class="sd">         Raises:</span>
+<span class="sd">        Raises:</span>
 <span class="sd">            FileNotFoundError: PlantUML diagram file not found.</span>
 <span class="sd">            OSError: Destination path does not exist.</span>
 <span class="sd">            requests.exceptions.RequestException: Error during GET request to PlantUML server.</span>
@@ -283,8 +399,8 @@
             <span class="n">output_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">diagram_path</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
             <span class="n">output_file</span> <span class="o">+=</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="n">diagram_type</span>
             <span class="n">output_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dst_path</span><span class="p">,</span> <span class="n">output_file</span><span class="p">)</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">image_file</span><span class="p">:</span>
+                <span class="n">image_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
 
             <span class="n">log_verbose</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Diagram saved as </span><span class="si">{</span><span class="n">output_file</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -310,7 +426,7 @@
             <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">dst_path</span><span class="p">):</span>
                 <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">dst_path</span><span class="p">)</span>
 
-            <span class="n">plantuml_cmd</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;java&quot;</span> <span class="p">]</span>
+            <span class="n">plantuml_cmd</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;java&quot;</span><span class="p">]</span>
 
             <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;linux&quot;</span><span class="p">):</span>
                 <span class="n">plantuml_cmd</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;-Djava.awt.headless=true&quot;</span><span class="p">)</span>
@@ -327,23 +443,24 @@
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">output</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">plantuml_cmd</span><span class="p">,</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
             <span class="k">except</span> <span class="ne">FileNotFoundError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
-                <span class="c1"># Subprocess run() raising a FileNotFoundError is indicating that the java command could not be found.</span>
-                <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="s2">&quot;Java is not installed on this machine or not on PATH.&quot;</span>\
-                                         <span class="s2">&quot; Please check your java install to render plantUML locally.&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+                <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
+                    <span class="s2">&quot;Java not found. Ensure Java is installed and available on PATH.&quot;</span>
+                <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
 
             <span class="k">if</span> <span class="n">output</span><span class="o">.</span><span class="n">stderr</span><span class="p">:</span>
                 <span class="n">log_error</span><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">stderr</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
-            <span class="k">if</span> <span class="mi">0</span> <span class="o">!=</span> <span class="n">output</span><span class="o">.</span><span class="n">returncode</span><span class="p">:</span>
-                <span class="c1"># An error in the subprocess indicates that the java command was found but did not complete sucessfully.</span>
+            <span class="k">if</span> <span class="n">output</span><span class="o">.</span><span class="n">returncode</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_plantuml_jar</span><span class="p">):</span>
                     <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;plantuml.jar at </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_plantuml_jar</span><span class="si">}</span><span class="s2"> not found.&quot;</span><span class="p">)</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">diagram_path</span><span class="p">):</span>
                     <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Diagram at </span><span class="si">{</span><span class="n">diagram_path</span><span class="si">}</span><span class="s2"> not found.&quot;</span><span class="p">)</span>
-                <span class="c1"># Raise the error from the CompletedProcess.</span>
                 <span class="n">output</span><span class="o">.</span><span class="n">check_returncode</span><span class="p">()</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
+            <span class="n">log_verbose</span><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">stdout</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="s2">&quot;plantuml.jar not found, set PLANTUML environment variable.&quot;</span><span class="p">)</span></div>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;PlantUML not found. Set the </span><span class="si">{</span><span class="n">PLANTUML_ENV_VAR</span><span class="si">}</span><span class="s2"> environment variable&quot;</span>
+                <span class="s2">&quot; to the path of plantuml.jar or a server URL.&quot;</span>
+            <span class="p">)</span></div>
 </div>
 
 
