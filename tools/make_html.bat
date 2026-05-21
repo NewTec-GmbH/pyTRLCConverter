@@ -38,6 +38,10 @@ call testReport/make_rst
 rem Create tracing report from TRLC and source files.
 call traceReport/make %ONLINE_REPORT_OPTION%
 
+rem Copy SVG diagrams into the Sphinx source directory so relative image
+rem references in included RST files resolve correctly during the build.
+for %%f in (trlc2other\out\*.svg) do copy /Y "%%f" "deployDoc\source\" >nul
+
 rem Create HTML documentation.
 call deployDoc/make clean
 call deployDoc/make html

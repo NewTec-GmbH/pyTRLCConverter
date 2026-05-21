@@ -206,7 +206,7 @@ html_context = {
 
 # List of files to copy to the output directory.
 #
-# The source is relative to the sphinx directory.
+# The source is relative to the sphinx source directory.
 # The destination is relative to the output directory.
 files_to_copy = [
     {
@@ -220,6 +220,7 @@ files_to_copy = [
         'exclude': ['*.rst']
     }
 ]
+
 
 def setup(app: Any) -> None:
     """Setup sphinx.
