@@ -39,13 +39,7 @@ from pyTRLCConverter.ret import Ret
 # pylint: disable-next=too-few-public-methods
 class ItemWalker:
     # lobster-trace: SwRequirements.sw_req_process_trlc_symbols
-    """
-    A walker that traverses through the TRLC items in the given symbol table.
-
-    Attributes:
-        _converter (AbstractConverter): The converter used for processing items.
-        _exclude_files (list): List of file paths to exclude from processing.
-    """
+    """A walker that traverses through the TRLC items in the given symbol table."""
 
     def __init__(self, args: Any, converter: AbstractConverter) -> None:
         """
