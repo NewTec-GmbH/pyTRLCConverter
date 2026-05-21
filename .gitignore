@@ -75,9 +75,6 @@ dmypy.json
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
-# Generated tool output directories
-doc/detailed-design/
-
 # Requirement conversion output files
 examples/plantuml/out/
 examples/simple_req/out/

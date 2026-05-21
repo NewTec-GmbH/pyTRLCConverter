@@ -316,7 +316,7 @@ pyTRLCConverter --version
 
 ### PlantUML
 
-With the PlantUML extension the tool supports the automatic diagram generation out of a PlantUML file.
+With the PlantUML extension the tool supports automatic diagram generation from PlantUML files.
 
 Activate the support by setting the `PLANTUML` environment variable to either the path to a local `plantuml.jar` file or the URL of a PlantUML server.
 
@@ -363,9 +363,6 @@ twine check dist/*.whl dist/*.tar.gz
 ## SW Documentation
 
 More information on the deployment and architecture can be found in the [documentation](./doc/README.md)
-
-For Detailed Software Design run `$ /doc/detailed-design/make html` to generate the detailed design documentation that then can be found
-in the folder `/doc/detailed-design/_build/html/index.html`
 
 ## Tools
 
