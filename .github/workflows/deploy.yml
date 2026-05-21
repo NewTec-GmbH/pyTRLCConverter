@@ -139,6 +139,16 @@ jobs:
       - name: Install build tools
         run: python -m pip install --upgrade pip build
 
+      - name: Rewrite relative README links to absolute for PyPI
+        run: |
+          python -c "
+          import re, pathlib
+          tag = '${{ github.event.release.tag_name }}'
+          base = 'https://github.com/NewTec-GmbH/pyTRLCConverter/tree/' + tag + '/'
+          readme = pathlib.Path('README.md')
+          readme.write_text(re.sub(r'\]\(\.\/', '](' + base, readme.read_text()))
+          "
+
       - name: Build distribution
         run: |
           SOURCE_DATE_EPOCH=$(git log -1 --pretty=%ct) \

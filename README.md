@@ -388,7 +388,7 @@ Used 3rd party libraries which are not part of the standard Python package:
 | [toml](https://github.com/uiri/toml)                         | Parsing [TOML](https://en.wikipedia.org/wiki/TOML)       | MIT        |
 | [trlc](https://github.com/bmw-software-engineering/trlc)     | Treat Requirements Like Code                             | GPL-3.0    |
 
-see also [requirements.txt](requirements.txt)
+See also [requirements.txt](requirements.txt).
 
 ## Issues, Ideas And Bugs
 
