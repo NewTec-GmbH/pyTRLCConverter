@@ -16,11 +16,12 @@
 # You should have received a copy of the GNU General Public License along with pyTRLCConverter.
 # If not, see <https://www.gnu.org/licenses/>.
 
-DIR=$(dirname `realpath "$_"`)
-PLANTUML="$DIR/plantuml.jar"
-export PLANTUML
+if [ -z "$PLANTUML" ]; then
+    DIR=$(dirname "$(realpath "$_")")
+    export PLANTUML="$DIR/plantuml.jar"
 
-if [ ! -f "$PLANTUML" ]; then
-    echo "Download PlantUML java program..."
-    curl -L -o "$PLANTUML" https://github.com/plantuml/plantuml/releases/download/v1.2026.1/plantuml-1.2026.1.jar
+    if [ ! -f "$PLANTUML" ]; then
+        echo "Download PlantUML java program..."
+        curl -L -o "$PLANTUML" https://github.com/plantuml/plantuml/releases/download/v1.2026.1/plantuml-1.2026.1.jar
+    fi
 fi
