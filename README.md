@@ -69,8 +69,8 @@ python -m venv .venv
 
 Note:
 
-- For Windows CMD shell, use ```.venv\Scripts\activate.bat``` to activate the virtual environment.
-- For Linux/Macos, use ```source .venv/bin/activate``` to activate the virtual environment.
+- For Windows CMD shell, use `.venv\Scripts\activate.bat` to activate the virtual environment.
+- For Linux/Macos, use `source .venv/bin/activate` to activate the virtual environment.
 
 ### Tool Installation
 
@@ -100,17 +100,17 @@ pip install pyTRLCConverter
 
 ### Conversion to Markdown format
 
-The tool requires two kinds of TRLC input sources for the conversion. These are the requirements (\*.trlc) files and the model (\*.tls) files. These input files are specified using one or more --source  or -s options followed by a file name or directory path. If a path is given, all files with a .trlc or .tls extension are read by the tool.
+The tool requires two kinds of TRLC input sources for the conversion. These are the requirements (`*.trlc`) files and the model (`*.tls`) files. These input files are specified using one or more `--source` or `-s` options followed by a file name or directory path. If a path is given, all files with a `.trlc` or `.tls` extension are read by the tool.
 
 ```bash
 pyTRLCConverter --source trlc/model --source trlc/swe-req markdown
 ```
 
-It will create a Markdown file with the same name as the requirements file (\*.trlc) in the current directory, but with the Markdown extension (.md).
+It will create a Markdown file with the same name as the requirements file (`*.trlc`) in the current directory, but with the Markdown extension (`.md`).
 
-If the requirements are split into several files, a Markdown file will be created for each. To generate a single Markdown file the argument --single-document can be used, which will create an ```output.md``` file by default.
+If the requirements are split into several files, a Markdown file will be created for each. To generate a single Markdown file the argument `--single-document` can be used, which will create an `output.md` file by default.
 
-The converter supports additional arguments that are shown by adding the --help option after the markdown subcommand.
+The converter supports additional arguments that are shown by adding the `--help` option after the markdown subcommand.
 
 ```bash
 pyTRLCConverter markdown --help
@@ -130,17 +130,15 @@ More examples are shown in the [examples folder](./examples/).
 
 ### Conversion to docx format
 
-Similar to the Markdown conversion, minimal required are the requirements (\*.trlc) and the model (\*.tls). Both can be added by file name or just the path where they are located.
+Similar to the Markdown conversion, minimal required are the requirements (`*.trlc`) and the model (`*.tls`). Both can be added by file name or just the path where they are located.
 
 ```bash
 pyTRLCConverter --source trlc/model --source trlc/swe-req docx
 ```
 
-It will create a docx file with default name ```output.docx``` in the current directory.
+It will always create a single `output.docx` file in the current directory, regardless of how many TRLC source files are provided.
 
-If the requirements are split in several files, they will be all part of a single docx file.
-
-The converter supports additional arguments that are shown by adding the --help option after the docx subcommand.
+The converter supports additional arguments that are shown by adding the `--help` option after the docx subcommand.
 
 ```bash
 pyTRLCConverter docx --help
@@ -156,15 +154,15 @@ options:
 
 ### Conversion to reStructuredText format
 
-The tool requires two kinds of TRLC input sources for the conversion. These are the requirements (\*.trlc) files and the model (\*.tls) files. These input files are specified using one or more --source  or -s options followed by a file name or directory path. If a path is given, all files with a .trlc or .tls extension are read by the tool.
+The tool requires two kinds of TRLC input sources for the conversion. These are the requirements (`*.trlc`) files and the model (`*.tls`) files. These input files are specified using one or more `--source` or `-s` options followed by a file name or directory path. If a path is given, all files with a `.trlc` or `.tls` extension are read by the tool.
 
 ```bash
 pyTRLCConverter --source trlc/model --source trlc/swe-req rst
 ```
 
-If the requirements are split into several files (\*.trlc), a reStructuredText file will be created for each. To generate a single reStructuredText file the argument --single-document can be used, which will create an ```output.md``` file by default.
+If the requirements are split into several files (`*.trlc`), a reStructuredText file will be created for each. To generate a single reStructuredText file the argument `--single-document` can be used, which will create an `output.rst` file by default.
 
-The converter supports additional arguments that are shown by adding the --help option after the reStructuredText subcommand.
+The converter supports additional arguments that are shown by adding the `--help` option after the reStructuredText subcommand.
 
 ```bash
 pyTRLCConverter rst --help
@@ -186,15 +184,15 @@ More examples are shown in the [examples folder](./examples/).
 
 ### Conversion to ReqIF format
 
-The tool requires two kinds of TRLC input sources for the conversion. These are the requirements (*.trlc) files and the model (*.tls) files. These input files are specified using one or more --source or -s options followed by a file name or directory path. If a path is given, all files with a .trlc or .tls extension are read by the tool.
+The tool requires two kinds of TRLC input sources for the conversion. These are the requirements (`*.trlc`) files and the model (`*.tls`) files. These input files are specified using one or more `--source` or `-s` options followed by a file name or directory path. If a path is given, all files with a `.trlc` or `.tls` extension are read by the tool.
 
 ```bash
 pyTRLCConverter --source trlc/model --source trlc/swe-req reqif
 ```
 
-If the requirements are split into several files (*.trlc), a ReqIF file will be created for each. To generate a single ReqIF file the argument --single-document can be used, which will create an `output.reqif` file by default.
+If the requirements are split into several files (`*.trlc`), a ReqIF file will be created for each. To generate a single ReqIF file the argument `--single-document` can be used, which will create an `output.reqif` file by default.
 
-The converter supports additional arguments that are shown by adding the --help option after the ReqIF subcommand.
+The converter supports additional arguments that are shown by adding the `--help` option after the ReqIF subcommand.
 
 ```bash
 pyTRLCConverter reqif --help
@@ -256,7 +254,7 @@ pyTRLCConverter --source trlc/model --source trlc/swe-req dump
 
 The built-in converters display the requirements and their attributes in a table. The first column always contains the attribute name, and the second column contains the attribute value. Since the attribute names must comply with the TRLC standard, they are not always human-readable.
 
-Therefore a translation JSON file can be used to translate the attribute names. Use the ```--translation``` argument to specify the translation file.
+Therefore a translation JSON file can be used to translate the attribute names. Use the `--translation` argument to specify the translation file.
 
 Translation file example:
 
@@ -276,8 +274,8 @@ When requirements include lists or need bold/italic emphasis, TRLC currently sup
 
 Two Markdown specifications are supported:
 
-- "md": [CommonMark's spec v0.31.2](https://spec.commonmark.org/0.31.2/)
-- "gfm": [GitHub Flavored Markdown spec v0.29-gfm](https://github.github.com/gfm)
+- `"md"`: [CommonMark's spec v0.31.2](https://spec.commonmark.org/0.31.2/)
+- `"gfm"`: [GitHub Flavored Markdown spec v0.29-gfm](https://github.github.com/gfm)
 
 Supported by the formats:
 
@@ -306,21 +304,21 @@ Configuration example:
 
 The package, type and attribute supports regex which makes it easier to set the format for several types. Currently **only Markdown** is supported as format. Always the first match wins.
 
-Use the ```--renderCfg <RENDER-CFG-FILE>``` program argument to specify the configuration file.
+Use the `--renderCfg <RENDER-CFG-FILE>` program argument to specify the configuration file.
 
 ### Show tool version
 
-Show the version of the tool to see whether the required one is used.
+Show the installed tool version.
 
 ```bash
-pyTRLCConverter --help
+pyTRLCConverter --version
 ```
 
 ### PlantUML
 
 With the PlantUML extension the tool supports the automatic diagram generation out of a PlantUML file.
 
-Activate the support by setting the ```PLANTUML``` environment variable to either the path to a local `plantuml.jar` file or the URL of a PlantUML server.
+Activate the support by setting the `PLANTUML` environment variable to either the path to a local `plantuml.jar` file or the URL of a PlantUML server.
 
 | Environment Variable  | Description                                                                                                                                                     | Default |
 | --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- |
