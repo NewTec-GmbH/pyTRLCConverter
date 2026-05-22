@@ -19,6 +19,7 @@
 
 # Imports **********************************************************************
 import os
+from unittest.mock import patch
 
 from argparse import Namespace
 from collections import namedtuple
@@ -672,8 +673,13 @@ def test_tc_rst_render_md(record_property, capsys, monkeypatch, tmp_path):
         "--name", output_file_name
     ])
 
-    # Expect the program to run without any exceptions.
-    main()
+    svg_payload = (
+        b'<?xml version="1.0" encoding="UTF-8" standalone="no"?>'
+        b'<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10"/>'
+    )
+    with patch("pyTRLCConverter.marko.md2rst_renderer.PlantUML.generate_to_bytes",
+               return_value=svg_payload):
+        main()
 
     # Capture stdout and stderr.
     captured = capsys.readouterr()
@@ -738,34 +744,30 @@ def test_tc_rst_render_md(record_property, capsys, monkeypatch, tmp_path):
         assert lines[51] == "    |                |     Code block example                                                      |\n"
         assert lines[52] == "    |                |                                                                             |\n"
         assert lines[53] == "    |                |                                                                             |\n"
-        assert lines[54] == "    |                | .. code-block:: plantuml                                                    |\n"
+        assert ".. image:: plantuml_" in lines[54]
+        assert lines[54].endswith(".svg                                        |\n")
         assert lines[55] == "    |                |                                                                             |\n"
-        assert lines[56] == "    |                |     @startuml                                                               |\n"
-        assert lines[57] == "    |                |     Alice -> Bob: Hello                                                     |\n"
-        assert lines[58] == "    |                |     Bob --> Alice: Hi                                                       |\n"
-        assert lines[59] == "    |                |     @enduml                                                                 |\n"
+        assert lines[56] == "    |                |                                                                             |\n"
+        assert lines[57] == "    |                |                                                                             |\n"
+        assert lines[58] == "    |                | ----                                                                        |\n"
+        assert lines[59] == "    |                |                                                                             |\n"
         assert lines[60] == "    |                |                                                                             |\n"
-        assert lines[61] == "    |                |                                                                             |\n"
+        assert lines[61] == "    |                |   Blockquote example                                                        |\n"
         assert lines[62] == "    |                |                                                                             |\n"
-        assert lines[63] == "    |                | ----                                                                        |\n"
+        assert lines[63] == "    |                |                                                                             |\n"
         assert lines[64] == "    |                |                                                                             |\n"
-        assert lines[65] == "    |                |                                                                             |\n"
-        assert lines[66] == "    |                |   Blockquote example                                                        |\n"
+        assert lines[65] == "    |                | `Link to pyTRLCConverter <https://github.com/NewTec-GmbH/pyTRLCConverter>`_ |\n"
+        assert lines[66] == "    |                |                                                                             |\n"
         assert lines[67] == "    |                |                                                                             |\n"
-        assert lines[68] == "    |                |                                                                             |\n"
-        assert lines[69] == "    |                |                                                                             |\n"
-        assert lines[70] == "    |                | `Link to pyTRLCConverter <https://github.com/NewTec-GmbH/pyTRLCConverter>`_ |\n"
-        assert lines[71] == "    |                |                                                                             |\n"
-        assert lines[72] == "    |                |                                                                             |\n"
-        assert lines[73] == "    +----------------+-----------------------------------------------------------------------------+\n"
-        assert lines[74] == "    | link           | N/A                                                                         |\n"
-        assert lines[75] == "    +----------------+-----------------------------------------------------------------------------+\n"
-        assert lines[76] == "    | index          | N/A                                                                         |\n"
-        assert lines[77] == "    +----------------+-----------------------------------------------------------------------------+\n"
-        assert lines[78] == "    | precision      | N/A                                                                         |\n"
-        assert lines[79] == "    +----------------+-----------------------------------------------------------------------------+\n"
-        assert lines[80] == "    | valid          | N/A                                                                         |\n"
-        assert lines[81] == "    +----------------+-----------------------------------------------------------------------------+\n"
+        assert lines[68] == "    +----------------+-----------------------------------------------------------------------------+\n"
+        assert lines[69] == "    | link           | N/A                                                                         |\n"
+        assert lines[70] == "    +----------------+-----------------------------------------------------------------------------+\n"
+        assert lines[71] == "    | index          | N/A                                                                         |\n"
+        assert lines[72] == "    +----------------+-----------------------------------------------------------------------------+\n"
+        assert lines[73] == "    | precision      | N/A                                                                         |\n"
+        assert lines[74] == "    +----------------+-----------------------------------------------------------------------------+\n"
+        assert lines[75] == "    | valid          | N/A                                                                         |\n"
+        assert lines[76] == "    +----------------+-----------------------------------------------------------------------------+\n"
 
 # pylint: disable-next=too-many-statements
 def test_tc_rst_render_gfm(record_property, capsys, monkeypatch, tmp_path):
@@ -794,8 +796,13 @@ def test_tc_rst_render_gfm(record_property, capsys, monkeypatch, tmp_path):
         "--name", output_file_name
     ])
 
-    # Expect the program to run without any exceptions.
-    main()
+    svg_payload = (
+        b'<?xml version="1.0" encoding="UTF-8" standalone="no"?>'
+        b'<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10"/>'
+    )
+    with patch("pyTRLCConverter.marko.md2rst_renderer.PlantUML.generate_to_bytes",
+               return_value=svg_payload):
+        main()
 
     # Capture stdout and stderr.
     captured = capsys.readouterr()
@@ -868,44 +875,129 @@ def test_tc_rst_render_gfm(record_property, capsys, monkeypatch, tmp_path):
         assert lines[58] == "    |                |     Code block example                                                                             |\n"
         assert lines[59] == "    |                |                                                                                                    |\n"
         assert lines[60] == "    |                |                                                                                                    |\n"
-        assert lines[61] == "    |                | .. code-block:: plantuml                                                                           |\n"
+        assert ".. image:: plantuml_" in lines[61]
+        assert lines[61].endswith(".svg                                                               |\n")
         assert lines[62] == "    |                |                                                                                                    |\n"
-        assert lines[63] == "    |                |     @startuml                                                                                      |\n"
-        assert lines[64] == "    |                |     Alice -> Bob: Hello                                                                            |\n"
-        assert lines[65] == "    |                |     Bob --> Alice: Hi                                                                              |\n"
-        assert lines[66] == "    |                |     @enduml                                                                                        |\n"
+        assert lines[63] == "    |                |                                                                                                    |\n"
+        assert lines[64] == "    |                |                                                                                                    |\n"
+        assert lines[65] == "    |                | ----                                                                                               |\n"
+        assert lines[66] == "    |                |                                                                                                    |\n"
         assert lines[67] == "    |                |                                                                                                    |\n"
-        assert lines[68] == "    |                |                                                                                                    |\n"
+        assert lines[68] == "    |                | `https://github.com/NewTec-GmbH/pyTRLCConverter <https://github.com/NewTec-GmbH/pyTRLCConverter>`_ |\n"
         assert lines[69] == "    |                |                                                                                                    |\n"
-        assert lines[70] == "    |                | ----                                                                                               |\n"
-        assert lines[71] == "    |                |                                                                                                    |\n"
+        assert lines[70] == "    |                |                                                                                                    |\n"
+        assert lines[71] == "    |                |   Blockquote example                                                                               |\n"
         assert lines[72] == "    |                |                                                                                                    |\n"
-        assert lines[73] == "    |                | `https://github.com/NewTec-GmbH/pyTRLCConverter <https://github.com/NewTec-GmbH/pyTRLCConverter>`_ |\n"
+        assert lines[73] == "    |                |                                                                                                    |\n"
         assert lines[74] == "    |                |                                                                                                    |\n"
-        assert lines[75] == "    |                |                                                                                                    |\n"
-        assert lines[76] == "    |                |   Blockquote example                                                                               |\n"
+        assert lines[75] == "    |                | `Link to pyTRLCConverter <https://github.com/NewTec-GmbH/pyTRLCConverter>`_                        |\n"
+        assert lines[76] == "    |                |                                                                                                    |\n"
         assert lines[77] == "    |                |                                                                                                    |\n"
-        assert lines[78] == "    |                |                                                                                                    |\n"
-        assert lines[79] == "    |                |                                                                                                    |\n"
-        assert lines[80] == "    |                | `Link to pyTRLCConverter <https://github.com/NewTec-GmbH/pyTRLCConverter>`_                        |\n"
-        assert lines[81] == "    |                |                                                                                                    |\n"
-        assert lines[82] == "    |                |                                                                                                    |\n"
-        assert lines[83] == "    |                | +-------+-------+                                                                                  |\n"
-        assert lines[84] == "    |                | | Col 0 | Col 1 |                                                                                  |\n"
-        assert lines[85] == "    |                | +=======+=======+                                                                                  |\n"
-        assert lines[86] == "    |                | | A     | B     |                                                                                  |\n"
-        assert lines[87] == "    |                | +-------+-------+                                                                                  |\n"
-        assert lines[88] == "    |                |                                                                                                    |\n"
-        assert lines[89] == "    |                |                                                                                                    |\n"
-        assert lines[90] == "    |                | ~~I am strikethrough.~~                                                                            |\n"
-        assert lines[91] == "    |                |                                                                                                    |\n"
-        assert lines[92] == "    |                |                                                                                                    |\n"
-        assert lines[93] == "    +----------------+----------------------------------------------------------------------------------------------------+\n"
-        assert lines[94] == "    | link           | N/A                                                                                                |\n"
-        assert lines[95] == "    +----------------+----------------------------------------------------------------------------------------------------+\n"
-        assert lines[96] == "    | index          | N/A                                                                                                |\n"
-        assert lines[97] == "    +----------------+----------------------------------------------------------------------------------------------------+\n"
-        assert lines[98] == "    | precision      | N/A                                                                                                |\n"
-        assert lines[99] == "    +----------------+----------------------------------------------------------------------------------------------------+\n"
-        assert lines[100] == "    | valid          | N/A                                                                                                |\n"
-        assert lines[101] == "    +----------------+----------------------------------------------------------------------------------------------------+\n"
+        assert lines[78] == "    |                | +-------+-------+                                                                                  |\n"
+        assert lines[79] == "    |                | | Col 0 | Col 1 |                                                                                  |\n"
+        assert lines[80] == "    |                | +=======+=======+                                                                                  |\n"
+        assert lines[81] == "    |                | | A     | B     |                                                                                  |\n"
+        assert lines[82] == "    |                | +-------+-------+                                                                                  |\n"
+        assert lines[83] == "    |                |                                                                                                    |\n"
+        assert lines[84] == "    |                |                                                                                                    |\n"
+        assert lines[85] == "    |                | ~~I am strikethrough.~~                                                                            |\n"
+        assert lines[86] == "    |                |                                                                                                    |\n"
+        assert lines[87] == "    |                |                                                                                                    |\n"
+        assert lines[88] == "    +----------------+----------------------------------------------------------------------------------------------------+\n"
+        assert lines[89] == "    | link           | N/A                                                                                                |\n"
+        assert lines[90] == "    +----------------+----------------------------------------------------------------------------------------------------+\n"
+        assert lines[91] == "    | index          | N/A                                                                                                |\n"
+        assert lines[92] == "    +----------------+----------------------------------------------------------------------------------------------------+\n"
+        assert lines[93] == "    | precision      | N/A                                                                                                |\n"
+        assert lines[94] == "    +----------------+----------------------------------------------------------------------------------------------------+\n"
+        assert lines[95] == "    | valid          | N/A                                                                                                |\n"
+        assert lines[96] == "    +----------------+----------------------------------------------------------------------------------------------------+\n"
+
+
+def test_tc_rst_render_plantuml(record_property, capsys, monkeypatch, tmp_path):
+    # lobster-trace: SwTests.tc_rst_render_plantuml
+    """A plantuml fenced code block in a Markdown attribute shall be rendered as a
+    reStructuredText ``.. image::`` directive referencing a generated SVG file copied
+    to the output folder.
+
+    Args:
+        record_property (Any): Used to inject the test case reference into the test results.
+        capsys (Any): Used to capture stdout and stderr.
+        monkeypatch (Any): Used to mock program arguments.
+        tmp_path (Path): Used to create a temporary output directory.
+    """
+    record_property("lobster-trace", "SwTests.tc_rst_render_plantuml")
+
+    monkeypatch.setattr("sys.argv", [
+        "pyTRLCConverter",
+        "--source", "./tests/utils/req.rsl",
+        "--source", "./tests/utils/single_req_description_md.trlc",
+        "--out", str(tmp_path),
+        "--renderCfg", "./tests/utils/renderCfg.json",
+        "rst",
+        "--single-document",
+    ])
+
+    svg_payload = (
+        b'<?xml version="1.0" encoding="UTF-8" standalone="no"?>'
+        b'<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10"/>'
+    )
+
+    with patch("pyTRLCConverter.marko.md2rst_renderer.PlantUML.generate_to_bytes",
+               return_value=svg_payload):
+        main()
+
+    captured = capsys.readouterr()
+    assert captured.err == ""
+
+    rst_content = (tmp_path / RstConverter.OUTPUT_FILE_NAME_DEFAULT).read_text(encoding="utf-8")
+
+    assert ".. image::" in rst_content
+
+    svg_files = [f for f in os.listdir(tmp_path)
+                 if f.startswith("plantuml_") and f.endswith(".svg")]
+    assert len(svg_files) == 1
+    assert svg_files[0] in rst_content
+
+    assert (tmp_path / svg_files[0]).read_bytes() == svg_payload
+
+
+def test_tc_rst_render_plantuml_error(record_property, capsys, monkeypatch, tmp_path):
+    # lobster-trace: SwTests.tc_rst_render_plantuml_error
+    """If PlantUML is not available, a plantuml fenced code block shall be replaced by a
+    [PlantUML error: ...] paragraph instead of failing the conversion.
+
+    Args:
+        record_property (Any): Used to inject the test case reference into the test results.
+        capsys (Any): Used to capture stdout and stderr.
+        monkeypatch (Any): Used to mock program arguments.
+        tmp_path (Path): Used to create a temporary output directory.
+    """
+    record_property("lobster-trace", "SwTests.tc_rst_render_plantuml_error")
+
+    monkeypatch.delenv("PLANTUML", raising=False)
+
+    monkeypatch.setattr("sys.argv", [
+        "pyTRLCConverter",
+        "--source", "./tests/utils/req.rsl",
+        "--source", "./tests/utils/single_req_description_md.trlc",
+        "--out", str(tmp_path),
+        "--renderCfg", "./tests/utils/renderCfg.json",
+        "rst",
+        "--single-document",
+    ])
+
+    main()
+
+    captured = capsys.readouterr()
+    assert captured.err == ""
+
+    rst_content = (tmp_path / RstConverter.OUTPUT_FILE_NAME_DEFAULT).read_text(encoding="utf-8")
+
+    assert "[PlantUML error:" in rst_content
+
+    svg_files = [f for f in os.listdir(tmp_path)
+                 if f.startswith("plantuml_") and f.endswith(".svg")]
+    assert len(svg_files) == 0
+
+# Main *************************************************************************
