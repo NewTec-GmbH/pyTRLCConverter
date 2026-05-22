@@ -339,6 +339,7 @@ section "SW Architecture" {
 
                     * Registers the `rst` output format and options
                     * Prints sections and records in ReStructuredText
+                    * Renders inline PlantUML fenced code blocks as SVG images referenced via `.. image::` directives.
                     """
                 verification_criteria = "Call the tool using the `pyTRLCConverter` frontend with rst output format."
                 satisfies = [
@@ -364,6 +365,7 @@ section "SW Architecture" {
                     SwRequirements.sw_req_rst_sd_top_level_custom,
                     SwRequirements.sw_req_rst_render_md,
                     SwRequirements.sw_req_rst_render_gfm,
+                    SwRequirements.sw_req_rst_render_plantuml,
                     SwRequirements.sw_req_destination_format
                 ]
             }
@@ -426,6 +428,7 @@ section "SW Architecture" {
 
                     * Registers the `docx` output format and options.
                     * Creates sections and records in docx format.
+                    * Renders inline PlantUML fenced code blocks as embedded PNG images.
                     """
                 verification_criteria = "Call the tool using the `pyTRLCConverter` frontend with docx output format."
                 satisfies = [
@@ -437,6 +440,7 @@ section "SW Architecture" {
                     SwRequirements.sw_req_docx_reference,
                     SwRequirements.sw_req_docx_render_md,
                     SwRequirements.sw_req_docx_render_gfm,
+                    SwRequirements.sw_req_docx_render_plantuml,
                     SwRequirements.sw_req_destination_format
                 ]
             }

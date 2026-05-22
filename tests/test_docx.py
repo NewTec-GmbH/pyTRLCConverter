@@ -20,6 +20,7 @@
 # Imports **********************************************************************
 
 import docx
+from unittest.mock import patch
 
 from pyTRLCConverter.__main__ import main
 from pyTRLCConverter.docx_converter import DocxConverter
@@ -437,3 +438,115 @@ def test_tc_docx_render_gfm(record_property, capsys, monkeypatch, tmp_path):
         for p in description_cell.paragraphs
     )
     assert plantuml_rendered, "PlantUML block not rendered (no image and no error string)"
+
+
+def test_tc_docx_render_plantuml(record_property, capsys, monkeypatch, tmp_path):
+    # lobster-trace: SwTests.tc_docx_render_plantuml
+    """A plantuml fenced code block in a Markdown attribute shall be rendered as an embedded
+    PNG image in the docx output.
+
+    Args:
+        record_property (Any): Used to inject the test case reference into the test results.
+        capsys (Any): Used to capture stdout and stderr.
+        monkeypatch (Any): Used to mock program arguments.
+        tmp_path (Any): Used to create a temporary output directory.
+    """
+    record_property("lobster-trace", "SwTests.tc_docx_render_plantuml")
+
+    monkeypatch.setattr("sys.argv", [
+        "pyTRLCConverter",
+        "--source", "./tests/utils/req.rsl",
+        "--source", "./tests/utils/single_req_description_md.trlc",
+        "--out", str(tmp_path),
+        "--renderCfg", "./tests/utils/renderCfgDocxMd.json",
+        "docx",
+        "--template", "./tests/utils/template.docx",
+    ])
+
+    # Provide a minimal valid 1x1 white PNG so python-docx can embed it.
+    png_1x1 = (
+        b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x01\x00\x00\x00\x01'
+        b'\x08\x02\x00\x00\x00\x90wS\xde\x00\x00\x00\x0cIDATx\x9cc\xf8\xff\xff?'
+        b'\x00\x05\xfe\x02\xfe\r\xefF\xb8\x00\x00\x00\x00IEND\xaeB`\x82'
+    )
+
+    def _fake_generate(_fmt, src, _dst):
+        png_path = src.replace(".puml", ".png")
+        with open(png_path, "wb") as f:
+            f.write(png_1x1)
+
+    with patch("pyTRLCConverter.marko.md2docx_renderer.PlantUML.generate",
+               side_effect=_fake_generate):
+        main()
+
+    captured = capsys.readouterr()
+    assert captured.err == ""
+
+    created_docx = docx.Document(docx=str(tmp_path / DocxConverter.OUTPUT_FILE_NAME_DEFAULT))
+    ns = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
+
+    description_cell = None
+    for table in created_docx.tables:
+        for row in table.rows:
+            if row.cells[0].text == "description":
+                description_cell = row.cells[1]
+                break
+        if description_cell is not None:
+            break
+
+    assert description_cell is not None, "description cell not found"
+
+    image_found = any(
+        any(run.element.findall(f'.//{{{ns}}}drawing') for run in p.runs)
+        for p in description_cell.paragraphs
+    )
+    assert image_found, "No embedded image found in docx output for plantuml block"
+
+
+def test_tc_docx_render_plantuml_error(record_property, capsys, monkeypatch, tmp_path):
+    # lobster-trace: SwTests.tc_docx_render_plantuml
+    """If PlantUML is not available, a plantuml fenced code block shall be replaced by a
+    [PlantUML error: ...] paragraph instead of failing the conversion.
+
+    Args:
+        record_property (Any): Used to inject the test case reference into the test results.
+        capsys (Any): Used to capture stdout and stderr.
+        monkeypatch (Any): Used to mock program arguments.
+        tmp_path (Any): Used to create a temporary output directory.
+    """
+    record_property("lobster-trace", "SwTests.tc_docx_render_plantuml")
+
+    monkeypatch.delenv("PLANTUML", raising=False)
+
+    monkeypatch.setattr("sys.argv", [
+        "pyTRLCConverter",
+        "--source", "./tests/utils/req.rsl",
+        "--source", "./tests/utils/single_req_description_md.trlc",
+        "--out", str(tmp_path),
+        "--renderCfg", "./tests/utils/renderCfgDocxMd.json",
+        "docx",
+        "--template", "./tests/utils/template.docx",
+    ])
+
+    main()
+
+    captured = capsys.readouterr()
+    assert captured.err == ""
+
+    created_docx = docx.Document(docx=str(tmp_path / DocxConverter.OUTPUT_FILE_NAME_DEFAULT))
+
+    description_cell = None
+    for table in created_docx.tables:
+        for row in table.rows:
+            if row.cells[0].text == "description":
+                description_cell = row.cells[1]
+                break
+        if description_cell is not None:
+            break
+
+    assert description_cell is not None, "description cell not found"
+
+    error_found = any("[PlantUML error:" in p.text for p in description_cell.paragraphs)
+    assert error_found, "No [PlantUML error:] paragraph found in docx output"
+
+# Main *************************************************************************

@@ -476,6 +476,12 @@ section "SW Requirements" {
                     verification_criteria = "Verify by using strings in Markdown format according to GitHub Flavored Markdown spec, that are converted."
                     valid_status = AbstractRequirements.VALID_STATUS.valid
                 }
+
+                SwReq sw_req_rst_render_plantuml {
+                    description = "The software shall render fenced code blocks tagged `plantuml` inside Markdown (CommonMark or GFM) requirement attributes as SVG images in the reStructuredText output. The generated SVG file shall be copied to the output folder and referenced via a `.. image::` directive. If PlantUML is not available, the block shall be replaced by a `[PlantUML error: ...]` paragraph instead of failing the conversion."
+                    verification_criteria = "Verify that a Markdown requirement attribute containing a fenced ```plantuml``` code block produces a reStructuredText `.. image::` directive referencing an SVG file present in the output folder, and that omitting the PlantUML configuration yields a `[PlantUML error: ...]` paragraph."
+                    valid_status = AbstractRequirements.VALID_STATUS.valid
+                }
             }
         }
 
@@ -679,6 +685,12 @@ section "SW Requirements" {
                 SwReq sw_req_docx_render_gfm {
                     description = "The software shall convert strings in [GitHub Flavored Markdown spec v0.29-gfm](https://github.github.com/gfm) Markdown format to docx format if specified in the render configuration."
                     verification_criteria = "Verify by using strings in Markdown format according to GitHub Flavored Markdown spec, that are converted."
+                    valid_status = AbstractRequirements.VALID_STATUS.valid
+                }
+
+                SwReq sw_req_docx_render_plantuml {
+                    description = "The software shall render fenced code blocks tagged `plantuml` inside Markdown (CommonMark or GFM) requirement attributes as embedded PNG images in the docx output. If PlantUML is not available, the block shall be replaced by a `[PlantUML error: ...]` paragraph instead of failing the conversion."
+                    verification_criteria = "Verify that a Markdown requirement attribute containing a fenced ```plantuml``` code block produces an embedded image in the docx output, and that omitting the PlantUML configuration yields a `[PlantUML error: ...]` paragraph."
                     valid_status = AbstractRequirements.VALID_STATUS.valid
                 }
             }
