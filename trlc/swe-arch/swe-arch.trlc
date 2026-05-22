@@ -297,6 +297,7 @@ section "SW Architecture" {
 
                     * Registers the `markdown` output format and options
                     * Prints sections and records in markdown
+                    * Optionally renders inline PlantUML fenced code blocks as SVG image references when `--render-plantuml` is given.
                     """
                 verification_criteria = "Call the tool using the `pyTRLCConverter` frontend with markdown output format."
                 satisfies = [
@@ -322,6 +323,8 @@ section "SW Architecture" {
                     SwRequirements.sw_req_markdown_top_level_custom,
                     SwRequirements.sw_req_markdown_render_md,
                     SwRequirements.sw_req_markdown_render_gfm,
+                    SwRequirements.sw_req_markdown_render_plantuml,
+                    SwRequirements.sw_req_cli_render_plantuml,
                     SwRequirements.sw_req_markdown_out_file_name_default,
                     SwRequirements.sw_req_destination_format
                 ]

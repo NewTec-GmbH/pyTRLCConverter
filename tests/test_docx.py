@@ -114,7 +114,7 @@ def test_tc_docx_multiple(record_property, capsys, monkeypatch, tmp_path):
     assert created_docx.tables[1].cell(2, 0).text == "link"
     assert created_docx.tables[1].cell(2, 1).text == "Requirements.req_id_5"
 
-    # Check that the hyperlink anchors were correctly set. Cells paragraph needs to hold a hyperlink with orrect anchor.
+    # Check that the hyperlink anchors were correctly set. Cells paragraph needs to hold a hyperlink with correct anchor.
     assert created_docx.tables[0].cell(2, 1).paragraphs[0]._p.hyperlink_lst[0].anchor == "req_id_6" # pylint: disable=protected-access
     assert created_docx.tables[1].cell(2, 1).paragraphs[0]._p.hyperlink_lst[0].anchor == "req_id_5" # pylint: disable=protected-access
 
@@ -194,7 +194,7 @@ def test_tc_docx_file(record_property, capsys, monkeypatch, tmp_path):
     # Check that the first requirement is present.
     assert created_docx.paragraphs[0].text == "req_id_1 (Requirement)"
     # Paragraph 1 is the "from file" paragraph.
-    # Check the secont requirement is present.
+    # Check the second requirement is present.
     assert created_docx.paragraphs[2].text == "Test section"
     assert created_docx.paragraphs[3].text == "req_id_2 (Requirement)"
 

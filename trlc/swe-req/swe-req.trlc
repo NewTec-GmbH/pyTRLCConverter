@@ -41,12 +41,12 @@ section "SW Requirements" {
                 description = "The software shall support the requirement type attribute name translation via a translation file in JSON format."
                 verification_criteria = "Verify by converting one or more TRLC files with a translation file."
                 valid_status = AbstractRequirements.VALID_STATUS.valid
-                note = "Some attribute names may contain underscores or other special characters. These shall be translated to a humand readable names."
+                note = "Some attribute names may contain underscores or other special characters. These shall be translated to a human readable names."
             }
 
             SwReq sw_req_render_configuration {
-                description = "The software shall support to specify the format of a string literal via a render configuration in JSON format."
-                verification_criteria = "Verify by converting one or more TRLC files with a render configuration file."
+                description = "The software shall allow the format of string attributes to be declared per `(package, type, attribute)` pattern via a JSON render configuration file. Supported formats are: `md` (CommonMark), `gfm` (GitHub Flavored Markdown), `rst` (reStructuredText), `xhtml`, and `path` (file-system path to an external image)."
+                verification_criteria = "Verify that each supported format token is correctly recognized and applied when a render configuration file is provided."
                 valid_status = AbstractRequirements.VALID_STATUS.valid
             }
 
@@ -147,7 +147,7 @@ section "SW Requirements" {
                 description = "The software shall support the command line argument '-ex' and '--exclude' multiple times to specify the file(s) for automatic exclusion."
                 verification_criteria = "Verify by calling the software with the argument '--exclude' and check if the file(s) are excluded."
                 valid_status = AbstractRequirements.VALID_STATUS.valid
-                note = "This is necessary in case an defined archtecture element traces to a requirement, but the requirement should not be included in the output."
+                note = "This is necessary in case an defined architecture element traces to a requirement, but the requirement should not be included in the output."
             }
 
             SwReq sw_req_no_prj_spec {
@@ -172,6 +172,13 @@ section "SW Requirements" {
                 description = "The software shall support the command line argument '-rc' and '--renderCfg' to specify the render configuration JSON file."
                 verification_criteria = "Verify by calling the software with the argument '--renderCfg' and check if e.g. Markdown is rendered correctly for string literals."
                 valid_status = AbstractRequirements.VALID_STATUS.valid
+            }
+
+            SwReq sw_req_cli_render_plantuml {
+                description = "The Markdown subcommand shall support the command line argument '--render-plantuml' to opt in to rendering plantuml fenced code blocks as SVG image references."
+                verification_criteria = "Verify by calling the Markdown converter with '--render-plantuml' and check that plantuml blocks are replaced by SVG image references."
+                valid_status = AbstractRequirements.VALID_STATUS.valid
+                derived = [sw_req_markdown_render_plantuml]
             }
         }
 
@@ -324,6 +331,12 @@ section "SW Requirements" {
                     verification_criteria = "Verify by using strings in Markdown format according to GitHub Flavored Markdown spec, which needs no escaping."
                     valid_status = AbstractRequirements.VALID_STATUS.valid
                 }
+
+                SwReq sw_req_markdown_render_plantuml {
+                    description = "When the `--render-plantuml` option is given, the software shall replace fenced code blocks tagged `plantuml` in the Markdown output with SVG image references (`![](plantuml_<hash>.svg)`). The generated SVG file shall be copied to the output folder. If PlantUML is not available, the block shall be replaced by a `[PlantUML error: ...]` paragraph instead of failing the conversion. Without the option, plantuml fenced code blocks shall be passed through unchanged."
+                    verification_criteria = "Verify that with `--render-plantuml`, a plantuml fenced code block is replaced by an SVG image reference and the SVG file is present in the output folder. Verify that without the option the block is passed through unchanged. Verify that an unavailable PlantUML yields a `[PlantUML error: ...]` paragraph."
+                    valid_status = AbstractRequirements.VALID_STATUS.valid
+                }
             }
         }
 
@@ -413,7 +426,7 @@ section "SW Requirements" {
 
             SwReq sw_req_rst_out_folder {
                 description = "The reStructuredText converter shall create the converted files in the specified output folder."
-                verification_criteria = "Verify by specifing an output folder, that doesn't exist. It must exist after the conversion."
+                verification_criteria = "Verify by specifying an output folder, that doesn't exist. It must exist after the conversion."
                 valid_status = AbstractRequirements.VALID_STATUS.valid
             }
 
@@ -716,8 +729,8 @@ section "SW Requirements" {
             }
 
             SwReq sw_req_plantuml {
-                description = "The software shall support the conversion of a PlantUML diagram to a propriate image format."
-                verification_criteria = "Verify by converting a PlantUML diagram into a propriate image format."
+                description = "The software shall support the conversion of a PlantUML diagram to an appropriate image format."
+                verification_criteria = "Verify by converting a PlantUML diagram into an appropriate image format."
                 valid_status = AbstractRequirements.VALID_STATUS.valid
             }
         }

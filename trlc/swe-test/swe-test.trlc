@@ -196,6 +196,18 @@ section "SW Test Cases" {
              when the render configuration is set to "gfm".'''
             verifies = [SwRequirements.sw_req_markdown_render_gfm, SwRequirements.sw_req_markdown_string_format]
         }
+
+        SwTestCase tc_markdown_render_plantuml {
+            description = '''This test case checks whether a fenced ```plantuml``` code block inside a Markdown requirement attribute is
+             replaced by an SVG image reference when --render-plantuml is given, and that the SVG file is written to the output folder.'''
+            verifies = [SwRequirements.sw_req_markdown_render_plantuml, SwRequirements.sw_req_cli_render_plantuml, SwRequirements.sw_req_plantuml]
+        }
+
+        SwTestCase tc_markdown_render_plantuml_error {
+            description = '''This test case checks whether a fenced ```plantuml``` code block is replaced by a [PlantUML error: ...]
+             paragraph in the Markdown output when --render-plantuml is given but PlantUML is not available.'''
+            verifies = [SwRequirements.sw_req_markdown_render_plantuml]
+        }
     }
 
     section "reStructuredText" {

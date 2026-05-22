@@ -20,10 +20,15 @@
 # If not, see <https://www.gnu.org/licenses/>.
 
 # Imports **********************************************************************
+import hashlib
 import os
+import re
+import shutil
+import tempfile
 from typing import List, Optional, Any
 from trlc.ast import Implicit_Null, Record_Object, Record_Reference, String_Literal, Expression
 from pyTRLCConverter.base_converter import BaseConverter
+from pyTRLCConverter.plantuml import PlantUML
 from pyTRLCConverter.ret import Ret
 from pyTRLCConverter.trlc_helper import TrlcAstWalker
 from pyTRLCConverter.logger import log_verbose, log_error
@@ -82,6 +87,9 @@ class MarkdownConverter(BaseConverter):
         # This will hold the information about the current package, type and attribute being processed.
         self._ast_meta_data = None
 
+        self._plantuml_tmp_dir: Optional[tempfile.TemporaryDirectory] = None
+        self._external_files: list = []
+
     @staticmethod
     def get_subcommand() -> str:
         # lobster-trace: SwRequirements.sw_req_markdown
@@ -112,6 +120,8 @@ class MarkdownConverter(BaseConverter):
         # lobster-trace: SwRequirements.sw_req_markdown_top_level_custom
         # lobster-trace: SwRequirements.sw_req_markdown_out_file_name_default
         # lobster-trace: SwRequirements.sw_req_markdown_out_file_name_custom
+        # lobster-trace: SwRequirements.sw_req_markdown_render_plantuml
+        # lobster-trace: SwRequirements.sw_req_cli_render_plantuml
         """
         Register converter specific argument parser.
 
@@ -162,6 +172,15 @@ class MarkdownConverter(BaseConverter):
                 f"(default = {MarkdownConverter.TOP_LEVEL_DEFAULT})."
         )
 
+        BaseConverter._parser.add_argument(
+            "--render-plantuml",
+            action="store_true",
+            required=False,
+            default=False,
+            help="Render plantuml fenced code blocks as SVG image references. "
+                 "Without this option plantuml blocks are passed through unchanged."
+        )
+
     def begin(self) -> Ret:
         # lobster-trace: SwRequirements.sw_req_markdown_single_doc_mode
         # lobster-trace: SwRequirements.sw_req_markdown_sd_top_level
@@ -188,6 +207,12 @@ class MarkdownConverter(BaseConverter):
             self._empty_attribute_value = self._args.empty
 
             log_verbose(f"Empty attribute value: {self._empty_attribute_value}")
+
+            if self._args.render_plantuml is True:
+                # pylint: disable-next=consider-using-with
+                self._plantuml_tmp_dir = tempfile.TemporaryDirectory(
+                    prefix="pyTRLCConverter_markdown_"
+                )
 
             # Single document mode?
             if self._args.single_document is True:
@@ -241,9 +266,12 @@ class MarkdownConverter(BaseConverter):
         # Multiple document mode?
         if self._args.single_document is False:
             assert self._fd is not None
+            out_dir = os.path.dirname(self._fd.name)
             self._fd.close()
             self._fd = None
             self._is_top_level_heading_req = True
+            self._copy_external_files(out_dir)
+            self._external_files = []
 
         return Ret.OK
 
@@ -307,8 +335,14 @@ class MarkdownConverter(BaseConverter):
         # Single document mode?
         if self._args.single_document is True:
             assert self._fd is not None
+            out_dir = os.path.dirname(self._fd.name)
             self._fd.close()
             self._fd = None
+            self._copy_external_files(out_dir)
+
+        if self._plantuml_tmp_dir is not None:
+            self._plantuml_tmp_dir.cleanup()
+            self._plantuml_tmp_dir = None
 
         return Ret.OK
 
@@ -538,7 +572,8 @@ class MarkdownConverter(BaseConverter):
         # lobster-trace: SwRequirements.sw_req_markdown_string_format
         # lobster-trace: SwRequirements.sw_req_markdown_render_md
         # lobster-trace: SwRequirements.sw_req_markdown_render_gfm
-        """Render the attribute value depened on its format.
+        # lobster-trace: SwRequirements.sw_req_markdown_render_plantuml
+        """Render the attribute value depending on its format.
 
         Args:
             package_name (str): The package name.
@@ -558,7 +593,66 @@ class MarkdownConverter(BaseConverter):
             result = self.markdown_escape(attribute_value)
             result = self.markdown_lf2soft_return(result)
 
+        if self._args.render_plantuml is True:
+            result = self._render_plantuml_blocks(result)
+
         return result
+
+    def _render_plantuml_blocks(self, text: str) -> str:
+        # lobster-trace: SwRequirements.sw_req_markdown_render_plantuml
+        # lobster-trace: SwRequirements.sw_req_plantuml
+        """Replace plantuml fenced code blocks with SVG image references.
+
+        Each ```plantuml ... ``` block is replaced by ``![](plantuml_<hash>.svg)``.
+        The SVG is written to the temporary image directory and registered in
+        ``_external_files`` for copying to the output folder. On failure an
+        inline ``[PlantUML error: ...]`` text is emitted instead.
+
+        Args:
+            text (str): Markdown text that may contain plantuml fenced blocks.
+
+        Returns:
+            str: Text with plantuml blocks replaced.
+        """
+        assert self._plantuml_tmp_dir is not None
+
+        def _replace(match: re.Match) -> str:
+            diagram_source = match.group(1)
+            try:
+                plantuml = PlantUML()
+                svg_bytes = plantuml.generate_to_bytes("svg", diagram_source)
+                digest = hashlib.sha1(diagram_source.encode("utf-8")).hexdigest()[:12]
+                local_name = f"plantuml_{digest}.svg"
+                svg_path = os.path.join(self._plantuml_tmp_dir.name, local_name)
+                with open(svg_path, "wb") as svg_file:
+                    svg_file.write(svg_bytes)
+                self._external_files.append((svg_path, local_name))
+                return f"![]({local_name})"
+            except (FileNotFoundError, OSError) as exc:
+                return f"[PlantUML error: {exc}]"
+
+        return re.sub(r"```plantuml\n(.*?)```", _replace, text, flags=re.DOTALL)
+
+    def _copy_external_files(self, dest_dir: str) -> None:
+        # lobster-trace: SwRequirements.sw_req_markdown_render_plantuml
+        """Copy all collected external files to the given destination directory.
+
+        Args:
+            dest_dir (str): Destination directory path.
+        """
+        copied_sources = set()
+
+        for source_path, local_name in self._external_files:
+            if source_path in copied_sources:
+                continue
+
+            dest_path = os.path.join(dest_dir, local_name)
+
+            try:
+                shutil.copy2(source_path, dest_path)
+                copied_sources.add(source_path)
+            except (OSError, IOError) as exc:
+                log_error(f"Failed to copy external file '{source_path}': {exc}", False)
 
     # pylint: disable-next=too-many-locals
     def _convert_record_object(self, record: Record_Object, level: int, translation: Optional[dict]) -> Ret:

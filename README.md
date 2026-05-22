@@ -105,15 +105,18 @@ The converter supports additional arguments that are shown by adding the --help 
 ```bash
 pyTRLCConverter markdown --help
 
-usage: pyTRLCConverter markdown [-h] [-n NAME] [-sd] [-tl TOP_LEVEL]
+usage: pyTRLCConverter markdown [-h] [-e EMPTY] [-n NAME] [-sd] [-tl TOP_LEVEL] [--render-plantuml]
 
 options:
   -h, --help            show this help message and exit
+  -e EMPTY, --empty EMPTY
+                        Every attribute value which is empty will output the string (default = N/A).
   -n NAME, --name NAME  Name of the generated output file inside the output folder (default = output.md) in case a single document is generated.
   -sd, --single-document
                         Generate a single document instead of multiple files. The default is to generate multiple files.
   -tl TOP_LEVEL, --top-level TOP_LEVEL
-                        Name of the top level heading, required in single document mode. (default = Specification)
+                        Name of the top level heading, required in single document mode (default = Specification).
+  --render-plantuml     Render plantuml fenced code blocks as SVG image references. Without this option plantuml blocks are passed through unchanged.
 ```
 
 More examples are shown in the [examples folder](./examples/).
@@ -189,17 +192,18 @@ The converter supports additional arguments that are shown by adding the --help 
 ```bash
 pyTRLCConverter reqif --help
 
-usage: pyTRLCConverter reqif [-h] [-e EMPTY] [-n NAME] [-sd] [-tl TOP_LEVEL]
+usage: pyTRLCConverter reqif [-h] [-e EMPTY] [-n NAME] [-sd] [-tl TOP_LEVEL] [--reqifz]
 
 options:
   -h, --help            show this help message and exit
   -e EMPTY, --empty EMPTY
-                        Every attribute value which is empty will output the string (default = N/A).
+                        Every attribute value which is empty will output the string (default = ).
   -n NAME, --name NAME  Name of the generated output file inside the output folder (default = output.reqif) in case a single document is generated.
   -sd, --single-document
                         Generate a single document instead of multiple files. The default is to generate multiple files.
   -tl TOP_LEVEL, --top-level TOP_LEVEL
-                        Name of the top level section, required in single document mode (default = Specification).
+                        Name of the top level heading, required in single document mode (default = Specification).
+  --reqifz              Archive the ReqIF output as a ZIP file with the .reqifz extension. The default is to write plain .reqif files.
 ```
 
 Markdown-formatted requirement attributes configured via `--renderCfg` are automatically converted to ReqIF-compatible XHTML content.
@@ -271,15 +275,17 @@ Two Markdown specifications are supported:
 
 Supported by the formats:
 
-| Format           | CommonMark               | GitHub Flavored          | XHTML |
-| ---------------- | ------------------------ | ------------------------ | ----- |
-| docx             | X                        | X                        | -     |
-| dump             | Output as string literal | Output as string literal | -     |
-| markdown         | X                        | X                        | -     |
-| reStructuredText | X                        | X                        | -     |
-| reqif            | X                        | X                        | X     |
+| Format           | CommonMark               | GitHub Flavored          | XHTML | Inline PlantUML            |
+| ---------------- | ------------------------ | ------------------------ | ----- | -------------------------- |
+| docx             | X                        | X                        | -     | Embedded PNG               |
+| dump             | Output as string literal | Output as string literal | -     | -                          |
+| markdown         | X                        | X                        | -     | SVG (opt-in, see below)    |
+| reStructuredText | X                        | X                        | -     | SVG via `.. image::`       |
+| reqif            | X                        | X                        | X     | SVG via `<object>` element |
 
 The `reqif` format additionally supports `"xhtml"` as a format specifier in the render configuration. When set, the attribute value is treated as already-valid XHTML and is embedded in the ReqIF output without any conversion. This allows requirement authors to write raw XHTML markup directly in their TRLC string attributes.
+
+For the `markdown` format, inline PlantUML rendering is opt-in: pass `--render-plantuml` to the `markdown` subcommand to replace ```` ```plantuml```` blocks with SVG image references. Without this flag, PlantUML blocks are passed through unchanged — useful when the Markdown is consumed by a renderer that supports PlantUML natively (e.g. GitLab, some Sphinx extensions).
 
 Configuration example:
 
@@ -294,7 +300,7 @@ Configuration example:
 }
 ```
 
-The package, type and attribute supports regex which makes it easier to set the format for several types. Currently **only Markdown** is supported as format. Always the first match wins.
+The package, type and attribute fields support regex, which makes it easier to set the format for several types. Always the first match wins.
 
 Use the ```--renderCfg <RENDER-CFG-FILE>``` program argument to specify the configuration file.
 
@@ -319,7 +325,7 @@ Activate the support by setting the ```PLANTUML``` environment variable to eithe
 
 ## Examples
 
-Check out the all the [Examples](./examples).
+Check out the all the [Examples](./examples/README.md).
 
 ## Compile into an executable
 

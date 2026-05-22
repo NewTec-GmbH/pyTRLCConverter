@@ -21,6 +21,7 @@
 import os
 from argparse import Namespace
 from collections import namedtuple
+from unittest.mock import patch
 
 from pyTRLCConverter.__main__ import main
 from pyTRLCConverter.markdown_converter import MarkdownConverter
@@ -834,3 +835,93 @@ https://github.com/NewTec-GmbH/pyTRLCConverter
                                      ["index", "N/A"],
                                      ["precision", "N/A"],
                                      ["valid", "N/A"]])
+
+
+def test_tc_markdown_render_plantuml(record_property, capsys, monkeypatch, tmp_path):
+    # lobster-trace: SwTests.tc_markdown_render_plantuml
+    """A plantuml fenced code block shall be replaced by an SVG image reference when
+    --render-plantuml is given, and the SVG file shall be written to the output folder.
+
+    Args:
+        record_property (Any): Used to inject the test case reference into the test results.
+        capsys (Any): Used to capture stdout and stderr.
+        monkeypatch (Any): Used to mock program arguments.
+        tmp_path (Any): Used to create a temporary output directory.
+    """
+    record_property("lobster-trace", "SwTests.tc_markdown_render_plantuml")
+
+    monkeypatch.setattr("sys.argv", [
+        "pyTRLCConverter",
+        "--source", "./tests/utils/req.rsl",
+        "--source", "./tests/utils/single_req_description_md.trlc",
+        "--out", str(tmp_path),
+        "--renderCfg", "./tests/utils/renderCfg.json",
+        "markdown",
+        "--single-document",
+        "--render-plantuml",
+    ])
+
+    svg_payload = (
+        b'<?xml version="1.0" encoding="UTF-8" standalone="no"?>'
+        b'<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10"/>'
+    )
+    with patch("pyTRLCConverter.markdown_converter.PlantUML.generate_to_bytes",
+               return_value=svg_payload):
+        main()
+
+    captured = capsys.readouterr()
+    assert captured.err == ""
+
+    md_content = (tmp_path / MarkdownConverter.OUTPUT_FILE_NAME_DEFAULT).read_text(encoding="utf-8")
+
+    assert "![](plantuml_" in md_content
+    assert "```plantuml" not in md_content
+
+    svg_files = [f for f in os.listdir(tmp_path)
+                 if f.startswith("plantuml_") and f.endswith(".svg")]
+    assert len(svg_files) == 1
+    assert svg_files[0] in md_content
+    assert (tmp_path / svg_files[0]).read_bytes() == svg_payload
+
+
+def test_tc_markdown_render_plantuml_error(record_property, capsys, monkeypatch, tmp_path):
+    # lobster-trace: SwTests.tc_markdown_render_plantuml_error
+    """When --render-plantuml is given but PlantUML is not available, a plantuml fenced
+    code block shall be replaced by a [PlantUML error: ...] paragraph.
+
+    Args:
+        record_property (Any): Used to inject the test case reference into the test results.
+        capsys (Any): Used to capture stdout and stderr.
+        monkeypatch (Any): Used to mock program arguments.
+        tmp_path (Any): Used to create a temporary output directory.
+    """
+    record_property("lobster-trace", "SwTests.tc_markdown_render_plantuml_error")
+
+    monkeypatch.delenv("PLANTUML", raising=False)
+
+    monkeypatch.setattr("sys.argv", [
+        "pyTRLCConverter",
+        "--source", "./tests/utils/req.rsl",
+        "--source", "./tests/utils/single_req_description_md.trlc",
+        "--out", str(tmp_path),
+        "--renderCfg", "./tests/utils/renderCfg.json",
+        "markdown",
+        "--single-document",
+        "--render-plantuml",
+    ])
+
+    main()
+
+    captured = capsys.readouterr()
+    assert captured.err == ""
+
+    md_content = (tmp_path / MarkdownConverter.OUTPUT_FILE_NAME_DEFAULT).read_text(encoding="utf-8")
+
+    assert "[PlantUML error:" in md_content
+    assert "```plantuml" not in md_content
+
+    svg_files = [f for f in os.listdir(tmp_path)
+                 if f.startswith("plantuml_") and f.endswith(".svg")]
+    assert len(svg_files) == 0
+
+# Main *************************************************************************
