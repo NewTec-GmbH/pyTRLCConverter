@@ -41,6 +41,8 @@ jobs:
     env:
       DOCS_VERSION: ${{ github.event_name == 'release' && github.event.release.tag_name || github.ref_name == 'main' && 'latest' || github.ref_name == 'develop' && 'unstable' || github.ref_name }}
       DOCS_VERSIONS: unstable
+      PLANTUML: ${{ vars.PLANTUML_SERVER_URL }}
+      PLANTUML_VERIFY_SSL: "false"
 
     # Steps represent a sequence of tasks that will be executed as part of the job.
     steps:
