@@ -382,6 +382,7 @@ section "SW Architecture" {
                     * Creates sections and records in ReqIF format.
                     * Converts configured CommonMark and GFM fields into ReqIF XHTML.
                     * Passes configured XHTML fields through to ReqIF XHTML without modification.
+                    * Renders inline PlantUML fenced code blocks as embedded SVG images in XHTML attributes.
                     * Converts TRLC enumeration type attributes to DATATYPE-DEFINITION-ENUMERATION with 0-based consecutive ENUM-VALUE keys in RSL declaration order.
                     * Omits optional enumeration attributes with null value from the generated spec-object.
                     * Converts TRLC record reference attributes to ReqIF SPEC-RELATION entries.
@@ -403,6 +404,7 @@ section "SW Architecture" {
                     SwRequirements.sw_req_reqif_render_xhtml,
                     SwRequirements.sw_req_reqif_render_path,
                     SwRequirements.sw_req_reqif_render_table_options,
+                    SwRequirements.sw_req_reqif_render_plantuml,
                     SwRequirements.sw_req_reqif_enum,
                     SwRequirements.sw_req_reqif_enum_key_order,
                     SwRequirements.sw_req_reqif_enum_null,

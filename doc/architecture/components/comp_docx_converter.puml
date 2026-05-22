@@ -37,14 +37,20 @@ package "Dependencies" {
         + render(ast: Any) : str
     }
 
-    class Gfm2DocxRenderer {
-        + render(ast: Any) : str
+    class Gfm2DocxRenderer extends Md2DocxRenderer {
     }
 
     class marko <<(M ,lightblue) module>> {
     }
     note bottom of marko
         Markdown Parser
+    end note
+
+    class PlantUML {
+    }
+    note bottom of PlantUML
+        Renders inline ```plantuml```
+        fenced code blocks to PNG.
     end note
 }
 
@@ -53,5 +59,6 @@ DocxConverter ..> docx
 DocxConverter ..> Md2DocxRenderer
 DocxConverter ..> Gfm2DocxRenderer
 DocxConverter ..> marko
+Md2DocxRenderer ..> PlantUML
 
 @enduml

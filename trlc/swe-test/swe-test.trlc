@@ -360,6 +360,20 @@ section "SW Test Cases" {
             verifies = [SwRequirements.sw_req_reqif_render_path]
         }
 
+        SwTestCase tc_reqif_render_plantuml {
+            description = '''This test case checks whether a fenced ```plantuml``` code block inside a Markdown requirement attribute is
+             rendered as an XHTML <object type="image/svg+xml"> element in the generated ReqIF output and that the referenced SVG file
+             is written to the output folder.'''
+            verifies = [SwRequirements.sw_req_reqif_render_plantuml, SwRequirements.sw_req_plantuml]
+        }
+
+        SwTestCase tc_reqif_render_plantuml_error {
+            description = '''This test case checks whether a fenced ```plantuml``` code block is replaced by a [PlantUML error: ...]
+             paragraph in the generated ReqIF output when the PLANTUML environment variable is not configured, so the conversion
+             does not fail.'''
+            verifies = [SwRequirements.sw_req_reqif_render_plantuml]
+        }
+
         SwTestCase tc_reqif_enum {
             description = "This test case checks whether a TRLC enumeration attribute is converted to a DATATYPE-DEFINITION-ENUMERATION with 0-based consecutive ENUM-VALUE keys and emitted as ATTRIBUTE-VALUE-ENUMERATION in the spec-object."
             verifies = [SwRequirements.sw_req_reqif_enum, SwRequirements.sw_req_reqif_enum_key_order]

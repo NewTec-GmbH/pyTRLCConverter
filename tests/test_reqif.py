@@ -20,6 +20,7 @@
 import os
 import zipfile
 from pathlib import Path
+from unittest.mock import patch
 from pyTRLCConverter.__main__ import main
 from pyTRLCConverter.reqif_converter import ReqifConverter
 from tests.reqif_test_utils import (
@@ -548,5 +549,121 @@ def test_tc_reqif_reqifz_multiple_doc(record_property, capsys, monkeypatch, tmp_
             names = zf.namelist()
             assert len(names) == 1
             assert names[0] == doc_name + ".reqif"
+
+
+def test_tc_reqif_render_plantuml(record_property, capsys, monkeypatch, tmp_path: Path):
+    # lobster-trace: SwTests.tc_reqif_render_plantuml
+    """A plantuml fenced code block in a Markdown attribute shall be rendered as an XHTML <object>
+    referencing a generated SVG file copied to the output folder.
+
+    Args:
+        record_property (Any): Used to inject the test case reference into the test results.
+        capsys (Any): Used to capture stdout and stderr.
+        monkeypatch (Any): Used to mock program arguments.
+        tmp_path (Path): Used to create a temporary output directory.
+    """
+    record_property("lobster-trace", "SwTests.tc_reqif_render_plantuml")
+
+    monkeypatch.setattr("sys.argv", [
+        "pyTRLCConverter",
+        "--source", "./tests/utils/req.rsl",
+        "--source", "./tests/utils/single_req_description_md.trlc",
+        "--out", str(tmp_path),
+        "--renderCfg", "./tests/utils/renderCfg.json",
+        "reqif",
+        "--single-document"
+    ])
+
+    # Mock PlantUML so the test does not depend on Java or a PlantUML server being
+    # available in the test environment.
+    svg_payload = (
+        b'<?xml version="1.0" encoding="UTF-8" standalone="no"?>'
+        b'<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10"/>'
+    )
+    with patch("pyTRLCConverter.marko.md2reqif_renderer.PlantUML.generate_to_bytes",
+               return_value=svg_payload):
+        main()
+
+    captured = capsys.readouterr()
+    assert captured.err == ""
+
+    output_file = os.path.join(tmp_path, ReqifConverter.OUTPUT_FILE_NAME_DEFAULT)
+    bundle = _parse_reqif(output_file)
+
+    spec_object = _find_spec_object_by_long_name(bundle, "req_id_md")
+    assert spec_object is not None
+
+    description_identifier = _find_attribute_identifier(bundle, "description")
+    assert description_identifier is not None
+
+    description_attribute = _find_attribute_by_identifier(spec_object, description_identifier)
+    assert description_attribute is not None
+
+    # The XHTML must reference the generated SVG via an <object> element.
+    assert 'type="image/svg+xml"' in description_attribute.value
+    assert '<object' in description_attribute.value
+
+    # Exactly one SVG file must have been copied to the output folder. Its
+    # local name is content-addressed, so we just verify any plantuml_*.svg
+    # exists and is referenced from the XHTML.
+    svg_files = [name for name in os.listdir(tmp_path)
+                 if name.startswith("plantuml_") and name.endswith(".svg")]
+    assert len(svg_files) == 1
+    assert f'data="{svg_files[0]}"' in description_attribute.value
+
+    # And the file on disk must contain the mocked SVG payload.
+    with open(os.path.join(tmp_path, svg_files[0]), "rb") as svg_file:
+        assert svg_file.read() == svg_payload
+
+
+def test_tc_reqif_render_plantuml_error(record_property, capsys, monkeypatch, tmp_path: Path):
+    # lobster-trace: SwTests.tc_reqif_render_plantuml_error
+    """If PlantUML is not available, a plantuml fenced code block shall be replaced by a
+    [PlantUML error: ...] paragraph instead of failing the conversion.
+
+    Args:
+        record_property (Any): Used to inject the test case reference into the test results.
+        capsys (Any): Used to capture stdout and stderr.
+        monkeypatch (Any): Used to mock program arguments.
+        tmp_path (Path): Used to create a temporary output directory.
+    """
+    record_property("lobster-trace", "SwTests.tc_reqif_render_plantuml_error")
+
+    # Ensure PlantUML is not configured for this test run.
+    monkeypatch.delenv("PLANTUML", raising=False)
+
+    monkeypatch.setattr("sys.argv", [
+        "pyTRLCConverter",
+        "--source", "./tests/utils/req.rsl",
+        "--source", "./tests/utils/single_req_description_md.trlc",
+        "--out", str(tmp_path),
+        "--renderCfg", "./tests/utils/renderCfg.json",
+        "reqif",
+        "--single-document"
+    ])
+
+    main()
+
+    captured = capsys.readouterr()
+    assert captured.err == ""
+
+    output_file = os.path.join(tmp_path, ReqifConverter.OUTPUT_FILE_NAME_DEFAULT)
+    bundle = _parse_reqif(output_file)
+
+    spec_object = _find_spec_object_by_long_name(bundle, "req_id_md")
+    assert spec_object is not None
+
+    description_identifier = _find_attribute_identifier(bundle, "description")
+    assert description_identifier is not None
+
+    description_attribute = _find_attribute_by_identifier(spec_object, description_identifier)
+    assert description_attribute is not None
+
+    # The plantuml block must be replaced by a [PlantUML error: ...] paragraph.
+    assert "[PlantUML error:" in description_attribute.value
+    # And no SVG file may have been written to the output folder.
+    svg_files = [name for name in os.listdir(tmp_path)
+                 if name.startswith("plantuml_") and name.endswith(".svg")]
+    assert len(svg_files) == 0
 
 # Main *************************************************************************

@@ -617,6 +617,12 @@ section "SW Requirements" {
                     verification_criteria = "Verify that a GFM attribute configured with `tableOptions` containing `border` and `headingStyle` generates a ReqIF XHTML `<table>` with the specified `style` and `<th>` cells with the specified `style`."
                     valid_status = AbstractRequirements.VALID_STATUS.valid
                 }
+
+                SwReq sw_req_reqif_render_plantuml {
+                    description = "The software shall render fenced code blocks tagged `plantuml` inside Markdown (CommonMark or GFM) requirement attributes as embedded SVG images in the ReqIF XHTML output. The generated SVG file shall be copied to the output folder (or bundled into the .reqifz archive) and referenced from the XHTML via an `<object>` element with `type=\"image/svg+xml\"` and `data` set to the SVG file's local name. If PlantUML is not available, the block shall be replaced by a `[PlantUML error: ...]` paragraph instead of failing the conversion."
+                    verification_criteria = "Verify that a Markdown requirement attribute containing a fenced ```plantuml``` code block produces a ReqIF XHTML `<object type=\"image/svg+xml\">` element, that the referenced SVG file is present in the output folder, and that omitting the PlantUML configuration yields a `[PlantUML error: ...]` paragraph."
+                    valid_status = AbstractRequirements.VALID_STATUS.valid
+                }
             }
         }
 

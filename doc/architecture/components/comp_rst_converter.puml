@@ -37,14 +37,20 @@ package "Dependencies" {
         + render(ast: Any) : str
     }
 
-    class Gfm2RstRenderer {
-        + render(ast: Any) : str
+    class Gfm2RstRenderer extends Md2RstRenderer {
     }
 
     class marko <<(M ,lightblue) module>> {
     }
     note bottom of marko
         Markdown Parser
+    end note
+
+    class PlantUML {
+    }
+    note bottom of PlantUML
+        Renders inline ```plantuml```
+        fenced code blocks to SVG.
     end note
 }
 
@@ -54,5 +60,6 @@ RstConverter ..> TrlcAstWalker
 RstConverter ..> Md2RstRenderer
 RstConverter ..> Gfm2RstRenderer
 RstConverter ..> marko
+Md2RstRenderer ..> PlantUML
 
 @enduml
