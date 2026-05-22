@@ -1,5 +1,6 @@
 """Test the reStructuredText requirements.
 """
+# pylint: disable=too-many-lines
 
 # pyTRLCConverter - A tool to convert TRLC files to specific formats.
 # Copyright (c) 2024 - 2026 NewTec GmbH

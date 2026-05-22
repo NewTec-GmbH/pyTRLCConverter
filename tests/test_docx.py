@@ -19,8 +19,9 @@
 
 # Imports **********************************************************************
 
-import docx
 from unittest.mock import patch
+
+import docx
 
 from pyTRLCConverter.__main__ import main
 from pyTRLCConverter.docx_converter import DocxConverter
@@ -114,7 +115,8 @@ def test_tc_docx_multiple(record_property, capsys, monkeypatch, tmp_path):
     assert created_docx.tables[1].cell(2, 0).text == "link"
     assert created_docx.tables[1].cell(2, 1).text == "Requirements.req_id_5"
 
-    # Check that the hyperlink anchors were correctly set. Cells paragraph needs to hold a hyperlink with correct anchor.
+    # Check that the hyperlink anchors were correctly set.
+    # Cells paragraph needs to hold a hyperlink with correct anchor.
     assert created_docx.tables[0].cell(2, 1).paragraphs[0]._p.hyperlink_lst[0].anchor == "req_id_6" # pylint: disable=protected-access
     assert created_docx.tables[1].cell(2, 1).paragraphs[0]._p.hyperlink_lst[0].anchor == "req_id_5" # pylint: disable=protected-access
 
