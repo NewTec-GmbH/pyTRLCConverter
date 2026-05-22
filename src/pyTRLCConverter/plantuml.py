@@ -40,6 +40,7 @@ from pyTRLCConverter.logger import log_verbose, log_error
 BASE64_ENCODE_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
 PLANTUML_ENCODE_CHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_"
 PLANTUML_ENV_VAR = "PLANTUML"
+PLANTUML_VERIFY_SSL_ENV_VAR = "PLANTUML_VERIFY_SSL"
 
 # Classes **********************************************************************
 
@@ -186,7 +187,7 @@ class PlantUML():
             url = self._make_server_url(diagram_type, tmp.name)
 
         log_verbose(f"Sending GET request {url}")
-        response = requests.get(url, timeout=10)
+        response = requests.get(url, timeout=10, verify=self._verify_ssl)
 
         if response.status_code != 200:
             raise requests.exceptions.RequestException(
