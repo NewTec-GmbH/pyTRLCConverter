@@ -18,11 +18,14 @@ rem If not, see <https://www.gnu.org/licenses/>.
 
 set LOCAL_DIR=%~dp0
 if "%PLANTUML%" == "" (
+    set USE_LOCAL="true"
     set PLANTUML=%LOCAL_DIR%plantuml.jar
 )
 
-if not exist "%PLANTUML%" (
-    echo "%PLANTUML%"
-    echo Download PlantUML java program...
-    powershell -Command "Invoke-WebRequest https://github.com/plantuml/plantuml/releases/download/v1.2026.1/plantuml-1.2026.1.jar -OutFile %PLANTUML%"
+if "%USE_LOCAL%"=="true" (
+    if not exist "%PLANTUML%" (
+        echo "%PLANTUML%"
+        echo Download PlantUML java program...
+        powershell -Command "Invoke-WebRequest https://github.com/plantuml/plantuml/releases/download/v1.2026.1/plantuml-1.2026.1.jar -OutFile %PLANTUML%"
+    )
 )
