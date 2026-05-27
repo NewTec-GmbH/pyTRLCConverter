@@ -16,10 +16,13 @@ rem
 rem You should have received a copy of the GNU General Public License along with pyTRLCConverter.
 rem If not, see <https://www.gnu.org/licenses/>.
 
+set LOCAL_DIR=%~dp0
 if "%PLANTUML%" == "" (
-    set LOCAL_DIR=%~dp0
+    set USE_LOCAL="true"
     set PLANTUML=%LOCAL_DIR%plantuml.jar
+)
 
+if defined USE_LOCAL (
     if not exist "%PLANTUML%" (
         echo Download PlantUML java program...
         powershell -Command "Invoke-WebRequest https://github.com/plantuml/plantuml/releases/download/v1.2026.1/plantuml-1.2026.1.jar -OutFile %PLANTUML%"
