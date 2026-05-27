@@ -22,9 +22,8 @@ if "%PLANTUML%" == "" (
     set PLANTUML=%LOCAL_DIR%plantuml.jar
 )
 
-if "%USE_LOCAL%"=="true" (
+if defined USE_LOCAL (
     if not exist "%PLANTUML%" (
-        echo "%PLANTUML%"
         echo Download PlantUML java program...
         powershell -Command "Invoke-WebRequest https://github.com/plantuml/plantuml/releases/download/v1.2026.1/plantuml-1.2026.1.jar -OutFile %PLANTUML%"
     )
