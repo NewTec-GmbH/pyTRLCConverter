@@ -566,6 +566,10 @@ pending record.</p>
 <dd><p>Convert Markdown text to an XHTML-wrapped string using marko.</p>
 <p>If <code class="docutils literal notranslate"><span class="pre">table_options</span></code> is provided and non-empty, table styling is applied to the
 generated HTML before wrapping (see <a class="reference internal" href="#pyTRLCConverter.reqif_converter.ReqifConverter._apply_table_options" title="pyTRLCConverter.reqif_converter.ReqifConverter._apply_table_options"><code class="xref py py-meth docutils literal notranslate"><span class="pre">_apply_table_options()</span></code></a>).</p>
+<p>Fenced code blocks tagged <code class="docutils literal notranslate"><span class="pre">plantuml</span></code> are rendered as embedded SVG
+images via <code class="xref py py-class docutils literal notranslate"><span class="pre">Md2ReqifRenderer</span></code> / <code class="xref py py-class docutils literal notranslate"><span class="pre">Gfm2ReqifRenderer</span></code>; the
+generated images are registered in <code class="docutils literal notranslate"><span class="pre">self._external_files</span></code> so they are
+copied next to the ReqIF document.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -1095,6 +1099,11 @@ section without a preceding record emits a warning and is skipped.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter._pending_relations">
 <span class="sig-name descname"><span class="pre">_pending_relations</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></span><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter._pending_relations" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter._plantuml_tmp_dir">
+<span class="sig-name descname"><span class="pre">_plantuml_tmp_dir</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">tempfile.TemporaryDirectory</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter._plantuml_tmp_dir" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">

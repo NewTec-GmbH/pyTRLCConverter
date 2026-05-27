@@ -121,14 +121,16 @@ Module Contents
 
 
 
-   .. py:method:: _make_server_url(diagram_type: str, diagram_path: str) -> str
+   .. py:method:: _make_server_url(diagram_type: str, diagram_source: str, source_is_file: bool = True) -> str
 
       Generate a PlantUML server GET URL from a diagram data file.
 
       :param diagram_type: Diagram type, e.g. svg. See PlantUML -t options.
       :type diagram_type: str
-      :param diagram_path: Path to the PlantUML diagram.
-      :type diagram_path: str
+      :param diagram_source: Path to the PlantUML diagram or content of PlantUML diagram.
+      :type diagram_source: str
+      :param source_is_file: True if diagram_source points to a file, False if it is the diagram content.
+      :type source_is_file: bool
 
       :raises FileNotFoundError: PlantUML diagram file not found.
 

@@ -775,6 +775,52 @@ when the render configuration is set to “gfm”.</p></td>
 </tbody>
 </table>
 </div>
+<div class="admonition-tc-markdown-render-plantuml admonition" id="swe-test-rst-tc-markdown-render-plantuml">
+<p class="admonition-title">tc_markdown_render_plantuml</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether a fenced ```plantuml``` code block inside a Markdown requirement attribute is
+replaced by an SVG image reference when --render-plantuml is given, and that the SVG file is written to the output folder.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-markdown-render-plantuml"><span class="std std-ref">SwRequirements.sw_req_markdown_render_plantuml</span></a></p></li>
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-cli-render-plantuml"><span class="std std-ref">SwRequirements.sw_req_cli_render_plantuml</span></a></p></li>
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-plantuml"><span class="std std-ref">SwRequirements.sw_req_plantuml</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-markdown-render-plantuml-error admonition" id="swe-test-rst-tc-markdown-render-plantuml-error">
+<p class="admonition-title">tc_markdown_render_plantuml_error</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether a fenced ```plantuml``` code block is replaced by a [PlantUML error: ...]
+paragraph in the Markdown output when --render-plantuml is given but PlantUML is not available.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-markdown-render-plantuml"><span class="std std-ref">SwRequirements.sw_req_markdown_render_plantuml</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 </section>
 <section id="restructuredtext">
 <span id="swe-test-rst-restructuredtext"></span><h2>reStructuredText<a class="headerlink" href="#restructuredtext" title="Link to this heading"></a></h2>
@@ -1132,6 +1178,52 @@ when the render configuration is set to “gfm”.</p></td>
 </tbody>
 </table>
 </div>
+<div class="admonition-tc-rst-render-plantuml admonition" id="swe-test-rst-tc-rst-render-plantuml">
+<p class="admonition-title">tc_rst_render_plantuml</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether a fenced ```plantuml``` code block inside a Markdown requirement attribute is
+rendered as a reStructuredText ``.. image::`` directive referencing an SVG file written to the output folder.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-rst-render-plantuml"><span class="std std-ref">SwRequirements.sw_req_rst_render_plantuml</span></a></p></li>
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-plantuml"><span class="std std-ref">SwRequirements.sw_req_plantuml</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-rst-render-plantuml-error admonition" id="swe-test-rst-tc-rst-render-plantuml-error">
+<p class="admonition-title">tc_rst_render_plantuml_error</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether a fenced ```plantuml``` code block is replaced by a [PlantUML error: ...]
+paragraph in the generated RST output when the PLANTUML environment variable is not configured, so the conversion
+does not fail.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-rst-render-plantuml"><span class="std std-ref">SwRequirements.sw_req_rst_render_plantuml</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 </section>
 <section id="reqif">
 <span id="swe-test-rst-reqif"></span><h2>ReqIF<a class="headerlink" href="#reqif" title="Link to this heading"></a></h2>
@@ -1332,6 +1424,53 @@ correct MIME type and local file reference, and that the referenced file is copi
 <tr class="row-odd"><td><p>Verifies</p></td>
 <td><ul class="simple">
 <li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-reqif-render-path"><span class="std std-ref">SwRequirements.sw_req_reqif_render_path</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-reqif-render-plantuml admonition" id="swe-test-rst-tc-reqif-render-plantuml">
+<p class="admonition-title">tc_reqif_render_plantuml</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether a fenced ```plantuml``` code block inside a Markdown requirement attribute is
+rendered as an XHTML &lt;object type=”image/svg+xml”&gt; element in the generated ReqIF output and that the referenced SVG file
+is written to the output folder.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-reqif-render-plantuml"><span class="std std-ref">SwRequirements.sw_req_reqif_render_plantuml</span></a></p></li>
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-plantuml"><span class="std std-ref">SwRequirements.sw_req_plantuml</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-reqif-render-plantuml-error admonition" id="swe-test-rst-tc-reqif-render-plantuml-error">
+<p class="admonition-title">tc_reqif_render_plantuml_error</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether a fenced ```plantuml``` code block is replaced by a [PlantUML error: ...]
+paragraph in the generated ReqIF output when the PLANTUML environment variable is not configured, so the conversion
+does not fail.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-reqif-render-plantuml"><span class="std std-ref">SwRequirements.sw_req_reqif_render_plantuml</span></a></p></li>
 </ul>
 </td>
 </tr>
@@ -1569,6 +1708,30 @@ correct MIME type and local file reference, and that the referenced file is copi
 <tr class="row-odd"><td><p>Verifies</p></td>
 <td><ul class="simple">
 <li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-docx-render-gfm"><span class="std std-ref">SwRequirements.sw_req_docx_render_gfm</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-docx-render-plantuml admonition" id="swe-test-rst-tc-docx-render-plantuml">
+<p class="admonition-title">tc_docx_render_plantuml</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether a fenced ```plantuml``` code block inside a Markdown requirement attribute is
+rendered as an embedded PNG image in the docx output, or replaced by a [PlantUML error: ...] paragraph if PlantUML is
+not available.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-docx-render-plantuml"><span class="std std-ref">SwRequirements.sw_req_docx_render_plantuml</span></a></p></li>
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-plantuml"><span class="std std-ref">SwRequirements.sw_req_plantuml</span></a></p></li>
 </ul>
 </td>
 </tr>

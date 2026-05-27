@@ -110,6 +110,7 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">zipfile</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timezone</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span>
@@ -140,6 +141,8 @@
     <span class="n">Record_Object</span><span class="p">,</span> <span class="n">Record_Reference</span><span class="p">,</span> <span class="n">String_Literal</span><span class="p">,</span> <span class="n">Expression</span><span class="p">,</span> <span class="n">Symbol_Table</span>
 <span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pyTRLCConverter.base_converter</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseConverter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyTRLCConverter.marko.md2reqif_renderer</span><span class="w"> </span><span class="kn">import</span> <span class="n">Md2ReqifRenderer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyTRLCConverter.marko.gfm2reqif_renderer</span><span class="w"> </span><span class="kn">import</span> <span class="n">Gfm2ReqifRenderer</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pyTRLCConverter.ret</span><span class="w"> </span><span class="kn">import</span> <span class="n">Ret</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pyTRLCConverter.trlc_helper</span><span class="w"> </span><span class="kn">import</span> <span class="n">TrlcAstWalker</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pyTRLCConverter.logger</span><span class="w"> </span><span class="kn">import</span> <span class="n">log_error</span><span class="p">,</span> <span class="n">log_verbose</span>
@@ -183,8 +186,9 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_out_path</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">out</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_markdown_renderer_md</span> <span class="o">=</span> <span class="n">Markdown</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_markdown_renderer_gfm</span> <span class="o">=</span> <span class="n">Markdown</span><span class="p">(</span><span class="n">extensions</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;gfm&quot;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_markdown_renderer_md</span> <span class="o">=</span> <span class="n">Markdown</span><span class="p">(</span><span class="n">renderer</span><span class="o">=</span><span class="n">Md2ReqifRenderer</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_markdown_renderer_gfm</span> <span class="o">=</span> <span class="n">Markdown</span><span class="p">(</span><span class="n">renderer</span><span class="o">=</span><span class="n">Gfm2ReqifRenderer</span><span class="p">,</span> <span class="n">extensions</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;gfm&quot;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_plantuml_tmp_dir</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_spec_objects</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_spec_relations</span> <span class="o">=</span> <span class="p">[]</span>
@@ -317,6 +321,12 @@
         <span class="k">if</span> <span class="n">result</span> <span class="o">==</span> <span class="n">Ret</span><span class="o">.</span><span class="n">OK</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_empty_attribute_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_args</span><span class="o">.</span><span class="n">empty</span>
             <span class="n">log_verbose</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Empty attribute value: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_empty_attribute_value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="c1"># Temporary directory for inline PlantUML images generated while</span>
+            <span class="c1"># rendering Markdown attributes. The directory is cleaned up in</span>
+            <span class="c1"># finish() once all documents have been written.</span>
+            <span class="c1"># pylint: disable-next=consider-using-with</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_plantuml_tmp_dir</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;pyTRLCConverter_reqif_&quot;</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_args</span><span class="o">.</span><span class="n">single_document</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
                 <span class="n">log_verbose</span><span class="p">(</span><span class="s2">&quot;Single document mode.&quot;</span><span class="p">)</span>
@@ -505,11 +515,17 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            Ret: Status</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">Ret</span><span class="o">.</span><span class="n">OK</span>
+
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_args</span><span class="o">.</span><span class="n">single_document</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_flush_pending_hierarchy</span><span class="p">()</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_write_document</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_args</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_write_document</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_args</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">Ret</span><span class="o">.</span><span class="n">OK</span></div>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_plantuml_tmp_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_plantuml_tmp_dir</span><span class="o">.</span><span class="n">cleanup</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_plantuml_tmp_dir</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">return</span> <span class="n">result</span></div>
 
 
 <div class="viewcode-block" id="ReqifConverter._write_document">
@@ -1544,10 +1560,16 @@
         <span class="c1"># lobster-trace: SwRequirements.sw_req_reqif_render_md</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_reqif_render_gfm</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_reqif_render_table_options</span>
+        <span class="c1"># lobster-trace: SwRequirements.sw_req_reqif_render_plantuml</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert Markdown text to an XHTML-wrapped string using marko.</span>
 
 <span class="sd">        If ``table_options`` is provided and non-empty, table styling is applied to the</span>
 <span class="sd">        generated HTML before wrapping (see :meth:`_apply_table_options`).</span>
+
+<span class="sd">        Fenced code blocks tagged ``plantuml`` are rendered as embedded SVG</span>
+<span class="sd">        images via :class:`Md2ReqifRenderer` / :class:`Gfm2ReqifRenderer`; the</span>
+<span class="sd">        generated images are registered in ``self._external_files`` so they are</span>
+<span class="sd">        copied next to the ReqIF document.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            markdown_text (str): Markdown source text.</span>
@@ -1559,6 +1581,14 @@
 <span class="sd">            str: XHTML-wrapped HTML string.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">renderer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_markdown_renderer_gfm</span> <span class="k">if</span> <span class="n">gfm_mode</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_markdown_renderer_md</span>
+
+        <span class="c1"># Wire the inline-PlantUML renderer state to this converter so generated</span>
+        <span class="c1"># SVGs are written to the converter&#39;s temp directory and tracked in</span>
+        <span class="c1"># _external_files for copying.</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_plantuml_tmp_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="n">Md2ReqifRenderer</span><span class="o">.</span><span class="n">image_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_plantuml_tmp_dir</span><span class="o">.</span><span class="n">name</span>
+        <span class="n">Md2ReqifRenderer</span><span class="o">.</span><span class="n">external_files</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_external_files</span>
+
         <span class="n">html_text</span> <span class="o">=</span> <span class="n">renderer</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="n">markdown_text</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">html_text</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>

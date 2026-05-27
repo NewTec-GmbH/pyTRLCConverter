@@ -145,6 +145,17 @@ If None, no translation is applied.</p></li>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.markdown_converter.MarkdownConverter._copy_external_files">
+<span class="sig-name descname"><span class="pre">_copy_external_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dest_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/markdown_converter.html#MarkdownConverter._copy_external_files"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.markdown_converter.MarkdownConverter._copy_external_files" title="Link to this definition"></a></dt>
+<dd><p>Copy all collected external files to the given destination directory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dest_dir</strong> (<em>str</em>) – Destination directory path.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="pyTRLCConverter.markdown_converter.MarkdownConverter._create_markdown_link_from_record_object_reference">
 <span class="sig-name descname"><span class="pre">_create_markdown_link_from_record_object_reference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record_reference</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">trlc.ast.Record_Reference</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/markdown_converter.html#MarkdownConverter._create_markdown_link_from_record_object_reference"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.markdown_converter.MarkdownConverter._create_markdown_link_from_record_object_reference" title="Link to this definition"></a></dt>
 <dd><p>Create a Markdown link from a record reference.
@@ -306,7 +317,7 @@ Otherwise the record object fields attribute values will be written to the Markd
 <dl class="py method">
 <dt class="sig sig-object py" id="pyTRLCConverter.markdown_converter.MarkdownConverter._render">
 <span class="sig-name descname"><span class="pre">_render</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">package_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attribute_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attribute_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/markdown_converter.html#MarkdownConverter._render"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.markdown_converter.MarkdownConverter._render" title="Link to this definition"></a></dt>
-<dd><p>Render the attribute value depened on its format.</p>
+<dd><p>Render the attribute value depending on its format.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -318,6 +329,27 @@ Otherwise the record object fields attribute values will be written to the Markd
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The rendered attribute value.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.markdown_converter.MarkdownConverter._render_plantuml_blocks">
+<span class="sig-name descname"><span class="pre">_render_plantuml_blocks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/markdown_converter.html#MarkdownConverter._render_plantuml_blocks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.markdown_converter.MarkdownConverter._render_plantuml_blocks" title="Link to this definition"></a></dt>
+<dd><p>Replace plantuml fenced code blocks with SVG image references.</p>
+<p>Each <code class="docutils literal notranslate"><span class="pre">`plantuml</span> <span class="pre">...</span> <span class="pre">`</span></code> block is replaced by <code class="docutils literal notranslate"><span class="pre">![](plantuml_&lt;hash&gt;.svg)</span></code>.
+The SVG is written to the temporary image directory and registered in
+<code class="docutils literal notranslate"><span class="pre">_external_files</span></code> for copying to the output folder. On failure an
+inline <code class="docutils literal notranslate"><span class="pre">[PlantUML</span> <span class="pre">error:</span> <span class="pre">...]</span></code> text is emitted instead.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>text</strong> (<em>str</em>) – Markdown text that may contain plantuml fenced blocks.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Text with plantuml blocks replaced.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>str</p>
@@ -677,6 +709,11 @@ There will be no newline appended at the end.</p>
 <dd></dd></dl>
 
 <dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.markdown_converter.MarkdownConverter._external_files">
+<span class="sig-name descname"><span class="pre">_external_files</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></span><a class="headerlink" href="#pyTRLCConverter.markdown_converter.MarkdownConverter._external_files" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="pyTRLCConverter.markdown_converter.MarkdownConverter._fd">
 <span class="sig-name descname"><span class="pre">_fd</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#pyTRLCConverter.markdown_converter.MarkdownConverter._fd" title="Link to this definition"></a></dt>
 <dd></dd></dl>
@@ -689,6 +726,11 @@ There will be no newline appended at the end.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pyTRLCConverter.markdown_converter.MarkdownConverter._out_path">
 <span class="sig-name descname"><span class="pre">_out_path</span></span><a class="headerlink" href="#pyTRLCConverter.markdown_converter.MarkdownConverter._out_path" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.markdown_converter.MarkdownConverter._plantuml_tmp_dir">
+<span class="sig-name descname"><span class="pre">_plantuml_tmp_dir</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">tempfile.TemporaryDirectory</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#pyTRLCConverter.markdown_converter.MarkdownConverter._plantuml_tmp_dir" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>

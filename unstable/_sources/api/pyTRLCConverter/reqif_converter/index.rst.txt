@@ -393,6 +393,11 @@ Module Contents
       If ``table_options`` is provided and non-empty, table styling is applied to the
       generated HTML before wrapping (see :meth:`_apply_table_options`).
 
+      Fenced code blocks tagged ``plantuml`` are rendered as embedded SVG
+      images via :class:`Md2ReqifRenderer` / :class:`Gfm2ReqifRenderer`; the
+      generated images are registered in ``self._external_files`` so they are
+      copied next to the ReqIF document.
+
       :param markdown_text: Markdown source text.
       :type markdown_text: str
       :param gfm_mode: If True, use the GFM extension; otherwise use CommonMark.
@@ -820,6 +825,12 @@ Module Contents
 
    .. py:attribute:: _pending_relations
       :value: []
+
+
+
+   .. py:attribute:: _plantuml_tmp_dir
+      :type:  Optional[tempfile.TemporaryDirectory]
+      :value: None
 
 
 
