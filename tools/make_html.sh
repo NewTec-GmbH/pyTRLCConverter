@@ -42,5 +42,9 @@ fi
 # Create tracing report from TRLC and source files.
 (cd traceReport; ./make.sh $ONLINE_REPORT_OPTION)
 
+# Copy SVG diagrams into the Sphinx source directory so relative image
+# references in included RST files resolve correctly during the build.
+cp trlc2other/out/*.svg deployDoc/source/
+
 #Create HTML documentation.
 (cd plantUML; . ./get_plantuml.sh; cd ..;cd deployDoc; make clean; make html)

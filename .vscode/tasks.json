@@ -124,6 +124,20 @@
                 "cwd": "${workspaceFolder}"
             },
             "problemMatcher": []
+        },
+        {
+            "label": "Dump TRLC items to console",
+            "type": "shell",
+            "command": ".venv/Scripts/pyTRLCConverter",
+            "args": [
+                "--source", "tests/utils/req_mixed_types.rsl",
+                "--source", "tests/utils/multi_type_nested_sections.trlc",
+                "dump"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": []
         }
     ]
 }
