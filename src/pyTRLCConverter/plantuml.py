@@ -23,7 +23,6 @@
 import os
 import subprocess
 import sys
-import tempfile
 import zlib
 import base64
 import urllib
@@ -108,19 +107,24 @@ class PlantUML():
 
         return is_plantuml
 
-    def _make_server_url(self, diagram_type: str, diagram_path: str) -> str:
+    def _make_server_url(self, diagram_type: str, diagram_source: str, source_is_file: bool = True) -> str:
         """Generate a PlantUML server GET URL from a diagram data file.
 
         Args:
             diagram_type (str): Diagram type, e.g. svg. See PlantUML -t options.
-            diagram_path (str): Path to the PlantUML diagram.
+            diagram_source (str): Path to the PlantUML diagram or content of PlantUML diagram.
+            source_is_file (bool): True if diagram_source points to a file, False if it is the diagram content.
 
         Raises:
             FileNotFoundError: PlantUML diagram file not found.
         """
-        # Read PlantUML diagram data from given file.
-        with open(diagram_path, 'r', encoding='utf-8') as input_file:
-            diagram_string = input_file.read().encode('utf-8')
+        if source_is_file:
+            # Read PlantUML diagram data from given file.
+            with open(diagram_source, 'r', encoding='utf-8') as input_file:
+                diagram_string = input_file.read().encode('utf-8')
+        else:
+            # Use the provided source directly as the diagram_string.
+            diagram_string = diagram_source.encode('utf-8')
 
         # Compress the data using deflate.
         # Strip Zlib's 2 byte header and 4 byte checksum for raw deflate data.
@@ -181,11 +185,8 @@ class PlantUML():
         Returns:
             bytes: The raw image bytes.
         """
-        with tempfile.NamedTemporaryFile(suffix=".puml", mode='w', encoding='utf-8') as tmp:
-            tmp.write(diagram_source)
-            tmp.flush()
-            url = self._make_server_url(diagram_type, tmp.name)
 
+        url = self._make_server_url(diagram_type, diagram_source, source_is_file=False)
         log_verbose(f"Sending GET request {url}")
         response = requests.get(url, timeout=10, verify=self._verify_ssl)
 

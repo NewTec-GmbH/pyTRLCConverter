@@ -26,7 +26,7 @@ pytest tests/test_reqif.py
 pytest tests/test_reqif.py::test_function_name
 
 # Lint (must be clean — no warnings or errors tolerated)
-pylint --rcfile=.pylintrc src/pyTRLCConverter/
+pylint --rcfile=.pylintrc src/pyTRLCConverter/ tests/
 
 # Run the tool directly
 pyTRLCConverter --source <trlc-dir> <subcommand>

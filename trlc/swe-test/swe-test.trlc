@@ -196,6 +196,18 @@ section "SW Test Cases" {
              when the render configuration is set to "gfm".'''
             verifies = [SwRequirements.sw_req_markdown_render_gfm, SwRequirements.sw_req_markdown_string_format]
         }
+
+        SwTestCase tc_markdown_render_plantuml {
+            description = '''This test case checks whether a fenced ```plantuml``` code block inside a Markdown requirement attribute is
+             replaced by an SVG image reference when --render-plantuml is given, and that the SVG file is written to the output folder.'''
+            verifies = [SwRequirements.sw_req_markdown_render_plantuml, SwRequirements.sw_req_cli_render_plantuml, SwRequirements.sw_req_plantuml]
+        }
+
+        SwTestCase tc_markdown_render_plantuml_error {
+            description = '''This test case checks whether a fenced ```plantuml``` code block is replaced by a [PlantUML error: ...]
+             paragraph in the Markdown output when --render-plantuml is given but PlantUML is not available.'''
+            verifies = [SwRequirements.sw_req_markdown_render_plantuml]
+        }
     }
 
     section "reStructuredText" {
@@ -297,6 +309,19 @@ section "SW Test Cases" {
              when the render configuration is set to "gfm".'''
             verifies = [SwRequirements.sw_req_rst_render_gfm]
         }
+
+        SwTestCase tc_rst_render_plantuml {
+            description = '''This test case checks whether a fenced ```plantuml``` code block inside a Markdown requirement attribute is
+             rendered as a reStructuredText ``.. image::`` directive referencing an SVG file written to the output folder.'''
+            verifies = [SwRequirements.sw_req_rst_render_plantuml, SwRequirements.sw_req_plantuml]
+        }
+
+        SwTestCase tc_rst_render_plantuml_error {
+            description = '''This test case checks whether a fenced ```plantuml``` code block is replaced by a [PlantUML error: ...]
+             paragraph in the generated RST output when the PLANTUML environment variable is not configured, so the conversion
+             does not fail.'''
+            verifies = [SwRequirements.sw_req_rst_render_plantuml]
+        }
     }
 
     section "ReqIF" {
@@ -360,6 +385,20 @@ section "SW Test Cases" {
             verifies = [SwRequirements.sw_req_reqif_render_path]
         }
 
+        SwTestCase tc_reqif_render_plantuml {
+            description = '''This test case checks whether a fenced ```plantuml``` code block inside a Markdown requirement attribute is
+             rendered as an XHTML <object type="image/svg+xml"> element in the generated ReqIF output and that the referenced SVG file
+             is written to the output folder.'''
+            verifies = [SwRequirements.sw_req_reqif_render_plantuml, SwRequirements.sw_req_plantuml]
+        }
+
+        SwTestCase tc_reqif_render_plantuml_error {
+            description = '''This test case checks whether a fenced ```plantuml``` code block is replaced by a [PlantUML error: ...]
+             paragraph in the generated ReqIF output when the PLANTUML environment variable is not configured, so the conversion
+             does not fail.'''
+            verifies = [SwRequirements.sw_req_reqif_render_plantuml]
+        }
+
         SwTestCase tc_reqif_enum {
             description = "This test case checks whether a TRLC enumeration attribute is converted to a DATATYPE-DEFINITION-ENUMERATION with 0-based consecutive ENUM-VALUE keys and emitted as ATTRIBUTE-VALUE-ENUMERATION in the spec-object."
             verifies = [SwRequirements.sw_req_reqif_enum, SwRequirements.sw_req_reqif_enum_key_order]
@@ -416,6 +455,13 @@ section "SW Test Cases" {
         SwTestCase tc_docx_render_gfm {
             description = "This test case checks whether GitHub Flavored Markdown content in requirement attributes is rendered correctly when the render configuration is set to \"gfm\"."
             verifies = [SwRequirements.sw_req_docx_render_gfm]
+        }
+
+        SwTestCase tc_docx_render_plantuml {
+            description = '''This test case checks whether a fenced ```plantuml``` code block inside a Markdown requirement attribute is
+             rendered as an embedded PNG image in the docx output, or replaced by a [PlantUML error: ...] paragraph if PlantUML is
+             not available.'''
+            verifies = [SwRequirements.sw_req_docx_render_plantuml, SwRequirements.sw_req_plantuml]
         }
     }
 

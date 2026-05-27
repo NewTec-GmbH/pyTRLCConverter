@@ -11,6 +11,7 @@ class MarkdownConverter extends BaseConverter {
     +leave_file(file_name: str) : Ret
     +convert_section(section: str, level: int) : Ret
     +convert_record_object_generic(record: Record_Object, level: int, translation: Optional[dict]) : Ret
+    +finish() : Ret
 }
 
 
@@ -30,9 +31,18 @@ package "Dependencies" {
 
     class TrlcAstWalker {
     }
+
+    class PlantUML {
+    }
+    note bottom of PlantUML
+        Renders inline ```plantuml```
+        fenced code blocks to SVG
+        when --render-plantuml is set.
+    end note
 }
 
 MarkdownConverter ..> "trlc"
 MarkdownConverter ..> TrlcAstWalker
+MarkdownConverter ..> PlantUML
 
 @enduml

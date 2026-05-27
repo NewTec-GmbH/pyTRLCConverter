@@ -25,6 +25,7 @@ import mimetypes
 import os
 import re
 import shutil
+import tempfile
 import zipfile
 from datetime import datetime, timezone
 from typing import Any, Optional
@@ -55,6 +56,8 @@ from trlc.ast import (
     Record_Object, Record_Reference, String_Literal, Expression, Symbol_Table
 )
 from pyTRLCConverter.base_converter import BaseConverter
+from pyTRLCConverter.marko.md2reqif_renderer import Md2ReqifRenderer
+from pyTRLCConverter.marko.gfm2reqif_renderer import Gfm2ReqifRenderer
 from pyTRLCConverter.ret import Ret
 from pyTRLCConverter.trlc_helper import TrlcAstWalker
 from pyTRLCConverter.logger import log_error, log_verbose
@@ -96,8 +99,9 @@ class ReqifConverter(BaseConverter):
         super().__init__(args)
 
         self._out_path = args.out
-        self._markdown_renderer_md = Markdown()
-        self._markdown_renderer_gfm = Markdown(extensions=["gfm"])
+        self._markdown_renderer_md = Markdown(renderer=Md2ReqifRenderer)
+        self._markdown_renderer_gfm = Markdown(renderer=Gfm2ReqifRenderer, extensions=["gfm"])
+        self._plantuml_tmp_dir: Optional[tempfile.TemporaryDirectory] = None
 
         self._spec_objects = []
         self._spec_relations = []
@@ -219,6 +223,12 @@ class ReqifConverter(BaseConverter):
         if result == Ret.OK:
             self._empty_attribute_value = self._args.empty
             log_verbose(f"Empty attribute value: {self._empty_attribute_value}")
+
+            # Temporary directory for inline PlantUML images generated while
+            # rendering Markdown attributes. The directory is cleaned up in
+            # finish() once all documents have been written.
+            # pylint: disable-next=consider-using-with
+            self._plantuml_tmp_dir = tempfile.TemporaryDirectory(prefix="pyTRLCConverter_reqif_")
 
             if self._args.single_document is True:
                 log_verbose("Single document mode.")
@@ -392,11 +402,17 @@ class ReqifConverter(BaseConverter):
         Returns:
             Ret: Status
         """
+        result = Ret.OK
+
         if self._args.single_document is True:
             self._flush_pending_hierarchy()
-            return self._write_document(self._args.name)
+            result = self._write_document(self._args.name)
 
-        return Ret.OK
+        if self._plantuml_tmp_dir is not None:
+            self._plantuml_tmp_dir.cleanup()
+            self._plantuml_tmp_dir = None
+
+        return result
 
     def _write_document(self, file_name: str) -> Ret:
         # lobster-trace: SwRequirements.sw_req_reqif_multiple_doc_mode
@@ -1332,10 +1348,16 @@ class ReqifConverter(BaseConverter):
         # lobster-trace: SwRequirements.sw_req_reqif_render_md
         # lobster-trace: SwRequirements.sw_req_reqif_render_gfm
         # lobster-trace: SwRequirements.sw_req_reqif_render_table_options
+        # lobster-trace: SwRequirements.sw_req_reqif_render_plantuml
         """Convert Markdown text to an XHTML-wrapped string using marko.
 
         If ``table_options`` is provided and non-empty, table styling is applied to the
         generated HTML before wrapping (see :meth:`_apply_table_options`).
+
+        Fenced code blocks tagged ``plantuml`` are rendered as embedded SVG
+        images via :class:`Md2ReqifRenderer` / :class:`Gfm2ReqifRenderer`; the
+        generated images are registered in ``self._external_files`` so they are
+        copied next to the ReqIF document.
 
         Args:
             markdown_text (str): Markdown source text.
@@ -1347,6 +1369,14 @@ class ReqifConverter(BaseConverter):
             str: XHTML-wrapped HTML string.
         """
         renderer = self._markdown_renderer_gfm if gfm_mode else self._markdown_renderer_md
+
+        # Wire the inline-PlantUML renderer state to this converter so generated
+        # SVGs are written to the converter's temp directory and tracked in
+        # _external_files for copying.
+        assert self._plantuml_tmp_dir is not None
+        Md2ReqifRenderer.image_dir = self._plantuml_tmp_dir.name
+        Md2ReqifRenderer.external_files = self._external_files
+
         html_text = renderer.convert(markdown_text).strip()
 
         if len(html_text) == 0:

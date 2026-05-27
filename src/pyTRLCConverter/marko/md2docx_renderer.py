@@ -180,6 +180,9 @@ class Md2DocxRenderer(Renderer, metaclass=Singleton):
         self._is_quote = False
 
     def render_fenced_code(self, element: block.FencedCode) -> None:
+        # lobster-trace: SwRequirements.sw_req_docx_render_md
+        # lobster-trace: SwRequirements.sw_req_docx_render_plantuml
+        # lobster-trace: SwRequirements.sw_req_plantuml
         """
         Renders a fenced code block element.
 
@@ -202,6 +205,8 @@ class Md2DocxRenderer(Renderer, metaclass=Singleton):
             run.font.name = "Consolas"
 
     def _render_plantuml(self, diagram_source: str) -> None:
+        # lobster-trace: SwRequirements.sw_req_docx_render_plantuml
+        # lobster-trace: SwRequirements.sw_req_plantuml
         """Renders a PlantUML diagram as an embedded PNG in the docx document.
 
         Generates PNG bytes via the PlantUML tool and embeds the image directly.

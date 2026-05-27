@@ -36,9 +36,12 @@ if TYPE_CHECKING:
 # pylint: disable-next=too-many-public-methods
 class Gfm2RstRenderer(Md2RstRenderer):
     # lobster-trace: SwRequirements.sw_req_rst_render_gfm
-    """
-    Renderer for reStructuredText output.
-    It is used to convert GitHub Flavored Markdown to reStructuredText format.
+    # lobster-trace: SwRequirements.sw_req_rst_render_plantuml
+    # lobster-trace: SwRequirements.sw_req_plantuml
+    """Renderer for reStructuredText output.
+
+    Converts GitHub Flavored Markdown to reStructuredText format.
+    Inherits inline PlantUML handling from :class:`Md2RstRenderer`.
     """
 
     # Inherit all CommonMark rendering behavior from Md2RstRenderer and override only GFM additions.

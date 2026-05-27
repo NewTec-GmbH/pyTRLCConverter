@@ -12,6 +12,7 @@ class RstConverter extends BaseConverter {
     +leave_file(file_name: str) : Ret
     +convert_section(section: str, level: int) : Ret
     +convert_record_object_generic(record: Record_Object, level: int, translation: Optional[dict]) : Ret
+    +finish() : Ret
 }
 
 ' Define external dependencies
@@ -37,14 +38,20 @@ package "Dependencies" {
         + render(ast: Any) : str
     }
 
-    class Gfm2RstRenderer {
-        + render(ast: Any) : str
+    class Gfm2RstRenderer extends Md2RstRenderer {
     }
 
     class marko <<(M ,lightblue) module>> {
     }
     note bottom of marko
         Markdown Parser
+    end note
+
+    class PlantUML {
+    }
+    note bottom of PlantUML
+        Renders inline ```plantuml```
+        fenced code blocks to SVG.
     end note
 }
 
@@ -54,5 +61,6 @@ RstConverter ..> TrlcAstWalker
 RstConverter ..> Md2RstRenderer
 RstConverter ..> Gfm2RstRenderer
 RstConverter ..> marko
+Md2RstRenderer ..> PlantUML
 
 @enduml
