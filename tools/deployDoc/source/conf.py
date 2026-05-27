@@ -184,12 +184,12 @@ def _build_version_links() -> tuple[str, list[tuple[str, str]]]:
             else:
                 version_links.append((version, f"/{version}/"))
 
-        if docs_base_path:
-            latest_url = f"{docs_base_path}/{latest_target}/"
-        else:
-            latest_url = f"/{latest_target}/"
-
-        version_links.insert(0, ('latest', latest_url))
+        if latest_target not in versions:
+            if docs_base_path:
+                latest_url = f"{docs_base_path}/{latest_target}/"
+            else:
+                latest_url = f"/{latest_target}/"
+            version_links.insert(0, ('latest', latest_url))
 
     return current_version, version_links
 
