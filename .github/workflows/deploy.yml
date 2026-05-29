@@ -120,7 +120,8 @@ jobs:
         with:
           publish_branch: gh-pages
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./tools/deployDoc/build/html/_static/version_selector_data.js
+          publish_dir: ./tools/deployDoc/build/html/_static
+          exclude_assets: '!version_selector_data.js' # Exclude all files and directories except version_selector_data.js.
           destination_dir: ./versions
 
   # Build the package distribution and upload it as a workflow artifact.
