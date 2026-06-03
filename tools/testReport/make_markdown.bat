@@ -44,8 +44,12 @@ if not exist "%OUTPUT_DIR%" (
 
 rem Create the sw test report and the coverage analysis.
 pushd  ..\..
-pytest %TESTS_PATH% -v --cov=%SRC_PATH% --cov-report=term-missing --cov-report=html:%REPORT_TOOL_PATH%/%OUTPUT_DIR%/%COVERAGE_REPORT% -o junit_family=xunit1 --junitxml=%REPORT_TOOL_PATH%/%OUTPUT_DIR%/%TEST_RESULT_REPORT_XML% || goto :error
+pytest %TESTS_PATH% -v --cov=%SRC_PATH% --cov-report=term-missing --cov-report=html:%REPORT_TOOL_PATH%/%OUTPUT_DIR%/%COVERAGE_REPORT% -o junit_family=xunit1 --junitxml=%REPORT_TOOL_PATH%/%OUTPUT_DIR%/%TEST_RESULT_REPORT_XML%
 popd
+IF errorlevel 2 (
+    echo Error: pytest execution failed. Please check the output above for details. >&2
+    goto :error
+)
 
 rem Convert sw test report XML to TRLC.
 python test_result_xml2trlc.py ./%OUTPUT_DIR%/%TEST_RESULT_REPORT_XML% ./%OUTPUT_DIR%/%TEST_RESULT_REPORT_TRLC% || goto :error
