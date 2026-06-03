@@ -222,19 +222,19 @@ class Md2RstRenderer(Renderer):
     # pylint: disable-next=unused-argument
     def render_thematic_break(self, element: block.ThematicBreak) -> str:
         """
-        Renders a thematic break (horizontal rule) element.
+        Renders a thematic break (horizontal rule) element as a empty line.
 
         Args:
             element (block.ThematicBreak): The thematic break element to render.
 
         Returns:
-            str: The rendered thematic break as a string.
+            str: The rendered thematic break as a empty rst line.
         """
-        return "\n----\n\n"
+        return "\n|\n"
 
     def render_heading(self, element: block.Heading) -> str:
         """
-        Renders a heading element.
+        Renders a heading element as a rubric.
 
         Args:
             element (block.Heading): The heading element to render.
@@ -243,16 +243,7 @@ class Md2RstRenderer(Renderer):
             str: The rendered heading as a string.
         """
         text = self.render_children(element)
-        underline = {
-            1: "=",
-            2: "-",
-            3: "~",
-            4: "^",
-            5: '"',
-            6: "'"
-        }.get(element.level, "-")
-
-        return f"{text}\n{underline * len(text)}\n\n"
+        return f".. rubric:: {text}\n"
 
     def render_setext_heading(self, element: block.SetextHeading) -> str:
         """
