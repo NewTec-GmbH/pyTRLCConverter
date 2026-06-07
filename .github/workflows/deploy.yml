@@ -80,6 +80,7 @@ jobs:
       # Install system and Python dependencies needed to build documentation.
       - name: Install dependencies
         run: |
+          sudo apt-get update
           sudo apt-get install -y graphviz curl default-jre
           python -m pip install --upgrade pip
           pip install -r requirements-dev.txt
@@ -174,7 +175,7 @@ jobs:
       id-token: write
     steps:
       - name: Download distribution artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: dist
           path: dist/
