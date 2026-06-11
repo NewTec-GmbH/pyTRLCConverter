@@ -18,7 +18,7 @@ rem If not, see <https://www.gnu.org/licenses/>.
 
 set OUT_PATH=./out
 
-pyTRLCConverter --source=req.rsl --source=req.trlc --translation=translation.json --renderCfg=renderCfg.json --out=%OUT_PATH% reqif --reqifz
+pyTRLCConverter --source=req.rsl --source=req.trlc --translation=translation.json --renderCfg=renderCfg.json --out=%OUT_PATH% reqif --reqifz --id-store id_store.json
 
 if errorlevel 1 (
     pause

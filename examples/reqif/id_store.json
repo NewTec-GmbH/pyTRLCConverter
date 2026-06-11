@@ -1,0 +1,22 @@
+{
+    "identifiers": {
+        "hierarchy:spec-object-11:req_child_1": "hierarchy-12",
+        "hierarchy:spec-object-13:req_child_2": "hierarchy-14",
+        "hierarchy:spec-object-1:inf_intro": "hierarchy-2",
+        "hierarchy:spec-object-3:img_test": "hierarchy-4",
+        "hierarchy:spec-object-5:req_plain_text": "hierarchy-6",
+        "hierarchy:spec-object-7:req_table": "hierarchy-8",
+        "hierarchy:spec-object-9:Children": "hierarchy-10",
+        "req-if-header:ReqIF TRLC Example": "req-if-header-15",
+        "spec-object:Requirements.hdr_my_childs": "spec-object-9",
+        "spec-object:Requirements.img_test": "spec-object-3",
+        "spec-object:Requirements.inf_intro": "spec-object-1",
+        "spec-object:Requirements.req_child_1": "spec-object-11",
+        "spec-object:Requirements.req_child_2": "spec-object-13",
+        "spec-object:Requirements.req_plain_text": "spec-object-5",
+        "spec-object:Requirements.req_table": "spec-object-7",
+        "spec-relation:spec-object-13:spec-relation-type-derived:spec-object-11": "spec-relation-16"
+    },
+    "next_id": 17,
+    "version": 1
+}
