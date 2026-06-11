@@ -418,6 +418,21 @@ section "SW Test Cases" {
             description = "This test case checks whether the ReqIF converter archives the generated output as a .reqifz ZIP file when the --reqifz flag is given."
             verifies = [SwRequirements.sw_req_reqif_reqifz]
         }
+
+        SwTestCase tc_reqif_identifier_store_init {
+            description = "This test case checks whether the ReqIF converter creates the JSON identifier store file and stores the generated identifiers on the initial conversion when --id-store points to a non-existing file."
+            verifies = [SwRequirements.sw_req_reqif_identifier_store_init]
+        }
+
+        SwTestCase tc_reqif_identifier_immutable {
+            description = "This test case checks whether the identifiers of the generated ReqIF Identifiable elements stay immutable across two consecutive exports using the same --id-store file."
+            verifies = [SwRequirements.sw_req_reqif_identifier_immutable]
+        }
+
+        SwTestCase tc_reqif_identifier_store_reuse {
+            description = "This test case checks whether the ReqIF converter reuses stored identifiers for known elements and assigns new identifiers to new elements, writing them back to the --id-store file."
+            verifies = [SwRequirements.sw_req_reqif_identifier_store_reuse]
+        }
     }
 
     section "Docx" {

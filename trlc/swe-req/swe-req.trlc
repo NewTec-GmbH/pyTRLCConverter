@@ -582,6 +582,30 @@ section "SW Requirements" {
                 }
             }
 
+            section "ReqIF Identifier Persistence" {
+
+                SwReq sw_req_reqif_identifier_immutable {
+                    description = "The ReqIF converter shall keep the identifier of every generated ReqIF Identifiable element (SPEC-OBJECT, SPEC-HIERARCHY, SPEC-RELATION and the ReqIF header) immutable across consecutive exports and imports, as required by the ReqIF standard, when an identifier store file is provided via the --id-store command line argument."
+                    verification_criteria = "Verify by converting the same TRLC files twice with --id-store pointing to the same JSON file and checking that the identifiers of the generated ReqIF Identifiable elements are unchanged between both exports."
+                    valid_status = AbstractRequirements.VALID_STATUS.valid
+                    derived = [sw_req_reqif]
+                }
+
+                SwReq sw_req_reqif_identifier_store_init {
+                    description = "On the initial conversion, when the identifier store file does not yet exist, the ReqIF converter shall generate the identifiers, store them keyed by a stable logical key in the JSON identifier store file, and create that file."
+                    verification_criteria = "Verify by converting TRLC files with --id-store pointing to a non-existing JSON file and checking that the file is created and contains the generated identifiers."
+                    valid_status = AbstractRequirements.VALID_STATUS.valid
+                    derived = [sw_req_reqif_identifier_immutable]
+                }
+
+                SwReq sw_req_reqif_identifier_store_reuse {
+                    description = "On subsequent conversions the ReqIF converter shall load the identifier store file and reuse the stored identifiers for already known elements. Newly added elements shall receive new identifiers which are added to the identifier store file."
+                    verification_criteria = "Verify by converting a TRLC file set with --id-store, then converting an extended file set with the same --id-store and checking that the known elements keep their identifiers while new elements get new identifiers that are written back to the file."
+                    valid_status = AbstractRequirements.VALID_STATUS.valid
+                    derived = [sw_req_reqif_identifier_immutable]
+                }
+            }
+
             section "ReqIF Enumeration" {
 
                 SwReq sw_req_reqif_enum {

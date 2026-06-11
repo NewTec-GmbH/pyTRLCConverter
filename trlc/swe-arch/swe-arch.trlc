@@ -392,6 +392,7 @@ section "SW Architecture" {
                     * Omits optional enumeration attributes with null value from the generated spec-object.
                     * Converts TRLC record reference attributes to ReqIF SPEC-RELATION entries.
                     * Optionally archives the generated .reqif output as a .reqifz ZIP archive.
+                    * Optionally persists the identifiers of ReqIF Identifiable elements in a JSON store so that they stay immutable across consecutive exports.
                     """
                 verification_criteria = "Call the tool using the `pyTRLCConverter` frontend with reqif output format."
                 satisfies = [
@@ -415,6 +416,9 @@ section "SW Architecture" {
                     SwRequirements.sw_req_reqif_enum_null,
                     SwRequirements.sw_req_reqif_relation,
                     SwRequirements.sw_req_reqif_reqifz,
+                    SwRequirements.sw_req_reqif_identifier_immutable,
+                    SwRequirements.sw_req_reqif_identifier_store_init,
+                    SwRequirements.sw_req_reqif_identifier_store_reuse,
                     SwRequirements.sw_req_destination_format
                 ]
             }

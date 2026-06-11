@@ -1,7 +1,7 @@
 """Analyse a .reqif or .reqifz file and generate TRLC source files.
 
 Reads a ReqIF file compliant with the ProSTEP ReqIF Implementation Guideline
-and produces four files ready for use with pyTRLCConverter:
+and produces five files ready for use with pyTRLCConverter:
 
 - <package>.rsl        TRLC type definitions (one ``type`` per SPEC-OBJECT-TYPE)
 - <package>.trlc       TRLC requirement instances, following the SPEC-HIERARCHY
@@ -16,13 +16,18 @@ and produces four files ready for use with pyTRLCConverter:
     with styled tables when pyTRLCConverter converts back to ReqIF.
 
 - translation.json     Maps sanitised TRLC attribute names back to their ReqIF LONG-NAMEs
+- id_store.json        Identifier store seeded with the identifiers of the source ReqIF
+                       Identifiable elements (SPEC-OBJECTs and SPEC-HIERARCHY nodes plus
+                       the ReqIF header), keyed by the same stable logical keys
+                       pyTRLCConverter uses.  Passing it back via ``--id-store`` keeps
+                       those identifiers immutable across the round-trip conversion.
 
 Round-trip fidelity
 -------------------
 The generated TRLC files are intended so that a subsequent::
 
     pyTRLCConverter --source <dir> --renderCfg renderCfg.json \\
-                    --translation translation.json reqif
+                    --translation translation.json reqif --id-store id_store.json
 
 run reproduces THE-VALUE content identical (or as close as possible) to the
 analysed source.  The following constraints apply:
@@ -44,7 +49,11 @@ analysed source.  The following constraints apply:
   original attribute was a plain value, so the attribute type differs in the
   round-trip output, but the text content is preserved.
 * SPEC-RELATIONs (record-to-record links) are not yet reverse-engineered to
-  TRLC record references.  They are silently omitted.
+  TRLC record references.  They are silently omitted.  Consequently the
+  generated ``id_store.json`` seeds only SPEC-OBJECT, SPEC-HIERARCHY (record
+  nodes) and ReqIF header identifiers; SPEC-RELATION identifiers cannot be
+  preserved because the relations themselves are not regenerated.  Dedicated
+  section SPEC-OBJECTs are likewise not seeded.
 * ENUMERATION datatypes become TRLC ``enum`` types in the RSL.  Attributes
   referencing an enumeration type are declared with the TRLC enum type and
   multi-valued enumerations use the ``[0 .. *]`` array syntax.  Attribute
@@ -122,10 +131,13 @@ _GFM_TABLE_HEADING_STYLE: str = "background-color: #c0c0c0;"
 
 
 class _WritingContext:  # pylint: disable=too-few-public-methods
-    """Groups the read-only lookup structures passed to every TRLC writing function.
+    """Groups the lookup structures passed to every TRLC writing function.
 
     Bundling these dicts into one object keeps the writing functions within
-    pylint's argument-count limit without losing any information.
+    pylint's argument-count limit without losing any information.  The mutable
+    ``id_store`` collector is filled while the TRLC files are written and maps
+    the stable logical keys used by pyTRLCConverter to the identifiers of the
+    source ReqIF Identifiable elements.
     """
 
     def __init__(self, type_info: dict[str, Any], attr_def_map: dict[str, Any],  # pylint: disable=too-many-arguments,too-many-positional-arguments
@@ -147,6 +159,7 @@ class _WritingContext:  # pylint: disable=too-few-public-methods
         self.spec_object_map = spec_object_map
         self.enum_info = enum_info
         self.package_name = package_name
+        self.id_store: dict[str, str] = {}
 
 
 # Functions ********************************************************************
@@ -927,6 +940,13 @@ def _write_spec_object_instance(lines: list[str], spec_obj: Any, indent: int,  #
     pad = "    " * indent
     lines.append(f"{pad}{type_data['trlc_name']} {obj_name} {{")
 
+    # Seed the spec-object identifier under the same stable logical key pyTRLCConverter
+    # derives from the record (``spec-object:<package>.<record-name>``) so the round-trip
+    # conversion reuses the original identifier.
+    spec_obj_id = getattr(spec_obj, "identifier", None)
+    if spec_obj_id:
+        ctx.id_store[f"spec-object:{ctx.package_name}.{obj_name}"] = spec_obj_id
+
     value_map, enum_refs_map = _build_value_maps(spec_obj, ctx.datatype_map, ctx.attr_def_map)
 
     for attr_meta in type_data["attrs"]:
@@ -945,6 +965,32 @@ def _write_spec_object_instance(lines: list[str], spec_obj: Any, indent: int,  #
 
     lines.append(f"{pad}}}")
     lines.append("")
+
+
+def _seed_hierarchy_id(ctx: _WritingContext, hierarchy: Any, spec_obj: Any,
+                       obj_name: str, has_children: bool) -> None:
+    """Seed the SPEC-HIERARCHY identifier of a record node into the id store.
+
+    The logical key mirrors the one pyTRLCConverter derives
+    (``hierarchy:<spec-object-id>:<long-name>``).  A leaf record is placed with its
+    own name as long-name; a record with children is promoted to the section
+    container whose long-name is the section title written for it.
+
+    Args:
+        ctx:          Shared writing context whose ``id_store`` is updated.
+        hierarchy:    ReqIFSpecHierarchy node being rendered.
+        spec_obj:     ReqIFSpecObject referenced by the node.
+        obj_name:     The unique TRLC object name written for the record.
+        has_children: Whether the node has child hierarchy nodes.
+
+    Returns:
+        None
+    """
+    spec_obj_id = getattr(spec_obj, "identifier", None)
+    hierarchy_id = getattr(hierarchy, "identifier", None)
+    if spec_obj_id and hierarchy_id:
+        long_name = (getattr(spec_obj, "long_name", None) or obj_name) if has_children else obj_name
+        ctx.id_store[f"hierarchy:{spec_obj_id}:{long_name}"] = hierarchy_id
 
 
 def _write_hierarchy(lines: list[str], hierarchy: Any, indent: int,
@@ -996,6 +1042,7 @@ def _write_hierarchy(lines: list[str], hierarchy: Any, indent: int,
 
     obj_name = _get_object_name(spec_obj, ctx.attr_def_map, used_obj_names)
     _write_spec_object_instance(lines, spec_obj, indent, type_data, ctx, obj_name)
+    _seed_hierarchy_id(ctx, hierarchy, spec_obj, obj_name, bool(children))
 
     if children:
         safe_title = (getattr(spec_obj, "long_name", None) or obj_name).replace('"', '\\"')
@@ -1138,6 +1185,74 @@ def _write_translation(trans_path: str, type_info: dict[str, Any]) -> None:
         fh.write("\n")
 
 
+def _compute_next_id(identifiers: dict[str, str]) -> int:
+    """Return the next free counter value derived from the seeded identifiers.
+
+    pyTRLCConverter generates new identifiers as ``<prefix>-<counter>``.  To avoid a
+    new element colliding with a seeded identifier, the counter must continue beyond
+    the highest numeric suffix already present.
+
+    Args:
+        identifiers: Mapping from logical key to seeded identifier.
+
+    Returns:
+        The next counter value (1 if no numeric suffix is found).
+    """
+    max_id = 0
+    for value in identifiers.values():
+        match = re.search(r"-(\d+)$", value)
+        if match:
+            max_id = max(max_id, int(match.group(1)))
+    return max_id + 1
+
+
+def _seed_header_id(ctx: _WritingContext, bundle: Any, content: Any) -> None:
+    """Seed the ReqIF header identifier into the id store.
+
+    pyTRLCConverter derives the document title from the first (outer) section, which
+    mirrors the first specification's long-name; the header key is
+    ``req-if-header:<document-title>``.
+
+    Args:
+        ctx:     Shared writing context whose ``id_store`` is updated.
+        bundle:  The parsed ReqIF bundle.
+        content: ReqIFReqIFContent from the parsed bundle.
+
+    Returns:
+        None
+    """
+    header = getattr(bundle, "req_if_header", None)
+    header_id = getattr(header, "identifier", None) if header is not None else None
+    if header_id:
+        specifications = getattr(content, "specifications", None) or []
+        document_title = "Specification"
+        if specifications:
+            document_title = getattr(specifications[0], "long_name", None) or "Specification"
+        ctx.id_store[f"req-if-header:{document_title}"] = header_id
+
+
+def _write_identifier_store(output_dir: str, identifiers: dict[str, str]) -> str:
+    """Write an id_store.json compatible with pyTRLCConverter's ``--id-store`` option.
+
+    Args:
+        output_dir:  Directory in which to write ``id_store.json``.
+        identifiers: Mapping from stable logical key to source ReqIF identifier.
+
+    Returns:
+        The path of the written file.
+    """
+    store_path = os.path.join(output_dir, "id_store.json")
+    data = {
+        "version": 1,
+        "next_id": _compute_next_id(identifiers),
+        "identifiers": identifiers,
+    }
+    with open(store_path, "w", encoding="utf-8") as fh:
+        json.dump(data, fh, indent=4, sort_keys=True)
+        fh.write("\n")
+    return store_path
+
+
 def generate_output(reqif_path: str, output_dir: str, package_name: str,
                     gfm_format: bool = False) -> None:
     """Parse the ReqIF file and write all four output files to output_dir.
@@ -1182,6 +1297,7 @@ def generate_output(reqif_path: str, output_dir: str, package_name: str,
     _write_rsl(rsl_path, package_name, type_info, enum_info)
     print(f"Written: {rsl_path}")
 
+    # _write_trlc fills ctx.id_store with the SPEC-OBJECT and SPEC-HIERARCHY identifiers.
     _write_trlc(trlc_path, package_name, content, ctx)
     print(f"Written: {trlc_path}")
 
@@ -1190,6 +1306,10 @@ def generate_output(reqif_path: str, output_dir: str, package_name: str,
 
     _write_translation(trans_path, type_info)
     print(f"Written: {trans_path}")
+
+    # Seed the header identifier, then write the id_store.json round-trip seed file.
+    _seed_header_id(ctx, bundle, content)
+    print(f"Written: {_write_identifier_store(output_dir, ctx.id_store)}")
 
 
 def _parse_args() -> argparse.Namespace:
