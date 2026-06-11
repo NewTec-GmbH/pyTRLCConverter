@@ -200,7 +200,7 @@ The converter supports additional arguments that are shown by adding the `--help
 ```bash
 pyTRLCConverter reqif --help
 
-usage: pyTRLCConverter reqif [-h] [-e EMPTY] [-n NAME] [-sd] [-tl TOP_LEVEL] [--reqifz]
+usage: pyTRLCConverter reqif [-h] [-e EMPTY] [-n NAME] [-sd] [-tl TOP_LEVEL] [--reqifz] [--id-store ID_STORE]
 
 options:
   -h, --help            show this help message and exit
@@ -212,7 +212,15 @@ options:
   -tl TOP_LEVEL, --top-level TOP_LEVEL
                         Name of the top level heading, required in single document mode (default = Specification).
   --reqifz              Archive the ReqIF output as a ZIP file with the .reqifz extension. The default is to write plain .reqif files.
+  --id-store ID_STORE   Path to a JSON file used to keep the identifiers of ReqIF Identifiable elements immutable across consecutive exports. On the initial conversion the file is created with the generated identifiers; on subsequent conversions the stored identifiers are reused and new elements are added.
 ```
+
+**Immutable identifiers:**
+
+The ReqIF standard requires the identifier of every `Identifiable` element to stay immutable across consecutive exports and imports. By default each conversion generates fresh identifiers. To keep them stable, pass `--id-store <file.json>`:
+
+- On the **initial** conversion the JSON file does not exist yet; the generated identifiers (for `SPEC-OBJECT`, `SPEC-HIERARCHY`, `SPEC-RELATION` and the ReqIF header) are stored in it, keyed by a stable logical key.
+- On **subsequent** conversions the file is loaded and the stored identifiers are reused for already known elements. New elements receive new identifiers which are written back to the file.
 
 Markdown-formatted requirement attributes configured via `--renderCfg` are automatically converted to ReqIF-compatible XHTML content.
 

@@ -220,6 +220,56 @@ def _assert_reqif_v12_compliance(reqif_file: str, tmp_path: Path):
     assert schema.validate(reqif_document) is True, str(schema.error_log)
 
 
+def _collect_hierarchy_identifiers(hierarchies, collected: dict) -> None:
+    # lobster-exclude: Utility function for other test code.
+    """Recursively collect SPEC-HIERARCHY identifiers keyed by (long_name, spec_object_ref).
+
+    Args:
+        hierarchies: Iterable of SPEC-HIERARCHY nodes (may be None).
+        collected (dict): Target mapping that is updated in place.
+    """
+    if hierarchies is not None:
+        for hierarchy in hierarchies:
+            collected[(hierarchy.long_name, hierarchy.spec_object)] = hierarchy.identifier
+            _collect_hierarchy_identifiers(hierarchy.children, collected)
+
+
+def _collect_identifiers(bundle) -> dict:
+    # lobster-exclude: Utility function for other test code.
+    """Collect the identifiers of the ReqIF Identifiable elements of a bundle.
+
+    The identifiers are keyed by stable attributes so two bundles generated from the
+    same input can be compared regardless of element ordering.
+
+    Args:
+        bundle: The parsed ReqIF bundle.
+
+    Returns:
+        dict: Mapping with keys ``header``, ``spec_objects``, ``hierarchies`` and ``spec_relations``.
+    """
+    content = bundle.core_content.req_if_content
+
+    spec_objects = {spec_object.long_name: spec_object.identifier
+                    for spec_object in content.spec_objects}
+
+    spec_relations = {}
+    if content.spec_relations is not None:
+        spec_relations = {(relation.source, relation.target): relation.identifier
+                          for relation in content.spec_relations}
+
+    hierarchies = {}
+    if content.specifications is not None:
+        for specification in content.specifications:
+            _collect_hierarchy_identifiers(specification.children, hierarchies)
+
+    return {
+        "header": bundle.req_if_header.identifier,
+        "spec_objects": spec_objects,
+        "hierarchies": hierarchies,
+        "spec_relations": spec_relations
+    }
+
+
 def _find_datatype_by_long_name(bundle, long_name: str):
     # lobster-exclude: Utility function for other test code.
     """Find a datatype definition in the bundle by its long-name.
