@@ -141,6 +141,7 @@
     <span class="n">Record_Object</span><span class="p">,</span> <span class="n">Record_Reference</span><span class="p">,</span> <span class="n">String_Literal</span><span class="p">,</span> <span class="n">Expression</span><span class="p">,</span> <span class="n">Symbol_Table</span>
 <span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pyTRLCConverter.base_converter</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseConverter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyTRLCConverter.reqif_identifier_store</span><span class="w"> </span><span class="kn">import</span> <span class="n">ReqifIdentifierStore</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pyTRLCConverter.marko.md2reqif_renderer</span><span class="w"> </span><span class="kn">import</span> <span class="n">Md2ReqifRenderer</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pyTRLCConverter.marko.gfm2reqif_renderer</span><span class="w"> </span><span class="kn">import</span> <span class="n">Gfm2ReqifRenderer</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pyTRLCConverter.ret</span><span class="w"> </span><span class="kn">import</span> <span class="n">Ret</span>
@@ -189,6 +190,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_markdown_renderer_md</span> <span class="o">=</span> <span class="n">Markdown</span><span class="p">(</span><span class="n">renderer</span><span class="o">=</span><span class="n">Md2ReqifRenderer</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_markdown_renderer_gfm</span> <span class="o">=</span> <span class="n">Markdown</span><span class="p">(</span><span class="n">renderer</span><span class="o">=</span><span class="n">Gfm2ReqifRenderer</span><span class="p">,</span> <span class="n">extensions</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;gfm&quot;</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_plantuml_tmp_dir</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_id_store_path</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="s2">&quot;id_store&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_id_store</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ReqifIdentifierStore</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_spec_objects</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_spec_relations</span> <span class="o">=</span> <span class="p">[]</span>
@@ -246,6 +250,7 @@
         <span class="c1"># lobster-trace: SwRequirements.sw_req_reqif_out_file_name_default</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_reqif_out_file_name_custom</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_reqif_reqifz</span>
+        <span class="c1"># lobster-trace: SwRequirements.sw_req_reqif_identifier_immutable</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Register converter specific argument parser.</span>
 
@@ -303,6 +308,17 @@
             <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
             <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Archive the ReqIF output as a ZIP file with the .reqifz extension. &quot;</span>
                  <span class="s2">&quot;The default is to write plain .reqif files.&quot;</span>
+        <span class="p">)</span>
+
+        <span class="n">BaseConverter</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s2">&quot;--id-store&quot;</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+            <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Path to a JSON file used to keep the identifiers of ReqIF Identifiable &quot;</span>
+                 <span class="s2">&quot;elements immutable across consecutive exports. On the initial conversion &quot;</span>
+                 <span class="s2">&quot;the file is created with the generated identifiers; on subsequent &quot;</span>
+                 <span class="s2">&quot;conversions the stored identifiers are reused and new elements are added.&quot;</span>
         <span class="p">)</span></div>
 
 
@@ -310,6 +326,8 @@
 <a class="viewcode-back" href="../../api/pyTRLCConverter/reqif_converter/index.html#pyTRLCConverter.reqif_converter.ReqifConverter.begin">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">begin</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Ret</span><span class="p">:</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_reqif_single_doc_mode</span>
+        <span class="c1"># lobster-trace: SwRequirements.sw_req_reqif_identifier_store_init</span>
+        <span class="c1"># lobster-trace: SwRequirements.sw_req_reqif_identifier_store_reuse</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Begin the conversion process.</span>
 
@@ -321,6 +339,11 @@
         <span class="k">if</span> <span class="n">result</span> <span class="o">==</span> <span class="n">Ret</span><span class="o">.</span><span class="n">OK</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_empty_attribute_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_args</span><span class="o">.</span><span class="n">empty</span>
             <span class="n">log_verbose</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Empty attribute value: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_empty_attribute_value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_id_store_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_id_store</span> <span class="o">=</span> <span class="n">ReqifIdentifierStore</span><span class="p">()</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_id_store</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_id_store_path</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+                    <span class="n">result</span> <span class="o">=</span> <span class="n">Ret</span><span class="o">.</span><span class="n">ERROR</span>
 
             <span class="c1"># Temporary directory for inline PlantUML images generated while</span>
             <span class="c1"># rendering Markdown attributes. The directory is cleaned up in</span>
@@ -496,7 +519,8 @@
             <span class="n">item_name</span><span class="o">=</span><span class="n">record</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
             <span class="n">type_key</span><span class="o">=</span><span class="n">type_key</span><span class="p">,</span>
             <span class="n">type_long_name</span><span class="o">=</span><span class="n">record</span><span class="o">.</span><span class="n">n_typ</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-            <span class="n">attribute_value_map</span><span class="o">=</span><span class="n">attribute_value_map</span>
+            <span class="n">attribute_value_map</span><span class="o">=</span><span class="n">attribute_value_map</span><span class="p">,</span>
+            <span class="n">identifier_key</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;spec-object:</span><span class="si">{</span><span class="n">record</span><span class="o">.</span><span class="n">n_package</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">record</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_spec_object_identifier_by_record</span><span class="p">[</span><span class="nb">id</span><span class="p">(</span><span class="n">record</span><span class="p">)]</span> <span class="o">=</span> <span class="n">spec_object</span><span class="o">.</span><span class="n">identifier</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_last_spec_object_identifier</span> <span class="o">=</span> <span class="n">spec_object</span><span class="o">.</span><span class="n">identifier</span>
@@ -510,7 +534,12 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">finish</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Ret</span><span class="p">:</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_reqif_single_doc_mode</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_reqif_reqifz</span>
+        <span class="c1"># lobster-trace: SwRequirements.sw_req_reqif_identifier_store_init</span>
+        <span class="c1"># lobster-trace: SwRequirements.sw_req_reqif_identifier_store_reuse</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Finish the conversion process and write the output in single document mode.</span>
+
+<span class="sd">        The persistent identifier store, if enabled, is written back so that the</span>
+<span class="sd">        generated identifiers stay immutable on subsequent conversions.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Ret: Status</span>
@@ -520,6 +549,10 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_args</span><span class="o">.</span><span class="n">single_document</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_flush_pending_hierarchy</span><span class="p">()</span>
             <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_write_document</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_args</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_id_store</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_id_store</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_id_store_path</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">Ret</span><span class="o">.</span><span class="n">ERROR</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_plantuml_tmp_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_plantuml_tmp_dir</span><span class="o">.</span><span class="n">cleanup</span><span class="p">()</span>
@@ -663,7 +696,7 @@
         <span class="p">)</span>
 
         <span class="n">req_if_header</span> <span class="o">=</span> <span class="n">ReqIFReqIFHeader</span><span class="p">(</span>
-            <span class="n">identifier</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_new_identifier</span><span class="p">(</span><span class="s2">&quot;req-if-header&quot;</span><span class="p">),</span>
+            <span class="n">identifier</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_obtain_identifier</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;req-if-header:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_document_title</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;req-if-header&quot;</span><span class="p">),</span>
             <span class="n">comment</span><span class="o">=</span><span class="s2">&quot;Generated by pyTRLCConverter&quot;</span><span class="p">,</span>
             <span class="n">creation_time</span><span class="o">=</span><span class="n">last_change</span><span class="p">,</span>
             <span class="n">repository_id</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
@@ -777,7 +810,8 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_hierarchy_stack</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
 
         <span class="n">hierarchy</span> <span class="o">=</span> <span class="n">ReqIFSpecHierarchy</span><span class="p">(</span>
-            <span class="n">identifier</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_new_identifier</span><span class="p">(</span><span class="s2">&quot;hierarchy&quot;</span><span class="p">),</span>
+            <span class="n">identifier</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_obtain_identifier</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;hierarchy:</span><span class="si">{</span><span class="n">spec_object_identifier</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">long_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;hierarchy&quot;</span><span class="p">),</span>
             <span class="n">spec_object</span><span class="o">=</span><span class="n">spec_object_identifier</span><span class="p">,</span>
             <span class="n">level</span><span class="o">=</span><span class="n">hierarchy_level</span><span class="p">,</span>
             <span class="n">children</span><span class="o">=</span><span class="p">[],</span>
@@ -798,14 +832,17 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_hierarchy_stack</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">hierarchy</span><span class="p">)</span></div>
 
 
+    <span class="c1"># pylint: disable-next=too-many-arguments,too-many-positional-arguments</span>
 <div class="viewcode-block" id="ReqifConverter._create_spec_object">
 <a class="viewcode-back" href="../../api/pyTRLCConverter/reqif_converter/index.html#pyTRLCConverter.reqif_converter.ReqifConverter._create_spec_object">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_create_spec_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                             <span class="n">item_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                             <span class="n">type_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                             <span class="n">type_long_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-                            <span class="n">attribute_value_map</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">ReqIFSpecObject</span><span class="p">:</span>
+                            <span class="n">attribute_value_map</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span>
+                            <span class="n">identifier_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ReqIFSpecObject</span><span class="p">:</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_reqif_record</span>
+        <span class="c1"># lobster-trace: SwRequirements.sw_req_reqif_identifier_immutable</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a ReqIFSpecObject for the given ReqIF type and field attributes.</span>
 
 <span class="sd">        Args:</span>
@@ -814,6 +851,7 @@
 <span class="sd">            type_long_name (str): Human-readable long-name of the ReqIF spec-object type.</span>
 <span class="sd">            attribute_value_map (dict[str, dict[str, Any]]): Mapping from field key to</span>
 <span class="sd">                ``{&quot;long_name&quot;: ..., &quot;value&quot;: ...}`` for each dynamic field attribute.</span>
+<span class="sd">            identifier_key (str): Stable logical key for the spec-object identifier.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            ReqIFSpecObject: The created and registered spec-object.</span>
@@ -856,7 +894,7 @@
                 <span class="p">)</span>
 
         <span class="n">spec_object</span> <span class="o">=</span> <span class="n">ReqIFSpecObject</span><span class="p">(</span>
-            <span class="n">identifier</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_new_identifier</span><span class="p">(</span><span class="s2">&quot;spec-object&quot;</span><span class="p">),</span>
+            <span class="n">identifier</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_obtain_identifier</span><span class="p">(</span><span class="n">identifier_key</span><span class="p">,</span> <span class="s2">&quot;spec-object&quot;</span><span class="p">),</span>
             <span class="n">attributes</span><span class="o">=</span><span class="n">attributes</span><span class="p">,</span>
             <span class="n">spec_object_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_spec_object_type_identifier</span><span class="p">(</span><span class="n">type_key</span><span class="p">),</span>
             <span class="n">long_name</span><span class="o">=</span><span class="n">item_name</span><span class="p">,</span>
@@ -1315,7 +1353,9 @@
 
             <span class="bp">self</span><span class="o">.</span><span class="n">_spec_relations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">ReqIFSpecRelation</span><span class="p">(</span>
-                    <span class="n">identifier</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_new_identifier</span><span class="p">(</span><span class="s2">&quot;spec-relation&quot;</span><span class="p">),</span>
+                    <span class="n">identifier</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_obtain_identifier</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;spec-relation:</span><span class="si">{</span><span class="n">source_identifier</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">relation_type_identifier</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">target_identifier</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;spec-relation&quot;</span><span class="p">),</span>
                     <span class="n">relation_type_ref</span><span class="o">=</span><span class="n">relation_type_identifier</span><span class="p">,</span>
                     <span class="n">source</span><span class="o">=</span><span class="n">source_identifier</span><span class="p">,</span>
                     <span class="n">target</span><span class="o">=</span><span class="n">target_identifier</span><span class="p">,</span>
@@ -1744,6 +1784,31 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_id_counter</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_id_counter</span><span class="si">}</span><span class="s2">&quot;</span></div>
+
+
+<div class="viewcode-block" id="ReqifConverter._obtain_identifier">
+<a class="viewcode-back" href="../../api/pyTRLCConverter/reqif_converter/index.html#pyTRLCConverter.reqif_converter.ReqifConverter._obtain_identifier">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_obtain_identifier</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">prefix</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="c1"># lobster-trace: SwRequirements.sw_req_reqif_identifier_immutable</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Obtain an identifier for an Identifiable element, persistent if a store is enabled.</span>
+
+<span class="sd">        When an identifier store is enabled (``--id-store``) the identifier is looked up</span>
+<span class="sd">        by its stable logical key and reused if known, keeping it immutable across</span>
+<span class="sd">        consecutive exports. Otherwise a volatile auto-incremented identifier is used.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            key (str): Stable logical key identifying the ReqIF element.</span>
+<span class="sd">            prefix (str): Identifier prefix (e.g. ``&quot;spec-object&quot;`` or ``&quot;hierarchy&quot;``).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: The identifier associated with the element.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_id_store</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">identifier</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_id_store</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">prefix</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">identifier</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_new_identifier</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">identifier</span></div>
 </div>
 
 </pre></div>

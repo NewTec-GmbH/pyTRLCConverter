@@ -26,6 +26,7 @@ Submodules
    /api/pyTRLCConverter/plantuml/index
    /api/pyTRLCConverter/render_config/index
    /api/pyTRLCConverter/reqif_converter/index
+   /api/pyTRLCConverter/reqif_identifier_store/index
    /api/pyTRLCConverter/ret/index
    /api/pyTRLCConverter/rst_converter/index
    /api/pyTRLCConverter/translator/index

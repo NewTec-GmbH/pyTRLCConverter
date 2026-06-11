@@ -1562,6 +1562,69 @@ does not fail.</p></td>
 </tbody>
 </table>
 </div>
+<div class="admonition-tc-reqif-identifier-store-init admonition" id="swe-test-rst-tc-reqif-identifier-store-init">
+<p class="admonition-title">tc_reqif_identifier_store_init</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether the ReqIF converter creates the JSON identifier store file and stores the generated identifiers on the initial conversion when --id-store points to a non-existing file.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-reqif-identifier-store-init"><span class="std std-ref">SwRequirements.sw_req_reqif_identifier_store_init</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-reqif-identifier-immutable admonition" id="swe-test-rst-tc-reqif-identifier-immutable">
+<p class="admonition-title">tc_reqif_identifier_immutable</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether the identifiers of the generated ReqIF Identifiable elements stay immutable across two consecutive exports using the same --id-store file.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-reqif-identifier-immutable"><span class="std std-ref">SwRequirements.sw_req_reqif_identifier_immutable</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition-tc-reqif-identifier-store-reuse admonition" id="swe-test-rst-tc-reqif-identifier-store-reuse">
+<p class="admonition-title">tc_reqif_identifier_store_reuse</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute Name</p></th>
+<th class="head"><p>Attribute Value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>This test case checks whether the ReqIF converter reuses stored identifiers for known elements and assigns new identifiers to new elements, writing them back to the --id-store file.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Verifies</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-reqif-identifier-store-reuse"><span class="std std-ref">SwRequirements.sw_req_reqif_identifier_store_reuse</span></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 </section>
 <section id="docx">
 <span id="swe-test-rst-docx"></span><h2>Docx<a class="headerlink" href="#docx" title="Link to this heading"></a></h2>
