@@ -153,7 +153,7 @@ Module Contents
 
 
 
-   .. py:method:: _create_spec_object(item_name: str, type_key: str, type_long_name: str, attribute_value_map: dict[str, dict[str, Any]]) -> reqif.models.reqif_spec_object.ReqIFSpecObject
+   .. py:method:: _create_spec_object(item_name: str, type_key: str, type_long_name: str, attribute_value_map: dict[str, dict[str, Any]], identifier_key: str) -> reqif.models.reqif_spec_object.ReqIFSpecObject
 
       Create a ReqIFSpecObject for the given ReqIF type and field attributes.
 
@@ -166,6 +166,8 @@ Module Contents
       :param attribute_value_map: Mapping from field key to
                                   ``{"long_name": ..., "value": ...}`` for each dynamic field attribute.
       :type attribute_value_map: dict[str, dict[str, Any]]
+      :param identifier_key: Stable logical key for the spec-object identifier.
+      :type identifier_key: str
 
       :returns: The created and registered spec-object.
       :rtype: ReqIFSpecObject
@@ -393,6 +395,11 @@ Module Contents
       If ``table_options`` is provided and non-empty, table styling is applied to the
       generated HTML before wrapping (see :meth:`_apply_table_options`).
 
+      Fenced code blocks tagged ``plantuml`` are rendered as embedded SVG
+      images via :class:`Md2ReqifRenderer` / :class:`Gfm2ReqifRenderer`; the
+      generated images are registered in ``self._external_files`` so they are
+      copied next to the ReqIF document.
+
       :param markdown_text: Markdown source text.
       :type markdown_text: str
       :param gfm_mode: If True, use the GFM extension; otherwise use CommonMark.
@@ -414,6 +421,24 @@ Module Contents
       :type prefix: str
 
       :returns: Unique identifier string.
+      :rtype: str
+
+
+
+   .. py:method:: _obtain_identifier(key: str, prefix: str) -> str
+
+      Obtain an identifier for an Identifiable element, persistent if a store is enabled.
+
+      When an identifier store is enabled (``--id-store``) the identifier is looked up
+      by its stable logical key and reused if known, keeping it immutable across
+      consecutive exports. Otherwise a volatile auto-incremented identifier is used.
+
+      :param key: Stable logical key identifying the ReqIF element.
+      :type key: str
+      :param prefix: Identifier prefix (e.g. ``"spec-object"`` or ``"hierarchy"``).
+      :type prefix: str
+
+      :returns: The identifier associated with the element.
       :rtype: str
 
 
@@ -670,6 +695,9 @@ Module Contents
 
       Finish the conversion process and write the output in single document mode.
 
+      The persistent identifier store, if enabled, is written back so that the
+      generated identifiers stay immutable on subsequent conversions.
+
       :returns: Status
       :rtype: Ret
 
@@ -797,6 +825,15 @@ Module Contents
 
 
 
+   .. py:attribute:: _id_store
+      :type:  Optional[pyTRLCConverter.reqif_identifier_store.ReqifIdentifierStore]
+      :value: None
+
+
+
+   .. py:attribute:: _id_store_path
+
+
    .. py:attribute:: _last_spec_object_identifier
       :type:  Optional[str]
       :value: None
@@ -820,6 +857,12 @@ Module Contents
 
    .. py:attribute:: _pending_relations
       :value: []
+
+
+
+   .. py:attribute:: _plantuml_tmp_dir
+      :type:  Optional[tempfile.TemporaryDirectory]
+      :value: None
 
 
 

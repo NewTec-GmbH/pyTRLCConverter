@@ -9,7 +9,7 @@
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
-      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=563f12fe" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=c87a014e" />
 
   
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
@@ -106,6 +106,8 @@
 
 <span class="c1"># Imports **********************************************************************</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Any</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">marko</span><span class="w"> </span><span class="kn">import</span> <span class="n">Markdown</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">trlc.ast</span><span class="w"> </span><span class="kn">import</span> <span class="n">Implicit_Null</span><span class="p">,</span> <span class="n">Record_Object</span><span class="p">,</span> <span class="n">Record_Reference</span><span class="p">,</span> <span class="n">String_Literal</span><span class="p">,</span> <span class="n">Expression</span>
@@ -120,6 +122,7 @@
 
 <span class="c1"># Classes **********************************************************************</span>
 
+<span class="c1"># pylint: disable-next=too-many-instance-attributes</span>
 <div class="viewcode-block" id="RstConverter">
 <a class="viewcode-back" href="../../api/pyTRLCConverter/rst_converter/index.html#pyTRLCConverter.rst_converter.RstConverter">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">RstConverter</span><span class="p">(</span><span class="n">BaseConverter</span><span class="p">):</span>
@@ -163,6 +166,9 @@
         <span class="c1"># The AST walker meta data for processing the record object fields.</span>
         <span class="c1"># This will hold the information about the current package, type and attribute being processed.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ast_meta_data</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_plantuml_tmp_dir</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_external_files</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="p">[]</span>
 
 <div class="viewcode-block" id="RstConverter.get_subcommand">
 <a class="viewcode-back" href="../../api/pyTRLCConverter/rst_converter/index.html#pyTRLCConverter.rst_converter.RstConverter.get_subcommand">[docs]</a>
@@ -282,6 +288,9 @@
 
             <span class="n">log_verbose</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Empty attribute value: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_empty_attribute_value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
+            <span class="c1"># pylint: disable-next=consider-using-with</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_plantuml_tmp_dir</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;pyTRLCConverter_rst_&quot;</span><span class="p">)</span>
+
             <span class="c1"># Single document mode?</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_args</span><span class="o">.</span><span class="n">single_document</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
                 <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_out_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_args</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
@@ -305,7 +314,7 @@
 
 <span class="sd">        Args:</span>
 <span class="sd">            file_name (str): File name</span>
-<span class="sd">        </span>
+
 <span class="sd">        Returns:</span>
 <span class="sd">            Ret: Status</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -341,8 +350,11 @@
         <span class="c1"># Multiple document mode?</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_args</span><span class="o">.</span><span class="n">single_document</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
             <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fd</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="n">out_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_fd</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_fd</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_fd</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_copy_external_files</span><span class="p">(</span><span class="n">out_dir</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_external_files</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="k">return</span> <span class="n">Ret</span><span class="o">.</span><span class="n">OK</span></div>
 
@@ -358,7 +370,7 @@
 <span class="sd">        Args:</span>
 <span class="sd">            section (str): The section name</span>
 <span class="sd">            level (int): The section indentation level</span>
-<span class="sd">        </span>
+
 <span class="sd">        Returns:</span>
 <span class="sd">            Ret: Status</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -389,7 +401,7 @@
 <span class="sd">            level (int): The record level.</span>
 <span class="sd">            translation (Optional[dict]): Translation dictionary for the record object.</span>
 <span class="sd">                                            If None, no translation is applied.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Returns:</span>
 <span class="sd">            Ret: Status</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -411,8 +423,14 @@
         <span class="c1"># Single document mode?</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_args</span><span class="o">.</span><span class="n">single_document</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
             <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fd</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="n">out_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_fd</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_fd</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_fd</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_copy_external_files</span><span class="p">(</span><span class="n">out_dir</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_plantuml_tmp_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_plantuml_tmp_dir</span><span class="o">.</span><span class="n">cleanup</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_plantuml_tmp_dir</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="k">return</span> <span class="n">Ret</span><span class="o">.</span><span class="n">OK</span></div>
 
@@ -437,6 +455,30 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_fd</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
 
+<div class="viewcode-block" id="RstConverter._copy_external_files">
+<a class="viewcode-back" href="../../api/pyTRLCConverter/rst_converter/index.html#pyTRLCConverter.rst_converter.RstConverter._copy_external_files">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_copy_external_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dest_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># lobster-trace: SwRequirements.sw_req_rst_render_plantuml</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Copy all collected external files to the given destination directory.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            dest_dir (str): Destination directory path.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">copied_sources</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">source_path</span><span class="p">,</span> <span class="n">local_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_external_files</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">source_path</span> <span class="ow">in</span> <span class="n">copied_sources</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="n">dest_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dest_dir</span><span class="p">,</span> <span class="n">local_name</span><span class="p">)</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">shutil</span><span class="o">.</span><span class="n">copy2</span><span class="p">(</span><span class="n">source_path</span><span class="p">,</span> <span class="n">dest_path</span><span class="p">)</span>
+                <span class="n">copied_sources</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">source_path</span><span class="p">)</span>
+            <span class="k">except</span> <span class="p">(</span><span class="ne">OSError</span><span class="p">,</span> <span class="ne">IOError</span><span class="p">)</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                <span class="n">log_error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to copy external file &#39;</span><span class="si">{</span><span class="n">source_path</span><span class="si">}</span><span class="s2">&#39;: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span></div>
+
+
 <div class="viewcode-block" id="RstConverter._get_rst_heading_level">
 <a class="viewcode-back" href="../../api/pyTRLCConverter/rst_converter/index.html#pyTRLCConverter.rst_converter.RstConverter._get_rst_heading_level">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_get_rst_heading_level</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
@@ -448,7 +490,7 @@
 
 <span class="sd">        Args:</span>
 <span class="sd">            level (int): The TRLC object level.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Returns:</span>
 <span class="sd">            int: reStructuredText heading level</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -464,7 +506,7 @@
 
 <span class="sd">        Args:</span>
 <span class="sd">            file_name_trlc (str): TRLC file name</span>
-<span class="sd">        </span>
+
 <span class="sd">        Returns:</span>
 <span class="sd">            str: reStructuredText file name</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -504,13 +546,13 @@
         <span class="k">return</span> <span class="n">result</span></div>
 
 
-<div class="viewcode-block" id="RstConverter._on_implict_null">
-<a class="viewcode-back" href="../../api/pyTRLCConverter/rst_converter/index.html#pyTRLCConverter.rst_converter.RstConverter._on_implict_null">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_on_implict_null</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_</span><span class="p">:</span> <span class="n">Implicit_Null</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="RstConverter._on_implicit_null">
+<a class="viewcode-back" href="../../api/pyTRLCConverter/rst_converter/index.html#pyTRLCConverter.rst_converter.RstConverter._on_implicit_null">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_on_implicit_null</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_</span><span class="p">:</span> <span class="n">Implicit_Null</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_rst_record</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Process the given implicit null value.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Returns:</span>
 <span class="sd">            str: The implicit null value.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -526,7 +568,7 @@
 
 <span class="sd">        Args:</span>
 <span class="sd">            record_reference (Record_Reference): The record reference value.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Returns:</span>
 <span class="sd">            str: reStructuredText link to the record reference.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -544,7 +586,7 @@
 
 <span class="sd">        Args:</span>
 <span class="sd">            string_literal (String_Literal): The string literal value.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Returns:</span>
 <span class="sd">            str: The string literal value.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -638,7 +680,7 @@
         <span class="n">trlc_ast_walker</span><span class="o">.</span><span class="n">add_dispatcher</span><span class="p">(</span>
             <span class="n">Implicit_Null</span><span class="p">,</span>
             <span class="kc">None</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_on_implict_null</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_on_implicit_null</span><span class="p">,</span>
             <span class="kc">None</span>
         <span class="p">)</span>
         <span class="n">trlc_ast_walker</span><span class="o">.</span><span class="n">add_dispatcher</span><span class="p">(</span>
@@ -664,7 +706,8 @@
         <span class="c1"># lobster-trace: SwRequirements.sw_req_rst_string_format</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_rst_render_md</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_rst_render_gfm</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Render the attribute value depened on its format.</span>
+        <span class="c1"># lobster-trace: SwRequirements.sw_req_rst_render_plantuml</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Render the attribute value depending on its format.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            package_name (str): The package name.</span>
@@ -682,13 +725,17 @@
 
             <span class="c1"># Is it CommonMark Markdown format?</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_render_cfg</span><span class="o">.</span><span class="n">is_format_md</span><span class="p">(</span><span class="n">package_name</span><span class="p">,</span> <span class="n">type_name</span><span class="p">,</span> <span class="n">attribute_name</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-                <span class="c1"># Convert Markdown to reStructuredText.</span>
+                <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_plantuml_tmp_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                <span class="n">Md2RstRenderer</span><span class="o">.</span><span class="n">image_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_plantuml_tmp_dir</span><span class="o">.</span><span class="n">name</span>
+                <span class="n">Md2RstRenderer</span><span class="o">.</span><span class="n">external_files</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_external_files</span>
                 <span class="n">markdown</span> <span class="o">=</span> <span class="n">Markdown</span><span class="p">(</span><span class="n">renderer</span><span class="o">=</span><span class="n">Md2RstRenderer</span><span class="p">)</span>
                 <span class="n">result</span> <span class="o">=</span> <span class="n">markdown</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="n">attribute_value</span><span class="p">)</span>
 
             <span class="c1"># Is it GitHub Flavored Markdown format?</span>
             <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_render_cfg</span><span class="o">.</span><span class="n">is_format_gfm</span><span class="p">(</span><span class="n">package_name</span><span class="p">,</span> <span class="n">type_name</span><span class="p">,</span> <span class="n">attribute_name</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-                <span class="c1"># Convert GitHub Flavored Markdown to reStructuredText.</span>
+                <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_plantuml_tmp_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                <span class="n">Md2RstRenderer</span><span class="o">.</span><span class="n">image_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_plantuml_tmp_dir</span><span class="o">.</span><span class="n">name</span>
+                <span class="n">Md2RstRenderer</span><span class="o">.</span><span class="n">external_files</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_external_files</span>
                 <span class="n">markdown</span> <span class="o">=</span> <span class="n">Markdown</span><span class="p">(</span><span class="n">renderer</span><span class="o">=</span><span class="n">Gfm2RstRenderer</span><span class="p">,</span> <span class="n">extensions</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;gfm&#39;</span><span class="p">])</span>
                 <span class="n">result</span> <span class="o">=</span> <span class="n">markdown</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="n">attribute_value</span><span class="p">)</span>
 
@@ -712,7 +759,7 @@
 <span class="sd">            level (int): The record level.</span>
 <span class="sd">            translation (Optional[dict]): Translation dictionary for the record object.</span>
 <span class="sd">                                            If None, no translation is applied.</span>
-<span class="sd">        </span>
+
 <span class="sd">            Returns:</span>
 <span class="sd">            Ret: Status</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -961,7 +1008,7 @@
 <span class="sd">        Args:</span>
 <span class="sd">            list_values (List[str]): List of list values.</span>
 <span class="sd">            escape (bool): Escapes every list value (default: True).</span>
-<span class="sd">        </span>
+
 <span class="sd">        Returns:</span>
 <span class="sd">            str: reStructuredText list</span>
 <span class="sd">        &quot;&quot;&quot;</span>

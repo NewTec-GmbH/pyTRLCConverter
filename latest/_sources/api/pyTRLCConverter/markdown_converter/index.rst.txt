@@ -51,6 +51,15 @@ Module Contents
 
 
 
+   .. py:method:: _copy_external_files(dest_dir: str) -> None
+
+      Copy all collected external files to the given destination directory.
+
+      :param dest_dir: Destination directory path.
+      :type dest_dir: str
+
+
+
    .. py:method:: _create_markdown_link_from_record_object_reference(record_reference: trlc.ast.Record_Reference) -> str
 
       Create a Markdown link from a record reference.
@@ -164,7 +173,7 @@ Module Contents
 
    .. py:method:: _render(package_name: str, type_name: str, attribute_name: str, attribute_value: str) -> str
 
-      Render the attribute value depened on its format.
+      Render the attribute value depending on its format.
 
       :param package_name: The package name.
       :type package_name: str
@@ -176,6 +185,23 @@ Module Contents
       :type attribute_value: str
 
       :returns: The rendered attribute value.
+      :rtype: str
+
+
+
+   .. py:method:: _render_plantuml_blocks(text: str) -> str
+
+      Replace plantuml fenced code blocks with SVG image references.
+
+      Each ```plantuml ... ``` block is replaced by ``![](plantuml_<hash>.svg)``.
+      The SVG is written to the temporary image directory and registered in
+      ``_external_files`` for copying to the output folder. On failure an
+      inline ``[PlantUML error: ...]`` text is emitted instead.
+
+      :param text: Markdown text that may contain plantuml fenced blocks.
+      :type text: str
+
+      :returns: Text with plantuml blocks replaced.
       :rtype: str
 
 
@@ -476,6 +502,12 @@ Module Contents
 
 
 
+   .. py:attribute:: _external_files
+      :type:  list
+      :value: []
+
+
+
    .. py:attribute:: _fd
       :value: None
 
@@ -487,5 +519,11 @@ Module Contents
 
 
    .. py:attribute:: _out_path
+
+
+   .. py:attribute:: _plantuml_tmp_dir
+      :type:  Optional[tempfile.TemporaryDirectory]
+      :value: None
+
 
 

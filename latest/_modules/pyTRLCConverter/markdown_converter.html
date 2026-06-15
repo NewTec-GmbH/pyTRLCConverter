@@ -9,7 +9,7 @@
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
-      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=563f12fe" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=c87a014e" />
 
   
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
@@ -105,10 +105,15 @@
 <span class="c1"># If not, see &lt;https://www.gnu.org/licenses/&gt;.</span>
 
 <span class="c1"># Imports **********************************************************************</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">hashlib</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Any</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">trlc.ast</span><span class="w"> </span><span class="kn">import</span> <span class="n">Implicit_Null</span><span class="p">,</span> <span class="n">Record_Object</span><span class="p">,</span> <span class="n">Record_Reference</span><span class="p">,</span> <span class="n">String_Literal</span><span class="p">,</span> <span class="n">Expression</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pyTRLCConverter.base_converter</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseConverter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyTRLCConverter.plantuml</span><span class="w"> </span><span class="kn">import</span> <span class="n">PlantUML</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pyTRLCConverter.ret</span><span class="w"> </span><span class="kn">import</span> <span class="n">Ret</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pyTRLCConverter.trlc_helper</span><span class="w"> </span><span class="kn">import</span> <span class="n">TrlcAstWalker</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pyTRLCConverter.logger</span><span class="w"> </span><span class="kn">import</span> <span class="n">log_verbose</span><span class="p">,</span> <span class="n">log_error</span>
@@ -169,6 +174,9 @@
         <span class="c1"># This will hold the information about the current package, type and attribute being processed.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ast_meta_data</span> <span class="o">=</span> <span class="kc">None</span>
 
+        <span class="bp">self</span><span class="o">.</span><span class="n">_plantuml_tmp_dir</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_external_files</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="p">[]</span>
+
 <div class="viewcode-block" id="MarkdownConverter.get_subcommand">
 <a class="viewcode-back" href="../../api/pyTRLCConverter/markdown_converter/index.html#pyTRLCConverter.markdown_converter.MarkdownConverter.get_subcommand">[docs]</a>
     <span class="nd">@staticmethod</span>
@@ -207,6 +215,8 @@
         <span class="c1"># lobster-trace: SwRequirements.sw_req_markdown_top_level_custom</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_markdown_out_file_name_default</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_markdown_out_file_name_custom</span>
+        <span class="c1"># lobster-trace: SwRequirements.sw_req_markdown_render_plantuml</span>
+        <span class="c1"># lobster-trace: SwRequirements.sw_req_cli_render_plantuml</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Register converter specific argument parser.</span>
 
@@ -255,6 +265,15 @@
             <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
             <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Name of the top level heading, required in single document mode &quot;</span> \
                 <span class="sa">f</span><span class="s2">&quot;(default = </span><span class="si">{</span><span class="n">MarkdownConverter</span><span class="o">.</span><span class="n">TOP_LEVEL_DEFAULT</span><span class="si">}</span><span class="s2">).&quot;</span>
+        <span class="p">)</span>
+
+        <span class="n">BaseConverter</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s2">&quot;--render-plantuml&quot;</span><span class="p">,</span>
+            <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
+            <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Render plantuml fenced code blocks as SVG image references. &quot;</span>
+                 <span class="s2">&quot;Without this option plantuml blocks are passed through unchanged.&quot;</span>
         <span class="p">)</span></div>
 
 
@@ -286,6 +305,12 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_empty_attribute_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_args</span><span class="o">.</span><span class="n">empty</span>
 
             <span class="n">log_verbose</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Empty attribute value: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_empty_attribute_value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_args</span><span class="o">.</span><span class="n">render_plantuml</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="c1"># pylint: disable-next=consider-using-with</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_plantuml_tmp_dir</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">(</span>
+                    <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;pyTRLCConverter_markdown_&quot;</span>
+                <span class="p">)</span>
 
             <span class="c1"># Single document mode?</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_args</span><span class="o">.</span><span class="n">single_document</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
@@ -345,9 +370,12 @@
         <span class="c1"># Multiple document mode?</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_args</span><span class="o">.</span><span class="n">single_document</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
             <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fd</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="n">out_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_fd</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_fd</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_fd</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_is_top_level_heading_req</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_copy_external_files</span><span class="p">(</span><span class="n">out_dir</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_external_files</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="k">return</span> <span class="n">Ret</span><span class="o">.</span><span class="n">OK</span></div>
 
@@ -420,8 +448,14 @@
         <span class="c1"># Single document mode?</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_args</span><span class="o">.</span><span class="n">single_document</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
             <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fd</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="n">out_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_fd</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_fd</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_fd</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_copy_external_files</span><span class="p">(</span><span class="n">out_dir</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_plantuml_tmp_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_plantuml_tmp_dir</span><span class="o">.</span><span class="n">cleanup</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_plantuml_tmp_dir</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="k">return</span> <span class="n">Ret</span><span class="o">.</span><span class="n">OK</span></div>
 
@@ -687,7 +721,8 @@
         <span class="c1"># lobster-trace: SwRequirements.sw_req_markdown_string_format</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_markdown_render_md</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_markdown_render_gfm</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Render the attribute value depened on its format.</span>
+        <span class="c1"># lobster-trace: SwRequirements.sw_req_markdown_render_plantuml</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Render the attribute value depending on its format.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            package_name (str): The package name.</span>
@@ -707,7 +742,72 @@
             <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">markdown_escape</span><span class="p">(</span><span class="n">attribute_value</span><span class="p">)</span>
             <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">markdown_lf2soft_return</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
 
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_args</span><span class="o">.</span><span class="n">render_plantuml</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_render_plantuml_blocks</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+
         <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="MarkdownConverter._render_plantuml_blocks">
+<a class="viewcode-back" href="../../api/pyTRLCConverter/markdown_converter/index.html#pyTRLCConverter.markdown_converter.MarkdownConverter._render_plantuml_blocks">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_render_plantuml_blocks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="c1"># lobster-trace: SwRequirements.sw_req_markdown_render_plantuml</span>
+        <span class="c1"># lobster-trace: SwRequirements.sw_req_plantuml</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Replace plantuml fenced code blocks with SVG image references.</span>
+
+<span class="sd">        Each ```plantuml ... ``` block is replaced by ``![](plantuml_&lt;hash&gt;.svg)``.</span>
+<span class="sd">        The SVG is written to the temporary image directory and registered in</span>
+<span class="sd">        ``_external_files`` for copying to the output folder. On failure an</span>
+<span class="sd">        inline ``[PlantUML error: ...]`` text is emitted instead.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            text (str): Markdown text that may contain plantuml fenced blocks.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: Text with plantuml blocks replaced.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_plantuml_tmp_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_replace</span><span class="p">(</span><span class="n">match</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">Match</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+            <span class="n">diagram_source</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">plantuml</span> <span class="o">=</span> <span class="n">PlantUML</span><span class="p">()</span>
+                <span class="n">svg_bytes</span> <span class="o">=</span> <span class="n">plantuml</span><span class="o">.</span><span class="n">generate_to_bytes</span><span class="p">(</span><span class="s2">&quot;svg&quot;</span><span class="p">,</span> <span class="n">diagram_source</span><span class="p">)</span>
+                <span class="n">digest</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha1</span><span class="p">(</span><span class="n">diagram_source</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()[:</span><span class="mi">12</span><span class="p">]</span>
+                <span class="n">local_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;plantuml_</span><span class="si">{</span><span class="n">digest</span><span class="si">}</span><span class="s2">.svg&quot;</span>
+                <span class="n">svg_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_plantuml_tmp_dir</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">local_name</span><span class="p">)</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">svg_path</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">svg_file</span><span class="p">:</span>
+                    <span class="n">svg_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">svg_bytes</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_external_files</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">svg_path</span><span class="p">,</span> <span class="n">local_name</span><span class="p">))</span>
+                <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;![](</span><span class="si">{</span><span class="n">local_name</span><span class="si">}</span><span class="s2">)&quot;</span>
+            <span class="k">except</span> <span class="p">(</span><span class="ne">FileNotFoundError</span><span class="p">,</span> <span class="ne">OSError</span><span class="p">)</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;[PlantUML error: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">]&quot;</span>
+
+        <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;```plantuml\n(.*?)```&quot;</span><span class="p">,</span> <span class="n">_replace</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">DOTALL</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MarkdownConverter._copy_external_files">
+<a class="viewcode-back" href="../../api/pyTRLCConverter/markdown_converter/index.html#pyTRLCConverter.markdown_converter.MarkdownConverter._copy_external_files">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_copy_external_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dest_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># lobster-trace: SwRequirements.sw_req_markdown_render_plantuml</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Copy all collected external files to the given destination directory.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            dest_dir (str): Destination directory path.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">copied_sources</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">source_path</span><span class="p">,</span> <span class="n">local_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_external_files</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">source_path</span> <span class="ow">in</span> <span class="n">copied_sources</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="n">dest_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dest_dir</span><span class="p">,</span> <span class="n">local_name</span><span class="p">)</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">shutil</span><span class="o">.</span><span class="n">copy2</span><span class="p">(</span><span class="n">source_path</span><span class="p">,</span> <span class="n">dest_path</span><span class="p">)</span>
+                <span class="n">copied_sources</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">source_path</span><span class="p">)</span>
+            <span class="k">except</span> <span class="p">(</span><span class="ne">OSError</span><span class="p">,</span> <span class="ne">IOError</span><span class="p">)</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                <span class="n">log_error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to copy external file &#39;</span><span class="si">{</span><span class="n">source_path</span><span class="si">}</span><span class="s2">&#39;: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span></div>
 
 
     <span class="c1"># pylint: disable-next=too-many-locals</span>

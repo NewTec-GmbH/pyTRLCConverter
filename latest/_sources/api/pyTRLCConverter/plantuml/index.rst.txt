@@ -18,6 +18,8 @@ Attributes
 
    pyTRLCConverter.plantuml.BASE64_ENCODE_CHARS
    pyTRLCConverter.plantuml.PLANTUML_ENCODE_CHARS
+   pyTRLCConverter.plantuml.PLANTUML_ENV_VAR
+   pyTRLCConverter.plantuml.PLANTUML_VERIFY_SSL_ENV_VAR
 
 
 Classes
@@ -57,8 +59,8 @@ Module Contents
 
       Generate image using a plantuml server.
 
-      This is does not require java installed and is usually a lot faster
-      as no java startup time needed when using the plantuml.jar file.
+      Does not require Java installed and is usually a lot faster
+      as no Java startup time is needed when using the plantuml.jar file.
 
       :param diagram_type: Diagram type, e.g. svg. See PlantUML -t options.
       :type diagram_type: str
@@ -67,34 +69,68 @@ Module Contents
       :param dst_path: Path to the destination of the generated image.
       :type dst_path: str
 
-       Raises:
-          FileNotFoundError: PlantUML diagram file not found.
-          OSError: Destination path does not exist.
-          requests.exceptions.RequestException: Error during GET request to PlantUML server.
+      :raises FileNotFoundError: PlantUML diagram file not found.
+      :raises OSError: Destination path does not exist.
+      :raises requests.exceptions.RequestException: Error during GET request to PlantUML server.
+
+
+
+   .. py:method:: _generate_to_bytes_local(diagram_type: str, diagram_source: str) -> bytes
+
+      Generate image via local plantuml.jar using -pipe mode and return raw bytes.
+
+      :param diagram_type: Diagram type, e.g. png.
+      :type diagram_type: str
+      :param diagram_source: PlantUML diagram source text.
+      :type diagram_source: str
+
+      :raises FileNotFoundError: Java not installed or plantuml.jar not found.
+
+      :returns: The raw image bytes.
+      :rtype: bytes
+
+
+
+   .. py:method:: _generate_to_bytes_server(diagram_type: str, diagram_source: str) -> bytes
+
+      Generate image via PlantUML server and return raw bytes.
+
+      :param diagram_type: Diagram type, e.g. png.
+      :type diagram_type: str
+      :param diagram_source: PlantUML diagram source text.
+      :type diagram_source: str
+
+      :raises requests.exceptions.RequestException: HTTP error from PlantUML server.
+
+      :returns: The raw image bytes.
+      :rtype: bytes
 
 
 
    .. py:method:: _get_absolute_path(path)
 
-      Get absolute path to the diagram.
-          This is required by PlantUML java program for the output path.
+      Convert a relative path to an absolute path based on the working directory.
 
-      :param path: _description_
-      :type path: _type_
+      The plantuml.jar requires an absolute output path.
 
-      :returns: _description_
-      :rtype: _type_
+      :param path: Relative or absolute path.
+      :type path: str
+
+      :returns: Absolute path.
+      :rtype: str
 
 
 
-   .. py:method:: _make_server_url(diagram_type: str, diagram_path: str) -> str
+   .. py:method:: _make_server_url(diagram_type: str, diagram_source: str, source_is_file: bool = True) -> str
 
-      Generate a plantuml server GET URL from a diagram data file.
+      Generate a PlantUML server GET URL from a diagram data file.
 
       :param diagram_type: Diagram type, e.g. svg. See PlantUML -t options.
       :type diagram_type: str
-      :param diagram_path: Path to the PlantUML diagram.
-      :type diagram_path: str
+      :param diagram_source: Path to the PlantUML diagram or content of PlantUML diagram.
+      :type diagram_source: str
+      :param source_is_file: True if diagram_source points to a file, False if it is the diagram content.
+      :type source_is_file: bool
 
       :raises FileNotFoundError: PlantUML diagram file not found.
 
@@ -115,6 +151,23 @@ Module Contents
       :raises FileNotFoundError: PlantUML diagram file not found.
       :raises requests.exceptions.RequestException: Error during GET request to PlantUML server.
       :raises OSError: Destination path does not exist.
+
+
+
+   .. py:method:: generate_to_bytes(diagram_type: str, diagram_source: str) -> bytes
+
+      Generate a PlantUML image from source text and return the raw bytes.
+
+      :param diagram_type: Diagram type, e.g. png. See PlantUML -t options.
+      :type diagram_type: str
+      :param diagram_source: PlantUML diagram source text.
+      :type diagram_source: str
+
+      :raises FileNotFoundError: PlantUML jar file not found or Java not installed (local mode).
+      :raises requests.exceptions.RequestException: HTTP error from PlantUML server (server mode).
+
+      :returns: The raw image bytes.
+      :rtype: bytes
 
 
 
@@ -141,6 +194,9 @@ Module Contents
 
 
 
+   .. py:attribute:: _verify_ssl
+
+
    .. py:attribute:: _working_directory
       :value: b'.'
 
@@ -152,5 +208,13 @@ Module Contents
 
 .. py:data:: PLANTUML_ENCODE_CHARS
    :value: '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_'
+
+
+.. py:data:: PLANTUML_ENV_VAR
+   :value: 'PLANTUML'
+
+
+.. py:data:: PLANTUML_VERIFY_SSL_ENV_VAR
+   :value: 'PLANTUML_VERIFY_SSL'
 
 

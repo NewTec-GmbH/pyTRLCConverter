@@ -50,6 +50,15 @@ Module Contents
 
 
 
+   .. py:method:: _copy_external_files(dest_dir: str) -> None
+
+      Copy all collected external files to the given destination directory.
+
+      :param dest_dir: Destination directory path.
+      :type dest_dir: str
+
+
+
    .. py:method:: _create_rst_link_from_record_object_reference(record_reference: trlc.ast.Record_Reference) -> str
 
       Create a reStructuredText cross-reference from a record reference.
@@ -116,7 +125,7 @@ Module Contents
 
 
 
-   .. py:method:: _on_implict_null(_: trlc.ast.Implicit_Null) -> str
+   .. py:method:: _on_implicit_null(_: trlc.ast.Implicit_Null) -> str
 
       Process the given implicit null value.
 
@@ -163,7 +172,7 @@ Module Contents
 
    .. py:method:: _render(package_name: str, type_name: str, attribute_name: str, attribute_value: str) -> str
 
-      Render the attribute value depened on its format.
+      Render the attribute value depending on its format.
 
       :param package_name: The package name.
       :type package_name: str
@@ -496,11 +505,23 @@ Module Contents
 
 
 
+   .. py:attribute:: _external_files
+      :type:  list
+      :value: []
+
+
+
    .. py:attribute:: _fd
       :value: None
 
 
 
    .. py:attribute:: _out_path
+
+
+   .. py:attribute:: _plantuml_tmp_dir
+      :type:  Optional[tempfile.TemporaryDirectory]
+      :value: None
+
 
 

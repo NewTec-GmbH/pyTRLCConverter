@@ -10,7 +10,7 @@
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=563f12fe" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=c87a014e" />
 
   
     <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
@@ -23,7 +23,7 @@
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="pyTRLCConverter.ret" href="../ret/index.html" />
+    <link rel="next" title="pyTRLCConverter.reqif_identifier_store" href="../reqif_identifier_store/index.html" />
     <link rel="prev" title="pyTRLCConverter.render_config" href="../render_config/index.html" /> 
 </head>
 
@@ -265,7 +265,7 @@ is logged and the file is skipped.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter._create_spec_object">
-<span class="sig-name descname"><span class="pre">_create_spec_object</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_long_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attribute_value_map</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">reqif.models.reqif_spec_object.ReqIFSpecObject</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/reqif_converter.html#ReqifConverter._create_spec_object"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter._create_spec_object" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_create_spec_object</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_long_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attribute_value_map</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">identifier_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">reqif.models.reqif_spec_object.ReqIFSpecObject</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/reqif_converter.html#ReqifConverter._create_spec_object"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter._create_spec_object" title="Link to this definition"></a></dt>
 <dd><p>Create a ReqIFSpecObject for the given ReqIF type and field attributes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -275,6 +275,7 @@ is logged and the file is skipped.</p>
 <li><p><strong>type_long_name</strong> (<em>str</em>) – Human-readable long-name of the ReqIF spec-object type.</p></li>
 <li><p><strong>attribute_value_map</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em><em>]</em>) – Mapping from field key to
 <code class="docutils literal notranslate"><span class="pre">{&quot;long_name&quot;:</span> <span class="pre">...,</span> <span class="pre">&quot;value&quot;:</span> <span class="pre">...}</span></code> for each dynamic field attribute.</p></li>
+<li><p><strong>identifier_key</strong> (<em>str</em>) – Stable logical key for the spec-object identifier.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -566,6 +567,10 @@ pending record.</p>
 <dd><p>Convert Markdown text to an XHTML-wrapped string using marko.</p>
 <p>If <code class="docutils literal notranslate"><span class="pre">table_options</span></code> is provided and non-empty, table styling is applied to the
 generated HTML before wrapping (see <a class="reference internal" href="#pyTRLCConverter.reqif_converter.ReqifConverter._apply_table_options" title="pyTRLCConverter.reqif_converter.ReqifConverter._apply_table_options"><code class="xref py py-meth docutils literal notranslate"><span class="pre">_apply_table_options()</span></code></a>).</p>
+<p>Fenced code blocks tagged <code class="docutils literal notranslate"><span class="pre">plantuml</span></code> are rendered as embedded SVG
+images via <code class="xref py py-class docutils literal notranslate"><span class="pre">Md2ReqifRenderer</span></code> / <code class="xref py py-class docutils literal notranslate"><span class="pre">Gfm2ReqifRenderer</span></code>; the
+generated images are registered in <code class="docutils literal notranslate"><span class="pre">self._external_files</span></code> so they are
+copied next to the ReqIF document.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -594,6 +599,29 @@ generated HTML before wrapping (see <a class="reference internal" href="#pyTRLCC
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Unique identifier string.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter._obtain_identifier">
+<span class="sig-name descname"><span class="pre">_obtain_identifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/reqif_converter.html#ReqifConverter._obtain_identifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter._obtain_identifier" title="Link to this definition"></a></dt>
+<dd><p>Obtain an identifier for an Identifiable element, persistent if a store is enabled.</p>
+<p>When an identifier store is enabled (<code class="docutils literal notranslate"><span class="pre">--id-store</span></code>) the identifier is looked up
+by its stable logical key and reused if known, keeping it immutable across
+consecutive exports. Otherwise a volatile auto-incremented identifier is used.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> (<em>str</em>) – Stable logical key identifying the ReqIF element.</p></li>
+<li><p><strong>prefix</strong> (<em>str</em>) – Identifier prefix (e.g. <code class="docutils literal notranslate"><span class="pre">&quot;spec-object&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;hierarchy&quot;</span></code>).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The identifier associated with the element.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>str</p>
@@ -921,6 +949,8 @@ section without a preceding record emits a warning and is skipped.</p>
 <dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter.finish">
 <span class="sig-name descname"><span class="pre">finish</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="../ret/index.html#pyTRLCConverter.ret.Ret" title="pyTRLCConverter.ret.Ret"><span class="pre">pyTRLCConverter.ret.Ret</span></a></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/reqif_converter.html#ReqifConverter.finish"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter.finish" title="Link to this definition"></a></dt>
 <dd><p>Finish the conversion process and write the output in single document mode.</p>
+<p>The persistent identifier store, if enabled, is written back so that the
+generated identifiers stay immutable on subsequent conversions.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Status</p>
@@ -1068,6 +1098,16 @@ section without a preceding record emits a warning and is skipped.</p>
 <dd></dd></dl>
 
 <dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter._id_store">
+<span class="sig-name descname"><span class="pre">_id_store</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../reqif_identifier_store/index.html#pyTRLCConverter.reqif_identifier_store.ReqifIdentifierStore" title="pyTRLCConverter.reqif_identifier_store.ReqifIdentifierStore"><span class="pre">pyTRLCConverter.reqif_identifier_store.ReqifIdentifierStore</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter._id_store" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter._id_store_path">
+<span class="sig-name descname"><span class="pre">_id_store_path</span></span><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter._id_store_path" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter._last_spec_object_identifier">
 <span class="sig-name descname"><span class="pre">_last_spec_object_identifier</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter._last_spec_object_identifier" title="Link to this definition"></a></dt>
 <dd></dd></dl>
@@ -1095,6 +1135,11 @@ section without a preceding record emits a warning and is skipped.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter._pending_relations">
 <span class="sig-name descname"><span class="pre">_pending_relations</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></span><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter._pending_relations" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.reqif_converter.ReqifConverter._plantuml_tmp_dir">
+<span class="sig-name descname"><span class="pre">_plantuml_tmp_dir</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">tempfile.TemporaryDirectory</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#pyTRLCConverter.reqif_converter.ReqifConverter._plantuml_tmp_dir" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -1142,7 +1187,7 @@ section without a preceding record emits a warning and is skipped.</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="../render_config/index.html" class="btn btn-neutral float-left" title="pyTRLCConverter.render_config" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="../ret/index.html" class="btn btn-neutral float-right" title="pyTRLCConverter.ret" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../reqif_identifier_store/index.html" class="btn btn-neutral float-right" title="pyTRLCConverter.reqif_identifier_store" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

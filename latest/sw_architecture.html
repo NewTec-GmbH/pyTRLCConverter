@@ -10,7 +10,7 @@
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
-      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=563f12fe" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=c87a014e" />
 
   
     <link rel="shortcut icon" href="_static/favicon.ico"/>
@@ -123,12 +123,39 @@
 <p>A main challenge for pyTRLCConverter is the conversion of project-specific TRLC types. TRLC is a framework that gets adapted to
 project needs using “rsl” files. These files define TRLC types through derivations similar to classes in OOP.
 PyTRLCConverter uses built-in converter classes that convert to destination formats using a generic <code class="docutils literal notranslate"><span class="pre">attribute:value</span></code> style
-result.  These built-in converter can be extended in an object-oriented manner to understand user defined types.</p>
+result. These built-in converter can be extended in an object-oriented manner to understand user defined types.</p>
+<p>The following table gives an overview of the supported output formats:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Format</p></th>
+<th class="head"><p>Subcommand</p></th>
+<th class="head"><p>GFM Support</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Markdown</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">markdown</span></code></p></td>
+<td><p>yes</p></td>
+</tr>
+<tr class="row-odd"><td><p>reStructuredText</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">rst</span></code></p></td>
+<td><p>yes</p></td>
+</tr>
+<tr class="row-even"><td><p>docx</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">docx</span></code></p></td>
+<td><p>yes</p></td>
+</tr>
+<tr class="row-odd"><td><p>ReqIF</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">reqif</span></code></p></td>
+<td><p>yes</p></td>
+</tr>
+</tbody>
+</table>
 <p>The following picture shows the overall tool flow:</p>
 <figure class="align-default" id="id1">
-<img alt="PyTRLCConverter Tool Flow" src="context_diagram.svg" />
+<img alt="pyTRLCConverter Tool Flow" src="_images/context_diagram.svg" />
 <figcaption>
-<p><span class="caption-text">PyTRLCConverter Tool Flow</span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
+<p><span class="caption-text">pyTRLCConverter Tool Flow</span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
 </figcaption>
 </figure>
 <section id="general">
@@ -247,7 +274,7 @@ result.  These built-in converter can be extended in an object-oriented manner t
 <span id="swe-arch-rst-static-view"></span><h3>Static View<a class="headerlink" href="#static-view" title="Link to this heading"></a></h3>
 <p>The following diagram shows the static architecture of the tool. It contains the components (Python modules) and their relations.</p>
 <figure class="align-default" id="id2">
-<img alt="Static Architecture view" src="class_diagram.svg" />
+<img alt="Static Architecture view" src="_images/class_diagram.svg" />
 <figcaption>
 <p><span class="caption-text">Static Architecture view</span><a class="headerlink" href="#id2" title="Link to this image"></a></p>
 </figcaption>
@@ -264,7 +291,7 @@ There are 4 main phases:</p>
 <li><p>Traversing and conversion of TRLC sections and records.</p></li>
 </ul>
 <figure class="align-default" id="id3">
-<img alt="Dynamic Architecture View" src="sequence_diagram.svg" />
+<img alt="Dynamic Architecture View" src="_images/sequence_diagram.svg" />
 <figcaption>
 <p><span class="caption-text">Dynamic Architecture View</span><a class="headerlink" href="#id3" title="Link to this image"></a></p>
 </figcaption>
@@ -281,7 +308,7 @@ output formats and user defined type conversions. Only the ProjectConverter
 derivation level must be provided by a project using pyTRLCConverter. The
 upper base class levels are part of pyTRLCConverter.</p>
 <figure class="align-default" id="id4">
-<img alt="Class Diagram Derivation Concept" src="concept_converter_derivation.svg" />
+<img alt="Class Diagram Derivation Concept" src="_images/concept_converter_derivation.svg" />
 <figcaption>
 <p><span class="caption-text">Class Diagram Derivation Concept</span><a class="headerlink" href="#id4" title="Link to this image"></a></p>
 </figcaption>
@@ -333,7 +360,7 @@ entry in the render configuration list is used.</p>
 <section id="main">
 <span id="swe-arch-rst-main"></span><h3>main<a class="headerlink" href="#main" title="Link to this heading"></a></h3>
 <figure class="align-default" id="id5">
-<img alt="Internal Functions and Dependencies in \_\_main\_\_\.py" src="comp_main.svg" />
+<img alt="Internal Functions and Dependencies in \_\_main\_\_\.py" src="_images/comp_main.svg" />
 <figcaption>
 <p><span class="caption-text">Internal Functions and Dependencies in __main__.py</span><a class="headerlink" href="#id5" title="Link to this image"></a></p>
 </figcaption>
@@ -390,7 +417,7 @@ help printing, usage error handling and version printing.</p>
 <section id="itemwalker">
 <span id="swe-arch-rst-itemwalker"></span><h3>ItemWalker<a class="headerlink" href="#itemwalker" title="Link to this heading"></a></h3>
 <figure class="align-default" id="id6">
-<img alt="Class Diagram for ItemWalker" src="comp_item_walker.svg" />
+<img alt="Class Diagram for ItemWalker" src="_images/comp_item_walker.svg" />
 <figcaption>
 <p><span class="caption-text">Class Diagram for ItemWalker</span><a class="headerlink" href="#id6" title="Link to this image"></a></p>
 </figcaption>
@@ -434,7 +461,7 @@ all of the elements.</p>
 <section id="base-converter">
 <span id="swe-arch-rst-base-converter"></span><h3>Base Converter<a class="headerlink" href="#base-converter" title="Link to this heading"></a></h3>
 <figure class="align-default" id="id7">
-<img alt="Class Diagram for BaseConverter" src="comp_base_converter.svg" />
+<img alt="Class Diagram for BaseConverter" src="_images/comp_base_converter.svg" />
 <figcaption>
 <p><span class="caption-text">Class Diagram for BaseConverter</span><a class="headerlink" href="#id7" title="Link to this image"></a></p>
 </figcaption>
@@ -480,7 +507,7 @@ that is common between all format specific converter implementations.</p>
 <section id="dump-converter">
 <span id="swe-arch-rst-dump-converter"></span><h3>Dump Converter<a class="headerlink" href="#dump-converter" title="Link to this heading"></a></h3>
 <figure class="align-default" id="id8">
-<img alt="Class Diagram for Dump\-Converter" src="comp_dump_converter.svg" />
+<img alt="Class Diagram for Dump\-Converter" src="_images/comp_dump_converter.svg" />
 <figcaption>
 <p><span class="caption-text">Class Diagram for Dump-Converter</span><a class="headerlink" href="#id8" title="Link to this image"></a></p>
 </figcaption>
@@ -523,7 +550,7 @@ that is common between all format specific converter implementations.</p>
 <section id="markdown-converter">
 <span id="swe-arch-rst-markdown-converter"></span><h3>Markdown Converter<a class="headerlink" href="#markdown-converter" title="Link to this heading"></a></h3>
 <figure class="align-default" id="id9">
-<img alt="Class Diagram for Markdown\-Converter" src="comp_markdown_converter.svg" />
+<img alt="Class Diagram for Markdown\-Converter" src="_images/comp_markdown_converter.svg" />
 <figcaption>
 <p><span class="caption-text">Class Diagram for Markdown-Converter</span><a class="headerlink" href="#id9" title="Link to this image"></a></p>
 </figcaption>
@@ -542,6 +569,7 @@ that is common between all format specific converter implementations.</p>
 <ul class="simple">
 <li><p>Registers the <code class="docutils literal notranslate"><span class="pre">markdown</span></code> output format and options</p></li>
 <li><p>Prints sections and records in markdown</p></li>
+<li><p>Optionally renders inline PlantUML fenced code blocks as SVG image references when <code class="docutils literal notranslate"><span class="pre">--render-plantuml</span></code> is given.</p></li>
 </ul>
 </td>
 </tr>
@@ -572,6 +600,8 @@ that is common between all format specific converter implementations.</p>
 <li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-markdown-top-level-custom"><span class="std std-ref">SwRequirements.sw_req_markdown_top_level_custom</span></a></p></li>
 <li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-markdown-render-md"><span class="std std-ref">SwRequirements.sw_req_markdown_render_md</span></a></p></li>
 <li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-markdown-render-gfm"><span class="std std-ref">SwRequirements.sw_req_markdown_render_gfm</span></a></p></li>
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-markdown-render-plantuml"><span class="std std-ref">SwRequirements.sw_req_markdown_render_plantuml</span></a></p></li>
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-cli-render-plantuml"><span class="std std-ref">SwRequirements.sw_req_cli_render_plantuml</span></a></p></li>
 <li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-markdown-out-file-name-default"><span class="std std-ref">SwRequirements.sw_req_markdown_out_file_name_default</span></a></p></li>
 <li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-destination-format"><span class="std std-ref">SwRequirements.sw_req_destination_format</span></a></p></li>
 </ul>
@@ -587,7 +617,7 @@ that is common between all format specific converter implementations.</p>
 <section id="restructuredtext-converter">
 <span id="swe-arch-rst-restructuredtext-converter"></span><h3>ReStructuredText Converter<a class="headerlink" href="#restructuredtext-converter" title="Link to this heading"></a></h3>
 <figure class="align-default" id="id10">
-<img alt="Class Diagram for ReStructuredText\-Converter" src="comp_rst_converter.svg" />
+<img alt="Class Diagram for ReStructuredText\-Converter" src="_images/comp_rst_converter.svg" />
 <figcaption>
 <p><span class="caption-text">Class Diagram for ReStructuredText-Converter</span><a class="headerlink" href="#id10" title="Link to this image"></a></p>
 </figcaption>
@@ -606,6 +636,7 @@ that is common between all format specific converter implementations.</p>
 <ul class="simple">
 <li><p>Registers the <code class="docutils literal notranslate"><span class="pre">rst</span></code> output format and options</p></li>
 <li><p>Prints sections and records in ReStructuredText</p></li>
+<li><p>Renders inline PlantUML fenced code blocks as SVG images referenced via <code class="docutils literal notranslate"><span class="pre">..</span> <span class="pre">image::</span></code> directives.</p></li>
 </ul>
 </td>
 </tr>
@@ -636,6 +667,7 @@ that is common between all format specific converter implementations.</p>
 <li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-rst-sd-top-level-custom"><span class="std std-ref">SwRequirements.sw_req_rst_sd_top_level_custom</span></a></p></li>
 <li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-rst-render-md"><span class="std std-ref">SwRequirements.sw_req_rst_render_md</span></a></p></li>
 <li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-rst-render-gfm"><span class="std std-ref">SwRequirements.sw_req_rst_render_gfm</span></a></p></li>
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-rst-render-plantuml"><span class="std std-ref">SwRequirements.sw_req_rst_render_plantuml</span></a></p></li>
 <li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-destination-format"><span class="std std-ref">SwRequirements.sw_req_destination_format</span></a></p></li>
 </ul>
 </td>
@@ -650,7 +682,7 @@ that is common between all format specific converter implementations.</p>
 <section id="reqif-converter">
 <span id="swe-arch-rst-reqif-converter"></span><h3>ReqIF Converter<a class="headerlink" href="#reqif-converter" title="Link to this heading"></a></h3>
 <figure class="align-default" id="id11">
-<img alt="Class Diagram for ReqIF\-Converter" src="comp_reqif_converter.svg" />
+<img alt="Class Diagram for ReqIF\-Converter" src="_images/comp_reqif_converter.svg" />
 <figcaption>
 <p><span class="caption-text">Class Diagram for ReqIF-Converter</span><a class="headerlink" href="#id11" title="Link to this image"></a></p>
 </figcaption>
@@ -671,10 +703,12 @@ that is common between all format specific converter implementations.</p>
 <li><p>Creates sections and records in ReqIF format.</p></li>
 <li><p>Converts configured CommonMark and GFM fields into ReqIF XHTML.</p></li>
 <li><p>Passes configured XHTML fields through to ReqIF XHTML without modification.</p></li>
+<li><p>Renders inline PlantUML fenced code blocks as embedded SVG images in XHTML attributes.</p></li>
 <li><p>Converts TRLC enumeration type attributes to DATATYPE-DEFINITION-ENUMERATION with 0-based consecutive ENUM-VALUE keys in RSL declaration order.</p></li>
 <li><p>Omits optional enumeration attributes with null value from the generated spec-object.</p></li>
 <li><p>Converts TRLC record reference attributes to ReqIF SPEC-RELATION entries.</p></li>
 <li><p>Optionally archives the generated .reqif output as a .reqifz ZIP archive.</p></li>
+<li><p>Optionally persists the identifiers of ReqIF Identifiable elements in a JSON store so that they stay immutable across consecutive exports.</p></li>
 </ul>
 </td>
 </tr>
@@ -697,11 +731,15 @@ that is common between all format specific converter implementations.</p>
 <li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-reqif-render-xhtml"><span class="std std-ref">SwRequirements.sw_req_reqif_render_xhtml</span></a></p></li>
 <li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-reqif-render-path"><span class="std std-ref">SwRequirements.sw_req_reqif_render_path</span></a></p></li>
 <li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-reqif-render-table-options"><span class="std std-ref">SwRequirements.sw_req_reqif_render_table_options</span></a></p></li>
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-reqif-render-plantuml"><span class="std std-ref">SwRequirements.sw_req_reqif_render_plantuml</span></a></p></li>
 <li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-reqif-enum"><span class="std std-ref">SwRequirements.sw_req_reqif_enum</span></a></p></li>
 <li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-reqif-enum-key-order"><span class="std std-ref">SwRequirements.sw_req_reqif_enum_key_order</span></a></p></li>
 <li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-reqif-enum-null"><span class="std std-ref">SwRequirements.sw_req_reqif_enum_null</span></a></p></li>
 <li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-reqif-relation"><span class="std std-ref">SwRequirements.sw_req_reqif_relation</span></a></p></li>
 <li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-reqif-reqifz"><span class="std std-ref">SwRequirements.sw_req_reqif_reqifz</span></a></p></li>
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-reqif-identifier-immutable"><span class="std std-ref">SwRequirements.sw_req_reqif_identifier_immutable</span></a></p></li>
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-reqif-identifier-store-init"><span class="std std-ref">SwRequirements.sw_req_reqif_identifier_store_init</span></a></p></li>
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-reqif-identifier-store-reuse"><span class="std std-ref">SwRequirements.sw_req_reqif_identifier_store_reuse</span></a></p></li>
 <li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-destination-format"><span class="std std-ref">SwRequirements.sw_req_destination_format</span></a></p></li>
 </ul>
 </td>
@@ -716,7 +754,7 @@ that is common between all format specific converter implementations.</p>
 <section id="docx-converter">
 <span id="swe-arch-rst-docx-converter"></span><h3>DocX Converter<a class="headerlink" href="#docx-converter" title="Link to this heading"></a></h3>
 <figure class="align-default" id="id12">
-<img alt="Class Diagram for DocX\-Converter" src="comp_docx_converter.svg" />
+<img alt="Class Diagram for DocX\-Converter" src="_images/comp_docx_converter.svg" />
 <figcaption>
 <p><span class="caption-text">Class Diagram for DocX-Converter</span><a class="headerlink" href="#id12" title="Link to this image"></a></p>
 </figcaption>
@@ -735,6 +773,7 @@ that is common between all format specific converter implementations.</p>
 <ul class="simple">
 <li><p>Registers the <code class="docutils literal notranslate"><span class="pre">docx</span></code> output format and options.</p></li>
 <li><p>Creates sections and records in docx format.</p></li>
+<li><p>Renders inline PlantUML fenced code blocks as embedded PNG images.</p></li>
 </ul>
 </td>
 </tr>
@@ -750,6 +789,8 @@ that is common between all format specific converter implementations.</p>
 <li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-docx-record"><span class="std std-ref">SwRequirements.sw_req_docx_record</span></a></p></li>
 <li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-docx-reference"><span class="std std-ref">SwRequirements.sw_req_docx_reference</span></a></p></li>
 <li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-docx-render-md"><span class="std std-ref">SwRequirements.sw_req_docx_render_md</span></a></p></li>
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-docx-render-gfm"><span class="std std-ref">SwRequirements.sw_req_docx_render_gfm</span></a></p></li>
+<li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-docx-render-plantuml"><span class="std std-ref">SwRequirements.sw_req_docx_render_plantuml</span></a></p></li>
 <li><p><a class="reference internal" href="sw_requirements.html#swe-req-rst-sw-req-destination-format"><span class="std std-ref">SwRequirements.sw_req_destination_format</span></a></p></li>
 </ul>
 </td>
@@ -764,7 +805,7 @@ that is common between all format specific converter implementations.</p>
 <section id="version-information">
 <span id="swe-arch-rst-version-information"></span><h3>Version Information<a class="headerlink" href="#version-information" title="Link to this heading"></a></h3>
 <figure class="align-default" id="id13">
-<img alt="Class Diagram for Version" src="comp_version.svg" />
+<img alt="Class Diagram for Version" src="_images/comp_version.svg" />
 <figcaption>
 <p><span class="caption-text">Class Diagram for Version</span><a class="headerlink" href="#id13" title="Link to this image"></a></p>
 </figcaption>
@@ -801,7 +842,7 @@ that is common between all format specific converter implementations.</p>
 <section id="logger">
 <span id="swe-arch-rst-logger"></span><h3>Logger<a class="headerlink" href="#logger" title="Link to this heading"></a></h3>
 <figure class="align-default" id="id14">
-<img alt="Class Diagram for Logging" src="comp_logger.svg" />
+<img alt="Class Diagram for Logging" src="_images/comp_logger.svg" />
 <figcaption>
 <p><span class="caption-text">Class Diagram for Logging</span><a class="headerlink" href="#id14" title="Link to this image"></a></p>
 </figcaption>
@@ -837,7 +878,7 @@ that is common between all format specific converter implementations.</p>
 <section id="plantuml">
 <span id="swe-arch-rst-plantuml"></span><h3>PlantUML<a class="headerlink" href="#plantuml" title="Link to this heading"></a></h3>
 <figure class="align-default" id="id15">
-<img alt="Class Diagram for PlantUML" src="comp_plantuml.svg" />
+<img alt="Class Diagram for PlantUML" src="_images/comp_plantuml.svg" />
 <figcaption>
 <p><span class="caption-text">Class Diagram for PlantUML</span><a class="headerlink" href="#id15" title="Link to this image"></a></p>
 </figcaption>

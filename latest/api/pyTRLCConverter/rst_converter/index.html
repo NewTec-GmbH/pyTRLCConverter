@@ -10,7 +10,7 @@
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=563f12fe" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=c87a014e" />
 
   
     <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
@@ -141,6 +141,17 @@ If None, no translation is applied.</p></li>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.rst_converter.RstConverter._copy_external_files">
+<span class="sig-name descname"><span class="pre">_copy_external_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dest_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/rst_converter.html#RstConverter._copy_external_files"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.rst_converter.RstConverter._copy_external_files" title="Link to this definition"></a></dt>
+<dd><p>Copy all collected external files to the given destination directory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dest_dir</strong> (<em>str</em>) – Destination directory path.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="pyTRLCConverter.rst_converter.RstConverter._create_rst_link_from_record_object_reference">
 <span class="sig-name descname"><span class="pre">_create_rst_link_from_record_object_reference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record_reference</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">trlc.ast.Record_Reference</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/rst_converter.html#RstConverter._create_rst_link_from_record_object_reference"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.rst_converter.RstConverter._create_rst_link_from_record_object_reference" title="Link to this definition"></a></dt>
 <dd><p>Create a reStructuredText cross-reference from a record reference.
@@ -233,8 +244,8 @@ Otherwise the record object fields attribute values will be written to the reStr
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pyTRLCConverter.rst_converter.RstConverter._on_implict_null">
-<span class="sig-name descname"><span class="pre">_on_implict_null</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">_</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">trlc.ast.Implicit_Null</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/rst_converter.html#RstConverter._on_implict_null"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.rst_converter.RstConverter._on_implict_null" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="pyTRLCConverter.rst_converter.RstConverter._on_implicit_null">
+<span class="sig-name descname"><span class="pre">_on_implicit_null</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">_</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">trlc.ast.Implicit_Null</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/rst_converter.html#RstConverter._on_implicit_null"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.rst_converter.RstConverter._on_implicit_null" title="Link to this definition"></a></dt>
 <dd><p>Process the given implicit null value.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -300,7 +311,7 @@ Otherwise the record object fields attribute values will be written to the reStr
 <dl class="py method">
 <dt class="sig sig-object py" id="pyTRLCConverter.rst_converter.RstConverter._render">
 <span class="sig-name descname"><span class="pre">_render</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">package_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attribute_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attribute_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../../_modules/pyTRLCConverter/rst_converter.html#RstConverter._render"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.rst_converter.RstConverter._render" title="Link to this definition"></a></dt>
-<dd><p>Render the attribute value depened on its format.</p>
+<dd><p>Render the attribute value depending on its format.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -694,6 +705,11 @@ There will be no newline appended at the end.</p>
 <dd></dd></dl>
 
 <dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.rst_converter.RstConverter._external_files">
+<span class="sig-name descname"><span class="pre">_external_files</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></span><a class="headerlink" href="#pyTRLCConverter.rst_converter.RstConverter._external_files" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="pyTRLCConverter.rst_converter.RstConverter._fd">
 <span class="sig-name descname"><span class="pre">_fd</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#pyTRLCConverter.rst_converter.RstConverter._fd" title="Link to this definition"></a></dt>
 <dd></dd></dl>
@@ -701,6 +717,11 @@ There will be no newline appended at the end.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pyTRLCConverter.rst_converter.RstConverter._out_path">
 <span class="sig-name descname"><span class="pre">_out_path</span></span><a class="headerlink" href="#pyTRLCConverter.rst_converter.RstConverter._out_path" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.rst_converter.RstConverter._plantuml_tmp_dir">
+<span class="sig-name descname"><span class="pre">_plantuml_tmp_dir</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">tempfile.TemporaryDirectory</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#pyTRLCConverter.rst_converter.RstConverter._plantuml_tmp_dir" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>

@@ -26,18 +26,6 @@ Module Contents
 
    A walker that traverses through the TRLC items in the given symbol table.
 
-   .. attribute:: _converter
-
-      The converter used for processing items.
-
-      :type: AbstractConverter
-
-   .. attribute:: _exclude_files
-
-      List of file paths to exclude from processing.
-
-      :type: list
-
 
    .. py:method:: _visit_item(item: Any) -> pyTRLCConverter.ret.Ret
 
