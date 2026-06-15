@@ -17,9 +17,14 @@ rem You should have received a copy of the GNU General Public License along with
 rem If not, see <https://www.gnu.org/licenses/>.
 
 set LOCAL_DIR=%~dp0
-set PLANTUML=%LOCAL_DIR%plantuml.jar
+if "%PLANTUML%" == "" (
+    set USE_LOCAL="true"
+    set PLANTUML=%LOCAL_DIR%plantuml.jar
+)
 
-if not exist "%PLANTUML%" (
-    echo Download PlantUML java program...
-    powershell -Command "Invoke-WebRequest https://github.com/plantuml/plantuml/releases/download/v1.2026.1/plantuml-1.2026.1.jar -OutFile %PLANTUML%"
+if defined USE_LOCAL (
+    if not exist "%PLANTUML%" (
+        echo Download PlantUML java program...
+        powershell -Command "Invoke-WebRequest https://github.com/plantuml/plantuml/releases/download/v1.2026.1/plantuml-1.2026.1.jar -OutFile %PLANTUML%"
+    )
 )

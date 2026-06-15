@@ -26,7 +26,7 @@ pytest tests/test_reqif.py
 pytest tests/test_reqif.py::test_function_name
 
 # Lint (must be clean — no warnings or errors tolerated)
-pylint --rcfile=.pylintrc src/pyTRLCConverter/
+pylint --rcfile=.pylintrc src/pyTRLCConverter/ tests/
 
 # Run the tool directly
 pyTRLCConverter --source <trlc-dir> <subcommand>
@@ -69,6 +69,13 @@ A project supplies `--project <module.py>` with a class that subclasses `Abstrac
 
 When a `--renderCfg` JSON file is provided, `RenderConfig` matches record attributes by `(package, type, attribute)` regex triplets and flags them as Markdown-formatted. Converters call `BaseConverter.render_attribute_value()` which uses `marko` to convert Markdown to the target-format-specific AST. Custom `marko` renderers live in `src/pyTRLCConverter/marko/`.
 
+Two Markdown dialects are supported via the `"format"` field in the render config:
+
+- `"md"` — CommonMark ([spec v0.31.2](https://spec.commonmark.org/0.31.2/)); supported by all converters.
+- `"gfm"` — GitHub Flavored Markdown ([spec v0.29-gfm](https://github.github.com/gfm/)); supported by `markdown`, `rst`, `reqif`, and `docx` converters.
+
+Each converter has a CommonMark renderer (`Md2*`) and a GFM renderer (`Gfm2*`) that extends it, overriding only GFM-specific elements (tables, strikethrough, task lists, bare URLs).
+
 ### ReqIF Converter Specifics
 
 `ReqifConverter` builds a document in memory using the `reqif` library, then serialises with `ReqIFUnparser`. Two modes:
@@ -103,6 +110,10 @@ When adding a new converter feature, follow this order to maintain full traceabi
 | `src/pyTRLCConverter/render_config.py` | `--renderCfg` JSON loader and attribute Markdown detection |
 | `src/pyTRLCConverter/translator.py` | `--translation` JSON loader for attribute name mapping |
 | `src/pyTRLCConverter/reqif_converter.py` | ReqIF output (uses `reqif` library) |
+| `src/pyTRLCConverter/marko/md2docx_renderer.py` | CommonMark → docx renderer (base for GFM docx renderer) |
+| `src/pyTRLCConverter/marko/gfm2docx_renderer.py` | GFM → docx renderer (extends `Md2DocxRenderer`) |
+| `src/pyTRLCConverter/marko/md2rst_renderer.py` | CommonMark → RST renderer (base for GFM RST renderer) |
+| `src/pyTRLCConverter/marko/gfm2rst_renderer.py` | GFM → RST renderer (extends `Md2RstRenderer`) |
 
 ## Coding Standards
 

@@ -23,8 +23,11 @@
 # Imports **********************************************************************
 
 from __future__ import annotations
-from typing import TYPE_CHECKING, Any, cast
+import hashlib
+import os
+from typing import TYPE_CHECKING, Any, cast, Optional
 from marko import Renderer
+from pyTRLCConverter.plantuml import PlantUML
 
 if TYPE_CHECKING:
     from . import block, inline
@@ -36,10 +39,20 @@ if TYPE_CHECKING:
 # pylint: disable-next=too-many-public-methods
 class Md2RstRenderer(Renderer):
     # lobster-trace: SwRequirements.sw_req_rst_render_md
+    # lobster-trace: SwRequirements.sw_req_rst_render_plantuml
+    # lobster-trace: SwRequirements.sw_req_plantuml
+    """Renderer for reStructuredText output.
+
+    Converts CommonMark Markdown to reStructuredText format. Fenced code
+    blocks tagged ``plantuml`` are rendered as SVG images referenced via
+    ``.. image::`` directives.
     """
-    Renderer for reStructuredText output.
-    It is used to convert CommonMark Markdown to reStructuredText format.
-    """
+
+    # Destination directory where generated PNG images are written.
+    image_dir: Optional[str] = None
+
+    # List of ``(source_path, local_name)`` tuples collected during rendering.
+    external_files: Optional[list] = None
 
     def __init__(self) -> None:
         """
@@ -115,8 +128,14 @@ class Md2RstRenderer(Renderer):
         return quoted + "\n\n"
 
     def render_fenced_code(self, element: block.FencedCode) -> str:
-        """
-        Renders a fenced code block element.
+        # lobster-trace: SwRequirements.sw_req_rst_render_md
+        # lobster-trace: SwRequirements.sw_req_plantuml
+        """Render a fenced code block as reStructuredText.
+
+        If the language tag is ``plantuml``, the diagram source is rendered as
+        a PNG image referenced via a ``.. image::`` directive. If PlantUML is
+        not available, an error paragraph is emitted instead. All other fenced
+        code blocks are rendered as ``.. code-block::`` directives.
 
         Args:
             element (block.FencedCode): The fenced code block element to render.
@@ -124,10 +143,54 @@ class Md2RstRenderer(Renderer):
         Returns:
             str: The rendered fenced code block as a string.
         """
+        if element.lang == "plantuml":
+            return self._render_plantuml(element.children[0].children)
+
         lang = element.lang or ""
         code = element.children[0].children  # type: ignore
 
         return f".. code-block:: {lang}\n\n    " + "\n    ".join(code.splitlines()) + "\n\n"
+
+    def _render_plantuml(self, diagram_source: str) -> str:
+        # lobster-trace: SwRequirements.sw_req_rst_render_md
+        # lobster-trace: SwRequirements.sw_req_plantuml
+        """Render a PlantUML diagram as a PNG image reference.
+
+        Generates SVG bytes via the PlantUML tool, writes them to a temporary
+        file under :attr:`image_dir`, registers the file in
+        :attr:`external_files` so the converter can copy it next to the RST
+        document, and returns a ``.. image::`` directive referencing the image
+        by its local name.
+
+        On failure an error paragraph is emitted instead.
+
+        Args:
+            diagram_source (str): The PlantUML diagram source text.
+
+        Returns:
+            str: RST fragment referencing the generated image, or an error
+                paragraph if image generation failed.
+        """
+        assert Md2RstRenderer.image_dir is not None
+        assert Md2RstRenderer.external_files is not None
+
+        try:
+            plantuml = PlantUML()
+            svg_bytes = plantuml.generate_to_bytes("svg", diagram_source)
+
+            digest = hashlib.sha1(diagram_source.encode("utf-8")).hexdigest()[:12]
+            local_name = f"plantuml_{digest}.svg"
+            svg_path = os.path.join(Md2RstRenderer.image_dir, local_name)
+            with open(svg_path, "wb") as svg_file:
+                svg_file.write(svg_bytes)
+
+            Md2RstRenderer.external_files.append((svg_path, local_name))
+
+            result = f".. image:: {local_name}\n\n"
+        except (FileNotFoundError, OSError) as exc:
+            result = f"[PlantUML error: {exc}]\n\n"
+
+        return result
 
     def render_code_block(self, element: block.CodeBlock) -> str:
         """
@@ -159,19 +222,19 @@ class Md2RstRenderer(Renderer):
     # pylint: disable-next=unused-argument
     def render_thematic_break(self, element: block.ThematicBreak) -> str:
         """
-        Renders a thematic break (horizontal rule) element.
+        Renders a thematic break (horizontal rule) element as a empty line.
 
         Args:
             element (block.ThematicBreak): The thematic break element to render.
 
         Returns:
-            str: The rendered thematic break as a string.
+            str: The rendered thematic break as a empty rst line.
         """
-        return "\n----\n\n"
+        return "\n|\n"
 
     def render_heading(self, element: block.Heading) -> str:
         """
-        Renders a heading element.
+        Renders a heading element as a rubric.
 
         Args:
             element (block.Heading): The heading element to render.
@@ -180,16 +243,7 @@ class Md2RstRenderer(Renderer):
             str: The rendered heading as a string.
         """
         text = self.render_children(element)
-        underline = {
-            1: "=",
-            2: "-",
-            3: "~",
-            4: "^",
-            5: '"',
-            6: "'"
-        }.get(element.level, "-")
-
-        return f"{text}\n{underline * len(text)}\n\n"
+        return f".. rubric:: {text}\n"
 
     def render_setext_heading(self, element: block.SetextHeading) -> str:
         """

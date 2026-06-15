@@ -44,7 +44,6 @@
                 "docx",
                 "--template=converter/template.docx"
             ]
-            
         },
         {
             "name": "Python Debugger: reStructuredText",

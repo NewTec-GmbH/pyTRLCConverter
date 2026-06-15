@@ -14,7 +14,7 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel.
 jobs:
-  # The introduction just shows some useful informations.
+  # The introduction just shows some useful information.
   intro:
     # The type of runner that the job will run on.
     runs-on: ubuntu-latest
@@ -25,16 +25,20 @@ jobs:
 
   trace:
     # The type of runner that the job will run on.
-    runs-on: ubuntu-latest
-    # Steps represent a sequence of tasks that will be executed as
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    # Steps represent a sequence of tasks that will be executed as part of the job.
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Set up Python 3.12
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.12"
+          cache: pip
 
       - name: Install dependencies
         run: |
@@ -42,28 +46,56 @@ jobs:
           pip install -r requirements-dev.txt
           pip install "pyTRLCConverter>=2.0.0"
 
-      - name: Analysing all TRLC releated elements
+      - name: Analysing all TRLC related elements
         run: |
           trlc ./trlc
 
-      - name: Prepare test report
+      - name: Prepare test report (Linux)
+        if: matrix.os == 'ubuntu-latest'
         run: |
           pushd ./tools/testReport
-          chmod +x make_rst.sh
           ./make_rst.sh
           popd
 
-      - name: Build tracing report
+      - name: Prepare test report (Windows)
+        if: matrix.os == 'windows-latest'
+        shell: cmd
+        run: |
+          pushd tools\testReport
+          call make_rst.bat
+          popd
+
+      - name: Install Graphviz (Linux)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y graphviz
+
+      - name: Install Graphviz (Windows)
+        if: matrix.os == 'windows-latest'
+        run: choco install graphviz --no-progress -y
+
+      - name: Build tracing report (Linux)
+        if: matrix.os == 'ubuntu-latest'
         run: |
           pushd ./tools/traceReport
-          chmod +x make.sh
           ./make.sh online
           rm -f ./out/*-lobster.json
           popd
 
+      - name: Build tracing report (Windows)
+        if: matrix.os == 'windows-latest'
+        shell: cmd
+        run: |
+          pushd tools\traceReport
+          call make.bat online
+          del /q out\*-lobster.json
+          popd
+
       - name: Upload tracing report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
+          name: tracing-report-${{ matrix.os }}
           path: ./tools/traceReport/out/*.html
 
   lint:
@@ -77,10 +109,10 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job.
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python-version }}
           cache: pip
@@ -97,19 +129,20 @@ jobs:
 
   test:
     # The type of runner that the job will run on.
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     needs: intro
     strategy:
       matrix:
+        os: [ubuntu-latest, windows-latest]
         python-version: ["3.10", "3.11", "3.12", "3.13"]
 
     # Steps represent a sequence of tasks that will be executed as part of the job.
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python-version }}
 
@@ -123,13 +156,50 @@ jobs:
         run: |
           pytest tests -v --cov=./src --cov-report=term
 
-# Uncomment this section to generate a html coverage report
-#      - name: Test and create coverage report
-#        run: |
-#          pytest tests -v --cov=./src --cov-report=html:coverage_report
-#
-#      - name: Upload coverage report
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: coverage-report-${{ matrix.python-version }}
-#          path: coverage_report/
+  test-toolchain:
+    # Run the full tool toolchain to check for any errors.
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v6
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+          pip install .
+
+      - name: Install Graphviz (Linux)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y graphviz
+
+      - name: Install Graphviz (Windows)
+        if: matrix.os == 'windows-latest'
+        run: choco install graphviz --no-progress -y
+
+      - name: Run full toolchain (Linux)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          pushd ./tools
+          ./make_html.sh
+          popd
+
+      - name: Run full toolchain (Windows)
+        if: matrix.os == 'windows-latest'
+        shell: cmd
+        run: |
+          pushd tools
+          call make_html.bat
+          popd

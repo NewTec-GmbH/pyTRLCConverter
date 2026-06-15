@@ -2,8 +2,9 @@
 
 class PlantUML {
     +__init__() : None
-    +set_server_url(url: str) : None
-    +generate_image(source: str, output_path: str) : None
+    +is_plantuml_file(diagram_path: str) : bool
+    +generate(diagram_type: str, diagram_path: str, dst_path: str) : None
+    +generate_to_bytes(diagram_type: str, diagram_source: str) : bytes
 }
 
 

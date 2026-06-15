@@ -4,7 +4,7 @@ Requirement req_id_md {
     description =
     '''
     # Heading 1
-    
+
     ## Heading 2
 
     - Bullet point 1
@@ -17,13 +17,20 @@ Requirement req_id_md {
         1. Sub numbered point 1
         2. Sub numbered point 2
 
-    **Bold text**, *italic text* and __underlined text__.
+    **Bold text** and *italic text*.
 
     ```
     Code block example
     ```
 
-    --- Divider ---
+    ```plantuml
+    @startuml
+    Alice -> Bob: Hello
+    Bob --> Alice: Hi
+    @enduml
+    ```
+
+    ---
 
     > Blockquote example
 

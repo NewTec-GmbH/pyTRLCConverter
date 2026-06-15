@@ -33,8 +33,11 @@ package "Dependencies" {
         Library for generating .docx files
     end note
 
-    class DocxRenderer {
+    class Md2DocxRenderer {
         + render(ast: Any) : str
+    }
+
+    class Gfm2DocxRenderer extends Md2DocxRenderer {
     }
 
     class marko <<(M ,lightblue) module>> {
@@ -42,11 +45,20 @@ package "Dependencies" {
     note bottom of marko
         Markdown Parser
     end note
+
+    class PlantUML {
+    }
+    note bottom of PlantUML
+        Renders inline ```plantuml```
+        fenced code blocks to PNG.
+    end note
 }
 
 DocxConverter ..> trlc
 DocxConverter ..> docx
-DocxConverter ..> DocxRenderer
+DocxConverter ..> Md2DocxRenderer
+DocxConverter ..> Gfm2DocxRenderer
 DocxConverter ..> marko
+Md2DocxRenderer ..> PlantUML
 
 @enduml

@@ -80,7 +80,8 @@ class GenericRslReqifConverter(ReqifConverter):
                     "long_name": "Description",
                     "value": rendered
                 }
-            }
+            },
+            identifier_key=f"spec-object:{info.n_package.name}.{info.name}"
         )
 
         self._append_hierarchy(spec_object.identifier, level + 1, info.name, is_container=False)
@@ -137,7 +138,8 @@ class GenericRslReqifConverter(ReqifConverter):
                     "long_name": "Caption",
                     "value": self._plain_text_to_xhtml(caption)
                 }
-            }
+            },
+            identifier_key=f"spec-object:{diagram.n_package.name}.{diagram.name}"
         )
 
         self._append_hierarchy(spec_object.identifier, level + 1, diagram.name, is_container=False)
@@ -192,7 +194,8 @@ class GenericRslReqifConverter(ReqifConverter):
                     "long_name": "Caption",
                     "value": self._plain_text_to_xhtml(caption)
                 }
-            }
+            },
+            identifier_key=f"spec-object:{image.n_package.name}.{image.name}"
         )
 
         self._append_hierarchy(spec_object.identifier, level + 1, image.name, is_container=False)

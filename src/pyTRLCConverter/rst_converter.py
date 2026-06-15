@@ -21,6 +21,8 @@
 
 # Imports **********************************************************************
 import os
+import shutil
+import tempfile
 from typing import List, Optional, Any
 from marko import Markdown
 from trlc.ast import Implicit_Null, Record_Object, Record_Reference, String_Literal, Expression
@@ -35,6 +37,7 @@ from pyTRLCConverter.marko.gfm2rst_renderer import Gfm2RstRenderer
 
 # Classes **********************************************************************
 
+# pylint: disable-next=too-many-instance-attributes
 class RstConverter(BaseConverter):
     """
     RstConverter provides functionality for converting to a reStructuredText format.
@@ -76,6 +79,9 @@ class RstConverter(BaseConverter):
         # The AST walker meta data for processing the record object fields.
         # This will hold the information about the current package, type and attribute being processed.
         self._ast_meta_data = None
+
+        self._plantuml_tmp_dir: Optional[tempfile.TemporaryDirectory] = None
+        self._external_files: list = []
 
     @staticmethod
     def get_subcommand() -> str:
@@ -184,6 +190,9 @@ class RstConverter(BaseConverter):
 
             log_verbose(f"Empty attribute value: {self._empty_attribute_value}")
 
+            # pylint: disable-next=consider-using-with
+            self._plantuml_tmp_dir = tempfile.TemporaryDirectory(prefix="pyTRLCConverter_rst_")
+
             # Single document mode?
             if self._args.single_document is True:
                 result = self._generate_out_file(self._args.name)
@@ -204,7 +213,7 @@ class RstConverter(BaseConverter):
 
         Args:
             file_name (str): File name
-        
+
         Returns:
             Ret: Status
         """
@@ -237,8 +246,11 @@ class RstConverter(BaseConverter):
         # Multiple document mode?
         if self._args.single_document is False:
             assert self._fd is not None
+            out_dir = os.path.dirname(self._fd.name)
             self._fd.close()
             self._fd = None
+            self._copy_external_files(out_dir)
+            self._external_files = []
 
         return Ret.OK
 
@@ -251,7 +263,7 @@ class RstConverter(BaseConverter):
         Args:
             section (str): The section name
             level (int): The section indentation level
-        
+
         Returns:
             Ret: Status
         """
@@ -279,7 +291,7 @@ class RstConverter(BaseConverter):
             level (int): The record level.
             translation (Optional[dict]): Translation dictionary for the record object.
                                             If None, no translation is applied.
-        
+
         Returns:
             Ret: Status
         """
@@ -298,8 +310,14 @@ class RstConverter(BaseConverter):
         # Single document mode?
         if self._args.single_document is True:
             assert self._fd is not None
+            out_dir = os.path.dirname(self._fd.name)
             self._fd.close()
             self._fd = None
+            self._copy_external_files(out_dir)
+
+        if self._plantuml_tmp_dir is not None:
+            self._plantuml_tmp_dir.cleanup()
+            self._plantuml_tmp_dir = None
 
         return Ret.OK
 
@@ -320,6 +338,27 @@ class RstConverter(BaseConverter):
         else:
             self._fd.write("\n")
 
+    def _copy_external_files(self, dest_dir: str) -> None:
+        # lobster-trace: SwRequirements.sw_req_rst_render_plantuml
+        """Copy all collected external files to the given destination directory.
+
+        Args:
+            dest_dir (str): Destination directory path.
+        """
+        copied_sources = set()
+
+        for source_path, local_name in self._external_files:
+            if source_path in copied_sources:
+                continue
+
+            dest_path = os.path.join(dest_dir, local_name)
+
+            try:
+                shutil.copy2(source_path, dest_path)
+                copied_sources.add(source_path)
+            except (OSError, IOError) as exc:
+                log_error(f"Failed to copy external file '{source_path}': {exc}", False)
+
     def _get_rst_heading_level(self, level: int) -> int:
         # lobster-trace: SwRequirements.sw_req_rst_section
         """
@@ -329,7 +368,7 @@ class RstConverter(BaseConverter):
 
         Args:
             level (int): The TRLC object level.
-        
+
         Returns:
             int: reStructuredText heading level
         """
@@ -342,7 +381,7 @@ class RstConverter(BaseConverter):
 
         Args:
             file_name_trlc (str): TRLC file name
-        
+
         Returns:
             str: reStructuredText file name
         """
@@ -378,11 +417,11 @@ class RstConverter(BaseConverter):
 
         return result
 
-    def _on_implict_null(self, _: Implicit_Null) -> str:
+    def _on_implicit_null(self, _: Implicit_Null) -> str:
         # lobster-trace: SwRequirements.sw_req_rst_record
         """
         Process the given implicit null value.
-        
+
         Returns:
             str: The implicit null value.
         """
@@ -395,7 +434,7 @@ class RstConverter(BaseConverter):
 
         Args:
             record_reference (Record_Reference): The record reference value.
-        
+
         Returns:
             str: reStructuredText link to the record reference.
         """
@@ -410,7 +449,7 @@ class RstConverter(BaseConverter):
 
         Args:
             string_literal (String_Literal): The string literal value.
-        
+
         Returns:
             str: The string literal value.
         """
@@ -495,7 +534,7 @@ class RstConverter(BaseConverter):
         trlc_ast_walker.add_dispatcher(
             Implicit_Null,
             None,
-            self._on_implict_null,
+            self._on_implicit_null,
             None
         )
         trlc_ast_walker.add_dispatcher(
@@ -518,7 +557,8 @@ class RstConverter(BaseConverter):
         # lobster-trace: SwRequirements.sw_req_rst_string_format
         # lobster-trace: SwRequirements.sw_req_rst_render_md
         # lobster-trace: SwRequirements.sw_req_rst_render_gfm
-        """Render the attribute value depened on its format.
+        # lobster-trace: SwRequirements.sw_req_rst_render_plantuml
+        """Render the attribute value depending on its format.
 
         Args:
             package_name (str): The package name.
@@ -536,13 +576,17 @@ class RstConverter(BaseConverter):
 
             # Is it CommonMark Markdown format?
             if self._render_cfg.is_format_md(package_name, type_name, attribute_name) is True:
-                # Convert Markdown to reStructuredText.
+                assert self._plantuml_tmp_dir is not None
+                Md2RstRenderer.image_dir = self._plantuml_tmp_dir.name
+                Md2RstRenderer.external_files = self._external_files
                 markdown = Markdown(renderer=Md2RstRenderer)
                 result = markdown.convert(attribute_value)
 
             # Is it GitHub Flavored Markdown format?
             elif self._render_cfg.is_format_gfm(package_name, type_name, attribute_name) is True:
-                # Convert GitHub Flavored Markdown to reStructuredText.
+                assert self._plantuml_tmp_dir is not None
+                Md2RstRenderer.image_dir = self._plantuml_tmp_dir.name
+                Md2RstRenderer.external_files = self._external_files
                 markdown = Markdown(renderer=Gfm2RstRenderer, extensions=['gfm'])
                 result = markdown.convert(attribute_value)
 
@@ -563,7 +607,7 @@ class RstConverter(BaseConverter):
             level (int): The record level.
             translation (Optional[dict]): Translation dictionary for the record object.
                                             If None, no translation is applied.
-        
+
             Returns:
             Ret: Status
         """
@@ -794,7 +838,7 @@ class RstConverter(BaseConverter):
         Args:
             list_values (List[str]): List of list values.
             escape (bool): Escapes every list value (default: True).
-        
+
         Returns:
             str: reStructuredText list
         """

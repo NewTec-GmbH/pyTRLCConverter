@@ -93,7 +93,7 @@ autoapi_options = [
     'show-inheritance',         # Show base classes on class pages
     'show-inheritance-diagram', # Show inheritance diagrams for classes
     'show-module-summary'       # Summary table at the top of each module page
-]    
+]
 suppress_warnings = ['autoapi.python_import_resolution', 'autoapi.not_readable']
 
 # sphinx.ext.inheritance_diagram configuration
@@ -107,7 +107,7 @@ inheritance_edge_attrs = {
     'arrowsize': '1.5',
 }
 
-# MyST parser configuration ---------------------------------------------------
+# -- MyST parser configuration ---------------------------------------------------
 
 # Configure MyST parser to generate GitHub-style anchors
 myst_heading_anchors = 6
@@ -184,12 +184,12 @@ def _build_version_links() -> tuple[str, list[tuple[str, str]]]:
             else:
                 version_links.append((version, f"/{version}/"))
 
-        if docs_base_path:
-            latest_url = f"{docs_base_path}/{latest_target}/"
-        else:
-            latest_url = f"/{latest_target}/"
-
-        version_links.insert(0, ('latest', latest_url))
+        if latest_target not in versions:
+            if docs_base_path:
+                latest_url = f"{docs_base_path}/{latest_target}/"
+            else:
+                latest_url = f"/{latest_target}/"
+            version_links.insert(0, ('latest', latest_url))
 
     return current_version, version_links
 
@@ -206,7 +206,7 @@ html_context = {
 
 # List of files to copy to the output directory.
 #
-# The source is relative to the sphinx directory.
+# The source is relative to the sphinx source directory.
 # The destination is relative to the output directory.
 files_to_copy = [
     {
@@ -220,6 +220,7 @@ files_to_copy = [
         'exclude': ['*.rst']
     }
 ]
+
 
 def setup(app: Any) -> None:
     """Setup sphinx.
@@ -262,12 +263,22 @@ def copy_files(app: Any) -> None:
 
         if not os.path.exists(destination):
             os.makedirs(destination)
-        
-        for filename in os.listdir(source):
-            if not any(fnmatch.fnmatch(filename, pattern) for pattern in files['exclude']):
-                full_file_name = os.path.join(source, filename)
-                if os.path.isfile(full_file_name):
-                    shutil.copy(full_file_name, destination)
+
+        if not os.path.exists(source):
+            print(
+                f"Warning: The source directory {source} does not exist. "
+                "Please check the configuration in conf.py."
+            )
+
+        else:
+            if not os.path.exists(destination):
+                os.makedirs(destination)
+            
+            for filename in os.listdir(source):
+                if not any(fnmatch.fnmatch(filename, pattern) for pattern in files['exclude']):
+                    full_file_name = os.path.join(source, filename)
+                    if os.path.isfile(full_file_name):
+                        shutil.copy(full_file_name, destination)
 
 # Main *************************************************************************
 
@@ -277,7 +288,7 @@ if plantuml_env is None:
         "of plantuml.jar or server URL.\n"
         "Set plantuml to either <path>/plantuml.jar or a server URL.")
 
-if  urlparse(plantuml_env).scheme in ['http', 'https']:
+if urlparse(plantuml_env).scheme in ['http', 'https']:
     plantuml = [plantuml_env]
 else:
     if os.path.isfile(plantuml_env):

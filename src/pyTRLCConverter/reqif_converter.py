@@ -25,6 +25,7 @@ import mimetypes
 import os
 import re
 import shutil
+import tempfile
 import zipfile
 from datetime import datetime, timezone
 from typing import Any, Optional
@@ -55,6 +56,9 @@ from trlc.ast import (
     Record_Object, Record_Reference, String_Literal, Expression, Symbol_Table
 )
 from pyTRLCConverter.base_converter import BaseConverter
+from pyTRLCConverter.reqif_identifier_store import ReqifIdentifierStore
+from pyTRLCConverter.marko.md2reqif_renderer import Md2ReqifRenderer
+from pyTRLCConverter.marko.gfm2reqif_renderer import Gfm2ReqifRenderer
 from pyTRLCConverter.ret import Ret
 from pyTRLCConverter.trlc_helper import TrlcAstWalker
 from pyTRLCConverter.logger import log_error, log_verbose
@@ -96,8 +100,12 @@ class ReqifConverter(BaseConverter):
         super().__init__(args)
 
         self._out_path = args.out
-        self._markdown_renderer_md = Markdown()
-        self._markdown_renderer_gfm = Markdown(extensions=["gfm"])
+        self._markdown_renderer_md = Markdown(renderer=Md2ReqifRenderer)
+        self._markdown_renderer_gfm = Markdown(renderer=Gfm2ReqifRenderer, extensions=["gfm"])
+        self._plantuml_tmp_dir: Optional[tempfile.TemporaryDirectory] = None
+
+        self._id_store_path = getattr(args, "id_store", None)
+        self._id_store: Optional[ReqifIdentifierStore] = None
 
         self._spec_objects = []
         self._spec_relations = []
@@ -147,6 +155,7 @@ class ReqifConverter(BaseConverter):
         # lobster-trace: SwRequirements.sw_req_reqif_out_file_name_default
         # lobster-trace: SwRequirements.sw_req_reqif_out_file_name_custom
         # lobster-trace: SwRequirements.sw_req_reqif_reqifz
+        # lobster-trace: SwRequirements.sw_req_reqif_identifier_immutable
         """
         Register converter specific argument parser.
 
@@ -206,8 +215,21 @@ class ReqifConverter(BaseConverter):
                  "The default is to write plain .reqif files."
         )
 
+        BaseConverter._parser.add_argument(
+            "--id-store",
+            type=str,
+            default=None,
+            required=False,
+            help="Path to a JSON file used to keep the identifiers of ReqIF Identifiable "
+                 "elements immutable across consecutive exports. On the initial conversion "
+                 "the file is created with the generated identifiers; on subsequent "
+                 "conversions the stored identifiers are reused and new elements are added."
+        )
+
     def begin(self) -> Ret:
         # lobster-trace: SwRequirements.sw_req_reqif_single_doc_mode
+        # lobster-trace: SwRequirements.sw_req_reqif_identifier_store_init
+        # lobster-trace: SwRequirements.sw_req_reqif_identifier_store_reuse
         """
         Begin the conversion process.
 
@@ -219,6 +241,17 @@ class ReqifConverter(BaseConverter):
         if result == Ret.OK:
             self._empty_attribute_value = self._args.empty
             log_verbose(f"Empty attribute value: {self._empty_attribute_value}")
+
+            if self._id_store_path is not None:
+                self._id_store = ReqifIdentifierStore()
+                if self._id_store.load(self._id_store_path) is False:
+                    result = Ret.ERROR
+
+            # Temporary directory for inline PlantUML images generated while
+            # rendering Markdown attributes. The directory is cleaned up in
+            # finish() once all documents have been written.
+            # pylint: disable-next=consider-using-with
+            self._plantuml_tmp_dir = tempfile.TemporaryDirectory(prefix="pyTRLCConverter_reqif_")
 
             if self._args.single_document is True:
                 log_verbose("Single document mode.")
@@ -376,7 +409,8 @@ class ReqifConverter(BaseConverter):
             item_name=record.name,
             type_key=type_key,
             type_long_name=record.n_typ.name,
-            attribute_value_map=attribute_value_map
+            attribute_value_map=attribute_value_map,
+            identifier_key=f"spec-object:{record.n_package.name}.{record.name}"
         )
         self._spec_object_identifier_by_record[id(record)] = spec_object.identifier
         self._last_spec_object_identifier = spec_object.identifier
@@ -387,16 +421,31 @@ class ReqifConverter(BaseConverter):
     def finish(self) -> Ret:
         # lobster-trace: SwRequirements.sw_req_reqif_single_doc_mode
         # lobster-trace: SwRequirements.sw_req_reqif_reqifz
+        # lobster-trace: SwRequirements.sw_req_reqif_identifier_store_init
+        # lobster-trace: SwRequirements.sw_req_reqif_identifier_store_reuse
         """Finish the conversion process and write the output in single document mode.
+
+        The persistent identifier store, if enabled, is written back so that the
+        generated identifiers stay immutable on subsequent conversions.
 
         Returns:
             Ret: Status
         """
+        result = Ret.OK
+
         if self._args.single_document is True:
             self._flush_pending_hierarchy()
-            return self._write_document(self._args.name)
+            result = self._write_document(self._args.name)
 
-        return Ret.OK
+        if self._id_store is not None:
+            if self._id_store.save(self._id_store_path) is False:
+                result = Ret.ERROR
+
+        if self._plantuml_tmp_dir is not None:
+            self._plantuml_tmp_dir.cleanup()
+            self._plantuml_tmp_dir = None
+
+        return result
 
     def _write_document(self, file_name: str) -> Ret:
         # lobster-trace: SwRequirements.sw_req_reqif_multiple_doc_mode
@@ -525,7 +574,7 @@ class ReqifConverter(BaseConverter):
         )
 
         req_if_header = ReqIFReqIFHeader(
-            identifier=self._new_identifier("req-if-header"),
+            identifier=self._obtain_identifier(f"req-if-header:{self._document_title}", "req-if-header"),
             comment="Generated by pyTRLCConverter",
             creation_time=last_change,
             repository_id="",
@@ -630,7 +679,8 @@ class ReqifConverter(BaseConverter):
             self._hierarchy_stack.pop()
 
         hierarchy = ReqIFSpecHierarchy(
-            identifier=self._new_identifier("hierarchy"),
+            identifier=self._obtain_identifier(
+                f"hierarchy:{spec_object_identifier}:{long_name}", "hierarchy"),
             spec_object=spec_object_identifier,
             level=hierarchy_level,
             children=[],
@@ -650,12 +700,15 @@ class ReqifConverter(BaseConverter):
         if is_container is True:
             self._hierarchy_stack.append(hierarchy)
 
+    # pylint: disable-next=too-many-arguments,too-many-positional-arguments
     def _create_spec_object(self,
                             item_name: str,
                             type_key: str,
                             type_long_name: str,
-                            attribute_value_map: dict[str, dict[str, Any]]) -> ReqIFSpecObject:
+                            attribute_value_map: dict[str, dict[str, Any]],
+                            identifier_key: str) -> ReqIFSpecObject:
         # lobster-trace: SwRequirements.sw_req_reqif_record
+        # lobster-trace: SwRequirements.sw_req_reqif_identifier_immutable
         """Create a ReqIFSpecObject for the given ReqIF type and field attributes.
 
         Args:
@@ -664,6 +717,7 @@ class ReqifConverter(BaseConverter):
             type_long_name (str): Human-readable long-name of the ReqIF spec-object type.
             attribute_value_map (dict[str, dict[str, Any]]): Mapping from field key to
                 ``{"long_name": ..., "value": ...}`` for each dynamic field attribute.
+            identifier_key (str): Stable logical key for the spec-object identifier.
 
         Returns:
             ReqIFSpecObject: The created and registered spec-object.
@@ -706,7 +760,7 @@ class ReqifConverter(BaseConverter):
                 )
 
         spec_object = ReqIFSpecObject(
-            identifier=self._new_identifier("spec-object"),
+            identifier=self._obtain_identifier(identifier_key, "spec-object"),
             attributes=attributes,
             spec_object_type=self._get_spec_object_type_identifier(type_key),
             long_name=item_name,
@@ -1120,7 +1174,9 @@ class ReqifConverter(BaseConverter):
 
             self._spec_relations.append(
                 ReqIFSpecRelation(
-                    identifier=self._new_identifier("spec-relation"),
+                    identifier=self._obtain_identifier(
+                        f"spec-relation:{source_identifier}:{relation_type_identifier}:{target_identifier}",
+                        "spec-relation"),
                     relation_type_ref=relation_type_identifier,
                     source=source_identifier,
                     target=target_identifier,
@@ -1332,10 +1388,16 @@ class ReqifConverter(BaseConverter):
         # lobster-trace: SwRequirements.sw_req_reqif_render_md
         # lobster-trace: SwRequirements.sw_req_reqif_render_gfm
         # lobster-trace: SwRequirements.sw_req_reqif_render_table_options
+        # lobster-trace: SwRequirements.sw_req_reqif_render_plantuml
         """Convert Markdown text to an XHTML-wrapped string using marko.
 
         If ``table_options`` is provided and non-empty, table styling is applied to the
         generated HTML before wrapping (see :meth:`_apply_table_options`).
+
+        Fenced code blocks tagged ``plantuml`` are rendered as embedded SVG
+        images via :class:`Md2ReqifRenderer` / :class:`Gfm2ReqifRenderer`; the
+        generated images are registered in ``self._external_files`` so they are
+        copied next to the ReqIF document.
 
         Args:
             markdown_text (str): Markdown source text.
@@ -1347,10 +1409,22 @@ class ReqifConverter(BaseConverter):
             str: XHTML-wrapped HTML string.
         """
         renderer = self._markdown_renderer_gfm if gfm_mode else self._markdown_renderer_md
+
+        # Wire the inline-PlantUML renderer state to this converter so generated
+        # SVGs are written to the converter's temp directory and tracked in
+        # _external_files for copying.
+        assert self._plantuml_tmp_dir is not None
+        Md2ReqifRenderer.image_dir = self._plantuml_tmp_dir.name
+        Md2ReqifRenderer.external_files = self._external_files
+
         html_text = renderer.convert(markdown_text).strip()
 
         if len(html_text) == 0:
             html_text = "<p></p>"
+
+        # Marko's GFM renderer outputs HTML void elements (e.g. <input ...>) for task list
+        # checkboxes. XHTML requires all void elements to be self-closed (<input ... />).
+        html_text = re.sub(r'<(input)(\s[^>]*)>', r'<\1\2/>', html_text)
 
         if table_options:
             html_text = self._apply_table_options(html_text, table_options)
@@ -1480,3 +1554,25 @@ class ReqifConverter(BaseConverter):
         """
         self._id_counter += 1
         return f"{prefix}-{self._id_counter}"
+
+    def _obtain_identifier(self, key: str, prefix: str) -> str:
+        # lobster-trace: SwRequirements.sw_req_reqif_identifier_immutable
+        """Obtain an identifier for an Identifiable element, persistent if a store is enabled.
+
+        When an identifier store is enabled (``--id-store``) the identifier is looked up
+        by its stable logical key and reused if known, keeping it immutable across
+        consecutive exports. Otherwise a volatile auto-incremented identifier is used.
+
+        Args:
+            key (str): Stable logical key identifying the ReqIF element.
+            prefix (str): Identifier prefix (e.g. ``"spec-object"`` or ``"hierarchy"``).
+
+        Returns:
+            str: The identifier associated with the element.
+        """
+        if self._id_store is not None:
+            identifier = self._id_store.get_or_create(key, prefix)
+        else:
+            identifier = self._new_identifier(prefix)
+
+        return identifier

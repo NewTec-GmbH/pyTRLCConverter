@@ -11,6 +11,7 @@ class ReqifConverter extends BaseConverter {
     +leave_file(file_name: str) : Ret
     +convert_section(section: str, level: int) : Ret
     +convert_record_object_generic(record: Record_Object, level: int, translation: Optional[dict]) : Ret
+    +finish() : Ret
 }
 
 
@@ -31,8 +32,25 @@ package "Dependencies" {
     class TrlcAstWalker {
     }
 
+    class Md2ReqifRenderer {
+        + render(ast: Any) : str
+    }
+
+    class Gfm2ReqifRenderer extends Md2ReqifRenderer {
+    }
+
     class "marko" <<(M ,lightblue) module>> {
     }
+    note bottom of "marko"
+        Markdown Parser
+    end note
+
+    class PlantUML {
+    }
+    note bottom of PlantUML
+        Renders inline ```plantuml```
+        fenced code blocks to SVG.
+    end note
 
     class "reqif" <<(M ,lightblue) module>> {
     }
@@ -40,7 +58,10 @@ package "Dependencies" {
 
 ReqifConverter ..> "trlc"
 ReqifConverter ..> TrlcAstWalker
+ReqifConverter ..> Md2ReqifRenderer
+ReqifConverter ..> Gfm2ReqifRenderer
 ReqifConverter ..> "marko"
 ReqifConverter ..> "reqif"
+Md2ReqifRenderer ..> PlantUML
 
 @enduml

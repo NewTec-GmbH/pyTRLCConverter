@@ -79,9 +79,16 @@ def test_make_server_url(record_property, plantuml_instance: PlantUML):
     expected_url = "http://plantuml.com/plantuml/svg/SoWkIImgAStDuNBCoKnELT2rKt3AJx9Iy4ZDoSddSaZDIm7A0G0%3D"
 
     mock_diagram_content = "@startuml\nAlice -> Bob: Hello\n@enduml"
+
+    # Test the URL creation when reading the diagram_content from a file.
     with patch("builtins.open", mock_open(read_data=mock_diagram_content)):
         result_url = plantuml_instance._make_server_url(diagram_type, diagram_path)
 
+    assert result_url.startswith("http://plantuml.com/plantuml/svg/")
+    assert result_url == expected_url
+
+    # Repeat the test by giving the diagram_content directly to the function.
+    result_url = plantuml_instance._make_server_url(diagram_type, mock_diagram_content, source_is_file=False)
     assert result_url.startswith("http://plantuml.com/plantuml/svg/")
     assert result_url == expected_url
 

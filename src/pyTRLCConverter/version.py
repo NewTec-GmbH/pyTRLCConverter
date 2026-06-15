@@ -63,8 +63,9 @@ def init_from_metadata():
         my_metadata.get('Version', '???'), \
         my_metadata.get('Author', '???'), \
         my_metadata.get('Author-email', '???'), \
-        my_metadata.get('Project-URL', 'repository, ???').replace("repository, ", ""), \
-        my_metadata.get('License', '???')
+        next((u.split(", ", 1)[1] for u in (my_metadata.get_all('Project-URL') or [])
+              if u.startswith("repository,")), '???'), \
+        my_metadata.get('License') or my_metadata.get('License-Expression', '???')
 
 def init_from_toml():
     # lobster-trace: SwRequirements.sw_req_version

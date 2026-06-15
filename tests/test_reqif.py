@@ -17,9 +17,11 @@
 # If not, see <https://www.gnu.org/licenses/>.
 
 # Imports **********************************************************************
+import json
 import os
 import zipfile
 from pathlib import Path
+from unittest.mock import patch
 from pyTRLCConverter.__main__ import main
 from pyTRLCConverter.reqif_converter import ReqifConverter
 from tests.reqif_test_utils import (
@@ -28,6 +30,7 @@ from tests.reqif_test_utils import (
     _find_attribute_by_identifier,
     _find_attribute_identifier,
     _assert_reqif_v12_compliance,
+    _collect_identifiers,
 )
 
 # Variables ********************************************************************
@@ -548,5 +551,285 @@ def test_tc_reqif_reqifz_multiple_doc(record_property, capsys, monkeypatch, tmp_
             names = zf.namelist()
             assert len(names) == 1
             assert names[0] == doc_name + ".reqif"
+
+
+def test_tc_reqif_render_plantuml(record_property, capsys, monkeypatch, tmp_path: Path):
+    # lobster-trace: SwTests.tc_reqif_render_plantuml
+    """A plantuml fenced code block in a Markdown attribute shall be rendered as an XHTML <object>
+    referencing a generated SVG file copied to the output folder.
+
+    Args:
+        record_property (Any): Used to inject the test case reference into the test results.
+        capsys (Any): Used to capture stdout and stderr.
+        monkeypatch (Any): Used to mock program arguments.
+        tmp_path (Path): Used to create a temporary output directory.
+    """
+    record_property("lobster-trace", "SwTests.tc_reqif_render_plantuml")
+
+    monkeypatch.setattr("sys.argv", [
+        "pyTRLCConverter",
+        "--source", "./tests/utils/req.rsl",
+        "--source", "./tests/utils/single_req_description_md.trlc",
+        "--out", str(tmp_path),
+        "--renderCfg", "./tests/utils/renderCfg.json",
+        "reqif",
+        "--single-document"
+    ])
+
+    # Mock PlantUML so the test does not depend on Java or a PlantUML server being
+    # available in the test environment.
+    svg_payload = (
+        b'<?xml version="1.0" encoding="UTF-8" standalone="no"?>'
+        b'<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10"/>'
+    )
+    with patch("pyTRLCConverter.marko.md2reqif_renderer.PlantUML.generate_to_bytes",
+               return_value=svg_payload):
+        main()
+
+    captured = capsys.readouterr()
+    assert captured.err == ""
+
+    output_file = os.path.join(tmp_path, ReqifConverter.OUTPUT_FILE_NAME_DEFAULT)
+    bundle = _parse_reqif(output_file)
+
+    spec_object = _find_spec_object_by_long_name(bundle, "req_id_md")
+    assert spec_object is not None
+
+    description_identifier = _find_attribute_identifier(bundle, "description")
+    assert description_identifier is not None
+
+    description_attribute = _find_attribute_by_identifier(spec_object, description_identifier)
+    assert description_attribute is not None
+
+    # The XHTML must reference the generated SVG via an <object> element.
+    assert 'type="image/svg+xml"' in description_attribute.value
+    assert '<object' in description_attribute.value
+
+    # Exactly one SVG file must have been copied to the output folder. Its
+    # local name is content-addressed, so we just verify any plantuml_*.svg
+    # exists and is referenced from the XHTML.
+    svg_files = [name for name in os.listdir(tmp_path)
+                 if name.startswith("plantuml_") and name.endswith(".svg")]
+    assert len(svg_files) == 1
+    assert f'data="{svg_files[0]}"' in description_attribute.value
+
+    # And the file on disk must contain the mocked SVG payload.
+    with open(os.path.join(tmp_path, svg_files[0]), "rb") as svg_file:
+        assert svg_file.read() == svg_payload
+
+
+def test_tc_reqif_render_plantuml_error(record_property, capsys, monkeypatch, tmp_path: Path):
+    # lobster-trace: SwTests.tc_reqif_render_plantuml_error
+    """If PlantUML is not available, a plantuml fenced code block shall be replaced by a
+    [PlantUML error: ...] paragraph instead of failing the conversion.
+
+    Args:
+        record_property (Any): Used to inject the test case reference into the test results.
+        capsys (Any): Used to capture stdout and stderr.
+        monkeypatch (Any): Used to mock program arguments.
+        tmp_path (Path): Used to create a temporary output directory.
+    """
+    record_property("lobster-trace", "SwTests.tc_reqif_render_plantuml_error")
+
+    # Ensure PlantUML is not configured for this test run.
+    monkeypatch.delenv("PLANTUML", raising=False)
+
+    monkeypatch.setattr("sys.argv", [
+        "pyTRLCConverter",
+        "--source", "./tests/utils/req.rsl",
+        "--source", "./tests/utils/single_req_description_md.trlc",
+        "--out", str(tmp_path),
+        "--renderCfg", "./tests/utils/renderCfg.json",
+        "reqif",
+        "--single-document"
+    ])
+
+    main()
+
+    captured = capsys.readouterr()
+    assert captured.err == ""
+
+    output_file = os.path.join(tmp_path, ReqifConverter.OUTPUT_FILE_NAME_DEFAULT)
+    bundle = _parse_reqif(output_file)
+
+    spec_object = _find_spec_object_by_long_name(bundle, "req_id_md")
+    assert spec_object is not None
+
+    description_identifier = _find_attribute_identifier(bundle, "description")
+    assert description_identifier is not None
+
+    description_attribute = _find_attribute_by_identifier(spec_object, description_identifier)
+    assert description_attribute is not None
+
+    # The plantuml block must be replaced by a [PlantUML error: ...] paragraph.
+    assert "[PlantUML error:" in description_attribute.value
+    # And no SVG file may have been written to the output folder.
+    svg_files = [name for name in os.listdir(tmp_path)
+                 if name.startswith("plantuml_") and name.endswith(".svg")]
+    assert len(svg_files) == 0
+
+
+def test_tc_reqif_identifier_store_init(record_property, capsys, monkeypatch, tmp_path: Path):
+    # lobster-trace: SwTests.tc_reqif_identifier_store_init
+    """On the initial conversion the identifier store file is created with the generated identifiers.
+
+    Args:
+        record_property (Any): Used to inject the test case reference into the test results.
+        capsys (Any): Used to capture stdout and stderr.
+        monkeypatch (Any): Used to mock program arguments.
+        tmp_path (Path): Used to create a temporary output directory.
+    """
+    record_property("lobster-trace", "SwTests.tc_reqif_identifier_store_init")
+
+    id_store_file = os.path.join(tmp_path, "ids.json")
+
+    # The identifier store file does not exist yet (initial conversion).
+    assert os.path.exists(id_store_file) is False
+
+    monkeypatch.setattr("sys.argv", [
+        "pyTRLCConverter",
+        "--source", "./tests/utils/req.rsl",
+        "--source", "./tests/utils/single_req_no_section.trlc",
+        "--out", str(tmp_path),
+        "reqif",
+        "--single-document",
+        "--id-store", id_store_file
+    ])
+
+    main()
+
+    captured = capsys.readouterr()
+    assert captured.err == ""
+
+    # The identifier store file has been created.
+    assert os.path.exists(id_store_file) is True
+
+    with open(id_store_file, "r", encoding="utf-8") as fd:
+        data = json.load(fd)
+
+    # It stores the generated spec-object identifier keyed by the record's stable logical key.
+    assert "spec-object:Requirements.req_id_1" in data["identifiers"]
+
+    output_file = os.path.join(tmp_path, ReqifConverter.OUTPUT_FILE_NAME_DEFAULT)
+    bundle = _parse_reqif(output_file)
+    spec_object = _find_spec_object_by_long_name(bundle, "req_id_1")
+
+    assert spec_object is not None
+    # The stored identifier matches the one used in the generated ReqIF output.
+    assert data["identifiers"]["spec-object:Requirements.req_id_1"] == spec_object.identifier
+
+
+def test_tc_reqif_identifier_immutable(record_property, capsys, monkeypatch, tmp_path: Path):
+    # lobster-trace: SwTests.tc_reqif_identifier_immutable
+    """The identifiers of the ReqIF Identifiable elements stay immutable across consecutive exports.
+
+    Args:
+        record_property (Any): Used to inject the test case reference into the test results.
+        capsys (Any): Used to capture stdout and stderr.
+        monkeypatch (Any): Used to mock program arguments.
+        tmp_path (Path): Used to create a temporary output directory.
+    """
+    record_property("lobster-trace", "SwTests.tc_reqif_identifier_immutable")
+
+    id_store_file = os.path.join(tmp_path, "ids.json")
+    argv = [
+        "pyTRLCConverter",
+        "--source", "./tests/utils/req.rsl",
+        "--source", "./tests/utils/multi_req_with_link.trlc",
+        "--out", str(tmp_path),
+        "reqif",
+        "--single-document",
+        "--id-store", id_store_file
+    ]
+    output_file = os.path.join(tmp_path, ReqifConverter.OUTPUT_FILE_NAME_DEFAULT)
+
+    # First export generates and stores the identifiers.
+    monkeypatch.setattr("sys.argv", argv)
+    main()
+    assert capsys.readouterr().err == ""
+    first_identifiers = _collect_identifiers(_parse_reqif(output_file))
+
+    # Second export reuses the stored identifiers.
+    monkeypatch.setattr("sys.argv", argv)
+    main()
+    assert capsys.readouterr().err == ""
+    second_identifiers = _collect_identifiers(_parse_reqif(output_file))
+
+    # Sanity check that the elements under test were actually present.
+    assert len(first_identifiers["spec_objects"]) == 2
+    assert len(first_identifiers["spec_relations"]) == 2
+
+    # All identifiers of the Identifiable elements remain unchanged.
+    assert first_identifiers == second_identifiers
+
+
+def test_tc_reqif_identifier_store_reuse(record_property, capsys, monkeypatch, tmp_path: Path):
+    # lobster-trace: SwTests.tc_reqif_identifier_store_reuse
+    """Stored identifiers are reused for known elements while new elements get new identifiers.
+
+    Args:
+        record_property (Any): Used to inject the test case reference into the test results.
+        capsys (Any): Used to capture stdout and stderr.
+        monkeypatch (Any): Used to mock program arguments.
+        tmp_path (Path): Used to create a temporary output directory.
+    """
+    record_property("lobster-trace", "SwTests.tc_reqif_identifier_store_reuse")
+
+    id_store_file = os.path.join(tmp_path, "ids.json")
+    output_file = os.path.join(tmp_path, ReqifConverter.OUTPUT_FILE_NAME_DEFAULT)
+
+    # First conversion with the base file set (only req_id_1).
+    monkeypatch.setattr("sys.argv", [
+        "pyTRLCConverter",
+        "--source", "./tests/utils/req.rsl",
+        "--source", "./tests/utils/id_store_base.trlc",
+        "--out", str(tmp_path),
+        "reqif",
+        "--single-document",
+        "--id-store", id_store_file
+    ])
+    main()
+    assert capsys.readouterr().err == ""
+
+    base_req_1 = _find_spec_object_by_long_name(_parse_reqif(output_file), "req_id_1")
+    assert base_req_1 is not None
+
+    with open(id_store_file, "r", encoding="utf-8") as fd:
+        data_base = json.load(fd)
+    # The new element is not part of the store yet.
+    assert "spec-object:Requirements.req_id_2" not in data_base["identifiers"]
+
+    # Second conversion with the extended file set (req_id_1 and the new req_id_2).
+    monkeypatch.setattr("sys.argv", [
+        "pyTRLCConverter",
+        "--source", "./tests/utils/req.rsl",
+        "--source", "./tests/utils/id_store_extended.trlc",
+        "--out", str(tmp_path),
+        "reqif",
+        "--single-document",
+        "--id-store", id_store_file
+    ])
+    main()
+    assert capsys.readouterr().err == ""
+
+    extended_bundle = _parse_reqif(output_file)
+    extended_req_1 = _find_spec_object_by_long_name(extended_bundle, "req_id_1")
+    extended_req_2 = _find_spec_object_by_long_name(extended_bundle, "req_id_2")
+
+    # The already known element keeps its identifier.
+    assert extended_req_1 is not None
+    assert extended_req_1.identifier == base_req_1.identifier
+
+    # The new element gets a new, different identifier.
+    assert extended_req_2 is not None
+    assert extended_req_2.identifier != base_req_1.identifier
+
+    with open(id_store_file, "r", encoding="utf-8") as fd:
+        data_extended = json.load(fd)
+
+    # The new element has been added to the store while the known one is preserved.
+    assert data_extended["identifiers"]["spec-object:Requirements.req_id_1"] == base_req_1.identifier
+    assert "spec-object:Requirements.req_id_2" in data_extended["identifiers"]
+    assert data_extended["identifiers"]["spec-object:Requirements.req_id_2"] == extended_req_2.identifier
 
 # Main *************************************************************************

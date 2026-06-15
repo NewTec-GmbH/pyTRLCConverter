@@ -17,13 +17,25 @@ Requirement req_id_gfm {
         1. Sub numbered point 1
         2. Sub numbered point 2
 
-    **Bold text**, *italic text* and __underlined text__.
+    **Bold text** and *italic text*.
+
+    - [x] Checked task
+    - [ ] Unchecked task
 
     ```
     Code block example
     ```
 
-    --- Divider ---
+    ```plantuml
+    @startuml
+    Alice -> Bob: Hello
+    Bob --> Alice: Hi
+    @enduml
+    ```
+
+    ---
+
+    https://github.com/NewTec-GmbH/pyTRLCConverter
 
     > Blockquote example
 

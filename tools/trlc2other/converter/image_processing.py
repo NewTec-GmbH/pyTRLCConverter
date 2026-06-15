@@ -32,20 +32,32 @@ from pyTRLCConverter.plantuml import PlantUML
 
 # Functions ********************************************************************
 
-def convert_plantuml_to_image(plantuml_file: str, dest_dir: str, directories: List[str]) -> Optional[Path]:
+def convert_plantuml_to_image(plantuml_file: str, dest_dir: str, directories: List[str],
+                              image_format: str = "svg") -> Optional[Path]:
+    """Convert PlantUML diagram to an image file.
+
+    Args:
+        plantuml_file (str): Path or name of the PlantUML source file.
+        dest_dir (str): Directory where the generated image will be written.
+        directories (List[str]): Directories to search when plantuml_file is not an absolute path.
+        image_format (str): Output image format passed to PlantUML (e.g. "svg" or "png").
+                            Defaults to "svg".
+
+    Returns:
+        Optional[Path]: Path to the generated image file, or None if the source file was not found.
     """
-    Convert PlantUML diagram to image file.
-    """
+    assert image_format in ("svg", "png"), f"Unsupported image format: {image_format!r}"
+
     result = None
 
     file_path = locate_file(plantuml_file, directories)
     if file_path is not None:
         puml = PlantUML()
-        puml.generate("svg", file_path, dest_dir)
+        puml.generate(image_format, file_path, dest_dir)
 
         file_dst_path = os.path.basename(file_path)
         file_dst_path = os.path.splitext(file_dst_path)[0]
-        file_dst_path += ".svg"
+        file_dst_path += f".{image_format}"
 
         # PlantUML uses as output filename the diagram name if available.
         # The diagram name may differ from the filename.

@@ -15,14 +15,23 @@ section "SW Architecture" {
             A main challenge for pyTRLCConverter is the conversion of project-specific TRLC types. TRLC is a framework that gets adapted to
             project needs using "rsl" files. These files define TRLC types through derivations similar to classes in OOP.
             PyTRLCConverter uses built-in converter classes that convert to destination formats using a generic `attribute:value` style
-            result.  These built-in converter can be extended in an object-oriented manner to understand user defined types.
+            result. These built-in converter can be extended in an object-oriented manner to understand user defined types.
+
+            The following table gives an overview of the supported output formats:
+
+            | Format | Subcommand | GFM Support |
+            | ------ | ---------- | ----------- |
+            | Markdown | `markdown` | yes |
+            | reStructuredText | `rst` | yes |
+            | docx | `docx` | yes |
+            | ReqIF | `reqif` | yes |
 
             The following picture shows the overall tool flow:
             """
     }
 
     Generic.PlantUML sw_arch_flow_diagram {
-        caption = "PyTRLCConverter Tool Flow"
+        caption = "pyTRLCConverter Tool Flow"
         file_path ="../../doc/architecture/context_diagram.puml"
     }
 
@@ -288,6 +297,7 @@ section "SW Architecture" {
 
                     * Registers the `markdown` output format and options
                     * Prints sections and records in markdown
+                    * Optionally renders inline PlantUML fenced code blocks as SVG image references when `--render-plantuml` is given.
                     """
                 verification_criteria = "Call the tool using the `pyTRLCConverter` frontend with markdown output format."
                 satisfies = [
@@ -313,6 +323,8 @@ section "SW Architecture" {
                     SwRequirements.sw_req_markdown_top_level_custom,
                     SwRequirements.sw_req_markdown_render_md,
                     SwRequirements.sw_req_markdown_render_gfm,
+                    SwRequirements.sw_req_markdown_render_plantuml,
+                    SwRequirements.sw_req_cli_render_plantuml,
                     SwRequirements.sw_req_markdown_out_file_name_default,
                     SwRequirements.sw_req_destination_format
                 ]
@@ -330,6 +342,7 @@ section "SW Architecture" {
 
                     * Registers the `rst` output format and options
                     * Prints sections and records in ReStructuredText
+                    * Renders inline PlantUML fenced code blocks as SVG images referenced via `.. image::` directives.
                     """
                 verification_criteria = "Call the tool using the `pyTRLCConverter` frontend with rst output format."
                 satisfies = [
@@ -355,6 +368,7 @@ section "SW Architecture" {
                     SwRequirements.sw_req_rst_sd_top_level_custom,
                     SwRequirements.sw_req_rst_render_md,
                     SwRequirements.sw_req_rst_render_gfm,
+                    SwRequirements.sw_req_rst_render_plantuml,
                     SwRequirements.sw_req_destination_format
                 ]
             }
@@ -373,10 +387,12 @@ section "SW Architecture" {
                     * Creates sections and records in ReqIF format.
                     * Converts configured CommonMark and GFM fields into ReqIF XHTML.
                     * Passes configured XHTML fields through to ReqIF XHTML without modification.
+                    * Renders inline PlantUML fenced code blocks as embedded SVG images in XHTML attributes.
                     * Converts TRLC enumeration type attributes to DATATYPE-DEFINITION-ENUMERATION with 0-based consecutive ENUM-VALUE keys in RSL declaration order.
                     * Omits optional enumeration attributes with null value from the generated spec-object.
                     * Converts TRLC record reference attributes to ReqIF SPEC-RELATION entries.
                     * Optionally archives the generated .reqif output as a .reqifz ZIP archive.
+                    * Optionally persists the identifiers of ReqIF Identifiable elements in a JSON store so that they stay immutable across consecutive exports.
                     """
                 verification_criteria = "Call the tool using the `pyTRLCConverter` frontend with reqif output format."
                 satisfies = [
@@ -394,11 +410,15 @@ section "SW Architecture" {
                     SwRequirements.sw_req_reqif_render_xhtml,
                     SwRequirements.sw_req_reqif_render_path,
                     SwRequirements.sw_req_reqif_render_table_options,
+                    SwRequirements.sw_req_reqif_render_plantuml,
                     SwRequirements.sw_req_reqif_enum,
                     SwRequirements.sw_req_reqif_enum_key_order,
                     SwRequirements.sw_req_reqif_enum_null,
                     SwRequirements.sw_req_reqif_relation,
                     SwRequirements.sw_req_reqif_reqifz,
+                    SwRequirements.sw_req_reqif_identifier_immutable,
+                    SwRequirements.sw_req_reqif_identifier_store_init,
+                    SwRequirements.sw_req_reqif_identifier_store_reuse,
                     SwRequirements.sw_req_destination_format
                 ]
             }
@@ -415,6 +435,7 @@ section "SW Architecture" {
 
                     * Registers the `docx` output format and options.
                     * Creates sections and records in docx format.
+                    * Renders inline PlantUML fenced code blocks as embedded PNG images.
                     """
                 verification_criteria = "Call the tool using the `pyTRLCConverter` frontend with docx output format."
                 satisfies = [
@@ -425,6 +446,8 @@ section "SW Architecture" {
                     SwRequirements.sw_req_docx_record,
                     SwRequirements.sw_req_docx_reference,
                     SwRequirements.sw_req_docx_render_md,
+                    SwRequirements.sw_req_docx_render_gfm,
+                    SwRequirements.sw_req_docx_render_plantuml,
                     SwRequirements.sw_req_destination_format
                 ]
             }
