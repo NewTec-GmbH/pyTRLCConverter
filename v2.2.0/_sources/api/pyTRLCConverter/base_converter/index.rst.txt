@@ -1,0 +1,252 @@
+pyTRLCConverter.base_converter
+==============================
+
+.. py:module:: pyTRLCConverter.base_converter
+
+.. autoapi-nested-parse::
+
+   Converter base class which does the argparser handling and provides helper functions.
+
+   Author: Norbert Schulz (norbert.schulz@newtec.de)
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   pyTRLCConverter.base_converter.BaseConverter
+   pyTRLCConverter.base_converter.RecordsPolicy
+
+
+Module Contents
+---------------
+
+.. py:class:: BaseConverter(args: Any)
+
+   Bases: :py:obj:`pyTRLCConverter.abstract_converter.AbstractConverter`
+
+   .. autoapi-inheritance-diagram:: pyTRLCConverter.base_converter.BaseConverter
+      :parts: 1
+      :private-bases:
+
+
+   Base converter with empty method implementations and helper functions
+   for subclassing converters.
+
+
+   .. py:method:: _get_attribute(record: pyTRLCConverter.trlc_helper.Record_Object, attribute_name: str) -> str
+
+      Get the attribute value from the record object.
+          If the attribute is not found or empty, return the default value.
+
+      :param record: The record object
+      :type record: Record_Object
+      :param attribute_name: The attribute name to get the value from.
+      :type attribute_name: str
+
+      :returns: The attribute value.
+      :rtype: str
+
+
+
+   .. py:method:: _set_project_record_handler(record_type: str, handler: Callable) -> None
+
+      Set a project specific record handler.
+
+      :param record_type: The record type
+      :type record_type: str
+      :param handler: The handler function
+      :type handler: Callable
+
+
+
+   .. py:method:: _set_project_record_handlers(handlers: dict[str, Callable]) -> None
+
+      Set project specific record handlers.
+
+      :param handler: List of record type and handler function tuples
+      :type handler: dict[str, Callable]
+
+
+
+   .. py:method:: _translate_attribute_name(translation: Optional[dict], attribute_name: str) -> str
+
+      Translate attribute name on demand.
+          If no translation is provided, the attribute name will be returned as is.
+
+      :param translation: The translation dictionary.
+      :type translation: Optional[dict]
+      :param attribute_name: The attribute name to translate.
+      :type attribute_name: str
+
+      :returns: The translated attribute name.
+      :rtype: str
+
+
+
+   .. py:method:: begin() -> pyTRLCConverter.ret.Ret
+
+      Begin the conversion process.
+
+      :returns: Status
+      :rtype: Ret
+
+
+
+   .. py:method:: convert_record_object(record: pyTRLCConverter.trlc_helper.Record_Object, level: int) -> pyTRLCConverter.ret.Ret
+
+      Process the given record object.
+
+      :param record: The record object
+      :type record: Record_Object
+      :param level: The record level
+      :type level: int
+
+      :returns: Status
+      :rtype: Ret
+
+
+
+   .. py:method:: convert_record_object_generic(record: pyTRLCConverter.trlc_helper.Record_Object, level: int, translation: Optional[dict]) -> pyTRLCConverter.ret.Ret
+      :abstractmethod:
+
+
+      Convert a record object generically.
+
+      :param record: The record object.
+      :type record: Record_Object
+      :param level: The record level.
+      :type level: int
+      :param translation: Translation dictionary for the record object.
+                          If None, no translation is applied.
+      :type translation: Optional[dict]
+
+      :returns: Status
+      :rtype: Ret
+
+
+
+   .. py:method:: convert_section(section: str, level: int) -> pyTRLCConverter.ret.Ret
+
+      Process the given section item.
+
+      :param section: The section name
+      :type section: str
+      :param level: The section indentation level
+      :type level: int
+
+      :returns: Status
+      :rtype: Ret
+
+
+
+   .. py:method:: enter_file(file_name: str) -> pyTRLCConverter.ret.Ret
+
+      Enter a file.
+
+      :param file_name: File name
+      :type file_name: str
+
+      :returns: Status
+      :rtype: Ret
+
+
+
+   .. py:method:: finish()
+
+      Finish the conversion process.
+
+
+
+
+   .. py:method:: leave_file(file_name: str) -> pyTRLCConverter.ret.Ret
+
+      Leave a file.
+
+      :param file_name: File name
+      :type file_name: str
+
+      :returns: Status
+      :rtype: Ret
+
+
+
+   .. py:method:: register(args_parser: Any) -> None
+      :classmethod:
+
+
+      Register converter specific argument parser.
+
+      :param args_parser: Argument parser
+      :type args_parser: Any
+
+
+
+   .. py:method:: set_render_cfg(render_cfg: pyTRLCConverter.render_config.RenderConfig) -> None
+
+      Set the render configuration.
+
+      :param render_cfg: Render configuration
+      :type render_cfg: RenderConfig
+
+
+
+   .. py:attribute:: EMPTY_ATTRIBUTE_DEFAULT
+      :value: 'N/A'
+
+
+
+   .. py:attribute:: _args
+
+
+   .. py:attribute:: _empty_attribute_value
+      :value: 'N/A'
+
+
+
+   .. py:attribute:: _parser
+      :value: None
+
+
+
+   .. py:attribute:: _record_handler_dict
+      :type:  dict[str, Callable]
+
+
+   .. py:attribute:: _record_policy
+
+
+   .. py:attribute:: _render_cfg
+
+
+   .. py:attribute:: _translator
+
+
+.. py:class:: RecordsPolicy(*args, **kwds)
+
+   Bases: :py:obj:`enum.Enum`
+
+   .. autoapi-inheritance-diagram:: pyTRLCConverter.base_converter.RecordsPolicy
+      :parts: 1
+      :private-bases:
+
+
+   Enum class to define policies for handling records during conversion.
+
+
+   .. py:attribute:: RECORD_CONVERT_ALL
+      :value: 1
+
+
+      Convert all records, including undefined ones using convert_record_object_generic().
+
+
+   .. py:attribute:: RECORD_SKIP_UNDEFINED
+      :value: 2
+
+
+      Skip record types that are not linked to a handler.
+
+

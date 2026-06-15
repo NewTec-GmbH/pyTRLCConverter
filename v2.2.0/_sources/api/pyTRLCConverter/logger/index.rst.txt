@@ -1,0 +1,73 @@
+pyTRLCConverter.logger
+======================
+
+.. py:module:: pyTRLCConverter.logger
+
+.. autoapi-nested-parse::
+
+   Log verbose functionality and errors.
+
+   Author: Andreas Merkle (andreas.merkle@newtec.de)
+
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   pyTRLCConverter.logger._VERBOSE_ENABLED
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   pyTRLCConverter.logger.enable_verbose
+   pyTRLCConverter.logger.is_verbose_enabled
+   pyTRLCConverter.logger.log_error
+   pyTRLCConverter.logger.log_verbose
+
+
+Module Contents
+---------------
+
+.. py:function:: enable_verbose(enable: bool) -> None
+
+   Enable or disable verbose mode.
+
+   :param enable: True to enable verbose mode, False to disable it.
+   :type enable: bool
+
+
+.. py:function:: is_verbose_enabled() -> bool
+
+   Check if verbose mode is enabled.
+
+   :returns: True if verbose mode is enabled, False otherwise.
+   :rtype: bool
+
+
+.. py:function:: log_error(message: str, show_timestamp: bool = False) -> None
+
+   Prints an error and optionally a timestamp with it
+
+   :param message: The error message
+   :type message: str
+   :param show_timestamp: Option to enable logging. Defaults to False.
+   :type show_timestamp: bool, optional
+
+
+.. py:function:: log_verbose(message: str) -> None
+
+   Print a message if verbose mode is enabled.
+
+   :param message: The message to print.
+   :type message: str
+
+
+.. py:data:: _VERBOSE_ENABLED
+   :value: False
+
+
