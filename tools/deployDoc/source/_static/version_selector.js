@@ -74,7 +74,7 @@
      * false when the sidebar is not yet available and a retry should be attempted.
      */
     function injectVersionSelector() {
-        const selectorData = window.PYTRLC_DOCS_VERSION_SELECTOR;
+        let selectorData = window.PYTRLC_DOCS_VERSION_SELECTOR;
         if (!selectorData || !Array.isArray(selectorData.versions) || selectorData.versions.length === 0) {
             return true;
         }
@@ -97,6 +97,16 @@
 
         const select = document.createElement('select');
         select.id = 'local-version-select';
+        
+        // Parse the current version from the URL.
+        const path = window.location.href.toString().split(window.location.host)[1];
+        const path_elements = path.split('/');
+
+        // If the URL looks plausible and contains a known version, use it instead of the default "current" value.
+        if ((path_elements.length >= 4) && (path_elements[1] === "pyTRLCConverter") && 
+            (selectorData.versions.map(v => v.label).includes(path_elements[2]))) {
+            selectorData["current"] = path_elements[2];
+        }
 
         selectorData.versions.forEach((versionEntry) => {
             const option = document.createElement('option');
