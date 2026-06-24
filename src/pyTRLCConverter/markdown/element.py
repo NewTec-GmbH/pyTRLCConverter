@@ -169,7 +169,8 @@ class BulletList(MarkdownElement):
 
             if self._escape is True:  # Escape the value if necessary.
                 value = MarkdownText.escape(value)
-                list_str += f"- {value}\n"
+
+            list_str += f"- {value}\n"
 
         return list_str
 

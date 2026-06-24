@@ -313,6 +313,12 @@ def test_tc_markdown_list(record_property):
     markdown_list = BulletList(["Item1", "Item2"]).render()
     assert markdown_list == "- Item1\n- Item2\n"
 
+    # The values are escaped by default.
+    assert BulletList(["Item.1", "Item.2"]).render() == "- Item\\.1\n- Item\\.2\n"
+
+    # Without escaping the values are taken as is, but every item is still listed.
+    assert BulletList(["[a](x)", "[b](y)"], escape=False).render() == "- [a](x)\n- [b](y)\n"
+
 def test_tc_markdown_link(record_property):
     # lobster-trace: SwTests.tc_markdown_link
     """
