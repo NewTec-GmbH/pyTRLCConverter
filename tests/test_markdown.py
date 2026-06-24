@@ -19,12 +19,13 @@
 
 # Imports **********************************************************************
 import os
-from argparse import Namespace
 from collections import namedtuple
 from unittest.mock import patch
 
 from pyTRLCConverter.__main__ import main
 from pyTRLCConverter.markdown_converter import MarkdownConverter
+from pyTRLCConverter.markdown.element import Heading, Table, BulletList, Image
+from pyTRLCConverter.markdown.text import MarkdownText
 
 # Variables ********************************************************************
 
@@ -236,20 +237,15 @@ def test_tc_markdown_section(record_property, capsys, monkeypatch, tmp_path):
                                      ["valid", "N/A"]])
 
 
-def test_tc_markdown_escape(record_property, tmp_path):
+def test_tc_markdown_escape(record_property):
     # lobster-trace: SwTests.tc_markdown_escape
     """
     The Markdown converter shall support Markdown escaping.
 
     Args:
         record_property (Any): Used to inject the test case reference into the test results.
-        capsys (Any): Used to capture stdout and stderr.
-        monkeypatch (Any): Used to mock program arguments.
-        tmp_path (Path): Used to create a temporary output directory.
     """
     record_property("lobster-trace", "SwTests.tc_markdown_escape")
-
-    markdown_converter = MarkdownConverter(Namespace(out=str(tmp_path), exclude=None))
 
     # Escaping rules see https://daringfireball.net/projects/markdown/syntax#misc
     EscapingResult = namedtuple("EscapingResult", ["initial", "escaped"])
@@ -261,183 +257,152 @@ def test_tc_markdown_escape(record_property, tmp_path):
     ]
 
     for check in checks:
-        assert markdown_converter.markdown_escape(check.initial) == check.escaped
+        assert MarkdownText.escape(check.initial) == check.escaped
 
 
-def test_tc_markdown_heading(record_property, tmp_path):
+def test_tc_markdown_heading(record_property):
     # lobster-trace: SwTests.tc_markdown_heading
     """
     The Markdown converter shall provide a function to create Markdown headings.
 
     Args:
         record_property (Any): Used to inject the test case reference into the test results.
-        capsys (Any): Used to capture stdout and stderr.
-        monkeypatch (Any): Used to mock program arguments.
-        tmp_path (Path): Used to create a temporary output directory.
     """
     record_property("lobster-trace", "SwTests.tc_markdown_heading")
 
-    markdown_converter = MarkdownConverter(Namespace(out=str(tmp_path), exclude=None))
-
     # Test the heading function. Levels 1-6 need to be supported.
-    assert markdown_converter.markdown_create_heading("Heading", 1) == r"# Heading" + "\n"
-    assert markdown_converter.markdown_create_heading("Heading", 2) == r"## Heading" + "\n"
-    assert markdown_converter.markdown_create_heading("Heading", 3) == r"### Heading" + "\n"
-    assert markdown_converter.markdown_create_heading("Heading", 4) == r"#### Heading" + "\n"
-    assert markdown_converter.markdown_create_heading("Heading", 5) == r"##### Heading" + "\n"
-    assert markdown_converter.markdown_create_heading("Heading", 6) == r"###### Heading" + "\n"
-    assert markdown_converter.markdown_create_heading("Chapter.2", 2) == r"## Chapter\.2" + "\n"
-    assert markdown_converter.markdown_create_heading("Chapter.2", 2, escape=False) == r"## Chapter.2" + "\n"
+    assert Heading("Heading", 1).render() == r"# Heading" + "\n"
+    assert Heading("Heading", 2).render() == r"## Heading" + "\n"
+    assert Heading("Heading", 3).render() == r"### Heading" + "\n"
+    assert Heading("Heading", 4).render() == r"#### Heading" + "\n"
+    assert Heading("Heading", 5).render() == r"##### Heading" + "\n"
+    assert Heading("Heading", 6).render() == r"###### Heading" + "\n"
+    assert Heading("Chapter.2", 2).render() == r"## Chapter\.2" + "\n"
+    assert Heading("Chapter.2", 2, escape=False).render() == r"## Chapter.2" + "\n"
 
     # Invalid level shall return a empty string.
-    assert markdown_converter.markdown_create_heading("Heading", 0) == ""
+    assert Heading("Heading", 0).render() == ""
 
-def test_tc_markdown_table(record_property, tmp_path):
+def test_tc_markdown_table(record_property):
     # lobster-trace: SwTests.tc_markdown_table
     """
     The Markdown converter shall provide the functionality to create Markdown tables.
 
     Args:
         record_property (Any): Used to inject the test case reference into the test results.
-        capsys (Any): Used to capture stdout and stderr.
-        monkeypatch (Any): Used to mock program arguments.
-        tmp_path (Path): Used to create a temporary output directory.
     """
     record_property("lobster-trace", "SwTests.tc_markdown_table")
 
-    markdown_converter = MarkdownConverter(Namespace(out=str(tmp_path), exclude=None))
-
     # Create a table header. Expect 2 lines. First containing the column titles, second the separator.
-    table = markdown_converter.markdown_create_table(["Header1", "Header2"], [["left", "center"]])
+    table = Table(["Header1", "Header2"], [["left", "center"]]).render()
     lines = table.splitlines(keepends=True)
     line_index = 0
     line_index += _assert_table(lines, [["Header1", "Header2"]], [["left", "center"]])
 
-def test_tc_markdown_list(record_property, tmp_path):
+def test_tc_markdown_list(record_property):
     # lobster-trace: SwTests.tc_markdown_list
     """
     The Markdown converter shall provide the functionality to create Markdown lists.
 
     Args:
         record_property (Any): Used to inject the test case reference into the test results.
-        tmp_path (Path): Used to create a temporary output directory.
     """
     record_property("lobster-trace", "SwTests.tc_markdown_list")
 
-    markdown_converter = MarkdownConverter(Namespace(out=str(tmp_path), exclude=None))
-
     # Create a Markdown list. Expect each item to be prefixed with a hyphen and space.
-    markdown_list = markdown_converter.markdown_create_list(["Item1", "Item2"])
+    markdown_list = BulletList(["Item1", "Item2"]).render()
     assert markdown_list == "- Item1\n- Item2\n"
 
-def test_tc_markdown_link(record_property, tmp_path):
+def test_tc_markdown_link(record_property):
     # lobster-trace: SwTests.tc_markdown_link
     """
     The Markdown converter shall provide the functionality to create Markdown links.
 
     Args:
         record_property (Any): Used to inject the test case reference into the test results.
-        tmp_path (Path): Used to create a temporary output directory.
     """
     record_property("lobster-trace", "SwTests.tc_markdown_link")
 
-    markdown_converter = MarkdownConverter(Namespace(out=str(tmp_path), exclude=None))
-
     # Create a Markdown link. Escaping should only apply to the text, not the url.
-    assert markdown_converter.markdown_create_link("Link Text", "http://example.com") == \
+    assert MarkdownText.link("Link Text", "http://example.com") == \
         r"[Link Text](http://example.com)"
-    assert markdown_converter.markdown_create_link("Another Link", "https://example.org") == \
+    assert MarkdownText.link("Another Link", "https://example.org") == \
         r"[Another Link](https://example.org)"
-    assert markdown_converter.markdown_create_link("Special Characters", "http://example.com/path?query=1&other=2") == \
+    assert MarkdownText.link("Special Characters", "http://example.com/path?query=1&other=2") == \
         r"[Special Characters](http://example.com/path?query=1&other=2)"
-    assert markdown_converter.markdown_create_link(
+    assert MarkdownText.link(
         "Special Characters",
         "http://example.com/path%20with%20spaces",
          escape=True) == r"[Special Characters](http://example.com/path%20with%20spaces)"
-    assert markdown_converter.markdown_create_link("Link with special characters!", "http://example.com") == \
+    assert MarkdownText.link("Link with special characters!", "http://example.com") == \
         r"[Link with special characters\!](http://example.com)"
-    assert markdown_converter.markdown_create_link(
+    assert MarkdownText.link(
         "Link with special characters!",
         "http://example.com",
          escape=False) == r"[Link with special characters!](http://example.com)"
 
-def test_tc_markdown_image(record_property, tmp_path):
+def test_tc_markdown_image(record_property):
     # lobster-trace: SwTests.tc_markdown_image
     """
     The Markdown converter shall provide the functionality to embed images in Markdown.
 
     Args:
         record_property (Any): Used to inject the test case reference into the test results.
-        tmp_path (Path): Used to create a temporary output directory.
     """
     record_property("lobster-trace", "SwTests.tc_markdown_image")
 
-    markdown_converter = MarkdownConverter(Namespace(out=str(tmp_path), exclude=None))
-
     # Create a Markdown diagram link. Absolute and relative paths shall be supported.
     diagram_path = "/diagram.png"
-    assert markdown_converter.markdown_create_diagram_link(
-        f"{diagram_path}",
-        "Caption") == \
+    assert Image(f"{diagram_path}", "Caption").render() == \
         f"![Caption]({os.path.normpath(diagram_path)})\n"
 
     diagram_path = "diagram.png"
-    assert markdown_converter.markdown_create_diagram_link(
-        f"{diagram_path}",
-        "Caption") == \
+    assert Image(f"{diagram_path}", "Caption").render() == \
         f"![Caption]({os.path.normpath(diagram_path)})\n"
 
     diagram_path = "./graph.jpg"
-    assert markdown_converter.markdown_create_diagram_link(
-        "./graph.jpg",
-        "Caption with special characters!") == \
+    assert Image("./graph.jpg", "Caption with special characters!").render() == \
         fr"![Caption with special characters\!]({os.path.normpath(diagram_path)})" + "\n"
 
     diagram_path = "./I/am/nested.png"
-    assert markdown_converter.markdown_create_diagram_link(
+    assert Image(
         "./I/am/nested.png",
         "Caption with special characters!",
-        escape=False) == f"![Caption with special characters!]({os.path.normpath(diagram_path)})\n"
+        escape=False).render() == f"![Caption with special characters!]({os.path.normpath(diagram_path)})\n"
 
-def test_tc_markdown_text_color(record_property, tmp_path):
+def test_tc_markdown_text_color(record_property):
     # lobster-trace: SwTests.tc_markdown_text_color
     """
     The Markdown converter shall provide the functionality to create colored Markdown text output.
 
     Args:
         record_property (Any): Used to inject the test case reference into the test results.
-        tmp_path (Path): Used to create a temporary output directory.
     """
     record_property("lobster-trace", "SwTests.tc_markdown_text_color")
 
-    markdown_converter = MarkdownConverter(Namespace(out=str(tmp_path), exclude=None))
-
     # Test colored text output. HTML span element with style attribute should be used.
-    assert markdown_converter.markdown_text_color("Text", "red") == r'<span style="red">Text</span>'
-    assert markdown_converter.markdown_text_color("Text", "green") == r'<span style="green">Text</span>'
-    assert markdown_converter.markdown_text_color("Text", "blue") == r'<span style="blue">Text</span>'
-    assert markdown_converter.markdown_text_color("!Text!", "yellow") == r'<span style="yellow">\!Text\!</span>'
-    assert markdown_converter.markdown_text_color("!Text!", "bad", escape=False) == r'<span style="bad">!Text!</span>'
+    assert MarkdownText.colored_text("Text", "red") == r'<span style="red">Text</span>'
+    assert MarkdownText.colored_text("Text", "green") == r'<span style="green">Text</span>'
+    assert MarkdownText.colored_text("Text", "blue") == r'<span style="blue">Text</span>'
+    assert MarkdownText.colored_text("!Text!", "yellow") == r'<span style="yellow">\!Text\!</span>'
+    assert MarkdownText.colored_text("!Text!", "bad", escape=False) == r'<span style="bad">!Text!</span>'
 
-def test_tc_markdown_soft_return(record_property, tmp_path):
+def test_tc_markdown_soft_return(record_property):
     # lobster-trace: SwTests.tc_markdown_soft_return
     """
     The Markdown converter shall provide the functionality to convert line feeds to Markdown soft returns.
 
     Args:
         record_property (Any): Used to inject the test case reference into the test results.
-        tmp_path (Path): Used to create a temporary output directory.
     """
     record_property("lobster-trace", "SwTests.tc_markdown_soft_return")
 
-    markdown_converter = MarkdownConverter(Namespace(out=str(tmp_path), exclude=None))
-
-    # The markdown_lf2soft_return function is expected to replace line feeds with a backslash and newline.
-    assert markdown_converter.markdown_lf2soft_return("Line 1\nLine 2") == "Line 1\\\nLine 2"
-    assert markdown_converter.markdown_lf2soft_return("No newline") == "No newline"
-    assert markdown_converter.markdown_lf2soft_return("Multiple\nLines\nHere") == "Multiple\\\nLines\\\nHere"
-    assert markdown_converter.markdown_lf2soft_return("Ends with newline\n") == "Ends with newline\\\n"
-    assert markdown_converter.markdown_lf2soft_return("\nStarts with newline") == "\\\nStarts with newline"
+    # The lf2soft_return function is expected to replace line feeds with a backslash and newline.
+    assert MarkdownText.lf2soft_return("Line 1\nLine 2") == "Line 1\\\nLine 2"
+    assert MarkdownText.lf2soft_return("No newline") == "No newline"
+    assert MarkdownText.lf2soft_return("Multiple\nLines\nHere") == "Multiple\\\nLines\\\nHere"
+    assert MarkdownText.lf2soft_return("Ends with newline\n") == "Ends with newline\\\n"
+    assert MarkdownText.lf2soft_return("\nStarts with newline") == "\\\nStarts with newline"
 
 def test_tc_markdown_out_folder(record_property, capsys, monkeypatch, tmp_path):
     # lobster-trace: SwTests.tc_markdown_out_folder
