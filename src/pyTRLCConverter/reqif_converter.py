@@ -56,6 +56,7 @@ from trlc.ast import (
     Record_Object, Record_Reference, String_Literal, Expression, Symbol_Table
 )
 from pyTRLCConverter.base_converter import BaseConverter
+from pyTRLCConverter.export_map import ExportMap
 from pyTRLCConverter.reqif_identifier_store import ReqifIdentifierStore
 from pyTRLCConverter.marko.md2reqif_renderer import Md2ReqifRenderer
 from pyTRLCConverter.marko.gfm2reqif_renderer import Gfm2ReqifRenderer
@@ -107,6 +108,9 @@ class ReqifConverter(BaseConverter):
         self._id_store_path = getattr(args, "id_store", None)
         self._id_store: Optional[ReqifIdentifierStore] = None
 
+        self._export_map_path = getattr(args, "export_map", None)
+        self._export_map = ExportMap()
+
         self._spec_objects = []
         self._spec_relations = []
         self._root_hierarchies = []
@@ -156,6 +160,7 @@ class ReqifConverter(BaseConverter):
         # lobster-trace: SwRequirements.sw_req_reqif_out_file_name_custom
         # lobster-trace: SwRequirements.sw_req_reqif_reqifz
         # lobster-trace: SwRequirements.sw_req_reqif_identifier_immutable
+        # lobster-trace: SwRequirements.sw_req_reqif_export_map
         """
         Register converter specific argument parser.
 
@@ -226,10 +231,21 @@ class ReqifConverter(BaseConverter):
                  "conversions the stored identifiers are reused and new elements are added."
         )
 
+        BaseConverter._parser.add_argument(
+            "--export-map",
+            type=str,
+            default=None,
+            required=False,
+            help="Path to a JSON file that lists TRLC attributes which shall be excluded "
+                 "from the export. This allows keeping internal-only attributes in the TRLC "
+                 "requirements that are never written to the ReqIF output."
+        )
+
     def begin(self) -> Ret:
         # lobster-trace: SwRequirements.sw_req_reqif_single_doc_mode
         # lobster-trace: SwRequirements.sw_req_reqif_identifier_store_init
         # lobster-trace: SwRequirements.sw_req_reqif_identifier_store_reuse
+        # lobster-trace: SwRequirements.sw_req_reqif_export_map
         """
         Begin the conversion process.
 
@@ -242,7 +258,11 @@ class ReqifConverter(BaseConverter):
             self._empty_attribute_value = self._args.empty
             log_verbose(f"Empty attribute value: {self._empty_attribute_value}")
 
-            if self._id_store_path is not None:
+            if self._export_map_path is not None:
+                if self._export_map.load(self._export_map_path) is False:
+                    result = Ret.ERROR
+
+            if result == Ret.OK and self._id_store_path is not None:
                 self._id_store = ReqifIdentifierStore()
                 if self._id_store.load(self._id_store_path) is False:
                     result = Ret.ERROR
@@ -341,6 +361,7 @@ class ReqifConverter(BaseConverter):
     # pylint: disable-next=too-many-locals
     def convert_record_object_generic(self, record: Record_Object, level: int, translation: Optional[dict]) -> Ret:
         # lobster-trace: SwRequirements.sw_req_reqif_record
+        # lobster-trace: SwRequirements.sw_req_reqif_export_map
         """Convert a record object generically to a ReqIF spec-object.
 
         Args:
@@ -364,6 +385,9 @@ class ReqifConverter(BaseConverter):
         type_key = self._get_record_type_key(record)
 
         for name, value in record.field.items():
+            if self._export_map.is_excluded(record.n_package.name, record.n_typ.name, name) is True:
+                continue
+
             if self._queue_spec_relations_from_expression(record, value, name) is True:
                 continue
 

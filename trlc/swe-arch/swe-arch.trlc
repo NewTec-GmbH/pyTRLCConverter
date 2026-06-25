@@ -393,6 +393,7 @@ section "SW Architecture" {
                     * Converts TRLC record reference attributes to ReqIF SPEC-RELATION entries.
                     * Optionally archives the generated .reqif output as a .reqifz ZIP archive.
                     * Optionally persists the identifiers of ReqIF Identifiable elements in a JSON store so that they stay immutable across consecutive exports.
+                    * Optionally excludes configured TRLC attributes from the export via an export mapping file, so that internal-only attributes are never written to the ReqIF output.
                     """
                 verification_criteria = "Call the tool using the `pyTRLCConverter` frontend with reqif output format."
                 satisfies = [
@@ -419,6 +420,7 @@ section "SW Architecture" {
                     SwRequirements.sw_req_reqif_identifier_immutable,
                     SwRequirements.sw_req_reqif_identifier_store_init,
                     SwRequirements.sw_req_reqif_identifier_store_reuse,
+                    SwRequirements.sw_req_reqif_export_map,
                     SwRequirements.sw_req_destination_format
                 ]
             }

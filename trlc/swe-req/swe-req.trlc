@@ -667,6 +667,16 @@ section "SW Requirements" {
                     valid_status = AbstractRequirements.VALID_STATUS.valid
                 }
             }
+
+            section "ReqIF Export Mapping" {
+
+                SwReq sw_req_reqif_export_map {
+                    description = "The ReqIF converter shall optionally exclude configured TRLC attributes from the export when an export mapping file is provided via the --export-map command line argument. The export mapping shall match attributes by package, type and attribute name, allowing a project to keep internal-only attributes in its TRLC requirements that are never written to the ReqIF output."
+                    verification_criteria = "Verify by converting a TRLC record with --export-map excluding one of its attributes and checking that the generated ReqIF spec-object does not contain an attribute for the excluded field."
+                    valid_status = AbstractRequirements.VALID_STATUS.valid
+                    derived = [sw_req_reqif]
+                }
+            }
         }
 
         section "Docx" {

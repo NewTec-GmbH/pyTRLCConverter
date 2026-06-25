@@ -832,4 +832,55 @@ def test_tc_reqif_identifier_store_reuse(record_property, capsys, monkeypatch, t
     assert "spec-object:Requirements.req_id_2" in data_extended["identifiers"]
     assert data_extended["identifiers"]["spec-object:Requirements.req_id_2"] == extended_req_2.identifier
 
+
+def test_tc_reqif_export_map(record_property, capsys, monkeypatch, tmp_path: Path):
+    # lobster-trace: SwTests.tc_reqif_export_map
+    """A TRLC attribute configured in the export mapping is excluded from the ReqIF output.
+
+    Args:
+        record_property (Any): Used to inject the test case reference into the test results.
+        capsys (Any): Used to capture stdout and stderr.
+        monkeypatch (Any): Used to mock program arguments.
+        tmp_path (Path): Used to create a temporary output directory.
+    """
+    record_property("lobster-trace", "SwTests.tc_reqif_export_map")
+
+    # Export mapping which excludes the 'index' attribute of the Requirement type.
+    export_map_file = os.path.join(tmp_path, "export_map.json")
+    with open(export_map_file, "w", encoding="utf-8") as fd:
+        json.dump(
+            {"exclude": [{"package": ".*", "type": "Requirement", "attribute": "index"}]},
+            fd
+        )
+
+    monkeypatch.setattr("sys.argv", [
+        "pyTRLCConverter",
+        "--source", "./tests/utils/req.rsl",
+        "--source", "./tests/utils/single_req_no_section.trlc",
+        "--out", str(tmp_path),
+        "reqif",
+        "--single-document",
+        "--export-map", export_map_file
+    ])
+
+    main()
+
+    captured = capsys.readouterr()
+    assert captured.err == ""
+
+    output_file = os.path.join(tmp_path, ReqifConverter.OUTPUT_FILE_NAME_DEFAULT)
+    bundle = _parse_reqif(output_file)
+    spec_object = _find_spec_object_by_long_name(bundle, "req_id_1")
+    assert spec_object is not None
+
+    # The non-excluded 'description' attribute is still present.
+    description_identifier = _find_attribute_identifier(bundle, "description")
+    assert description_identifier is not None
+    assert _find_attribute_by_identifier(spec_object, description_identifier) is not None
+
+    # The excluded 'index' attribute is not part of the output at all.
+    assert _find_attribute_identifier(bundle, "index") is None
+
+    _assert_reqif_v12_compliance(output_file, tmp_path)
+
 # Main *************************************************************************

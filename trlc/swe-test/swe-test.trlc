@@ -433,6 +433,11 @@ section "SW Test Cases" {
             description = "This test case checks whether the ReqIF converter reuses stored identifiers for known elements and assigns new identifiers to new elements, writing them back to the --id-store file."
             verifies = [SwRequirements.sw_req_reqif_identifier_store_reuse]
         }
+
+        SwTestCase tc_reqif_export_map {
+            description = "This test case checks whether the ReqIF converter excludes a configured TRLC attribute from the export when an --export-map file is provided, so that the generated spec-object contains no attribute for the excluded field."
+            verifies = [SwRequirements.sw_req_reqif_export_map]
+        }
     }
 
     section "Docx" {
