@@ -39,6 +39,7 @@ from pyTRLCConverter.docx_converter import DocxConverter
 from pyTRLCConverter.logger import enable_verbose, log_verbose, is_verbose_enabled, log_error
 from pyTRLCConverter.rst_converter import RstConverter
 from pyTRLCConverter.reqif_converter import ReqifConverter
+from pyTRLCConverter.reqif_importer import ReqifImporter
 from pyTRLCConverter.render_config import RenderConfig
 
 # Variables ********************************************************************
@@ -105,7 +106,8 @@ def _create_args_parser() -> argparse.ArgumentParser:
         "-s",
         "--source",
         type=str,
-        required=True,
+        default=None,
+        required=False,
         action="append",
         help="The path to the TRLC files folder or a single TRLC file."
     )
@@ -306,11 +308,23 @@ def main() -> int:
 
     ret_status = _setup_converters(args_sub_parser)
 
+    # lobster-trace: SwRequirements.sw_req_reqif_import
+    ReqifImporter.register(args_sub_parser)
+
     if ret_status == Ret.OK:
 
         args = args_parser.parse_args()
 
         if args is None:
+            ret_status = Ret.ERROR
+
+        elif getattr(args, "operation_class", None) is not None:
+            enable_verbose(args.verbose)
+            _show_program_arguments(args)
+            ret_status = args.operation_class(args).run()
+
+        elif args.source is None:
+            log_error("No source provided. Use --source to specify the TRLC files.")
             ret_status = Ret.ERROR
 
         else:

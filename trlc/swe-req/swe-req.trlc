@@ -677,6 +677,50 @@ section "SW Requirements" {
                     derived = [sw_req_reqif]
                 }
             }
+
+            section "ReqIF Import" {
+
+                SwReq sw_req_reqif_import {
+                    description = "The software shall support importing a ReqIF file (.reqif or .reqifz) into TRLC via the reqif-import subcommand. A .reqifz archive shall be extracted transparently."
+                    verification_criteria = "Verify by importing a .reqif and a .reqifz file and checking that TRLC output is produced without errors."
+                    valid_status = AbstractRequirements.VALID_STATUS.valid
+                }
+
+                SwReq sw_req_reqif_import_initial {
+                    description = "When no existing TRLC source is provided, the ReqIF import shall generate a new TRLC project from the ReqIF file: the type definitions (.rsl), the requirement instances (.trlc) following the SPEC-HIERARCHY, and the companion renderCfg.json, translation.json and id_store.json files."
+                    verification_criteria = "Verify by importing a ReqIF file into an empty output directory and checking that the generated .rsl and .trlc parse and that the companion configuration files are created."
+                    valid_status = AbstractRequirements.VALID_STATUS.valid
+                    derived = [sw_req_reqif_import]
+                }
+
+                SwReq sw_req_reqif_import_enum {
+                    description = "The ReqIF import shall convert DATATYPE-DEFINITION-ENUMERATION datatypes into TRLC enum types and reference them from the corresponding attributes, using the array form for multi-valued enumeration attributes."
+                    verification_criteria = "Verify by importing a ReqIF file with an enumeration datatype and checking that the generated .rsl contains a TRLC enum type and the attribute references it."
+                    valid_status = AbstractRequirements.VALID_STATUS.valid
+                    derived = [sw_req_reqif_import]
+                }
+
+                SwReq sw_req_reqif_import_xhtml {
+                    description = "The ReqIF import shall store XHTML attribute values as TRLC strings with the outer div wrapper removed and shall mark the attribute as xhtml in the generated render configuration, so the round-trip conversion reproduces the content."
+                    verification_criteria = "Verify by importing a ReqIF file with an XHTML attribute and checking that the generated render configuration marks the attribute as xhtml."
+                    valid_status = AbstractRequirements.VALID_STATUS.valid
+                    derived = [sw_req_reqif_import]
+                }
+
+                SwReq sw_req_reqif_import_path {
+                    description = "The ReqIF import shall detect XHTML attribute values consisting of a single object element with a local file reference, store the file name as the TRLC value, and mark the attribute as path in the generated render configuration. Unsupported references (base64, internal attachment or remote URI) shall keep the xhtml format."
+                    verification_criteria = "Verify by importing a ReqIF file with an object element referencing a local file and checking that the generated render configuration marks the attribute as path."
+                    valid_status = AbstractRequirements.VALID_STATUS.valid
+                    derived = [sw_req_reqif_import]
+                }
+
+                SwReq sw_req_reqif_import_identifier {
+                    description = "The ReqIF import shall seed the identifiers of the source ReqIF Identifiable elements into the generated id_store.json, keyed by the same stable logical keys the ReqIF export uses, so the identifiers stay immutable on the round-trip conversion."
+                    verification_criteria = "Verify by importing a ReqIF file and re-exporting the generated TRLC with the seeded --id-store, checking that the spec-object identifiers are unchanged."
+                    valid_status = AbstractRequirements.VALID_STATUS.valid
+                    derived = [sw_req_reqif_import]
+                }
+            }
         }
 
         section "Docx" {

@@ -425,6 +425,31 @@ section "SW Architecture" {
                 ]
             }
         }
+
+        section "ReqIF Importer" {
+            SwArchSpec sw_arch_component_reqif_importer {
+                description =
+                    """
+                    The ReqIF Importer implements the ReqIF to TRLC import (roundtrip).
+
+                    * Registers the `reqif-import` subcommand and options.
+                    * Reads a .reqif or .reqifz file and builds a normalized model (ReqifReader).
+                    * On the initial import (no existing TRLC) it generates the type definitions (.rsl), the requirement instances (.trlc) following the SPEC-HIERARCHY, and the companion renderCfg.json, translation.json and id_store.json files (TrlcGenerator).
+                    * Converts DATATYPE-DEFINITION-ENUMERATION datatypes into TRLC enum types.
+                    * Stores XHTML attribute values with the outer div wrapper removed and marks them as xhtml; object elements referencing a local file are stored as path.
+                    * Seeds the identifiers of the source ReqIF Identifiable elements into id_store.json so they stay immutable on the roundtrip.
+                    """
+                verification_criteria = "Call the tool using the `pyTRLCConverter` frontend with the reqif-import subcommand."
+                satisfies = [
+                    SwRequirements.sw_req_reqif_import,
+                    SwRequirements.sw_req_reqif_import_initial,
+                    SwRequirements.sw_req_reqif_import_enum,
+                    SwRequirements.sw_req_reqif_import_xhtml,
+                    SwRequirements.sw_req_reqif_import_path,
+                    SwRequirements.sw_req_reqif_import_identifier
+                ]
+            }
+        }
         section "DocX Converter" {
             Generic.PlantUML sw_arch_comp_docx_converter_diagram {
                     caption = "Class Diagram for DocX-Converter"

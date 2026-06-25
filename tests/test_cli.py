@@ -58,7 +58,7 @@ def test_tc_help(record_property, capsys, monkeypatch):
 
     # Check just the first line of the help message.
     print(captured.out)
-    regex = r"usage: pyTRLCConverter \[\-h\] \[\-\-version\] \[\-v\] \[\-i INCLUDE\] \-s SOURCE"
+    regex = r"usage: pyTRLCConverter \[\-h\] \[\-\-version\] \[\-v\] \[\-i INCLUDE\] \[\-s SOURCE\]"
     assert re.match(regex, captured.out)
 
 def test_tc_help_prj_spec(record_property, capsys, monkeypatch):
@@ -89,7 +89,7 @@ def test_tc_help_prj_spec(record_property, capsys, monkeypatch):
 
     # Check just the first line of the help message.
     print(captured.out)
-    regex = r"usage: pyTRLCConverter \[\-h\] \[\-\-version\] \[\-v\] \[\-i INCLUDE\] \-s SOURCE"
+    regex = r"usage: pyTRLCConverter \[\-h\] \[\-\-version\] \[\-v\] \[\-i INCLUDE\] \[\-s SOURCE\]"
     assert re.match(regex, captured.out)
 
 def test_tc_cli_exclude(record_property, capsys, monkeypatch):

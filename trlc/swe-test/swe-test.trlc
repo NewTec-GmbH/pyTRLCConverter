@@ -438,6 +438,26 @@ section "SW Test Cases" {
             description = "This test case checks whether the ReqIF converter excludes a configured TRLC attribute from the export when an --export-map file is provided, so that the generated spec-object contains no attribute for the excluded field."
             verifies = [SwRequirements.sw_req_reqif_export_map]
         }
+
+        SwTestCase tc_reqif_import_initial {
+            description = "This test case checks whether the initial ReqIF import generates a parseable TRLC project (.rsl and .trlc) with the companion configuration files from a ReqIF file when no existing TRLC is provided, and whether re-exporting the generated TRLC with the seeded identifier store keeps the spec-object identifiers immutable."
+            verifies = [SwRequirements.sw_req_reqif_import, SwRequirements.sw_req_reqif_import_initial, SwRequirements.sw_req_reqif_import_identifier]
+        }
+
+        SwTestCase tc_reqif_import_enum {
+            description = "This test case checks whether the ReqIF import converts a DATATYPE-DEFINITION-ENUMERATION into a TRLC enum type referenced by the corresponding attribute."
+            verifies = [SwRequirements.sw_req_reqif_import_enum]
+        }
+
+        SwTestCase tc_reqif_import_xhtml {
+            description = "This test case checks whether the ReqIF import marks an XHTML attribute as xhtml in the generated render configuration."
+            verifies = [SwRequirements.sw_req_reqif_import_xhtml]
+        }
+
+        SwTestCase tc_reqif_import_path {
+            description = "This test case checks whether the ReqIF import marks an attribute whose value is an object element referencing a local file as path in the generated render configuration."
+            verifies = [SwRequirements.sw_req_reqif_import_path]
+        }
     }
 
     section "Docx" {
