@@ -1,0 +1,358 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>element &mdash; pyTRLCConverter  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=c87a014e" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/version_selector.js?v=02fa0f40"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #0C2C40" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            pyTRLCConverter
+              <img src="../../_static/NewTec_Logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../sw_requirements.html">SW Requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sw_architecture.html">SW Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sw_detail_design.html">SW Detailed Design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sw_tests.html">SW Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sw_tracing_report.html">SW Tracing Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sw_test_result_report.html">SW Test Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../coverage_report.html">Coverage Report</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../license_include.html">License information</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #0C2C40" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pyTRLCConverter</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">element</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/api/element/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-element">
+<span id="element"></span><h1>element<a class="headerlink" href="#module-element" title="Link to this heading"></a></h1>
+<p>Markdown block elements.
+Each element renders itself into a Markdown string. Elements are collected
+by the MarkdownDocument and rendered once when the output file is written.</p>
+<p>Author: Andreas Merkle (<a class="reference external" href="mailto:andreas&#46;merkle&#37;&#52;&#48;newtec&#46;de">andreas<span>&#46;</span>merkle<span>&#64;</span>newtec<span>&#46;</span>de</a>)</p>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#element.BulletList" title="element.BulletList"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BulletList</span></code></a></p></td>
+<td><p>Unordered Markdown list block element.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#element.Heading" title="element.Heading"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Heading</span></code></a></p></td>
+<td><p>Markdown heading block element.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#element.Image" title="element.Image"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Image</span></code></a></p></td>
+<td><p>Markdown image / diagram link block element.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#element.MarkdownElement" title="element.MarkdownElement"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MarkdownElement</span></code></a></p></td>
+<td><p>Abstract base class for Markdown block elements.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#element.RawText" title="element.RawText"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RawText</span></code></a></p></td>
+<td><p>Raw Markdown text block element passed through unchanged.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#element.Table" title="element.Table"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Table</span></code></a></p></td>
+<td><p>Markdown table block element.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="element.BulletList">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">element.</span></span><span class="sig-name descname"><span class="pre">BulletList</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">escape</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#element.BulletList" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#element.MarkdownElement" title="element.MarkdownElement"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MarkdownElement</span></code></a></p>
+<div class="graphviz"><img src="../../_images/inheritance-4a6002b0e3315d0dc840239102245f45daf227fa.png" alt="Inheritance diagram of element.BulletList" usemap="#inheritance54f98cb30a" class="inheritance graphviz" /></div>
+<map id="inheritance54f98cb30a" name="inheritance54f98cb30a">
+<area shape="rect" id="node3" href="#element.MarkdownElement" target="_top" title="Abstract base class for Markdown block elements." alt="" coords="5,79,149,104"/>
+<area shape="rect" id="node2" href="#element.BulletList" target="_top" title="Unordered Markdown list block element." alt="" coords="36,152,119,177"/>
+</map><p>Unordered Markdown list block element.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="element.BulletList.render">
+<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#element.BulletList.render" title="Link to this definition"></a></dt>
+<dd><p>Render the unordered list.
+The values will be automatically escaped for Markdown if necessary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Markdown list</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="element.BulletList._escape">
+<span class="sig-name descname"><span class="pre">_escape</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></span><a class="headerlink" href="#element.BulletList._escape" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="element.BulletList._values">
+<span class="sig-name descname"><span class="pre">_values</span></span><a class="headerlink" href="#element.BulletList._values" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="element.Heading">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">element.</span></span><span class="sig-name descname"><span class="pre">Heading</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">escape</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#element.Heading" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#element.MarkdownElement" title="element.MarkdownElement"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MarkdownElement</span></code></a></p>
+<div class="graphviz"><img src="../../_images/inheritance-6ba8ba8a211628e19c23957256bde3d888bd67a7.png" alt="Inheritance diagram of element.Heading" usemap="#inheritanced39756dd62" class="inheritance graphviz" /></div>
+<map id="inheritanced39756dd62" name="inheritanced39756dd62">
+<area shape="rect" id="node3" href="#element.MarkdownElement" target="_top" title="Abstract base class for Markdown block elements." alt="" coords="5,79,149,104"/>
+<area shape="rect" id="node2" href="#element.Heading" target="_top" title="Markdown heading block element." alt="" coords="39,152,115,177"/>
+</map><p>Markdown heading block element.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="element.Heading.render">
+<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#element.Heading.render" title="Link to this definition"></a></dt>
+<dd><p>Render the heading.
+The text will be automatically escaped for Markdown if necessary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Markdown heading</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="element.Heading._escape">
+<span class="sig-name descname"><span class="pre">_escape</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></span><a class="headerlink" href="#element.Heading._escape" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="element.Heading._level">
+<span class="sig-name descname"><span class="pre">_level</span></span><a class="headerlink" href="#element.Heading._level" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="element.Heading._text">
+<span class="sig-name descname"><span class="pre">_text</span></span><a class="headerlink" href="#element.Heading._text" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="element.Image">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">element.</span></span><span class="sig-name descname"><span class="pre">Image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">caption</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">escape</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#element.Image" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#element.MarkdownElement" title="element.MarkdownElement"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MarkdownElement</span></code></a></p>
+<div class="graphviz"><img src="../../_images/inheritance-3512aef662ebc48612b2fd5237e25a26a557cff2.png" alt="Inheritance diagram of element.Image" usemap="#inheritance936ece384a" class="inheritance graphviz" /></div>
+<map id="inheritance936ece384a" name="inheritance936ece384a">
+<area shape="rect" id="node3" href="#element.MarkdownElement" target="_top" title="Abstract base class for Markdown block elements." alt="" coords="5,79,149,104"/>
+<area shape="rect" id="node2" href="#element.Image" target="_top" title="Markdown image / diagram link block element." alt="" coords="41,152,113,177"/>
+</map><p>Markdown image / diagram link block element.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="element.Image.render">
+<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#element.Image.render" title="Link to this definition"></a></dt>
+<dd><p>Render the image link.
+The caption will be automatically escaped for Markdown if necessary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Markdown diagram link</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="element.Image._caption">
+<span class="sig-name descname"><span class="pre">_caption</span></span><a class="headerlink" href="#element.Image._caption" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="element.Image._escape">
+<span class="sig-name descname"><span class="pre">_escape</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></span><a class="headerlink" href="#element.Image._escape" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="element.Image._file_name">
+<span class="sig-name descname"><span class="pre">_file_name</span></span><a class="headerlink" href="#element.Image._file_name" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="element.MarkdownElement">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">element.</span></span><span class="sig-name descname"><span class="pre">MarkdownElement</span></span><a class="headerlink" href="#element.MarkdownElement" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">abc.ABC</span></code></p>
+<div class="graphviz"><img src="../../_images/inheritance-6cb6ae0cd2da2bbcf70720aed1324b18922d4d09.png" alt="Inheritance diagram of element.MarkdownElement" usemap="#inheritancef6da13a409" class="inheritance graphviz" /></div>
+<map id="inheritancef6da13a409" name="inheritancef6da13a409">
+<area shape="rect" id="node2" href="#element.MarkdownElement" target="_top" title="Abstract base class for Markdown block elements." alt="" coords="5,79,149,104"/>
+</map><p>Abstract base class for Markdown block elements.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="element.MarkdownElement.render">
+<span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#element.MarkdownElement.render" title="Link to this definition"></a></dt>
+<dd><p>Render the element into a Markdown string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Rendered Markdown</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="element.RawText">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">element.</span></span><span class="sig-name descname"><span class="pre">RawText</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#element.RawText" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#element.MarkdownElement" title="element.MarkdownElement"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MarkdownElement</span></code></a></p>
+<div class="graphviz"><img src="../../_images/inheritance-493a5ea4e6961613ec54dc33232319b00ae69a12.png" alt="Inheritance diagram of element.RawText" usemap="#inheritancef18aee6946" class="inheritance graphviz" /></div>
+<map id="inheritancef18aee6946" name="inheritancef18aee6946">
+<area shape="rect" id="node2" href="#element.MarkdownElement" target="_top" title="Abstract base class for Markdown block elements." alt="" coords="5,79,149,104"/>
+<area shape="rect" id="node3" href="#element.RawText" target="_top" title="Raw Markdown text block element passed through unchanged." alt="" coords="39,152,116,177"/>
+</map><p>Raw Markdown text block element passed through unchanged.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="element.RawText.render">
+<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#element.RawText.render" title="Link to this definition"></a></dt>
+<dd><p>Render the raw text.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Raw Markdown text</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="element.RawText._text">
+<span class="sig-name descname"><span class="pre">_text</span></span><a class="headerlink" href="#element.RawText._text" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="element.Table">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">element.</span></span><span class="sig-name descname"><span class="pre">Table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">column_titles</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rows</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#element.Table" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#element.MarkdownElement" title="element.MarkdownElement"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MarkdownElement</span></code></a></p>
+<div class="graphviz"><img src="../../_images/inheritance-f66a23bb96e02fde347ee1195124363a2a9d3b41.png" alt="Inheritance diagram of element.Table" usemap="#inheritancec3aa5a262a" class="inheritance graphviz" /></div>
+<map id="inheritancec3aa5a262a" name="inheritancec3aa5a262a">
+<area shape="rect" id="node2" href="#element.MarkdownElement" target="_top" title="Abstract base class for Markdown block elements." alt="" coords="5,79,149,104"/>
+<area shape="rect" id="node3" href="#element.Table" target="_top" title="Markdown table block element." alt="" coords="41,152,113,177"/>
+</map><p>Markdown table block element.
+Rendered as HTML to support multi-line cells and other complex content.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="element.Table.render">
+<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#element.Table.render" title="Link to this definition"></a></dt>
+<dd><p>Render the table in HTML format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Markdown table</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="element.Table._column_titles">
+<span class="sig-name descname"><span class="pre">_column_titles</span></span><a class="headerlink" href="#element.Table._column_titles" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="element.Table._rows">
+<span class="sig-name descname"><span class="pre">_rows</span></span><a class="headerlink" href="#element.Table._rows" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024 - 2026, NewTec GmbH.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

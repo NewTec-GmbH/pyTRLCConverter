@@ -1,0 +1,68 @@
+document
+========
+
+.. py:module:: document
+
+.. autoapi-nested-parse::
+
+   Markdown document container.
+   Collects Markdown block elements and renders them into a single string.
+   Consecutive blocks are separated by a single blank line, the first block
+   has no leading blank line and the document ends with a single newline.
+
+   Author: Andreas Merkle (andreas.merkle@newtec.de)
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   document.MarkdownDocument
+
+
+Module Contents
+---------------
+
+.. py:class:: MarkdownDocument
+
+   In-memory Markdown document built from block elements.
+
+
+
+   .. py:method:: add(element: pyTRLCConverter.markdown.element.MarkdownElement) -> None
+
+      Append a block element to the document.
+
+      :param element: Block element to append.
+      :type element: MarkdownElement
+
+
+
+   .. py:method:: is_empty() -> bool
+
+      Return whether the document has no elements yet.
+
+      :returns: True if no element has been added, otherwise False.
+      :rtype: bool
+
+
+
+   .. py:method:: render() -> str
+
+      Render the whole document.
+      Blocks are separated by a single blank line, the first block has no
+      leading blank line and the document ends with a single newline.
+
+      :returns: Rendered Markdown document
+      :rtype: str
+
+
+
+   .. py:attribute:: _elements
+      :type:  List[pyTRLCConverter.markdown.element.MarkdownElement]
+      :value: []
+
+
+

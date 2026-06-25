@@ -1,0 +1,207 @@
+element
+=======
+
+.. py:module:: element
+
+.. autoapi-nested-parse::
+
+   Markdown block elements.
+   Each element renders itself into a Markdown string. Elements are collected
+   by the MarkdownDocument and rendered once when the output file is written.
+
+   Author: Andreas Merkle (andreas.merkle@newtec.de)
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   element.BulletList
+   element.Heading
+   element.Image
+   element.MarkdownElement
+   element.RawText
+   element.Table
+
+
+Module Contents
+---------------
+
+.. py:class:: BulletList(values: List[str], escape: bool = True)
+
+   Bases: :py:obj:`MarkdownElement`
+
+   .. autoapi-inheritance-diagram:: element.BulletList
+      :parts: 1
+      :private-bases:
+
+
+   Unordered Markdown list block element.
+
+
+
+   .. py:method:: render() -> str
+
+      Render the unordered list.
+      The values will be automatically escaped for Markdown if necessary.
+
+      :returns: Markdown list
+      :rtype: str
+
+
+
+   .. py:attribute:: _escape
+      :value: True
+
+
+
+   .. py:attribute:: _values
+
+
+.. py:class:: Heading(text: str, level: int, escape: bool = True)
+
+   Bases: :py:obj:`MarkdownElement`
+
+   .. autoapi-inheritance-diagram:: element.Heading
+      :parts: 1
+      :private-bases:
+
+
+   Markdown heading block element.
+
+
+
+   .. py:method:: render() -> str
+
+      Render the heading.
+      The text will be automatically escaped for Markdown if necessary.
+
+      :returns: Markdown heading
+      :rtype: str
+
+
+
+   .. py:attribute:: _escape
+      :value: True
+
+
+
+   .. py:attribute:: _level
+
+
+   .. py:attribute:: _text
+
+
+.. py:class:: Image(file_name: str, caption: str, escape: bool = True)
+
+   Bases: :py:obj:`MarkdownElement`
+
+   .. autoapi-inheritance-diagram:: element.Image
+      :parts: 1
+      :private-bases:
+
+
+   Markdown image / diagram link block element.
+
+
+
+   .. py:method:: render() -> str
+
+      Render the image link.
+      The caption will be automatically escaped for Markdown if necessary.
+
+      :returns: Markdown diagram link
+      :rtype: str
+
+
+
+   .. py:attribute:: _caption
+
+
+   .. py:attribute:: _escape
+      :value: True
+
+
+
+   .. py:attribute:: _file_name
+
+
+.. py:class:: MarkdownElement
+
+   Bases: :py:obj:`abc.ABC`
+
+   .. autoapi-inheritance-diagram:: element.MarkdownElement
+      :parts: 1
+      :private-bases:
+
+
+   Abstract base class for Markdown block elements.
+
+
+
+   .. py:method:: render() -> str
+      :abstractmethod:
+
+
+      Render the element into a Markdown string.
+
+      :returns: Rendered Markdown
+      :rtype: str
+
+
+
+.. py:class:: RawText(text: str)
+
+   Bases: :py:obj:`MarkdownElement`
+
+   .. autoapi-inheritance-diagram:: element.RawText
+      :parts: 1
+      :private-bases:
+
+
+   Raw Markdown text block element passed through unchanged.
+
+
+
+   .. py:method:: render() -> str
+
+      Render the raw text.
+
+      :returns: Raw Markdown text
+      :rtype: str
+
+
+
+   .. py:attribute:: _text
+
+
+.. py:class:: Table(column_titles: List[str], rows: List[List[str]])
+
+   Bases: :py:obj:`MarkdownElement`
+
+   .. autoapi-inheritance-diagram:: element.Table
+      :parts: 1
+      :private-bases:
+
+
+   Markdown table block element.
+   Rendered as HTML to support multi-line cells and other complex content.
+
+
+   .. py:method:: render() -> str
+
+      Render the table in HTML format.
+
+      :returns: Markdown table
+      :rtype: str
+
+
+
+   .. py:attribute:: _column_titles
+
+
+   .. py:attribute:: _rows
+
+

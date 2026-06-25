@@ -33,6 +33,18 @@ Module Contents
 
    MarkdownConverter provides functionality for converting to a markdown format.
 
+   The converter builds a Markdown AST (MarkdownDocument made of block elements)
+   while walking the TRLC symbols and writes the output file(s) only once the
+   document is complete (in leave_file() for multiple-document mode and in
+   finish() for single-document mode).
+
+
+   .. py:method:: _add_top_level_heading_on_demand() -> None
+
+      Add the top level heading to the document if necessary.
+
+
+
 
    .. py:method:: _convert_record_object(record: trlc.ast.Record_Object, level: int, translation: Optional[dict]) -> pyTRLCConverter.ret.Ret
 
@@ -82,20 +94,6 @@ Module Contents
 
       :returns: Markdown file name
       :rtype: str
-
-
-
-   .. py:method:: _generate_out_file(file_name: str) -> pyTRLCConverter.ret.Ret
-
-      Generate the output file.
-
-      :param file_name: The output file name without path.
-      :type file_name: str
-      :param item_list: List of elements.
-      :type item_list: [Element]
-
-      :returns: Status
-      :rtype: Ret
 
 
 
@@ -206,21 +204,15 @@ Module Contents
 
 
 
-   .. py:method:: _write_empty_line_on_demand() -> None
+   .. py:method:: _write_document(file_name: str) -> pyTRLCConverter.ret.Ret
 
-      Write an empty line if necessary.
+      Write the current Markdown document to the output file.
 
-      For proper Markdown formatting, the first written part shall not have an empty
-      line before. But all following parts (heading, table, paragraph, image, etc.) shall
-      have an empty line before. And at the document bottom, there shall be just one empty
-      line.
+      :param file_name: The output file name without path.
+      :type file_name: str
 
-
-
-   .. py:method:: _write_top_level_heading_on_demand() -> None
-
-      Write the top level heading if necessary.
-
+      :returns: Status
+      :rtype: Ret
 
 
 
@@ -284,6 +276,9 @@ Module Contents
 
       Finish the conversion process.
 
+      :returns: Status
+      :rtype: Ret
+
 
 
    .. py:method:: get_description() -> str
@@ -320,147 +315,6 @@ Module Contents
 
 
 
-   .. py:method:: markdown_create_diagram_link(diagram_file_name: str, diagram_caption: str, escape: bool = True) -> str
-      :staticmethod:
-
-
-      Create a Markdown diagram link.
-      The caption will be automatically escaped for Markdown if necessary.
-
-      :param diagram_file_name: Diagram file name
-      :type diagram_file_name: str
-      :param diagram_caption: Diagram caption
-      :type diagram_caption: str
-      :param escape: Escapes caption (default: True).
-      :type escape: bool
-
-      :returns: Markdown diagram link
-      :rtype: str
-
-
-
-   .. py:method:: markdown_create_heading(text: str, level: int, escape: bool = True) -> str
-      :staticmethod:
-
-
-      Create a Markdown heading.
-      The text will be automatically escaped for Markdown if necessary.
-
-      :param text: Heading text
-      :type text: str
-      :param level: Heading level [1; inf]
-      :type level: int
-      :param escape: Escape the text (default: True).
-      :type escape: bool
-
-      :returns: Markdown heading
-      :rtype: str
-
-
-
-   .. py:method:: markdown_create_link(text: str, url: str, escape: bool = True) -> str
-      :staticmethod:
-
-
-      Create a Markdown link.
-      The text will be automatically escaped for Markdown if necessary.
-      There will be no newline appended at the end.
-
-      :param text: Link text
-      :type text: str
-      :param url: Link URL
-      :type url: str
-      :param escape: Escapes text (default: True).
-      :type escape: bool
-
-      :returns: Markdown link
-      :rtype: str
-
-
-
-   .. py:method:: markdown_create_list(list_values: List[str], escape: bool = True) -> str
-      :staticmethod:
-
-
-      Create a unordered Markdown list.
-      The values will be automatically escaped for Markdown if necessary.
-
-      :param list_values: List of list values.
-      :type list_values: List[str]
-      :param escape: Escapes every list value (default: True).
-      :type escape: bool
-
-      :returns: Markdown list
-      :rtype: str
-
-
-
-   .. py:method:: markdown_create_table(column_titles: List[str], row_values_list: List[List[str]]) -> str
-      :staticmethod:
-
-
-      Create a complete Markdown table in HTML format to support multi-line cells and
-      other complex content.
-
-      :param column_titles: List of column titles.
-      :type column_titles: List[str]
-      :param row_values_list: List of row values.
-      :type row_values_list: List[List[str]]
-
-      :returns: Markdown table
-      :rtype: str
-
-
-
-   .. py:method:: markdown_escape(text: str) -> str
-      :staticmethod:
-
-
-      Escapes the text to be used in a Markdown document.
-
-      :param text: Text to escape
-      :type text: str
-
-      :returns: Escaped text
-      :rtype: str
-
-
-
-   .. py:method:: markdown_lf2soft_return(text: str) -> str
-      :staticmethod:
-
-
-      A single LF will be converted to backslash + LF.
-      Use it for paragraphs, but not for headings or tables.
-
-      :param text: Text
-      :type text: str
-
-      :returns: Handled text
-      :rtype: str
-
-
-
-   .. py:method:: markdown_text_color(text: str, color: str, escape: bool = True) -> str
-      :staticmethod:
-
-
-      Create colored text in Markdown.
-      The text will be automatically escaped for Markdown if necessary.
-      There will be no newline appended at the end.
-
-      :param text: Text
-      :type text: str
-      :param color: HTML color
-      :type color: str
-      :param escape: Escapes text (default: True).
-      :type escape: bool
-
-      :returns: Colored text
-      :rtype: str
-
-
-
    .. py:method:: register(args_parser: Any) -> None
       :classmethod:
 
@@ -492,8 +346,9 @@ Module Contents
 
 
 
-   .. py:attribute:: _empty_line_required
-      :value: False
+   .. py:attribute:: _document
+      :type:  Optional[pyTRLCConverter.markdown.document.MarkdownDocument]
+      :value: None
 
 
 
@@ -505,11 +360,6 @@ Module Contents
    .. py:attribute:: _external_files
       :type:  list
       :value: []
-
-
-
-   .. py:attribute:: _fd
-      :value: None
 
 
 
