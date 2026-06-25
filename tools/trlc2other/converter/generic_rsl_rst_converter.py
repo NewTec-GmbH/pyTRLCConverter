@@ -30,6 +30,7 @@ from typing import Optional
 # pylint: disable=import-error
 from pyTRLCConverter.ret import Ret
 from pyTRLCConverter.rst_converter import RstConverter
+from pyTRLCConverter.rst.element import RstImage, RstRawText
 from pyTRLCConverter.trlc_helper import Record_Object
 
 # pylint: disable=wrong-import-order
@@ -57,17 +58,14 @@ class GenericRslRstConverter(RstConverter):
         Returns:
            Ret: Status
         """
-        assert self._fd is not None
-
-        self._write_empty_line_on_demand()
+        assert self._document is not None
 
         rst_info = self._render(info.n_package.name,
                                 info.n_typ.name,
                                 "description",
                                 self._get_attribute(info, "description"))
 
-        self._fd.write(rst_info)
-        self._fd.write("\n")
+        self._document.add(RstRawText(rst_info + "\n"))
 
         return Ret.OK
 
@@ -84,7 +82,7 @@ class GenericRslRstConverter(RstConverter):
         Returns:
            Ret: Status
         """
-        assert self._fd is not None
+        assert self._document is not None
 
         image_file = convert_plantuml_to_image(
             self._get_attribute(diagram, "file_path"),
@@ -93,12 +91,10 @@ class GenericRslRstConverter(RstConverter):
         )
 
         if image_file is not None:
-            self._write_empty_line_on_demand()
-            rst_image = self.rst_create_diagram_link(
+            self._document.add(RstImage(
                 os.path.basename(image_file),
                 self._get_attribute(diagram, "caption")
-            )
-            self._fd.write(rst_image)
+            ))
 
         return Ret.OK
 
@@ -115,20 +111,17 @@ class GenericRslRstConverter(RstConverter):
         Returns:
            Ret: Status
         """
-        assert self._fd is not None
+        assert self._document is not None
 
         image_file = locate_file(self._get_attribute(image, "file_path"), self._args.source)
         if image_file is not None:
             # Copy image image file to output folder.
             shutil.copy(image_file, self._args.out)
 
-            self._write_empty_line_on_demand()
-
-            rst_image = self.rst_create_diagram_link(
+            self._document.add(RstImage(
                 os.path.basename(image_file),
                 self._get_attribute(image, "caption")
-            )
-            self._fd.write(rst_image)
+            ))
 
         return Ret.OK
 
