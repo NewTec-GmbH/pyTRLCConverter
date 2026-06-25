@@ -25,9 +25,12 @@ import os
 import re
 import shutil
 import tempfile
-from typing import List, Optional, Any
+from typing import Optional, Any
 from trlc.ast import Implicit_Null, Record_Object, Record_Reference, String_Literal, Expression
 from pyTRLCConverter.base_converter import BaseConverter
+from pyTRLCConverter.markdown.document import MarkdownDocument
+from pyTRLCConverter.markdown.element import Heading, Table, BulletList
+from pyTRLCConverter.markdown.text import MarkdownText
 from pyTRLCConverter.plantuml import PlantUML
 from pyTRLCConverter.ret import Ret
 from pyTRLCConverter.trlc_helper import TrlcAstWalker
@@ -41,6 +44,11 @@ from pyTRLCConverter.logger import log_verbose, log_error
 class MarkdownConverter(BaseConverter):
     """
     MarkdownConverter provides functionality for converting to a markdown format.
+
+    The converter builds a Markdown AST (MarkdownDocument made of block elements)
+    while walking the TRLC symbols and writes the output file(s) only once the
+    document is complete (in leave_file() for multiple-document mode and in
+    finish() for single-document mode).
     """
 
     OUTPUT_FILE_NAME_DEFAULT = "output.md"
@@ -66,17 +74,13 @@ class MarkdownConverter(BaseConverter):
         if args.exclude is not None:
             self._excluded_paths = [os.path.normpath(path) for path in args.exclude]
 
-        # The file descriptor for the output file.
-        self._fd = None
+        # The Markdown document currently being built. In multiple-document mode a new
+        # document is created per file, in single-document mode one document is shared.
+        self._document: Optional[MarkdownDocument] = None
 
         # The base level for the headings. Its the minimum level for the headings which depends
         # on the single/multiple document mode.
         self._base_level = 1
-
-        # For proper Markdown formatting, the first written Markdown part shall not have an empty line before.
-        # But all following parts (heading, table, paragraph, image, etc.) shall have an empty line before.
-        # And at the document bottom, there shall be just one empty line.
-        self._empty_line_required = False
 
         # A top level heading is always required to generate a compliant Markdown document.
         # In single document mode it will always be necessary.
@@ -190,7 +194,7 @@ class MarkdownConverter(BaseConverter):
         Returns:
             Ret: Status
         """
-        assert self._fd is None
+        assert self._document is None
 
         # Call the base converter to initialize the common stuff.
         result = BaseConverter.begin(self)
@@ -216,13 +220,14 @@ class MarkdownConverter(BaseConverter):
 
             # Single document mode?
             if self._args.single_document is True:
-                result = self._generate_out_file(self._args.name)
+                self._document = MarkdownDocument()
 
-                if self._fd is not None:
-                    self._write_top_level_heading_on_demand()
+                # The top level heading is always required in single document mode.
+                self._document.add(Heading(self._args.top_level, 1))
+                self._is_top_level_heading_req = False
 
-                    # All headings will be shifted by one level.
-                    self._base_level = self._base_level + 1
+                # All headings will be shifted by one level.
+                self._base_level = self._base_level + 1
 
         return result
 
@@ -233,23 +238,20 @@ class MarkdownConverter(BaseConverter):
 
         Args:
             file_name (str): File name
-        
+
         Returns:
             Ret: Status
         """
-        result = Ret.OK
-
         # Multiple document mode?
         if self._args.single_document is False:
-            assert self._fd is None
+            assert self._document is None
 
-            file_name_md = self._file_name_trlc_to_md(file_name)
-            result = self._generate_out_file(file_name_md)
+            # A new document is built for each file. The very first written Markdown part
+            # shall not have an empty line before, which the document handles implicitly.
+            self._document = MarkdownDocument()
+            self._is_top_level_heading_req = True
 
-            # The very first written Markdown part shall not have a empty line before.
-            self._empty_line_required = False
-
-        return result
+        return Ret.OK
 
     def leave_file(self, file_name: str) -> Ret:
         # lobster-trace: SwRequirements.sw_req_markdown_multiple_doc_mode
@@ -262,18 +264,21 @@ class MarkdownConverter(BaseConverter):
         Returns:
             Ret: Status
         """
+        result = Ret.OK
 
         # Multiple document mode?
         if self._args.single_document is False:
-            assert self._fd is not None
-            out_dir = os.path.dirname(self._fd.name)
-            self._fd.close()
-            self._fd = None
-            self._is_top_level_heading_req = True
-            self._copy_external_files(out_dir)
-            self._external_files = []
+            assert self._document is not None
 
-        return Ret.OK
+            file_name_md = self._file_name_trlc_to_md(file_name)
+            result = self._write_document(file_name_md)
+
+            self._copy_external_files(self._out_path)
+            self._external_files = []
+            self._document = None
+            self._is_top_level_heading_req = True
+
+        return result
 
     def convert_section(self, section: str, level: int) -> Ret:
         # lobster-trace: SwRequirements.sw_req_markdown_section
@@ -285,16 +290,14 @@ class MarkdownConverter(BaseConverter):
         Args:
             section (str): The section name
             level (int): The section indentation level
-        
+
         Returns:
             Ret: Status
         """
         assert len(section) > 0
-        assert self._fd is not None
+        assert self._document is not None
 
-        self._write_empty_line_on_demand()
-        markdown_heading = self.markdown_create_heading(section, self._get_markdown_heading_level(level))
-        self._fd.write(markdown_heading)
+        self._document.add(Heading(section, self._get_markdown_heading_level(level)))
 
         # If a section heading is written, there is no top level heading required anymore.
         self._is_top_level_heading_req = False
@@ -315,14 +318,13 @@ class MarkdownConverter(BaseConverter):
             level (int): The record level.
             translation (Optional[dict]): Translation dictionary for the record object.
                                             If None, no translation is applied.
-        
+
         Returns:
             Ret: Status
         """
-        assert self._fd is not None
+        assert self._document is not None
 
-        self._write_top_level_heading_on_demand()
-        self._write_empty_line_on_demand()
+        self._add_top_level_heading_on_demand()
 
         return self._convert_record_object(record, level, translation)
 
@@ -330,50 +332,38 @@ class MarkdownConverter(BaseConverter):
         # lobster-trace: SwRequirements.sw_req_markdown_single_doc_mode
         """
         Finish the conversion process.
+
+        Returns:
+            Ret: Status
         """
+        result = Ret.OK
 
         # Single document mode?
         if self._args.single_document is True:
-            assert self._fd is not None
-            out_dir = os.path.dirname(self._fd.name)
-            self._fd.close()
-            self._fd = None
-            self._copy_external_files(out_dir)
+            assert self._document is not None
+
+            result = self._write_document(self._args.name)
+
+            self._copy_external_files(self._out_path)
+            self._external_files = []
+            self._document = None
 
         if self._plantuml_tmp_dir is not None:
             self._plantuml_tmp_dir.cleanup()
             self._plantuml_tmp_dir = None
 
-        return Ret.OK
+        return result
 
-    def _write_top_level_heading_on_demand(self) -> None:
+    def _add_top_level_heading_on_demand(self) -> None:
         # lobster-trace: SwRequirements.sw_req_markdown_md_top_level
         # lobster-trace: SwRequirements.sw_req_markdown_sd_top_level
-        """Write the top level heading if necessary.
+        """Add the top level heading to the document if necessary.
         """
-        assert self._fd is not None
+        assert self._document is not None
 
         if self._is_top_level_heading_req is True:
-            self._fd.write(MarkdownConverter.markdown_create_heading(self._args.top_level, 1))
-            self._empty_line_required = True
+            self._document.add(Heading(self._args.top_level, 1))
             self._is_top_level_heading_req = False
-
-    def _write_empty_line_on_demand(self) -> None:
-        # lobster-trace: SwRequirements.sw_req_markdown
-        """
-        Write an empty line if necessary.
-
-        For proper Markdown formatting, the first written part shall not have an empty
-        line before. But all following parts (heading, table, paragraph, image, etc.) shall
-        have an empty line before. And at the document bottom, there shall be just one empty
-        line.
-        """
-        assert self._fd is not None
-
-        if self._empty_line_required is False:
-            self._empty_line_required = True
-        else:
-            self._fd.write("\n")
 
     def _get_markdown_heading_level(self, level: int) -> int:
         # lobster-trace: SwRequirements.sw_req_markdown_record
@@ -383,7 +373,7 @@ class MarkdownConverter(BaseConverter):
 
         Args:
             level (int): The TRLC object level.
-        
+
         Returns:
             int: Markdown heading level
         """
@@ -396,7 +386,7 @@ class MarkdownConverter(BaseConverter):
 
         Args:
             file_name_trlc (str): TRLC file name
-        
+
         Returns:
             str: Markdown file name
         """
@@ -405,18 +395,19 @@ class MarkdownConverter(BaseConverter):
 
         return file_name
 
-    def _generate_out_file(self, file_name: str) -> Ret:
+    def _write_document(self, file_name: str) -> Ret:
         # lobster-trace: SwRequirements.sw_req_markdown_out_folder
         """
-        Generate the output file.
+        Write the current Markdown document to the output file.
 
         Args:
             file_name (str): The output file name without path.
-            item_list ([Element]): List of elements.
 
         Returns:
             Ret: Status
         """
+        assert self._document is not None
+
         result = Ret.OK
         file_name_with_path = file_name
 
@@ -425,7 +416,8 @@ class MarkdownConverter(BaseConverter):
             file_name_with_path = os.path.join(self._out_path, file_name)
 
         try:
-            self._fd = open(file_name_with_path, "w", encoding="utf-8") #pylint: disable=consider-using-with
+            with open(file_name_with_path, "w", encoding="utf-8") as out_file:
+                out_file.write(self._document.render())
         except IOError as e:
             log_error(f"Failed to open file {file_name_with_path}: {e}")
             result = Ret.ERROR
@@ -436,11 +428,11 @@ class MarkdownConverter(BaseConverter):
         # lobster-trace: SwRequirements.sw_req_markdown_record
         """
         Process the given implicit null value.
-        
+
         Returns:
             str: The implicit null value.
         """
-        return self.markdown_escape(self._empty_attribute_value)
+        return MarkdownText.escape(self._empty_attribute_value)
 
     def _on_record_reference(self, record_reference: Record_Reference) -> str:
         # lobster-trace: SwRequirements.sw_req_markdown_record
@@ -449,7 +441,7 @@ class MarkdownConverter(BaseConverter):
 
         Args:
             record_reference (Record_Reference): The record reference value.
-        
+
         Returns:
             str: Markdown link to the record reference.
         """
@@ -464,7 +456,7 @@ class MarkdownConverter(BaseConverter):
 
         Args:
             string_literal (String_Literal): The string literal value.
-        
+
         Returns:
             str: The string literal value.
         """
@@ -515,7 +507,7 @@ class MarkdownConverter(BaseConverter):
 
         anchor_tag = file_name + "#" + record_name.lower().replace(" ", "-")
 
-        return MarkdownConverter.markdown_create_link(str(record_reference.to_python_object()), anchor_tag)
+        return MarkdownText.link(str(record_reference.to_python_object()), anchor_tag)
 
     def _other_dispatcher(self, expression: Expression) -> str:
         # lobster-trace: SwRequirements.sw_req_markdown_record
@@ -529,7 +521,7 @@ class MarkdownConverter(BaseConverter):
         Returns:
             str: The processed expression.
         """
-        return self.markdown_escape(expression.to_string())
+        return MarkdownText.escape(expression.to_string())
 
     def _get_trlc_ast_walker(self) -> TrlcAstWalker:
         # lobster-trace: SwRequirements.sw_req_markdown_record
@@ -590,8 +582,8 @@ class MarkdownConverter(BaseConverter):
         if self._render_cfg.is_format_md(package_name, type_name, attribute_name) is False and \
             self._render_cfg.is_format_gfm(package_name, type_name, attribute_name) is False:
 
-            result = self.markdown_escape(attribute_value)
-            result = self.markdown_lf2soft_return(result)
+            result = MarkdownText.escape(attribute_value)
+            result = MarkdownText.lf2soft_return(result)
 
         if self._args.render_plantuml is True:
             result = self._render_plantuml_blocks(result)
@@ -654,7 +646,6 @@ class MarkdownConverter(BaseConverter):
             except (OSError, IOError) as exc:
                 log_error(f"Failed to copy external file '{source_path}': {exc}", False)
 
-    # pylint: disable-next=too-many-locals
     def _convert_record_object(self, record: Record_Object, level: int, translation: Optional[dict]) -> Ret:
         # lobster-trace: SwRequirements.sw_req_markdown_record
         """
@@ -665,28 +656,26 @@ class MarkdownConverter(BaseConverter):
             level (int): The record level.
             translation (Optional[dict]): Translation dictionary for the record object.
                                             If None, no translation is applied.
-        
+
         Returns:
             Ret: Status
         """
-        assert self._fd is not None
+        assert self._document is not None
 
         # The record name will be the heading.
-        markdown_heading = self.markdown_create_heading(record.name, self._get_markdown_heading_level(level + 1))
-        self._fd.write(markdown_heading)
-        self._fd.write("\n")
+        self._document.add(Heading(record.name, self._get_markdown_heading_level(level + 1)))
 
         # The record fields will be written to a table.
         # First define the table column titles.
         table_column_titles = ["Attribute Name", "Attribute Value"]
         table_rows = []
 
-        # Walk through the record object fields and write the table rows.
+        # Walk through the record object fields and build the table rows.
         trlc_ast_walker = self._get_trlc_ast_walker()
 
         for name, value in record.field.items():
             attribute_name = self._translate_attribute_name(translation, name)
-            attribute_name = self.markdown_escape(attribute_name)
+            attribute_name = MarkdownText.escape(attribute_name)
 
             # Retrieve the attribute value by processing the field value.
             # The result will be a string representation of the value.
@@ -704,219 +693,16 @@ class MarkdownConverter(BaseConverter):
 
             attribute_value = ""
             if isinstance(walker_result, list):
-                attribute_value = self.markdown_create_list(walker_result, False)
+                attribute_value = BulletList(walker_result, False).render()
             else:
                 attribute_value = walker_result
 
             # Append the attribute name and value to the table rows.
             table_rows.append([attribute_name, attribute_value])
 
-        html_table = self.markdown_create_table(table_column_titles, table_rows)
-        self._fd.write(html_table)
+        self._document.add(Table(table_column_titles, table_rows))
 
         return Ret.OK
-
-    @staticmethod
-    def markdown_escape(text: str) -> str:
-        # lobster-trace: SwRequirements.sw_req_markdown_escape
-        """
-        Escapes the text to be used in a Markdown document.
-
-        Args:
-            text (str): Text to escape
-
-        Returns:
-            str: Escaped text
-        """
-        characters = ["\\", "`", "*", "_", "{", "}", "[", "]", "<", ">", "(", ")", "#", "+", "-", ".", "!", "|"]
-
-        for character in characters:
-            text = text.replace(character, "\\" + character)
-
-        return text
-
-    @staticmethod
-    def markdown_lf2soft_return(text: str) -> str:
-        # lobster-trace: SwRequirements.sw_req_markdown_soft_return
-        """
-        A single LF will be converted to backslash + LF.
-        Use it for paragraphs, but not for headings or tables.
-
-        Args:
-            text (str): Text
-        Returns:
-            str: Handled text
-        """
-        return text.replace("\n", "\\\n")
-
-    @staticmethod
-    def markdown_create_heading(text: str, level: int, escape: bool = True) -> str:
-        # lobster-trace: SwRequirements.sw_req_markdown_heading
-        """
-        Create a Markdown heading.
-        The text will be automatically escaped for Markdown if necessary.
-
-        Args:
-            text (str): Heading text
-            level (int): Heading level [1; inf]
-            escape (bool): Escape the text (default: True).
-
-        Returns:
-            str: Markdown heading
-        """
-        result = ""
-
-        if 1 <= level:
-            text_raw = text
-
-            if escape is True:
-                text_raw = MarkdownConverter.markdown_escape(text)
-
-            result = f"{'#' * level} {text_raw}\n"
-
-        else:
-            log_error(f"Invalid heading level {level} for {text}.")
-
-        return result
-
-    @staticmethod
-    def markdown_create_table(column_titles : List[str], row_values_list: List[List[str]]) -> str:
-        # lobster-trace: SwRequirements.sw_req_markdown_table
-        """
-        Create a complete Markdown table in HTML format to support multi-line cells and
-        other complex content.
-
-        Args:
-            column_titles (List[str]): List of column titles.
-            row_values_list (List[List[str]]): List of row values.
-
-        Returns:
-            str: Markdown table
-        """
-        table = "<table>\n"
-        table += "<thead>\n"
-        table += "<tr>\n"
-
-        for column_title in column_titles:
-            table += f"<th>{column_title}</th>\n"
-
-        table += "</tr>\n"
-        table += "</thead>\n"
-        table += "<tbody>\n"
-
-        for row_values in row_values_list:
-            table += "<tr>\n"
-
-            for cell_value in row_values:
-                # To allow Markdown content inside table cells, a blank line is required
-                # before and after the cell content.
-                # See https://spec.commonmark.org/0.31.2/#html-blocks
-                table += "<td>\n"
-                table += "\n"
-                table += f"{cell_value}\n"
-                table += "\n"
-                table += "</td>\n"
-
-            table += "</tr>\n"
-
-        table += "</tbody>\n"
-        table += "</table>\n"
-
-        return table
-
-    @staticmethod
-    def markdown_create_list(list_values: List[str], escape: bool = True) -> str:
-        # lobster-trace: SwRequirements.sw_req_markdown_list
-        """Create a unordered Markdown list.
-        The values will be automatically escaped for Markdown if necessary.
-
-        Args:
-            list_values (List[str]): List of list values.
-            escape (bool): Escapes every list value (default: True).
-        Returns:
-            str: Markdown list
-        """
-        list_str = ""
-
-        for value_raw in list_values:
-            value = value_raw
-
-            if escape is True:  # Escape the value if necessary.
-                value = MarkdownConverter.markdown_escape(value)
-                list_str += f"- {value}\n"
-
-        return list_str
-
-    @staticmethod
-    def markdown_create_link(text: str, url: str, escape: bool = True) -> str:
-        # lobster-trace: SwRequirements.sw_req_markdown_link
-        """
-        Create a Markdown link.
-        The text will be automatically escaped for Markdown if necessary.
-        There will be no newline appended at the end.
-
-        Args:
-            text (str): Link text
-            url (str): Link URL
-            escape (bool): Escapes text (default: True).
-
-        Returns:
-            str: Markdown link
-        """
-        text_raw = text
-
-        if escape is True:
-            text_raw = MarkdownConverter.markdown_escape(text)
-
-        return f"[{text_raw}]({url})"
-
-    @staticmethod
-    def markdown_create_diagram_link(diagram_file_name: str, diagram_caption: str, escape: bool = True) -> str:
-        # lobster-trace: SwRequirements.sw_req_markdown_image
-        """
-        Create a Markdown diagram link.
-        The caption will be automatically escaped for Markdown if necessary.
-
-        Args:
-            diagram_file_name (str): Diagram file name
-            diagram_caption (str): Diagram caption
-            escape (bool): Escapes caption (default: True).
-
-        Returns:
-            str: Markdown diagram link
-        """
-        diagram_caption_raw = diagram_caption
-
-        if escape is True:
-            diagram_caption_raw = MarkdownConverter.markdown_escape(diagram_caption)
-
-        # Allowed are absolute and relative to source paths.
-        diagram_file_name = os.path.normpath(diagram_file_name)
-
-        return f"![{diagram_caption_raw}]({diagram_file_name})\n"
-
-    @staticmethod
-    def markdown_text_color(text: str, color: str, escape: bool = True) -> str:
-        # lobster-trace: SwRequirements.sw_req_markdown_text_color
-        """
-        Create colored text in Markdown.
-        The text will be automatically escaped for Markdown if necessary.
-        There will be no newline appended at the end.
-
-        Args:
-            text (str): Text
-            color (str): HTML color
-            escape (bool): Escapes text (default: True).
-
-        Returns:
-            str: Colored text
-        """
-        text_raw = text
-
-        if escape is True:
-            text_raw = MarkdownConverter.markdown_escape(text)
-
-        return f"<span style=\"{color}\">{text_raw}</span>"
 
 # Functions ********************************************************************
 

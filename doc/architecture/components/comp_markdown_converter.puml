@@ -14,6 +14,65 @@ class MarkdownConverter extends BaseConverter {
     +finish() : Ret
 }
 
+note right of MarkdownConverter
+    Builds a Markdown AST (MarkdownDocument)
+    while walking the TRLC symbols and writes
+    the output file(s) only once the document
+    is complete:
+    * leave_file()  -> multiple-document mode
+    * finish()      -> single-document mode
+end note
+
+package "Markdown AST" {
+
+    abstract class MarkdownElement {
+        +{abstract} render() : str
+    }
+
+    class Heading extends MarkdownElement {
+        +render() : str
+    }
+    class Table extends MarkdownElement {
+        +render() : str
+    }
+    class BulletList extends MarkdownElement {
+        +render() : str
+    }
+    class Image extends MarkdownElement {
+        +render() : str
+    }
+    class RawText extends MarkdownElement {
+        +render() : str
+    }
+
+    class MarkdownDocument {
+        +add(element: MarkdownElement) : None
+        +is_empty() : bool
+        +render() : str
+    }
+
+    class MarkdownText <<utility>> {
+        +{static} escape(text: str) : str
+        +{static} lf2soft_return(text: str) : str
+        +{static} link(text: str, url: str, escape: bool) : str
+        +{static} colored_text(text: str, color: str, escape: bool) : str
+    }
+
+    note bottom of MarkdownDocument
+        render() concatenates the block
+        elements, separating consecutive
+        blocks by a single blank line.
+    end note
+
+    MarkdownDocument o-- "0..*" MarkdownElement
+    Heading ..> MarkdownText
+    Image ..> MarkdownText
+    BulletList ..> MarkdownText
+}
+
+MarkdownConverter *-- MarkdownDocument
+MarkdownConverter ..> MarkdownElement : builds
+MarkdownConverter ..> MarkdownText
 
 package "Dependencies" {
 

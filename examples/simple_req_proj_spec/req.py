@@ -77,8 +77,6 @@ class CustomMarkdownConverter(MarkdownConverter):
             Ret: Status
         """
 
-        self._write_empty_line_on_demand()
-
         # Translation file is not used, therefore _translation is not needed.
         # Its translated here, just for example.
         attribute_translation = {

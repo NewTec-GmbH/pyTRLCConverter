@@ -28,6 +28,8 @@ from pyTRLCConverter.ret import Ret
 from pyTRLCConverter.plantuml import PlantUML
 
 from pyTRLCConverter.markdown_converter import MarkdownConverter
+from pyTRLCConverter.markdown.element import Heading, Image, Table
+from pyTRLCConverter.markdown.text import MarkdownText
 from pyTRLCConverter.trlc_helper import Record_Object
 
 # Variables ********************************************************************
@@ -77,7 +79,7 @@ class ExamplePlantumlMarkdownConverter(MarkdownConverter):
         Returns:
             Ret: Status
         """
-        assert self._fd is not None
+        assert self._document is not None
 
         plantuml_generator = PlantUML()
         image_format = "png"
@@ -120,9 +122,7 @@ class ExamplePlantumlMarkdownConverter(MarkdownConverter):
             shutil.copy(full_file_path, self._args.out)
             file_dst_path = os.path.basename(full_file_path)
 
-        markdown_image = self.markdown_create_diagram_link(
-            file_dst_path, caption)
-        self._fd.write(markdown_image)
+        self._document.add(Image(file_dst_path, caption))
 
         return Ret.OK
 
@@ -136,15 +136,14 @@ class ExamplePlantumlMarkdownConverter(MarkdownConverter):
         Returns:
             Ret: Status
         """
-        assert self._fd is not None
+        assert self._document is not None
 
         description = self._get_attribute(req, "description")
 
-        markdown_heading = self.markdown_create_heading(req.name, level + 1)
-        markdown_description = self.markdown_escape(description)
-        markdown_table = self.markdown_create_table(["Attribute", "Value"], [["Description", markdown_description]])
+        markdown_description = MarkdownText.escape(description)
 
-        self._fd.write(f"{markdown_heading}\n{markdown_table}\n")
+        self._document.add(Heading(req.name, level + 1))
+        self._document.add(Table(["Attribute", "Value"], [["Description", markdown_description]]))
 
         return Ret.OK
 
