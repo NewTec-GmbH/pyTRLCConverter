@@ -23,10 +23,13 @@
 import os
 import shutil
 import tempfile
-from typing import List, Optional, Any
+from typing import Optional, Any
 from marko import Markdown
 from trlc.ast import Implicit_Null, Record_Object, Record_Reference, String_Literal, Expression
 from pyTRLCConverter.base_converter import BaseConverter
+from pyTRLCConverter.rst.document import RstDocument
+from pyTRLCConverter.rst.element import RstHeading, RstAdmonition, RstTable, RstBulletList
+from pyTRLCConverter.rst.text import RstText
 from pyTRLCConverter.ret import Ret
 from pyTRLCConverter.trlc_helper import TrlcAstWalker
 from pyTRLCConverter.logger import log_verbose, log_error
@@ -41,6 +44,11 @@ from pyTRLCConverter.marko.gfm2rst_renderer import Gfm2RstRenderer
 class RstConverter(BaseConverter):
     """
     RstConverter provides functionality for converting to a reStructuredText format.
+
+    The converter builds a reStructuredText AST (RstDocument made of block
+    elements) while walking the TRLC symbols and writes the output file(s) only
+    once the document is complete (in leave_file() for multiple-document mode and
+    in finish() for single-document mode).
     """
     OUTPUT_FILE_NAME_DEFAULT = "output.rst"
     TOP_LEVEL_DEFAULT = "Specification"
@@ -64,17 +72,17 @@ class RstConverter(BaseConverter):
         if args.exclude is not None:
             self._excluded_paths = [os.path.normpath(path) for path in args.exclude]
 
-        # The file descriptor for the output file.
-        self._fd = None
+        # The reStructuredText document currently being built. In multiple-document mode a new
+        # document is created per file, in single-document mode one document is shared.
+        self._document: Optional[RstDocument] = None
+
+        # The base name of the output file currently being built. It is used to build the
+        # labels of headings and admonitions.
+        self._current_file_name = ""
 
         # The base level for the headings. Its the minimum level for the headings which depends
         # on the single/multiple document mode.
         self._base_level = 1
-
-        # For proper reStructuredText formatting, the first written part shall not have an empty line before.
-        # But all following parts (heading, table, paragraph, image, etc.) shall have an empty line before.
-        # And at the document bottom, there shall be just one empty line.
-        self._empty_line_required = False
 
         # The AST walker meta data for processing the record object fields.
         # This will hold the information about the current package, type and attribute being processed.
@@ -172,7 +180,7 @@ class RstConverter(BaseConverter):
         Returns:
             Ret: Status
         """
-        assert self._fd is None
+        assert self._document is None
 
         # Call the base converter to initialize the common stuff.
         result = BaseConverter.begin(self)
@@ -195,14 +203,14 @@ class RstConverter(BaseConverter):
 
             # Single document mode?
             if self._args.single_document is True:
-                result = self._generate_out_file(self._args.name)
+                self._document = RstDocument()
+                self._current_file_name = self._args.name
 
-                if self._fd is not None:
-                    self._write_empty_line_on_demand()
-                    self._fd.write(RstConverter.rst_create_heading(self._args.top_level, 1, self._args.name))
+                # The top level heading is always required in single document mode.
+                self._document.add(RstHeading(self._args.top_level, 1, self._current_file_name))
 
-                    # All headings will be shifted by one level.
-                    self._base_level = self._base_level + 1
+                # All headings will be shifted by one level.
+                self._base_level = self._base_level + 1
 
         return result
 
@@ -217,19 +225,16 @@ class RstConverter(BaseConverter):
         Returns:
             Ret: Status
         """
-        result = Ret.OK
-
         # Multiple document mode?
         if self._args.single_document is False:
-            assert self._fd is None
+            assert self._document is None
 
-            file_name_rst = self._file_name_trlc_to_rst(file_name)
-            result = self._generate_out_file(file_name_rst)
+            # A new document is built for each file. The very first written part shall not have
+            # an empty line before, which the document handles implicitly.
+            self._document = RstDocument()
+            self._current_file_name = self._file_name_trlc_to_rst(file_name)
 
-            # The very first written reStructuredText part shall not have an empty line before.
-            self._empty_line_required = False
-
-        return result
+        return Ret.OK
 
     def leave_file(self, file_name: str) -> Ret:
         # lobster-trace: SwRequirements.sw_req_rst_multiple_doc_mode
@@ -242,17 +247,19 @@ class RstConverter(BaseConverter):
         Returns:
             Ret: Status
         """
+        result = Ret.OK
 
         # Multiple document mode?
         if self._args.single_document is False:
-            assert self._fd is not None
-            out_dir = os.path.dirname(self._fd.name)
-            self._fd.close()
-            self._fd = None
-            self._copy_external_files(out_dir)
-            self._external_files = []
+            assert self._document is not None
 
-        return Ret.OK
+            result = self._write_document(self._current_file_name)
+
+            self._copy_external_files(self._out_path)
+            self._external_files = []
+            self._document = None
+
+        return result
 
     def convert_section(self, section: str, level: int) -> Ret:
         # lobster-trace: SwRequirements.sw_req_rst_section
@@ -268,13 +275,9 @@ class RstConverter(BaseConverter):
             Ret: Status
         """
         assert len(section) > 0
-        assert self._fd is not None
+        assert self._document is not None
 
-        self._write_empty_line_on_demand()
-        rst_heading = self.rst_create_heading(section,
-                                            self._get_rst_heading_level(level),
-                                            os.path.basename(self._fd.name))
-        self._fd.write(rst_heading)
+        self._document.add(RstHeading(section, self._get_rst_heading_level(level), self._current_file_name))
 
         return Ret.OK
 
@@ -295,9 +298,7 @@ class RstConverter(BaseConverter):
         Returns:
             Ret: Status
         """
-        assert self._fd is not None
-
-        self._write_empty_line_on_demand()
+        assert self._document is not None
 
         return self._convert_record_object(record, level, translation)
 
@@ -305,59 +306,27 @@ class RstConverter(BaseConverter):
         # lobster-trace: SwRequirements.sw_req_rst_single_doc_mode
         """
         Finish the conversion process.
+
+        Returns:
+            Ret: Status
         """
+        result = Ret.OK
 
         # Single document mode?
         if self._args.single_document is True:
-            assert self._fd is not None
-            out_dir = os.path.dirname(self._fd.name)
-            self._fd.close()
-            self._fd = None
-            self._copy_external_files(out_dir)
+            assert self._document is not None
+
+            result = self._write_document(self._current_file_name)
+
+            self._copy_external_files(self._out_path)
+            self._external_files = []
+            self._document = None
 
         if self._plantuml_tmp_dir is not None:
             self._plantuml_tmp_dir.cleanup()
             self._plantuml_tmp_dir = None
 
-        return Ret.OK
-
-    def _write_empty_line_on_demand(self) -> None:
-        # lobster-trace: SwRequirements.sw_req_rst
-        """
-        Write an empty line if necessary.
-
-        For proper reStructuredText formatting, the first written part shall not have an empty
-        line before. But all following parts (heading, table, paragraph, image, etc.) shall
-        have an empty line before. And at the document bottom, there shall be just one empty
-        line.
-        """
-        assert self._fd is not None
-
-        if self._empty_line_required is False:
-            self._empty_line_required = True
-        else:
-            self._fd.write("\n")
-
-    def _copy_external_files(self, dest_dir: str) -> None:
-        # lobster-trace: SwRequirements.sw_req_rst_render_plantuml
-        """Copy all collected external files to the given destination directory.
-
-        Args:
-            dest_dir (str): Destination directory path.
-        """
-        copied_sources = set()
-
-        for source_path, local_name in self._external_files:
-            if source_path in copied_sources:
-                continue
-
-            dest_path = os.path.join(dest_dir, local_name)
-
-            try:
-                shutil.copy2(source_path, dest_path)
-                copied_sources.add(source_path)
-            except (OSError, IOError) as exc:
-                log_error(f"Failed to copy external file '{source_path}': {exc}", False)
+        return result
 
     def _get_rst_heading_level(self, level: int) -> int:
         # lobster-trace: SwRequirements.sw_req_rst_section
@@ -390,18 +359,19 @@ class RstConverter(BaseConverter):
 
         return file_name
 
-    def _generate_out_file(self, file_name: str) -> Ret:
+    def _write_document(self, file_name: str) -> Ret:
         # lobster-trace: SwRequirements.sw_req_rst_out_folder
         """
-        Generate the output file.
+        Write the current reStructuredText document to the output file.
 
         Args:
             file_name (str): The output file name without path.
-            item_list ([Element]): List of elements.
 
         Returns:
             Ret: Status
         """
+        assert self._document is not None
+
         result = Ret.OK
         file_name_with_path = file_name
 
@@ -410,7 +380,8 @@ class RstConverter(BaseConverter):
             file_name_with_path = os.path.join(self._out_path, file_name)
 
         try:
-            self._fd = open(file_name_with_path, "w", encoding="utf-8") #pylint: disable=consider-using-with
+            with open(file_name_with_path, "w", encoding="utf-8") as out_file:
+                out_file.write(self._document.render())
         except IOError as e:
             log_error(f"Failed to open file {file_name_with_path}: {e}")
             result = Ret.ERROR
@@ -425,7 +396,7 @@ class RstConverter(BaseConverter):
         Returns:
             str: The implicit null value.
         """
-        return self.rst_escape(self._empty_attribute_value)
+        return RstText.escape(self._empty_attribute_value)
 
     def _on_record_reference(self, record_reference: Record_Reference) -> str:
         # lobster-trace: SwRequirements.sw_req_rst_record
@@ -500,7 +471,7 @@ class RstConverter(BaseConverter):
         # Create a target ID for the record
         target_id = f"{file_name}-{record_name.lower().replace(' ', '-')}"
 
-        return RstConverter.rst_create_link(str(record_reference.to_python_object()), target_id)
+        return RstText.link(str(record_reference.to_python_object()), target_id)
 
     def _other_dispatcher(self, expression: Expression) -> str:
         # lobster-trace: SwRequirements.sw_req_rst_record
@@ -514,7 +485,7 @@ class RstConverter(BaseConverter):
         Returns:
             str: The processed expression.
         """
-        return self.rst_escape(expression.to_string())
+        return RstText.escape(expression.to_string())
 
     def _get_trlc_ast_walker(self) -> TrlcAstWalker:
         # lobster-trace: SwRequirements.sw_req_rst_record
@@ -592,11 +563,32 @@ class RstConverter(BaseConverter):
 
             # Otherwise escape the text for reStructuredText.
             else:
-                result = self.rst_escape(attribute_value)
+                result = RstText.escape(attribute_value)
 
         return result
 
-    # pylint: disable-next=too-many-locals, unused-argument
+    def _copy_external_files(self, dest_dir: str) -> None:
+        # lobster-trace: SwRequirements.sw_req_rst_render_plantuml
+        """Copy all collected external files to the given destination directory.
+
+        Args:
+            dest_dir (str): Destination directory path.
+        """
+        copied_sources = set()
+
+        for source_path, local_name in self._external_files:
+            if source_path in copied_sources:
+                continue
+
+            dest_path = os.path.join(dest_dir, local_name)
+
+            try:
+                shutil.copy2(source_path, dest_path)
+                copied_sources.add(source_path)
+            except (OSError, IOError) as exc:
+                log_error(f"Failed to copy external file '{source_path}': {exc}", False)
+
+    # pylint: disable-next=unused-argument
     def _convert_record_object(self, record: Record_Object, level: int, translation: Optional[dict]) -> Ret:
         # lobster-trace: SwRequirements.sw_req_rst_record
         """
@@ -608,31 +600,23 @@ class RstConverter(BaseConverter):
             translation (Optional[dict]): Translation dictionary for the record object.
                                             If None, no translation is applied.
 
-            Returns:
+        Returns:
             Ret: Status
         """
-        assert self._fd is not None
+        assert self._document is not None
 
-         # The record name will be the admonition.
-        file_name = os.path.basename(self._fd.name)
-        rst_heading = self.rst_create_admonition(record.name,
-                                                 file_name)
-        self._fd.write(rst_heading)
-
-        self._write_empty_line_on_demand()
+        # The record name will be the admonition.
+        self._document.add(RstAdmonition(record.name, self._current_file_name))
 
         # The record fields will be written to a table.
         column_titles = ["Attribute Name", "Attribute Value"]
 
         # Build rows for the table.
-        # Its required to calculate the maximum width for each column, therefore the rows
-        # will be stored first in a list and then the maximum width will be calculated.
-        # The table will be written after the maximum width calculation.
         rows = []
         trlc_ast_walker = self._get_trlc_ast_walker()
         for name, value in record.field.items():
             attribute_name = self._translate_attribute_name(translation, name)
-            attribute_name = self.rst_escape(attribute_name)
+            attribute_name = RstText.escape(attribute_name)
 
             # Retrieve the attribute value by processing the field value.
             # The result will be a string representation of the value.
@@ -650,289 +634,15 @@ class RstConverter(BaseConverter):
 
             attribute_value = ""
             if isinstance(walker_result, list):
-                attribute_value = self.rst_create_list(walker_result, False)
+                attribute_value = RstBulletList(walker_result, False).render()
             else:
                 attribute_value = walker_result
 
             rows.append([attribute_name, attribute_value])
 
-        # Calculate the maximum width of each column based on both headers and row values.
-        max_widths = [len(title) for title in column_titles]
-        for row in rows:
-            for idx, value in enumerate(row):
-                lines = value.split('\n')
-                for line in lines:
-                    max_widths[idx] = max(max_widths[idx], len(line))
-
-        # Write the table head and rows.
-        rst_table_head = self.rst_create_table_head(column_titles, max_widths)
-        self._fd.write(rst_table_head)
-
-        for row in rows:
-            rst_table_row = self.rst_append_table_row(row, max_widths, False)
-            self._fd.write(rst_table_row)
+        self._document.add(RstTable(column_titles, rows))
 
         return Ret.OK
-
-    @staticmethod
-    def rst_escape(text: str) -> str:
-        # lobster-trace: SwRequirements.sw_req_rst_escape
-        """
-        Escapes the text to be used in a reStructuredText document.
-
-        Args:
-            text (str): Text to escape
-
-        Returns:
-            str: Escaped text
-        """
-        characters = ["\\", "`", "*", "_", "{", "}", "[", "]", "<", ">", "(", ")", "#", "+", "-", ".", "!", "|"]
-
-        for character in characters:
-            text = text.replace(character, "\\" + character)
-
-        return text
-
-    @staticmethod
-    def rst_create_heading(text: str,
-                           level: int,
-                           file_name: str,
-                           escape: bool = True) -> str:
-        # lobster-trace: SwRequirements.sw_req_rst_heading
-        """
-        Create a reStructuredText heading with a label.
-        The text will be automatically escaped for reStructuredText if necessary.
-
-        Args:
-            text (str): Heading text
-            level (int): Heading level [1; 7]
-            file_name (str): File name where the heading is found
-            escape (bool): Escape the text (default: True).
-
-        Returns:
-            str: reStructuredText heading with a label
-        """
-        result = ""
-
-        if 1 <= level <= 7:
-            text_raw = text
-
-            if escape is True:
-                text_raw = RstConverter.rst_escape(text)
-
-            label = f"{file_name}-{text_raw.lower().replace(' ', '-')}"
-
-            underline_char = ["=", "#", "~", "^", "\"", "+", "'"][level - 1]
-            underline = underline_char * len(text_raw)
-
-            result = f".. _{label}:\n\n{text_raw}\n{underline}\n"
-
-        else:
-            log_error(f"Invalid heading level {level} for {text}.")
-
-        return result
-
-    @staticmethod
-    def rst_create_admonition(text: str,
-                              file_name: str,
-                              escape: bool = True) -> str:
-        # lobster-trace: SwRequirements.sw_req_rst_admonition
-        """
-        Create a reStructuredText admonition with a label.
-        The text will be automatically escaped for reStructuredText if necessary.
-
-        Args:
-            text (str): Admonition text
-            file_name (str): File name where the heading is found
-            escape (bool): Escape the text (default: True).
-
-        Returns:
-            str: reStructuredText admonition with a label
-        """
-        text_raw = text
-
-        if escape is True:
-            text_raw = RstConverter.rst_escape(text)
-
-        label = f"{file_name}-{text_raw.lower().replace(' ', '-')}"
-        admonition_label = f".. admonition:: {text_raw}"
-
-        return f".. _{label}:\n\n{admonition_label}\n"
-
-    @staticmethod
-    def rst_create_table_head(column_titles: List[str], max_widths: List[int], escape: bool = True) -> str:
-        # lobster-trace: SwRequirements.sw_req_rst_table
-        """
-        Create the table head for a reStructuredText table in grid format.
-        The titles will be automatically escaped for reStructuredText if necessary.
-
-        Args:
-            column_titles ([str]): List of column titles.
-            max_widths ([int]): List of maximum widths for each column.
-            escape (bool): Escape the titles (default: True).
-
-        Returns:
-            str: Table head
-        """
-        if escape:
-            column_titles = [RstConverter.rst_escape(title) for title in column_titles]
-
-        # Create the top border of the table
-        table_head = "    +" + "+".join(["-" * (width + 2) for width in max_widths]) + "+\n"
-
-        # Create the title row
-        table_head += "    |"
-        table_head += "|".join([f" {title.ljust(max_widths[idx])} " for idx, title in enumerate(column_titles)]) + "|\n"
-
-        # Create the separator row
-        table_head += "    +" + "+".join(["=" * (width + 2) for width in max_widths]) + "+\n"
-
-        return table_head
-
-    @staticmethod
-    def rst_append_table_row(row_values: List[str], max_widths: List[int], escape: bool = True) -> str:
-        # lobster-trace: SwRequirements.sw_req_rst_table
-        """
-        Append a row to a reStructuredText table in grid format.
-        The values will be automatically escaped for reStructuredText if necessary.
-        Supports multi-line cell values.
-
-        Args:
-            row_values ([str]): List of row values.
-            max_widths ([int]): List of maximum widths for each column.
-            escape (bool): Escapes every row value (default: True).
-
-        Returns:
-            str: Table row
-        """
-        if escape:
-            row_values = [RstConverter.rst_escape(value) for value in row_values]
-
-        # Split each cell value into lines.
-        split_values = [value.split('\n') for value in row_values]
-        max_lines = max(len(lines) for lines in split_values)
-
-        # Create the row with multi-line support.
-        table_row = ""
-        for line_idx in range(max_lines):
-            table_row += "    |"
-            for col_idx, lines in enumerate(split_values):
-                if line_idx < len(lines):
-                    table_row += f" {lines[line_idx].ljust(max_widths[col_idx])} "
-                else:
-                    table_row += " " * (max_widths[col_idx] + 2)
-                table_row += "|"
-            table_row += "\n"
-
-        # Create the separator row.
-        separator_row = "    +" + "+".join(["-" * (width + 2) for width in max_widths]) + "+\n"
-
-        return table_row + separator_row
-
-    @staticmethod
-    def rst_create_list(list_values: List[str], escape: bool = True) -> str:
-        # lobster-trace: SwRequirements.sw_req_rst_list
-        """Create a unordered reStructuredText list.
-        The values will be automatically escaped for reStructuredText if necessary.
-
-        Args:
-            list_values (List[str]): List of list values.
-            escape (bool): Escapes every list value (default: True).
-
-        Returns:
-            str: reStructuredText list
-        """
-        list_str = ""
-
-        for idx, value_raw in enumerate(list_values):
-            value = value_raw
-
-            if escape is True:  # Escape the value if necessary.
-                value = RstConverter.rst_escape(value)
-
-            list_str += f"* {value}"
-
-            # The last list value must not have a newline at the end.
-            if idx < len(list_values) - 1:
-                list_str += "\n"
-
-        return list_str
-
-    @staticmethod
-    def rst_create_link(text: str, target: str, escape: bool = True) -> str:
-        # lobster-trace: SwRequirements.sw_req_rst_link
-        """
-        Create a reStructuredText cross-reference.
-        The text will be automatically escaped for reStructuredText if necessary.
-        There will be no newline appended at the end.
-
-        Args:
-            text (str): Link text
-            target (str): Cross-reference target
-            escape (bool): Escapes text (default: True).
-
-        Returns:
-            str: reStructuredText cross-reference
-        """
-        text_raw = text
-
-        if escape is True:
-            text_raw = RstConverter.rst_escape(text)
-
-        return f":ref:`{text_raw} <{target}>`"
-
-    @staticmethod
-    def rst_create_diagram_link(diagram_file_name: str, diagram_caption: str, escape: bool = True) -> str:
-        # lobster-trace: SwRequirements.sw_req_rst_image
-        """
-        Create a reStructuredText diagram link.
-        The caption will be automatically escaped for reStructuredText if necessary.
-
-        Args:
-            diagram_file_name (str): Diagram file name
-            diagram_caption (str): Diagram caption
-            escape (bool): Escapes caption (default: True).
-
-        Returns:
-            str: reStructuredText diagram link
-        """
-        diagram_caption_raw = diagram_caption
-
-        if escape is True:
-            diagram_caption_raw = RstConverter.rst_escape(diagram_caption)
-
-        # Allowed are absolute and relative to source paths.
-        diagram_file_name = os.path.normpath(diagram_file_name)
-
-        result =  f".. figure:: {diagram_file_name}\n    :alt: {diagram_caption_raw}\n"
-
-        if diagram_caption_raw:
-            result += f"\n    {diagram_caption_raw}\n"
-
-        return result
-
-    @staticmethod
-    def rst_role(text: str, role: str, escape: bool = True) -> str:
-        # lobster-trace: SwRequirements.sw_req_rst_role
-        """
-        Create role text in reStructuredText.
-        The text will be automatically escaped for reStructuredText if necessary.
-        There will be no newline appended at the end.
-
-        Args:
-            text (str): Text
-            color (str): Role
-            escape (bool): Escapes text (default: True).
-
-        Returns:
-            str: Text with role
-        """
-        text_raw = text
-
-        if escape is True:
-            text_raw = RstConverter.rst_escape(text)
-
-        return f":{role}:`{text_raw}`"
 
 # Functions ********************************************************************
 

@@ -38,7 +38,7 @@ OUT_FORMAT=rst
 if [ ! -d "$OUTPUT_DIR" ]; then
     mkdir -p "$OUTPUT_DIR"
 else
-    rm -f "$OUTPUT_DIR"/*
+    rm -rf "$OUTPUT_DIR"/*
 fi
 
 # Create the test report and the coverage analysis.
