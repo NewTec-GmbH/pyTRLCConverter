@@ -458,6 +458,11 @@ section "SW Test Cases" {
             description = "This test case checks whether the ReqIF import marks an attribute whose value is an object element referencing a local file as path in the generated render configuration."
             verifies = [SwRequirements.sw_req_reqif_import_path]
         }
+
+        SwTestCase tc_reqif_import_merge {
+            description = "This test case checks whether a merge import updates a changed attribute value in an existing .trlc file in place, matching the object via the identifier store, while preserving comments and unchanged content."
+            verifies = [SwRequirements.sw_req_reqif_import_merge]
+        }
     }
 
     section "Docx" {

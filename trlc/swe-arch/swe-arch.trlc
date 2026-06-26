@@ -438,6 +438,7 @@ section "SW Architecture" {
                     * Converts DATATYPE-DEFINITION-ENUMERATION datatypes into TRLC enum types.
                     * Stores XHTML attribute values with the outer div wrapper removed and marks them as xhtml; object elements referencing a local file are stored as path.
                     * Seeds the identifiers of the source ReqIF Identifiable elements into id_store.json so they stay immutable on the roundtrip.
+                    * On a re-import with existing TRLC it merges the changes into the existing .trlc files in place (ReqifMerger and TrlcSourcePatcher), matching objects via the identifier store and preserving comments, formatting and attributes that are not part of the exchange.
                     """
                 verification_criteria = "Call the tool using the `pyTRLCConverter` frontend with the reqif-import subcommand."
                 satisfies = [
@@ -446,7 +447,8 @@ section "SW Architecture" {
                     SwRequirements.sw_req_reqif_import_enum,
                     SwRequirements.sw_req_reqif_import_xhtml,
                     SwRequirements.sw_req_reqif_import_path,
-                    SwRequirements.sw_req_reqif_import_identifier
+                    SwRequirements.sw_req_reqif_import_identifier,
+                    SwRequirements.sw_req_reqif_import_merge
                 ]
             }
         }

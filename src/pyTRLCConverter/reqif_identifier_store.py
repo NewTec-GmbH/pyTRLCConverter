@@ -108,6 +108,18 @@ class ReqifIdentifierStore():
 
         return identifier
 
+    def get_reverse_map(self) -> dict:
+        # lobster-trace: SwRequirements.sw_req_reqif_import_merge
+        """Return a mapping from stored identifier to its stable logical key.
+
+        Used by the ReqIF import to match an incoming ReqIF element back to the TRLC
+        element it was generated from.
+
+        Returns:
+            dict: Mapping from identifier to logical key.
+        """
+        return {identifier: key for key, identifier in self._identifiers.items()}
+
     def save(self, file_name: str) -> bool:
         # lobster-trace: SwRequirements.sw_req_reqif_identifier_store_init
         # lobster-trace: SwRequirements.sw_req_reqif_identifier_store_reuse

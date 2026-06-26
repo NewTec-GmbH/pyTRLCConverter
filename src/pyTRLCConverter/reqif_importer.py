@@ -28,10 +28,15 @@
 
 # Imports **********************************************************************
 import os
-from typing import Any
+from typing import Any, Optional
+from pyTRLCConverter.import_config import ImportConfig
 from pyTRLCConverter.logger import log_error, log_verbose
+from pyTRLCConverter.render_config import RenderConfig
+from pyTRLCConverter.reqif_identifier_store import ReqifIdentifierStore
+from pyTRLCConverter.reqif_merger import ReqifMerger
 from pyTRLCConverter.reqif_reader import ReqifReader, sanitize_identifier
 from pyTRLCConverter.ret import Ret
+from pyTRLCConverter.translator import Translator
 from pyTRLCConverter.trlc_generator import TrlcGenerator
 from pyTRLCConverter.trlc_helper import (
     get_trlc_symbols,
@@ -180,8 +185,12 @@ class ReqifImporter:
         return generator.generate(output_dir, gfm_format=self._args.gfm)
 
     def _run_merge(self, reader: ReqifReader) -> Ret:
-        # lobster-trace: SwRequirements.sw_req_reqif_import
+        # lobster-trace: SwRequirements.sw_req_reqif_import_merge
         """Run the merge import (update existing TRLC files in place).
+
+        Objects are matched via the identifier store. The matched records' string attribute
+        values are updated in place; unmatched attributes, comments and formatting are
+        preserved. Requires the --id-store argument.
 
         Args:
             reader (ReqifReader): The loaded ReqIF reader.
@@ -189,11 +198,53 @@ class ReqifImporter:
         Returns:
             Ret: Status.
         """
-        # The merge import is implemented in a later step.
-        del reader
-        log_error("Merge import into existing TRLC files is not yet available.")
+        result = Ret.OK
 
-        return Ret.ERROR
+        if self._args.id_store is None:
+            log_error("Merge import requires --id-store to match ReqIF objects to TRLC records.")
+            result = Ret.ERROR
+        else:
+            id_store = ReqifIdentifierStore()
+            symbols = get_trlc_symbols(self._args.source, self._args.include)
+
+            if id_store.load(self._args.id_store) is False or symbols is None:
+                result = Ret.ERROR
+            else:
+                import_config = self._build_import_config()
+                if import_config is None:
+                    result = Ret.ERROR
+                else:
+                    log_verbose("Merge ReqIF import into existing TRLC files.")
+                    result = ReqifMerger(reader, id_store, import_config).merge(symbols)
+
+        return result
+
+    def _build_import_config(self) -> Optional[ImportConfig]:
+        # lobster-trace: SwRequirements.sw_req_reqif_import_merge
+        """Build the import configuration from the translation and render configuration arguments.
+
+        Returns:
+            Optional[ImportConfig]: The import configuration, or None on a load error.
+        """
+        import_config: Optional[ImportConfig] = None
+        translator = Translator()
+        render_cfg = RenderConfig()
+        status = True
+
+        if isinstance(self._args.translation, str):
+            if translator.load(self._args.translation) is False:
+                log_error(f"Failed to load translation file {self._args.translation}.")
+                status = False
+
+        if status is True and isinstance(self._args.renderCfg, str):
+            if render_cfg.load(self._args.renderCfg) is False:
+                log_error(f"Failed to load render configuration file {self._args.renderCfg}.")
+                status = False
+
+        if status is True:
+            import_config = ImportConfig(translator, render_cfg)
+
+        return import_config
 
 
 # Functions ********************************************************************

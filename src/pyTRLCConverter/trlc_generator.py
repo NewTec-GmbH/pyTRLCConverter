@@ -232,78 +232,14 @@ class TrlcGenerator:  # pylint: disable=too-few-public-methods
             type_data (dict[str, Any]): Type metadata for this spec-object's type.
             obj_name (str): The unique TRLC object name for this instance.
         """
-        pad = "    " * indent
-        lines.append(f"{pad}{type_data['trlc_name']} {obj_name} {{")
-
         spec_obj_id = getattr(spec_obj, "identifier", None)
         if spec_obj_id:
             self._id_store[f"spec-object:{self._package_name}.{obj_name}"] = spec_obj_id
 
-        value_map, enum_refs_map = self._reader.build_value_maps(spec_obj)
-
-        for attr_meta in type_data["attrs"]:
-            if attr_meta["is_enum"] and attr_meta["enum_trlc_name"] and attr_meta["datatype_ref"]:
-                refs = enum_refs_map.get(attr_meta["attr_def_id"], [])
-                formatted = self._format_enum_attr_value(attr_meta, refs)
-                if formatted:
-                    lines.append(f"{pad}    {attr_meta['trlc_name']} = {formatted}")
-            else:
-                value_str = value_map.get(attr_meta["attr_def_id"], "")
-                if attr_meta["is_path"] and value_str:
-                    extracted = extract_object_data(value_str)
-                    if extracted is not None:
-                        value_str = extracted
-                self._append_string_attr(lines, pad, attr_meta["trlc_name"], value_str)
-
-        lines.append(f"{pad}}}")
+        lines.extend(
+            render_record_block(self._reader, self._package_name, type_data, spec_obj, obj_name, indent)
+        )
         lines.append("")
-
-    def _format_enum_attr_value(self, attr_meta: dict[str, Any], enum_refs: list[str]) -> Optional[str]:
-        # lobster-trace: SwRequirements.sw_req_reqif_import_enum
-        """Return the TRLC value string for an enumeration attribute, or None if refs is empty.
-
-        Args:
-            attr_meta (dict[str, Any]): Attribute metadata.
-            enum_refs (list[str]): List of raw ReqIF enum-value identifier strings.
-
-        Returns:
-            Optional[str]: A TRLC qualified enum-literal string (single or array form), or None.
-        """
-        formatted: Optional[str] = None
-
-        if enum_refs:
-            enum_entry = self._reader.enum_info.get(attr_meta["datatype_ref"], {})
-            literals_map = enum_entry.get("literals", {})
-            trlc_refs = [
-                f"{self._package_name}.{attr_meta['enum_trlc_name']}."
-                f"{literals_map.get(ref, {}).get('trlc_name') or sanitize_identifier(str(ref))}"
-                for ref in enum_refs
-            ]
-            if attr_meta["is_multi_valued"] or len(trlc_refs) > 1:
-                formatted = f"[{', '.join(trlc_refs)}]"
-            else:
-                formatted = trlc_refs[0]
-
-        return formatted
-
-    @staticmethod
-    def _append_string_attr(lines: list[str], pad: str, attr_name: str, value_str: str) -> None:
-        # lobster-trace: SwRequirements.sw_req_reqif_import_initial
-        """Append a TRLC string attribute assignment to the line buffer.
-
-        Args:
-            lines (list[str]): Line buffer to append to.
-            pad (str): Indentation prefix for the enclosing block.
-            attr_name (str): TRLC attribute name.
-            value_str (str): Raw string value to embed.
-        """
-        if value_str:
-            trlc_lit = trlc_string(value_str)
-            if "\n" in value_str:
-                lines.append(f"{pad}    {attr_name} =")
-                lines.append(trlc_lit)
-            else:
-                lines.append(f"{pad}    {attr_name} = {trlc_lit}")
 
     def _write_render_config(self, cfg_path: str, gfm_format: bool) -> None:
         # lobster-trace: SwRequirements.sw_req_reqif_import_initial
@@ -476,6 +412,98 @@ class TrlcGenerator:  # pylint: disable=too-few-public-methods
 
 
 # Functions ********************************************************************
+
+
+def append_string_attr(lines: list[str], pad: str, attr_name: str, value_str: str) -> None:
+    # lobster-trace: SwRequirements.sw_req_reqif_import_initial
+    """Append a TRLC string attribute assignment to the line buffer.
+
+    Args:
+        lines (list[str]): Line buffer to append to.
+        pad (str): Indentation prefix for the enclosing block.
+        attr_name (str): TRLC attribute name.
+        value_str (str): Raw string value to embed.
+    """
+    if value_str:
+        trlc_lit = trlc_string(value_str)
+        if "\n" in value_str:
+            lines.append(f"{pad}    {attr_name} =")
+            lines.append(trlc_lit)
+        else:
+            lines.append(f"{pad}    {attr_name} = {trlc_lit}")
+
+
+def format_enum_attr_value(reader: ReqifReader, package_name: str,
+                           attr_meta: dict[str, Any], enum_refs: list[str]) -> Optional[str]:
+    # lobster-trace: SwRequirements.sw_req_reqif_import_enum
+    """Return the TRLC value string for an enumeration attribute, or None if refs is empty.
+
+    Args:
+        reader (ReqifReader): The loaded ReqIF reader (for the enum metadata).
+        package_name (str): The TRLC package name used for qualified enum literals.
+        attr_meta (dict[str, Any]): Attribute metadata.
+        enum_refs (list[str]): List of raw ReqIF enum-value identifier strings.
+
+    Returns:
+        Optional[str]: A TRLC qualified enum-literal string (single or array form), or None.
+    """
+    formatted: Optional[str] = None
+
+    if enum_refs:
+        enum_entry = reader.enum_info.get(attr_meta["datatype_ref"], {})
+        literals_map = enum_entry.get("literals", {})
+        trlc_refs = [
+            f"{package_name}.{attr_meta['enum_trlc_name']}."
+            f"{literals_map.get(ref, {}).get('trlc_name') or sanitize_identifier(str(ref))}"
+            for ref in enum_refs
+        ]
+        if attr_meta["is_multi_valued"] or len(trlc_refs) > 1:
+            formatted = f"[{', '.join(trlc_refs)}]"
+        else:
+            formatted = trlc_refs[0]
+
+    return formatted
+
+
+# pylint: disable-next=too-many-arguments,too-many-positional-arguments
+def render_record_block(reader: ReqifReader, package_name: str, type_data: dict[str, Any],
+                        spec_obj: Any, obj_name: str, indent: int) -> list[str]:
+    # lobster-trace: SwRequirements.sw_req_reqif_import_initial
+    # lobster-trace: SwRequirements.sw_req_reqif_import_merge
+    """Render the TRLC lines for a single record object instance.
+
+    Args:
+        reader (ReqifReader): The loaded ReqIF reader.
+        package_name (str): The TRLC package name.
+        type_data (dict[str, Any]): Type metadata for this spec-object's type.
+        spec_obj (Any): The spec-object to render.
+        obj_name (str): The unique TRLC object name for this instance.
+        indent (int): Current indentation level.
+
+    Returns:
+        list[str]: The TRLC lines of the record block (including the closing brace).
+    """
+    pad = "    " * indent
+    lines = [f"{pad}{type_data['trlc_name']} {obj_name} {{"]
+    value_map, enum_refs_map = reader.build_value_maps(spec_obj)
+
+    for attr_meta in type_data["attrs"]:
+        if attr_meta["is_enum"] and attr_meta["enum_trlc_name"] and attr_meta["datatype_ref"]:
+            refs = enum_refs_map.get(attr_meta["attr_def_id"], [])
+            formatted = format_enum_attr_value(reader, package_name, attr_meta, refs)
+            if formatted:
+                lines.append(f"{pad}    {attr_meta['trlc_name']} = {formatted}")
+        else:
+            value_str = value_map.get(attr_meta["attr_def_id"], "")
+            if attr_meta["is_path"] and value_str:
+                extracted = extract_object_data(value_str)
+                if extracted is not None:
+                    value_str = extracted
+            append_string_attr(lines, pad, attr_meta["trlc_name"], value_str)
+
+    lines.append(f"{pad}}}")
+
+    return lines
 
 
 def trlc_string(value: str) -> str:

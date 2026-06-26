@@ -235,4 +235,67 @@ def test_tc_reqif_import_path(record_property, capsys, monkeypatch, tmp_path: Pa
     formats = {entry.get("format") for entry in render_cfg["renderCfg"]}
     assert "path" in formats
 
+
+def test_tc_reqif_import_merge(record_property, capsys, monkeypatch, tmp_path: Path):
+    # lobster-trace: SwTests.tc_reqif_import_merge
+    """A merge import updates a changed value in place and preserves comments.
+
+    Args:
+        record_property (Any): Used to inject the test case reference into the test results.
+        capsys (Any): Used to capture stdout and stderr.
+        monkeypatch (Any): Used to mock program arguments.
+        tmp_path (Path): Used to create a temporary output directory.
+    """
+    record_property("lobster-trace", "SwTests.tc_reqif_import_merge")
+
+    trlc_dir = tmp_path / "trlc"
+    trlc_dir.mkdir()
+    reqif_dir = tmp_path / "reqif"
+    id_store = str(tmp_path / "ids.json")
+
+    # A TRLC file with a comment and a record to be updated in place.
+    rsl_file = trlc_dir / "req.rsl"
+    rsl_file.write_text(Path("./tests/utils/req.rsl").read_text(encoding="utf-8"), encoding="utf-8")
+    data_file = trlc_dir / "data.trlc"
+    data_file.write_text(
+        "package Requirements\n\n"
+        "// This comment must survive the merge.\n"
+        "Requirement req_id_1 {\n"
+        '    description = "Original description"\n'
+        "    index = 7\n"
+        "}\n",
+        encoding="utf-8"
+    )
+
+    # Export to ReqIF with an identifier store.
+    reqif_file = _export_reqif(monkeypatch, reqif_dir, [str(rsl_file), str(data_file)], id_store=id_store)
+    assert capsys.readouterr().err == ""
+
+    # Simulate an external edit of the attribute value in the ReqIF document.
+    reqif_text = Path(reqif_file).read_text(encoding="utf-8")
+    assert "Original description" in reqif_text
+    Path(reqif_file).write_text(
+        reqif_text.replace("Original description", "Edited externally"), encoding="utf-8"
+    )
+
+    # Merge the edited ReqIF back into the existing TRLC.
+    monkeypatch.setattr("sys.argv", [
+        "pyTRLCConverter",
+        "--source", str(rsl_file),
+        "--source", str(data_file),
+        "reqif-import", str(reqif_file),
+        "--id-store", id_store
+    ])
+    main()
+    assert capsys.readouterr().err == ""
+
+    merged = data_file.read_text(encoding="utf-8")
+
+    # The changed value was applied in place.
+    assert "Edited externally" in merged
+    assert "Original description" not in merged
+    # The comment and the unchanged integer attribute are preserved.
+    assert "// This comment must survive the merge." in merged
+    assert "index = 7" in merged
+
 # Main *************************************************************************
