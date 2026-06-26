@@ -1,0 +1,301 @@
+pyTRLCConverter.rst.element
+===========================
+
+.. py:module:: pyTRLCConverter.rst.element
+
+.. autoapi-nested-parse::
+
+   reStructuredText block elements.
+   Each element renders itself into a reStructuredText string. Elements are
+   collected by the RstDocument and rendered once when the output file is
+   written.
+
+   Author: Gabryel Reyes (gabryel.reyes@newtec.de)
+
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   pyTRLCConverter.rst.element._UNDERLINE_CHARS
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   pyTRLCConverter.rst.element.RstAdmonition
+   pyTRLCConverter.rst.element.RstBulletList
+   pyTRLCConverter.rst.element.RstElement
+   pyTRLCConverter.rst.element.RstHeading
+   pyTRLCConverter.rst.element.RstImage
+   pyTRLCConverter.rst.element.RstRawText
+   pyTRLCConverter.rst.element.RstTable
+
+
+Module Contents
+---------------
+
+.. py:class:: RstAdmonition(text: str, file_name: str, escape: bool = True)
+
+   Bases: :py:obj:`RstElement`
+
+   .. autoapi-inheritance-diagram:: pyTRLCConverter.rst.element.RstAdmonition
+      :parts: 1
+      :private-bases:
+
+
+   reStructuredText admonition block element with a label.
+
+
+
+   .. py:method:: render() -> str
+
+      Render the admonition with a label.
+      The text will be automatically escaped for reStructuredText if necessary.
+
+      :returns: reStructuredText admonition with a label
+      :rtype: str
+
+
+
+   .. py:attribute:: _escape
+      :value: True
+
+
+
+   .. py:attribute:: _file_name
+
+
+   .. py:attribute:: _text
+
+
+.. py:class:: RstBulletList(values: List[str], escape: bool = True)
+
+   Bases: :py:obj:`RstElement`
+
+   .. autoapi-inheritance-diagram:: pyTRLCConverter.rst.element.RstBulletList
+      :parts: 1
+      :private-bases:
+
+
+   Unordered reStructuredText list block element.
+
+
+
+   .. py:method:: render() -> str
+
+      Render the unordered list.
+      The values will be automatically escaped for reStructuredText if necessary.
+      The last list value has no newline at the end.
+
+      :returns: reStructuredText list
+      :rtype: str
+
+
+
+   .. py:attribute:: _escape
+      :value: True
+
+
+
+   .. py:attribute:: _values
+
+
+.. py:class:: RstElement
+
+   Bases: :py:obj:`abc.ABC`
+
+   .. autoapi-inheritance-diagram:: pyTRLCConverter.rst.element.RstElement
+      :parts: 1
+      :private-bases:
+
+
+   Abstract base class for reStructuredText block elements.
+
+
+
+   .. py:method:: render() -> str
+      :abstractmethod:
+
+
+      Render the element into a reStructuredText string.
+
+      :returns: Rendered reStructuredText
+      :rtype: str
+
+
+
+.. py:class:: RstHeading(text: str, level: int, file_name: str, escape: bool = True)
+
+   Bases: :py:obj:`RstElement`
+
+   .. autoapi-inheritance-diagram:: pyTRLCConverter.rst.element.RstHeading
+      :parts: 1
+      :private-bases:
+
+
+   reStructuredText heading block element with a label.
+
+
+
+   .. py:method:: render() -> str
+
+      Render the heading with a label.
+      The text will be automatically escaped for reStructuredText if necessary.
+
+      :returns: reStructuredText heading with a label
+      :rtype: str
+
+
+
+   .. py:attribute:: _escape
+      :value: True
+
+
+
+   .. py:attribute:: _file_name
+
+
+   .. py:attribute:: _level
+
+
+   .. py:attribute:: _text
+
+
+.. py:class:: RstImage(file_name: str, caption: str, escape: bool = True)
+
+   Bases: :py:obj:`RstElement`
+
+   .. autoapi-inheritance-diagram:: pyTRLCConverter.rst.element.RstImage
+      :parts: 1
+      :private-bases:
+
+
+   reStructuredText image / diagram link block element.
+
+
+
+   .. py:method:: render() -> str
+
+      Render the diagram link.
+      The caption will be automatically escaped for reStructuredText if necessary.
+
+      :returns: reStructuredText diagram link
+      :rtype: str
+
+
+
+   .. py:attribute:: _caption
+
+
+   .. py:attribute:: _escape
+      :value: True
+
+
+
+   .. py:attribute:: _file_name
+
+
+.. py:class:: RstRawText(text: str)
+
+   Bases: :py:obj:`RstElement`
+
+   .. autoapi-inheritance-diagram:: pyTRLCConverter.rst.element.RstRawText
+      :parts: 1
+      :private-bases:
+
+
+   Raw reStructuredText block element passed through unchanged.
+
+
+
+   .. py:method:: render() -> str
+
+      Render the raw text.
+
+      :returns: Raw reStructuredText
+      :rtype: str
+
+
+
+   .. py:attribute:: _text
+
+
+.. py:class:: RstTable(column_titles: List[str], rows: List[List[str]])
+
+   Bases: :py:obj:`RstElement`
+
+   .. autoapi-inheritance-diagram:: pyTRLCConverter.rst.element.RstTable
+      :parts: 1
+      :private-bases:
+
+
+   reStructuredText table block element in grid format.
+   The column titles are escaped, the row values are taken as is. Multi-line
+   cell values are supported.
+
+
+   .. py:method:: _calculate_widths() -> List[int]
+
+      Calculate the maximum width of each column based on titles and row values.
+
+      :returns: Maximum width per column.
+      :rtype: List[int]
+
+
+
+   .. py:method:: _render_head(column_titles: List[str], max_widths: List[int]) -> str
+      :staticmethod:
+
+
+      Render the table head. The titles are escaped for reStructuredText.
+
+      :param column_titles: List of column titles.
+      :type column_titles: List[str]
+      :param max_widths: List of maximum widths for each column.
+      :type max_widths: List[int]
+
+      :returns: Table head
+      :rtype: str
+
+
+
+   .. py:method:: _render_row(row_values: List[str], max_widths: List[int]) -> str
+      :staticmethod:
+
+
+      Render a table row. The values are taken as is. Multi-line values are supported.
+
+      :param row_values: List of row values.
+      :type row_values: List[str]
+      :param max_widths: List of maximum widths for each column.
+      :type max_widths: List[int]
+
+      :returns: Table row
+      :rtype: str
+
+
+
+   .. py:method:: render() -> str
+
+      Render the table in grid format.
+
+      :returns: reStructuredText table
+      :rtype: str
+
+
+
+   .. py:attribute:: _column_titles
+
+
+   .. py:attribute:: _rows
+
+
+.. py:data:: _UNDERLINE_CHARS
+   :value: ['=', '#', '~', '^', '"', '+', "'"]
+
+

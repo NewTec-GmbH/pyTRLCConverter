@@ -1,0 +1,496 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pyTRLCConverter.rst.element &mdash; pyTRLCConverter  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/custom.css?v=c87a014e" />
+
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.ico"/>
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../_static/version_selector.js?v=02fa0f40"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="pyTRLCConverter.rst.text" href="../text/index.html" />
+    <link rel="prev" title="pyTRLCConverter.rst.document" href="../document/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #0C2C40" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            pyTRLCConverter
+              <img src="../../../../_static/NewTec_Logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../sw_requirements.html">SW Requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../sw_architecture.html">SW Architecture</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../sw_detail_design.html">SW Detailed Design</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../sw_detail_design.html#api-reference">API Reference</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../../index.html">pyTRLCConverter</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../index.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../sw_tests.html">SW Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../sw_tracing_report.html">SW Tracing Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../sw_test_result_report.html">SW Test Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../coverage_report.html">Coverage Report</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../license_include.html">License information</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #0C2C40" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">pyTRLCConverter</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../sw_detail_design.html">SW Detailed Design</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">pyTRLCConverter</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">pyTRLCConverter.rst</a></li>
+      <li class="breadcrumb-item active">pyTRLCConverter.rst.element</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../_sources/api/pyTRLCConverter/rst/element/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-pyTRLCConverter.rst.element">
+<span id="pytrlcconverter-rst-element"></span><h1>pyTRLCConverter.rst.element<a class="headerlink" href="#module-pyTRLCConverter.rst.element" title="Link to this heading"></a></h1>
+<p>reStructuredText block elements.
+Each element renders itself into a reStructuredText string. Elements are
+collected by the RstDocument and rendered once when the output file is
+written.</p>
+<p>Author: Gabryel Reyes (<a class="reference external" href="mailto:gabryel&#46;reyes&#37;&#52;&#48;newtec&#46;de">gabryel<span>&#46;</span>reyes<span>&#64;</span>newtec<span>&#46;</span>de</a>)</p>
+<section id="attributes">
+<h2>Attributes<a class="headerlink" href="#attributes" title="Link to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyTRLCConverter.rst.element._UNDERLINE_CHARS" title="pyTRLCConverter.rst.element._UNDERLINE_CHARS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_UNDERLINE_CHARS</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyTRLCConverter.rst.element.RstAdmonition" title="pyTRLCConverter.rst.element.RstAdmonition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RstAdmonition</span></code></a></p></td>
+<td><p>reStructuredText admonition block element with a label.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyTRLCConverter.rst.element.RstBulletList" title="pyTRLCConverter.rst.element.RstBulletList"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RstBulletList</span></code></a></p></td>
+<td><p>Unordered reStructuredText list block element.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyTRLCConverter.rst.element.RstElement" title="pyTRLCConverter.rst.element.RstElement"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RstElement</span></code></a></p></td>
+<td><p>Abstract base class for reStructuredText block elements.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyTRLCConverter.rst.element.RstHeading" title="pyTRLCConverter.rst.element.RstHeading"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RstHeading</span></code></a></p></td>
+<td><p>reStructuredText heading block element with a label.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyTRLCConverter.rst.element.RstImage" title="pyTRLCConverter.rst.element.RstImage"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RstImage</span></code></a></p></td>
+<td><p>reStructuredText image / diagram link block element.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyTRLCConverter.rst.element.RstRawText" title="pyTRLCConverter.rst.element.RstRawText"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RstRawText</span></code></a></p></td>
+<td><p>Raw reStructuredText block element passed through unchanged.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyTRLCConverter.rst.element.RstTable" title="pyTRLCConverter.rst.element.RstTable"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RstTable</span></code></a></p></td>
+<td><p>reStructuredText table block element in grid format.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyTRLCConverter.rst.element.RstAdmonition">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyTRLCConverter.rst.element.</span></span><span class="sig-name descname"><span class="pre">RstAdmonition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">escape</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/pyTRLCConverter/rst/element.html#RstAdmonition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.rst.element.RstAdmonition" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pyTRLCConverter.rst.element.RstElement" title="pyTRLCConverter.rst.element.RstElement"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RstElement</span></code></a></p>
+<div class="graphviz"><img src="../../../../_images/inheritance-4ead30619679fcf8777783a972fde76eab837771.png" alt="Inheritance diagram of pyTRLCConverter.rst.element.RstAdmonition" usemap="#inheritanceb135f8b95a" class="inheritance graphviz" /></div>
+<map id="inheritanceb135f8b95a" name="inheritanceb135f8b95a">
+<area shape="rect" id="node3" href="#pyTRLCConverter.rst.element.RstElement" target="_top" title="Abstract base class for reStructuredText block elements." alt="" coords="16,79,113,104"/>
+<area shape="rect" id="node2" href="#pyTRLCConverter.rst.element.RstAdmonition" target="_top" title="reStructuredText admonition block element with a label." alt="" coords="5,152,124,177"/>
+</map><p>reStructuredText admonition block element with a label.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.rst.element.RstAdmonition.render">
+<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../../../_modules/pyTRLCConverter/rst/element.html#RstAdmonition.render"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.rst.element.RstAdmonition.render" title="Link to this definition"></a></dt>
+<dd><p>Render the admonition with a label.
+The text will be automatically escaped for reStructuredText if necessary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>reStructuredText admonition with a label</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.rst.element.RstAdmonition._escape">
+<span class="sig-name descname"><span class="pre">_escape</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></span><a class="headerlink" href="#pyTRLCConverter.rst.element.RstAdmonition._escape" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.rst.element.RstAdmonition._file_name">
+<span class="sig-name descname"><span class="pre">_file_name</span></span><a class="headerlink" href="#pyTRLCConverter.rst.element.RstAdmonition._file_name" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.rst.element.RstAdmonition._text">
+<span class="sig-name descname"><span class="pre">_text</span></span><a class="headerlink" href="#pyTRLCConverter.rst.element.RstAdmonition._text" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyTRLCConverter.rst.element.RstBulletList">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyTRLCConverter.rst.element.</span></span><span class="sig-name descname"><span class="pre">RstBulletList</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">escape</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/pyTRLCConverter/rst/element.html#RstBulletList"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.rst.element.RstBulletList" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pyTRLCConverter.rst.element.RstElement" title="pyTRLCConverter.rst.element.RstElement"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RstElement</span></code></a></p>
+<div class="graphviz"><img src="../../../../_images/inheritance-8affef18db321a6be4fb3ae838dcf997cfcbf392.png" alt="Inheritance diagram of pyTRLCConverter.rst.element.RstBulletList" usemap="#inheritance381106c78b" class="inheritance graphviz" /></div>
+<map id="inheritance381106c78b" name="inheritance381106c78b">
+<area shape="rect" id="node3" href="#pyTRLCConverter.rst.element.RstElement" target="_top" title="Abstract base class for reStructuredText block elements." alt="" coords="9,79,106,104"/>
+<area shape="rect" id="node2" href="#pyTRLCConverter.rst.element.RstBulletList" target="_top" title="Unordered reStructuredText list block element." alt="" coords="5,152,109,177"/>
+</map><p>Unordered reStructuredText list block element.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.rst.element.RstBulletList.render">
+<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../../../_modules/pyTRLCConverter/rst/element.html#RstBulletList.render"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.rst.element.RstBulletList.render" title="Link to this definition"></a></dt>
+<dd><p>Render the unordered list.
+The values will be automatically escaped for reStructuredText if necessary.
+The last list value has no newline at the end.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>reStructuredText list</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.rst.element.RstBulletList._escape">
+<span class="sig-name descname"><span class="pre">_escape</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></span><a class="headerlink" href="#pyTRLCConverter.rst.element.RstBulletList._escape" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.rst.element.RstBulletList._values">
+<span class="sig-name descname"><span class="pre">_values</span></span><a class="headerlink" href="#pyTRLCConverter.rst.element.RstBulletList._values" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyTRLCConverter.rst.element.RstElement">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyTRLCConverter.rst.element.</span></span><span class="sig-name descname"><span class="pre">RstElement</span></span><a class="reference internal" href="../../../../_modules/pyTRLCConverter/rst/element.html#RstElement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.rst.element.RstElement" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">abc.ABC</span></code></p>
+<div class="graphviz"><img src="../../../../_images/inheritance-3f234c2000da820fd62fdc9bc657dc4e5bb375fc.png" alt="Inheritance diagram of pyTRLCConverter.rst.element.RstElement" usemap="#inheritancedb4da6e294" class="inheritance graphviz" /></div>
+<map id="inheritancedb4da6e294" name="inheritancedb4da6e294">
+<area shape="rect" id="node2" href="#pyTRLCConverter.rst.element.RstElement" target="_top" title="Abstract base class for reStructuredText block elements." alt="" coords="5,79,103,104"/>
+</map><p>Abstract base class for reStructuredText block elements.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.rst.element.RstElement.render">
+<span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../../../_modules/pyTRLCConverter/rst/element.html#RstElement.render"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.rst.element.RstElement.render" title="Link to this definition"></a></dt>
+<dd><p>Render the element into a reStructuredText string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Rendered reStructuredText</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyTRLCConverter.rst.element.RstHeading">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyTRLCConverter.rst.element.</span></span><span class="sig-name descname"><span class="pre">RstHeading</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">escape</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/pyTRLCConverter/rst/element.html#RstHeading"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.rst.element.RstHeading" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pyTRLCConverter.rst.element.RstElement" title="pyTRLCConverter.rst.element.RstElement"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RstElement</span></code></a></p>
+<div class="graphviz"><img src="../../../../_images/inheritance-b2d8920e1ad2f03b2b7a8a18d1d2df4ea40fa12b.png" alt="Inheritance diagram of pyTRLCConverter.rst.element.RstHeading" usemap="#inheritance82852c0d32" class="inheritance graphviz" /></div>
+<map id="inheritance82852c0d32" name="inheritance82852c0d32">
+<area shape="rect" id="node2" href="#pyTRLCConverter.rst.element.RstElement" target="_top" title="Abstract base class for reStructuredText block elements." alt="" coords="5,79,103,104"/>
+<area shape="rect" id="node3" href="#pyTRLCConverter.rst.element.RstHeading" target="_top" title="reStructuredText heading block element with a label." alt="" coords="5,152,103,177"/>
+</map><p>reStructuredText heading block element with a label.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.rst.element.RstHeading.render">
+<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../../../_modules/pyTRLCConverter/rst/element.html#RstHeading.render"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.rst.element.RstHeading.render" title="Link to this definition"></a></dt>
+<dd><p>Render the heading with a label.
+The text will be automatically escaped for reStructuredText if necessary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>reStructuredText heading with a label</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.rst.element.RstHeading._escape">
+<span class="sig-name descname"><span class="pre">_escape</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></span><a class="headerlink" href="#pyTRLCConverter.rst.element.RstHeading._escape" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.rst.element.RstHeading._file_name">
+<span class="sig-name descname"><span class="pre">_file_name</span></span><a class="headerlink" href="#pyTRLCConverter.rst.element.RstHeading._file_name" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.rst.element.RstHeading._level">
+<span class="sig-name descname"><span class="pre">_level</span></span><a class="headerlink" href="#pyTRLCConverter.rst.element.RstHeading._level" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.rst.element.RstHeading._text">
+<span class="sig-name descname"><span class="pre">_text</span></span><a class="headerlink" href="#pyTRLCConverter.rst.element.RstHeading._text" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyTRLCConverter.rst.element.RstImage">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyTRLCConverter.rst.element.</span></span><span class="sig-name descname"><span class="pre">RstImage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">caption</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">escape</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/pyTRLCConverter/rst/element.html#RstImage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.rst.element.RstImage" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pyTRLCConverter.rst.element.RstElement" title="pyTRLCConverter.rst.element.RstElement"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RstElement</span></code></a></p>
+<div class="graphviz"><img src="../../../../_images/inheritance-e2d8b4639a4d2df43e2089530b8ea0498d8f820e.png" alt="Inheritance diagram of pyTRLCConverter.rst.element.RstImage" usemap="#inheritance42fce6f2ed" class="inheritance graphviz" /></div>
+<map id="inheritance42fce6f2ed" name="inheritance42fce6f2ed">
+<area shape="rect" id="node2" href="#pyTRLCConverter.rst.element.RstElement" target="_top" title="Abstract base class for reStructuredText block elements." alt="" coords="5,79,103,104"/>
+<area shape="rect" id="node3" href="#pyTRLCConverter.rst.element.RstImage" target="_top" title="reStructuredText image / diagram link block element." alt="" coords="12,152,96,177"/>
+</map><p>reStructuredText image / diagram link block element.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.rst.element.RstImage.render">
+<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../../../_modules/pyTRLCConverter/rst/element.html#RstImage.render"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.rst.element.RstImage.render" title="Link to this definition"></a></dt>
+<dd><p>Render the diagram link.
+The caption will be automatically escaped for reStructuredText if necessary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>reStructuredText diagram link</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.rst.element.RstImage._caption">
+<span class="sig-name descname"><span class="pre">_caption</span></span><a class="headerlink" href="#pyTRLCConverter.rst.element.RstImage._caption" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.rst.element.RstImage._escape">
+<span class="sig-name descname"><span class="pre">_escape</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></span><a class="headerlink" href="#pyTRLCConverter.rst.element.RstImage._escape" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.rst.element.RstImage._file_name">
+<span class="sig-name descname"><span class="pre">_file_name</span></span><a class="headerlink" href="#pyTRLCConverter.rst.element.RstImage._file_name" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyTRLCConverter.rst.element.RstRawText">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyTRLCConverter.rst.element.</span></span><span class="sig-name descname"><span class="pre">RstRawText</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/pyTRLCConverter/rst/element.html#RstRawText"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.rst.element.RstRawText" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pyTRLCConverter.rst.element.RstElement" title="pyTRLCConverter.rst.element.RstElement"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RstElement</span></code></a></p>
+<div class="graphviz"><img src="../../../../_images/inheritance-1d2bfc91f9dd728a6eaa20f6440ed515c5e901e7.png" alt="Inheritance diagram of pyTRLCConverter.rst.element.RstRawText" usemap="#inheritancec882d4c538" class="inheritance graphviz" /></div>
+<map id="inheritancec882d4c538" name="inheritancec882d4c538">
+<area shape="rect" id="node2" href="#pyTRLCConverter.rst.element.RstElement" target="_top" title="Abstract base class for reStructuredText block elements." alt="" coords="6,79,103,104"/>
+<area shape="rect" id="node3" href="#pyTRLCConverter.rst.element.RstRawText" target="_top" title="Raw reStructuredText block element passed through unchanged." alt="" coords="5,152,104,177"/>
+</map><p>Raw reStructuredText block element passed through unchanged.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.rst.element.RstRawText.render">
+<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../../../_modules/pyTRLCConverter/rst/element.html#RstRawText.render"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.rst.element.RstRawText.render" title="Link to this definition"></a></dt>
+<dd><p>Render the raw text.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Raw reStructuredText</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.rst.element.RstRawText._text">
+<span class="sig-name descname"><span class="pre">_text</span></span><a class="headerlink" href="#pyTRLCConverter.rst.element.RstRawText._text" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyTRLCConverter.rst.element.RstTable">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyTRLCConverter.rst.element.</span></span><span class="sig-name descname"><span class="pre">RstTable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">column_titles</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rows</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/pyTRLCConverter/rst/element.html#RstTable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.rst.element.RstTable" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pyTRLCConverter.rst.element.RstElement" title="pyTRLCConverter.rst.element.RstElement"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RstElement</span></code></a></p>
+<div class="graphviz"><img src="../../../../_images/inheritance-219659ee32b6934b4175bbbea40a80059799c3e4.png" alt="Inheritance diagram of pyTRLCConverter.rst.element.RstTable" usemap="#inheritance395b55f521" class="inheritance graphviz" /></div>
+<map id="inheritance395b55f521" name="inheritance395b55f521">
+<area shape="rect" id="node2" href="#pyTRLCConverter.rst.element.RstElement" target="_top" title="Abstract base class for reStructuredText block elements." alt="" coords="5,79,103,104"/>
+<area shape="rect" id="node3" href="#pyTRLCConverter.rst.element.RstTable" target="_top" title="reStructuredText table block element in grid format." alt="" coords="15,152,93,177"/>
+</map><p>reStructuredText table block element in grid format.
+The column titles are escaped, the row values are taken as is. Multi-line
+cell values are supported.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.rst.element.RstTable._calculate_widths">
+<span class="sig-name descname"><span class="pre">_calculate_widths</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../../../_modules/pyTRLCConverter/rst/element.html#RstTable._calculate_widths"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.rst.element.RstTable._calculate_widths" title="Link to this definition"></a></dt>
+<dd><p>Calculate the maximum width of each column based on titles and row values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Maximum width per column.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>List[int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.rst.element.RstTable._render_head">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">_render_head</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">column_titles</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_widths</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../../../_modules/pyTRLCConverter/rst/element.html#RstTable._render_head"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.rst.element.RstTable._render_head" title="Link to this definition"></a></dt>
+<dd><p>Render the table head. The titles are escaped for reStructuredText.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>column_titles</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – List of column titles.</p></li>
+<li><p><strong>max_widths</strong> (<em>List</em><em>[</em><em>int</em><em>]</em>) – List of maximum widths for each column.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Table head</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.rst.element.RstTable._render_row">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">_render_row</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row_values</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_widths</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../../../_modules/pyTRLCConverter/rst/element.html#RstTable._render_row"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.rst.element.RstTable._render_row" title="Link to this definition"></a></dt>
+<dd><p>Render a table row. The values are taken as is. Multi-line values are supported.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>row_values</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – List of row values.</p></li>
+<li><p><strong>max_widths</strong> (<em>List</em><em>[</em><em>int</em><em>]</em>) – List of maximum widths for each column.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Table row</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyTRLCConverter.rst.element.RstTable.render">
+<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../../../_modules/pyTRLCConverter/rst/element.html#RstTable.render"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyTRLCConverter.rst.element.RstTable.render" title="Link to this definition"></a></dt>
+<dd><p>Render the table in grid format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>reStructuredText table</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.rst.element.RstTable._column_titles">
+<span class="sig-name descname"><span class="pre">_column_titles</span></span><a class="headerlink" href="#pyTRLCConverter.rst.element.RstTable._column_titles" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyTRLCConverter.rst.element.RstTable._rows">
+<span class="sig-name descname"><span class="pre">_rows</span></span><a class="headerlink" href="#pyTRLCConverter.rst.element.RstTable._rows" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="pyTRLCConverter.rst.element._UNDERLINE_CHARS">
+<span class="sig-prename descclassname"><span class="pre">pyTRLCConverter.rst.element.</span></span><span class="sig-name descname"><span class="pre">_UNDERLINE_CHARS</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['=',</span> <span class="pre">'#',</span> <span class="pre">'~',</span> <span class="pre">'^',</span> <span class="pre">'&quot;',</span> <span class="pre">'+',</span> <span class="pre">&quot;'&quot;]</span></span><a class="headerlink" href="#pyTRLCConverter.rst.element._UNDERLINE_CHARS" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../document/index.html" class="btn btn-neutral float-left" title="pyTRLCConverter.rst.document" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../text/index.html" class="btn btn-neutral float-right" title="pyTRLCConverter.rst.text" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024 - 2026, NewTec GmbH.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

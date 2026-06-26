@@ -1,0 +1,513 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pyTRLCConverter.rst.element &mdash; pyTRLCConverter  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=c87a014e" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/version_selector.js?v=02fa0f40"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #0C2C40" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            pyTRLCConverter
+              <img src="../../../_static/NewTec_Logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../sw_requirements.html">SW Requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../sw_architecture.html">SW Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../sw_detail_design.html">SW Detailed Design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../sw_tests.html">SW Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../sw_tracing_report.html">SW Tracing Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../sw_test_result_report.html">SW Test Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../coverage_report.html">Coverage Report</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../license_include.html">License information</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #0C2C40" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">pyTRLCConverter</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">pyTRLCConverter.rst.element</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pyTRLCConverter.rst.element</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;reStructuredText block elements.</span>
+<span class="sd">    Each element renders itself into a reStructuredText string. Elements are</span>
+<span class="sd">    collected by the RstDocument and rendered once when the output file is</span>
+<span class="sd">    written.</span>
+
+<span class="sd">    Author: Gabryel Reyes (gabryel.reyes@newtec.de)</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># pyTRLCConverter - A tool to convert TRLC files to specific formats.</span>
+<span class="c1"># Copyright (c) 2024 - 2026 NewTec GmbH</span>
+<span class="c1">#</span>
+<span class="c1"># This file is part of pyTRLCConverter program.</span>
+<span class="c1">#</span>
+<span class="c1"># The pyTRLCConverter program is free software: you can redistribute it and/or modify it under</span>
+<span class="c1"># the terms of the GNU General Public License as published by the Free Software Foundation,</span>
+<span class="c1"># either version 3 of the License, or (at your option) any later version.</span>
+<span class="c1">#</span>
+<span class="c1"># The pyTRLCConverter program is distributed in the hope that it will be useful, but</span>
+<span class="c1"># WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or</span>
+<span class="c1"># FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1"># You should have received a copy of the GNU General Public License along with pyTRLCConverter.</span>
+<span class="c1"># If not, see &lt;https://www.gnu.org/licenses/&gt;.</span>
+
+<span class="c1"># Imports **********************************************************************</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyTRLCConverter.logger</span><span class="w"> </span><span class="kn">import</span> <span class="n">log_error</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyTRLCConverter.rst.text</span><span class="w"> </span><span class="kn">import</span> <span class="n">RstText</span>
+
+<span class="c1"># Variables ********************************************************************</span>
+
+<span class="c1"># Heading underline characters per heading level [1; 7].</span>
+<span class="n">_UNDERLINE_CHARS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="s2">&quot;#&quot;</span><span class="p">,</span> <span class="s2">&quot;~&quot;</span><span class="p">,</span> <span class="s2">&quot;^&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\&quot;</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;+&quot;</span><span class="p">,</span> <span class="s2">&quot;&#39;&quot;</span><span class="p">]</span>
+
+<span class="c1"># Classes **********************************************************************</span>
+
+<span class="c1"># pylint: disable-next=too-few-public-methods</span>
+<div class="viewcode-block" id="RstElement">
+<a class="viewcode-back" href="../../../api/pyTRLCConverter/rst/element/index.html#pyTRLCConverter.rst.element.RstElement">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">RstElement</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Abstract base class for reStructuredText block elements.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="RstElement.render">
+<a class="viewcode-back" href="../../../api/pyTRLCConverter/rst/element/index.html#pyTRLCConverter.rst.element.RstElement.render">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Render the element into a reStructuredText string.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: Rendered reStructuredText</span>
+<span class="sd">        &quot;&quot;&quot;</span></div>
+</div>
+
+
+<span class="c1"># pylint: disable-next=too-few-public-methods</span>
+<div class="viewcode-block" id="RstHeading">
+<a class="viewcode-back" href="../../../api/pyTRLCConverter/rst/element/index.html#pyTRLCConverter.rst.element.RstHeading">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">RstHeading</span><span class="p">(</span><span class="n">RstElement</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;reStructuredText heading block element with a label.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">file_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">escape</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the heading element.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            text (str): Heading text</span>
+<span class="sd">            level (int): Heading level [1; 7]</span>
+<span class="sd">            file_name (str): File name where the heading is found</span>
+<span class="sd">            escape (bool): Escape the text (default: True).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_text</span> <span class="o">=</span> <span class="n">text</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_level</span> <span class="o">=</span> <span class="n">level</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_file_name</span> <span class="o">=</span> <span class="n">file_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_escape</span> <span class="o">=</span> <span class="n">escape</span>
+
+<div class="viewcode-block" id="RstHeading.render">
+<a class="viewcode-back" href="../../../api/pyTRLCConverter/rst/element/index.html#pyTRLCConverter.rst.element.RstHeading.render">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="c1"># lobster-trace: SwRequirements.sw_req_rst_heading</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Render the heading with a label.</span>
+<span class="sd">        The text will be automatically escaped for reStructuredText if necessary.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: reStructuredText heading with a label</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_level</span> <span class="o">&lt;=</span> <span class="mi">7</span><span class="p">:</span>
+            <span class="n">text_raw</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_text</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_escape</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="n">text_raw</span> <span class="o">=</span> <span class="n">RstText</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_text</span><span class="p">)</span>
+
+            <span class="n">label</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_file_name</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">text_raw</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;-&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+
+            <span class="n">underline_char</span> <span class="o">=</span> <span class="n">_UNDERLINE_CHARS</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_level</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="n">underline</span> <span class="o">=</span> <span class="n">underline_char</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">text_raw</span><span class="p">)</span>
+
+            <span class="n">result</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;.. _</span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2">:</span><span class="se">\n\n</span><span class="si">{</span><span class="n">text_raw</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">underline</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">log_error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid heading level </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_level</span><span class="si">}</span><span class="s2"> for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_text</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">result</span></div>
+</div>
+
+
+<span class="c1"># pylint: disable-next=too-few-public-methods</span>
+<div class="viewcode-block" id="RstAdmonition">
+<a class="viewcode-back" href="../../../api/pyTRLCConverter/rst/element/index.html#pyTRLCConverter.rst.element.RstAdmonition">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">RstAdmonition</span><span class="p">(</span><span class="n">RstElement</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;reStructuredText admonition block element with a label.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">file_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">escape</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the admonition element.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            text (str): Admonition text</span>
+<span class="sd">            file_name (str): File name where the admonition is found</span>
+<span class="sd">            escape (bool): Escape the text (default: True).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_text</span> <span class="o">=</span> <span class="n">text</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_file_name</span> <span class="o">=</span> <span class="n">file_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_escape</span> <span class="o">=</span> <span class="n">escape</span>
+
+<div class="viewcode-block" id="RstAdmonition.render">
+<a class="viewcode-back" href="../../../api/pyTRLCConverter/rst/element/index.html#pyTRLCConverter.rst.element.RstAdmonition.render">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="c1"># lobster-trace: SwRequirements.sw_req_rst_admonition</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Render the admonition with a label.</span>
+<span class="sd">        The text will be automatically escaped for reStructuredText if necessary.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: reStructuredText admonition with a label</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">text_raw</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_text</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_escape</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">text_raw</span> <span class="o">=</span> <span class="n">RstText</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_text</span><span class="p">)</span>
+
+        <span class="n">label</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_file_name</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">text_raw</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;-&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">admonition_label</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;.. admonition:: </span><span class="si">{</span><span class="n">text_raw</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;.. _</span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2">:</span><span class="se">\n\n</span><span class="si">{</span><span class="n">admonition_label</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span></div>
+</div>
+
+
+<span class="c1"># pylint: disable-next=too-few-public-methods</span>
+<div class="viewcode-block" id="RstTable">
+<a class="viewcode-back" href="../../../api/pyTRLCConverter/rst/element/index.html#pyTRLCConverter.rst.element.RstTable">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">RstTable</span><span class="p">(</span><span class="n">RstElement</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;reStructuredText table block element in grid format.</span>
+<span class="sd">    The column titles are escaped, the row values are taken as is. Multi-line</span>
+<span class="sd">    cell values are supported.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">column_titles</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">rows</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the table element.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            column_titles (List[str]): List of column titles.</span>
+<span class="sd">            rows (List[List[str]]): List of row values.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_column_titles</span> <span class="o">=</span> <span class="n">column_titles</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rows</span> <span class="o">=</span> <span class="n">rows</span>
+
+<div class="viewcode-block" id="RstTable._calculate_widths">
+<a class="viewcode-back" href="../../../api/pyTRLCConverter/rst/element/index.html#pyTRLCConverter.rst.element.RstTable._calculate_widths">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_calculate_widths</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+        <span class="c1"># lobster-trace: SwRequirements.sw_req_rst_table</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate the maximum width of each column based on titles and row values.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            List[int]: Maximum width per column.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">max_widths</span> <span class="o">=</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">title</span><span class="p">)</span> <span class="k">for</span> <span class="n">title</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_column_titles</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rows</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">):</span>
+                    <span class="n">max_widths</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">max_widths</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">max_widths</span></div>
+
+
+<div class="viewcode-block" id="RstTable._render_head">
+<a class="viewcode-back" href="../../../api/pyTRLCConverter/rst/element/index.html#pyTRLCConverter.rst.element.RstTable._render_head">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_render_head</span><span class="p">(</span><span class="n">column_titles</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">max_widths</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="c1"># lobster-trace: SwRequirements.sw_req_rst_table</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Render the table head. The titles are escaped for reStructuredText.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            column_titles (List[str]): List of column titles.</span>
+<span class="sd">            max_widths (List[int]): List of maximum widths for each column.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: Table head</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">escaped_titles</span> <span class="o">=</span> <span class="p">[</span><span class="n">RstText</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">title</span><span class="p">)</span> <span class="k">for</span> <span class="n">title</span> <span class="ow">in</span> <span class="n">column_titles</span><span class="p">]</span>
+
+        <span class="c1"># Create the top border of the table.</span>
+        <span class="n">table_head</span> <span class="o">=</span> <span class="s2">&quot;    +&quot;</span> <span class="o">+</span> <span class="s2">&quot;+&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="p">(</span><span class="n">width</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">width</span> <span class="ow">in</span> <span class="n">max_widths</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;+</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+        <span class="c1"># Create the title row.</span>
+        <span class="n">table_head</span> <span class="o">+=</span> <span class="s2">&quot;    |&quot;</span>
+        <span class="n">table_head</span> <span class="o">+=</span> <span class="s2">&quot;|&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="p">[</span><span class="sa">f</span><span class="s2">&quot; </span><span class="si">{</span><span class="n">title</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="n">max_widths</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span><span class="si">}</span><span class="s2"> &quot;</span> <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">title</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">escaped_titles</span><span class="p">)])</span> <span class="o">+</span> <span class="s2">&quot;|</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+        <span class="c1"># Create the separator row.</span>
+        <span class="n">table_head</span> <span class="o">+=</span> <span class="s2">&quot;    +&quot;</span> <span class="o">+</span> <span class="s2">&quot;+&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="p">(</span><span class="n">width</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">width</span> <span class="ow">in</span> <span class="n">max_widths</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;+</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+        <span class="k">return</span> <span class="n">table_head</span></div>
+
+
+<div class="viewcode-block" id="RstTable._render_row">
+<a class="viewcode-back" href="../../../api/pyTRLCConverter/rst/element/index.html#pyTRLCConverter.rst.element.RstTable._render_row">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_render_row</span><span class="p">(</span><span class="n">row_values</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">max_widths</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="c1"># lobster-trace: SwRequirements.sw_req_rst_table</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Render a table row. The values are taken as is. Multi-line values are supported.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            row_values (List[str]): List of row values.</span>
+<span class="sd">            max_widths (List[int]): List of maximum widths for each column.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: Table row</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Split each cell value into lines.</span>
+        <span class="n">split_values</span> <span class="o">=</span> <span class="p">[</span><span class="n">value</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">row_values</span><span class="p">]</span>
+        <span class="n">max_lines</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span> <span class="k">for</span> <span class="n">lines</span> <span class="ow">in</span> <span class="n">split_values</span><span class="p">)</span>
+
+        <span class="c1"># Create the row with multi-line support.</span>
+        <span class="n">table_row</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">line_idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_lines</span><span class="p">):</span>
+            <span class="n">table_row</span> <span class="o">+=</span> <span class="s2">&quot;    |&quot;</span>
+            <span class="k">for</span> <span class="n">col_idx</span><span class="p">,</span> <span class="n">lines</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">split_values</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">line_idx</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">):</span>
+                    <span class="n">table_row</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot; </span><span class="si">{</span><span class="n">lines</span><span class="p">[</span><span class="n">line_idx</span><span class="p">]</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="n">max_widths</span><span class="p">[</span><span class="n">col_idx</span><span class="p">])</span><span class="si">}</span><span class="s2"> &quot;</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">table_row</span> <span class="o">+=</span> <span class="s2">&quot; &quot;</span> <span class="o">*</span> <span class="p">(</span><span class="n">max_widths</span><span class="p">[</span><span class="n">col_idx</span><span class="p">]</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span>
+                <span class="n">table_row</span> <span class="o">+=</span> <span class="s2">&quot;|&quot;</span>
+            <span class="n">table_row</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+        <span class="c1"># Create the separator row.</span>
+        <span class="n">separator_row</span> <span class="o">=</span> <span class="s2">&quot;    +&quot;</span> <span class="o">+</span> <span class="s2">&quot;+&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="p">(</span><span class="n">width</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">width</span> <span class="ow">in</span> <span class="n">max_widths</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;+</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+        <span class="k">return</span> <span class="n">table_row</span> <span class="o">+</span> <span class="n">separator_row</span></div>
+
+
+<div class="viewcode-block" id="RstTable.render">
+<a class="viewcode-back" href="../../../api/pyTRLCConverter/rst/element/index.html#pyTRLCConverter.rst.element.RstTable.render">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="c1"># lobster-trace: SwRequirements.sw_req_rst_table</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Render the table in grid format.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: reStructuredText table</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">max_widths</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calculate_widths</span><span class="p">()</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="n">RstTable</span><span class="o">.</span><span class="n">_render_head</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_column_titles</span><span class="p">,</span> <span class="n">max_widths</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rows</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">+=</span> <span class="n">RstTable</span><span class="o">.</span><span class="n">_render_row</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">max_widths</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">result</span></div>
+</div>
+
+
+<span class="c1"># pylint: disable-next=too-few-public-methods</span>
+<div class="viewcode-block" id="RstBulletList">
+<a class="viewcode-back" href="../../../api/pyTRLCConverter/rst/element/index.html#pyTRLCConverter.rst.element.RstBulletList">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">RstBulletList</span><span class="p">(</span><span class="n">RstElement</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Unordered reStructuredText list block element.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">escape</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the list element.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            values (List[str]): List of list values.</span>
+<span class="sd">            escape (bool): Escapes every list value (default: True).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span> <span class="o">=</span> <span class="n">values</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_escape</span> <span class="o">=</span> <span class="n">escape</span>
+
+<div class="viewcode-block" id="RstBulletList.render">
+<a class="viewcode-back" href="../../../api/pyTRLCConverter/rst/element/index.html#pyTRLCConverter.rst.element.RstBulletList.render">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="c1"># lobster-trace: SwRequirements.sw_req_rst_list</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Render the unordered list.</span>
+<span class="sd">        The values will be automatically escaped for reStructuredText if necessary.</span>
+<span class="sd">        The last list value has no newline at the end.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: reStructuredText list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">list_str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">value_raw</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">):</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">value_raw</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_escape</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>  <span class="c1"># Escape the value if necessary.</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="n">RstText</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+            <span class="n">list_str</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;* </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span>
+
+            <span class="c1"># The last list value must not have a newline at the end.</span>
+            <span class="k">if</span> <span class="n">idx</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">list_str</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+        <span class="k">return</span> <span class="n">list_str</span></div>
+</div>
+
+
+<span class="c1"># pylint: disable-next=too-few-public-methods</span>
+<div class="viewcode-block" id="RstImage">
+<a class="viewcode-back" href="../../../api/pyTRLCConverter/rst/element/index.html#pyTRLCConverter.rst.element.RstImage">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">RstImage</span><span class="p">(</span><span class="n">RstElement</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;reStructuredText image / diagram link block element.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">caption</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">escape</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the image element.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            file_name (str): Diagram file name</span>
+<span class="sd">            caption (str): Diagram caption</span>
+<span class="sd">            escape (bool): Escapes caption (default: True).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_file_name</span> <span class="o">=</span> <span class="n">file_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_caption</span> <span class="o">=</span> <span class="n">caption</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_escape</span> <span class="o">=</span> <span class="n">escape</span>
+
+<div class="viewcode-block" id="RstImage.render">
+<a class="viewcode-back" href="../../../api/pyTRLCConverter/rst/element/index.html#pyTRLCConverter.rst.element.RstImage.render">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="c1"># lobster-trace: SwRequirements.sw_req_rst_image</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Render the diagram link.</span>
+<span class="sd">        The caption will be automatically escaped for reStructuredText if necessary.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: reStructuredText diagram link</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">caption_raw</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_caption</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_escape</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">caption_raw</span> <span class="o">=</span> <span class="n">RstText</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_caption</span><span class="p">)</span>
+
+        <span class="c1"># Allowed are absolute and relative to source paths.</span>
+        <span class="n">file_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_file_name</span><span class="p">)</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;.. figure:: </span><span class="si">{</span><span class="n">file_name</span><span class="si">}</span><span class="se">\n</span><span class="s2">    :alt: </span><span class="si">{</span><span class="n">caption_raw</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+        <span class="k">if</span> <span class="n">caption_raw</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    </span><span class="si">{</span><span class="n">caption_raw</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+        <span class="k">return</span> <span class="n">result</span></div>
+</div>
+
+
+<span class="c1"># pylint: disable-next=too-few-public-methods</span>
+<div class="viewcode-block" id="RstRawText">
+<a class="viewcode-back" href="../../../api/pyTRLCConverter/rst/element/index.html#pyTRLCConverter.rst.element.RstRawText">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">RstRawText</span><span class="p">(</span><span class="n">RstElement</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Raw reStructuredText block element passed through unchanged.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the raw text element.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            text (str): Raw reStructuredText</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_text</span> <span class="o">=</span> <span class="n">text</span>
+
+<div class="viewcode-block" id="RstRawText.render">
+<a class="viewcode-back" href="../../../api/pyTRLCConverter/rst/element/index.html#pyTRLCConverter.rst.element.RstRawText.render">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="c1"># lobster-trace: SwRequirements.sw_req_rst_record</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Render the raw text.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: Raw reStructuredText</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_text</span></div>
+</div>
+
+
+<span class="c1"># Functions ********************************************************************</span>
+
+<span class="c1"># Main *************************************************************************</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024 - 2026, NewTec GmbH.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

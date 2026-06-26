@@ -108,10 +108,13 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Any</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Any</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">marko</span><span class="w"> </span><span class="kn">import</span> <span class="n">Markdown</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">trlc.ast</span><span class="w"> </span><span class="kn">import</span> <span class="n">Implicit_Null</span><span class="p">,</span> <span class="n">Record_Object</span><span class="p">,</span> <span class="n">Record_Reference</span><span class="p">,</span> <span class="n">String_Literal</span><span class="p">,</span> <span class="n">Expression</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pyTRLCConverter.base_converter</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseConverter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyTRLCConverter.rst.document</span><span class="w"> </span><span class="kn">import</span> <span class="n">RstDocument</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyTRLCConverter.rst.element</span><span class="w"> </span><span class="kn">import</span> <span class="n">RstHeading</span><span class="p">,</span> <span class="n">RstAdmonition</span><span class="p">,</span> <span class="n">RstTable</span><span class="p">,</span> <span class="n">RstBulletList</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyTRLCConverter.rst.text</span><span class="w"> </span><span class="kn">import</span> <span class="n">RstText</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pyTRLCConverter.ret</span><span class="w"> </span><span class="kn">import</span> <span class="n">Ret</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pyTRLCConverter.trlc_helper</span><span class="w"> </span><span class="kn">import</span> <span class="n">TrlcAstWalker</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pyTRLCConverter.logger</span><span class="w"> </span><span class="kn">import</span> <span class="n">log_verbose</span><span class="p">,</span> <span class="n">log_error</span>
@@ -128,6 +131,11 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">RstConverter</span><span class="p">(</span><span class="n">BaseConverter</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    RstConverter provides functionality for converting to a reStructuredText format.</span>
+
+<span class="sd">    The converter builds a reStructuredText AST (RstDocument made of block</span>
+<span class="sd">    elements) while walking the TRLC symbols and writes the output file(s) only</span>
+<span class="sd">    once the document is complete (in leave_file() for multiple-document mode and</span>
+<span class="sd">    in finish() for single-document mode).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">OUTPUT_FILE_NAME_DEFAULT</span> <span class="o">=</span> <span class="s2">&quot;output.rst&quot;</span>
     <span class="n">TOP_LEVEL_DEFAULT</span> <span class="o">=</span> <span class="s2">&quot;Specification&quot;</span>
@@ -151,17 +159,17 @@
         <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">exclude</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_excluded_paths</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">args</span><span class="o">.</span><span class="n">exclude</span><span class="p">]</span>
 
-        <span class="c1"># The file descriptor for the output file.</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_fd</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1"># The reStructuredText document currently being built. In multiple-document mode a new</span>
+        <span class="c1"># document is created per file, in single-document mode one document is shared.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_document</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">RstDocument</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># The base name of the output file currently being built. It is used to build the</span>
+        <span class="c1"># labels of headings and admonitions.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_current_file_name</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
 
         <span class="c1"># The base level for the headings. Its the minimum level for the headings which depends</span>
         <span class="c1"># on the single/multiple document mode.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_base_level</span> <span class="o">=</span> <span class="mi">1</span>
-
-        <span class="c1"># For proper reStructuredText formatting, the first written part shall not have an empty line before.</span>
-        <span class="c1"># But all following parts (heading, table, paragraph, image, etc.) shall have an empty line before.</span>
-        <span class="c1"># And at the document bottom, there shall be just one empty line.</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_empty_line_required</span> <span class="o">=</span> <span class="kc">False</span>
 
         <span class="c1"># The AST walker meta data for processing the record object fields.</span>
         <span class="c1"># This will hold the information about the current package, type and attribute being processed.</span>
@@ -270,7 +278,7 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            Ret: Status</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fd</span> <span class="ow">is</span> <span class="kc">None</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_document</span> <span class="ow">is</span> <span class="kc">None</span>
 
         <span class="c1"># Call the base converter to initialize the common stuff.</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">BaseConverter</span><span class="o">.</span><span class="n">begin</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
@@ -293,14 +301,14 @@
 
             <span class="c1"># Single document mode?</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_args</span><span class="o">.</span><span class="n">single_document</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-                <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_out_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_args</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_document</span> <span class="o">=</span> <span class="n">RstDocument</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_current_file_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_args</span><span class="o">.</span><span class="n">name</span>
 
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fd</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_write_empty_line_on_demand</span><span class="p">()</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_fd</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">RstConverter</span><span class="o">.</span><span class="n">rst_create_heading</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_args</span><span class="o">.</span><span class="n">top_level</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_args</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+                <span class="c1"># The top level heading is always required in single document mode.</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_document</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">RstHeading</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_args</span><span class="o">.</span><span class="n">top_level</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_file_name</span><span class="p">))</span>
 
-                    <span class="c1"># All headings will be shifted by one level.</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_base_level</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base_level</span> <span class="o">+</span> <span class="mi">1</span>
+                <span class="c1"># All headings will be shifted by one level.</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_base_level</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base_level</span> <span class="o">+</span> <span class="mi">1</span>
 
         <span class="k">return</span> <span class="n">result</span></div>
 
@@ -318,19 +326,16 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            Ret: Status</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="n">Ret</span><span class="o">.</span><span class="n">OK</span>
-
         <span class="c1"># Multiple document mode?</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_args</span><span class="o">.</span><span class="n">single_document</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
-            <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fd</span> <span class="ow">is</span> <span class="kc">None</span>
+            <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_document</span> <span class="ow">is</span> <span class="kc">None</span>
 
-            <span class="n">file_name_rst</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_file_name_trlc_to_rst</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
-            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_out_file</span><span class="p">(</span><span class="n">file_name_rst</span><span class="p">)</span>
+            <span class="c1"># A new document is built for each file. The very first written part shall not have</span>
+            <span class="c1"># an empty line before, which the document handles implicitly.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_document</span> <span class="o">=</span> <span class="n">RstDocument</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_current_file_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_file_name_trlc_to_rst</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
 
-            <span class="c1"># The very first written reStructuredText part shall not have an empty line before.</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_empty_line_required</span> <span class="o">=</span> <span class="kc">False</span>
-
-        <span class="k">return</span> <span class="n">result</span></div>
+        <span class="k">return</span> <span class="n">Ret</span><span class="o">.</span><span class="n">OK</span></div>
 
 
 <div class="viewcode-block" id="RstConverter.leave_file">
@@ -346,17 +351,19 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            Ret: Status</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">Ret</span><span class="o">.</span><span class="n">OK</span>
 
         <span class="c1"># Multiple document mode?</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_args</span><span class="o">.</span><span class="n">single_document</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
-            <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fd</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-            <span class="n">out_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_fd</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_fd</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_fd</span> <span class="o">=</span> <span class="kc">None</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_copy_external_files</span><span class="p">(</span><span class="n">out_dir</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_external_files</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_document</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
 
-        <span class="k">return</span> <span class="n">Ret</span><span class="o">.</span><span class="n">OK</span></div>
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_write_document</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_current_file_name</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_copy_external_files</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_out_path</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_external_files</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_document</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">return</span> <span class="n">result</span></div>
 
 
 <div class="viewcode-block" id="RstConverter.convert_section">
@@ -375,13 +382,9 @@
 <span class="sd">            Ret: Status</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">section</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
-        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fd</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_document</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_write_empty_line_on_demand</span><span class="p">()</span>
-        <span class="n">rst_heading</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rst_create_heading</span><span class="p">(</span><span class="n">section</span><span class="p">,</span>
-                                            <span class="bp">self</span><span class="o">.</span><span class="n">_get_rst_heading_level</span><span class="p">(</span><span class="n">level</span><span class="p">),</span>
-                                            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_fd</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_fd</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">rst_heading</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_document</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">RstHeading</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_rst_heading_level</span><span class="p">(</span><span class="n">level</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_file_name</span><span class="p">))</span>
 
         <span class="k">return</span> <span class="n">Ret</span><span class="o">.</span><span class="n">OK</span></div>
 
@@ -405,9 +408,7 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            Ret: Status</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fd</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">_write_empty_line_on_demand</span><span class="p">()</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_document</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_convert_record_object</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">translation</span><span class="p">)</span></div>
 
@@ -418,65 +419,27 @@
         <span class="c1"># lobster-trace: SwRequirements.sw_req_rst_single_doc_mode</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Finish the conversion process.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Ret: Status</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">Ret</span><span class="o">.</span><span class="n">OK</span>
 
         <span class="c1"># Single document mode?</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_args</span><span class="o">.</span><span class="n">single_document</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fd</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-            <span class="n">out_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_fd</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_fd</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_fd</span> <span class="o">=</span> <span class="kc">None</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_copy_external_files</span><span class="p">(</span><span class="n">out_dir</span><span class="p">)</span>
+            <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_document</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_write_document</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_current_file_name</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_copy_external_files</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_out_path</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_external_files</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_document</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_plantuml_tmp_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_plantuml_tmp_dir</span><span class="o">.</span><span class="n">cleanup</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_plantuml_tmp_dir</span> <span class="o">=</span> <span class="kc">None</span>
 
-        <span class="k">return</span> <span class="n">Ret</span><span class="o">.</span><span class="n">OK</span></div>
-
-
-<div class="viewcode-block" id="RstConverter._write_empty_line_on_demand">
-<a class="viewcode-back" href="../../api/pyTRLCConverter/rst_converter/index.html#pyTRLCConverter.rst_converter.RstConverter._write_empty_line_on_demand">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_write_empty_line_on_demand</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="c1"># lobster-trace: SwRequirements.sw_req_rst</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Write an empty line if necessary.</span>
-
-<span class="sd">        For proper reStructuredText formatting, the first written part shall not have an empty</span>
-<span class="sd">        line before. But all following parts (heading, table, paragraph, image, etc.) shall</span>
-<span class="sd">        have an empty line before. And at the document bottom, there shall be just one empty</span>
-<span class="sd">        line.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fd</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_empty_line_required</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_empty_line_required</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_fd</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="RstConverter._copy_external_files">
-<a class="viewcode-back" href="../../api/pyTRLCConverter/rst_converter/index.html#pyTRLCConverter.rst_converter.RstConverter._copy_external_files">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_copy_external_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dest_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="c1"># lobster-trace: SwRequirements.sw_req_rst_render_plantuml</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Copy all collected external files to the given destination directory.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            dest_dir (str): Destination directory path.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">copied_sources</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-
-        <span class="k">for</span> <span class="n">source_path</span><span class="p">,</span> <span class="n">local_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_external_files</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">source_path</span> <span class="ow">in</span> <span class="n">copied_sources</span><span class="p">:</span>
-                <span class="k">continue</span>
-
-            <span class="n">dest_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dest_dir</span><span class="p">,</span> <span class="n">local_name</span><span class="p">)</span>
-
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">shutil</span><span class="o">.</span><span class="n">copy2</span><span class="p">(</span><span class="n">source_path</span><span class="p">,</span> <span class="n">dest_path</span><span class="p">)</span>
-                <span class="n">copied_sources</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">source_path</span><span class="p">)</span>
-            <span class="k">except</span> <span class="p">(</span><span class="ne">OSError</span><span class="p">,</span> <span class="ne">IOError</span><span class="p">)</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
-                <span class="n">log_error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to copy external file &#39;</span><span class="si">{</span><span class="n">source_path</span><span class="si">}</span><span class="s2">&#39;: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">result</span></div>
 
 
 <div class="viewcode-block" id="RstConverter._get_rst_heading_level">
@@ -516,20 +479,21 @@
         <span class="k">return</span> <span class="n">file_name</span></div>
 
 
-<div class="viewcode-block" id="RstConverter._generate_out_file">
-<a class="viewcode-back" href="../../api/pyTRLCConverter/rst_converter/index.html#pyTRLCConverter.rst_converter.RstConverter._generate_out_file">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_generate_out_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Ret</span><span class="p">:</span>
+<div class="viewcode-block" id="RstConverter._write_document">
+<a class="viewcode-back" href="../../api/pyTRLCConverter/rst_converter/index.html#pyTRLCConverter.rst_converter.RstConverter._write_document">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_write_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Ret</span><span class="p">:</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_rst_out_folder</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Generate the output file.</span>
+<span class="sd">        Write the current reStructuredText document to the output file.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            file_name (str): The output file name without path.</span>
-<span class="sd">            item_list ([Element]): List of elements.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Ret: Status</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_document</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+
         <span class="n">result</span> <span class="o">=</span> <span class="n">Ret</span><span class="o">.</span><span class="n">OK</span>
         <span class="n">file_name_with_path</span> <span class="o">=</span> <span class="n">file_name</span>
 
@@ -538,7 +502,8 @@
             <span class="n">file_name_with_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_out_path</span><span class="p">,</span> <span class="n">file_name</span><span class="p">)</span>
 
         <span class="k">try</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_fd</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_name_with_path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="c1">#pylint: disable=consider-using-with</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_name_with_path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">out_file</span><span class="p">:</span>
+                <span class="n">out_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_document</span><span class="o">.</span><span class="n">render</span><span class="p">())</span>
         <span class="k">except</span> <span class="ne">IOError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="n">log_error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to open file </span><span class="si">{</span><span class="n">file_name_with_path</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="n">result</span> <span class="o">=</span> <span class="n">Ret</span><span class="o">.</span><span class="n">ERROR</span>
@@ -556,7 +521,7 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            str: The implicit null value.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rst_escape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_empty_attribute_value</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">RstText</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_empty_attribute_value</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="RstConverter._on_record_reference">
@@ -640,7 +605,7 @@
         <span class="c1"># Create a target ID for the record</span>
         <span class="n">target_id</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">file_name</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">record_name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;-&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
 
-        <span class="k">return</span> <span class="n">RstConverter</span><span class="o">.</span><span class="n">rst_create_link</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">record_reference</span><span class="o">.</span><span class="n">to_python_object</span><span class="p">()),</span> <span class="n">target_id</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">RstText</span><span class="o">.</span><span class="n">link</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">record_reference</span><span class="o">.</span><span class="n">to_python_object</span><span class="p">()),</span> <span class="n">target_id</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="RstConverter._other_dispatcher">
@@ -657,7 +622,7 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            str: The processed expression.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rst_escape</span><span class="p">(</span><span class="n">expression</span><span class="o">.</span><span class="n">to_string</span><span class="p">())</span></div>
+        <span class="k">return</span> <span class="n">RstText</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">expression</span><span class="o">.</span><span class="n">to_string</span><span class="p">())</span></div>
 
 
 <div class="viewcode-block" id="RstConverter._get_trlc_ast_walker">
@@ -741,12 +706,36 @@
 
             <span class="c1"># Otherwise escape the text for reStructuredText.</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rst_escape</span><span class="p">(</span><span class="n">attribute_value</span><span class="p">)</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">RstText</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">attribute_value</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">result</span></div>
 
 
-    <span class="c1"># pylint: disable-next=too-many-locals, unused-argument</span>
+<div class="viewcode-block" id="RstConverter._copy_external_files">
+<a class="viewcode-back" href="../../api/pyTRLCConverter/rst_converter/index.html#pyTRLCConverter.rst_converter.RstConverter._copy_external_files">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_copy_external_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dest_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># lobster-trace: SwRequirements.sw_req_rst_render_plantuml</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Copy all collected external files to the given destination directory.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            dest_dir (str): Destination directory path.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">copied_sources</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">source_path</span><span class="p">,</span> <span class="n">local_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_external_files</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">source_path</span> <span class="ow">in</span> <span class="n">copied_sources</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="n">dest_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dest_dir</span><span class="p">,</span> <span class="n">local_name</span><span class="p">)</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">shutil</span><span class="o">.</span><span class="n">copy2</span><span class="p">(</span><span class="n">source_path</span><span class="p">,</span> <span class="n">dest_path</span><span class="p">)</span>
+                <span class="n">copied_sources</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">source_path</span><span class="p">)</span>
+            <span class="k">except</span> <span class="p">(</span><span class="ne">OSError</span><span class="p">,</span> <span class="ne">IOError</span><span class="p">)</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                <span class="n">log_error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to copy external file &#39;</span><span class="si">{</span><span class="n">source_path</span><span class="si">}</span><span class="s2">&#39;: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span></div>
+
+
+    <span class="c1"># pylint: disable-next=unused-argument</span>
 <div class="viewcode-block" id="RstConverter._convert_record_object">
 <a class="viewcode-back" href="../../api/pyTRLCConverter/rst_converter/index.html#pyTRLCConverter.rst_converter.RstConverter._convert_record_object">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_convert_record_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">:</span> <span class="n">Record_Object</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">translation</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Ret</span><span class="p">:</span>
@@ -760,31 +749,23 @@
 <span class="sd">            translation (Optional[dict]): Translation dictionary for the record object.</span>
 <span class="sd">                                            If None, no translation is applied.</span>
 
-<span class="sd">            Returns:</span>
+<span class="sd">        Returns:</span>
 <span class="sd">            Ret: Status</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fd</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_document</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
 
-         <span class="c1"># The record name will be the admonition.</span>
-        <span class="n">file_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_fd</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-        <span class="n">rst_heading</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rst_create_admonition</span><span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-                                                 <span class="n">file_name</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_fd</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">rst_heading</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">_write_empty_line_on_demand</span><span class="p">()</span>
+        <span class="c1"># The record name will be the admonition.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_document</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">RstAdmonition</span><span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_file_name</span><span class="p">))</span>
 
         <span class="c1"># The record fields will be written to a table.</span>
         <span class="n">column_titles</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Attribute Name&quot;</span><span class="p">,</span> <span class="s2">&quot;Attribute Value&quot;</span><span class="p">]</span>
 
         <span class="c1"># Build rows for the table.</span>
-        <span class="c1"># Its required to calculate the maximum width for each column, therefore the rows</span>
-        <span class="c1"># will be stored first in a list and then the maximum width will be calculated.</span>
-        <span class="c1"># The table will be written after the maximum width calculation.</span>
         <span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">trlc_ast_walker</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_trlc_ast_walker</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">record</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">attribute_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_translate_attribute_name</span><span class="p">(</span><span class="n">translation</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
-            <span class="n">attribute_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rst_escape</span><span class="p">(</span><span class="n">attribute_name</span><span class="p">)</span>
+            <span class="n">attribute_name</span> <span class="o">=</span> <span class="n">RstText</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">attribute_name</span><span class="p">)</span>
 
             <span class="c1"># Retrieve the attribute value by processing the field value.</span>
             <span class="c1"># The result will be a string representation of the value.</span>
@@ -802,316 +783,15 @@
 
             <span class="n">attribute_value</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">walker_result</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-                <span class="n">attribute_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rst_create_list</span><span class="p">(</span><span class="n">walker_result</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+                <span class="n">attribute_value</span> <span class="o">=</span> <span class="n">RstBulletList</span><span class="p">(</span><span class="n">walker_result</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">attribute_value</span> <span class="o">=</span> <span class="n">walker_result</span>
 
             <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">attribute_name</span><span class="p">,</span> <span class="n">attribute_value</span><span class="p">])</span>
 
-        <span class="c1"># Calculate the maximum width of each column based on both headers and row values.</span>
-        <span class="n">max_widths</span> <span class="o">=</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">title</span><span class="p">)</span> <span class="k">for</span> <span class="n">title</span> <span class="ow">in</span> <span class="n">column_titles</span><span class="p">]</span>
-        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
-                <span class="n">lines</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-                <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
-                    <span class="n">max_widths</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">max_widths</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="p">))</span>
-
-        <span class="c1"># Write the table head and rows.</span>
-        <span class="n">rst_table_head</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rst_create_table_head</span><span class="p">(</span><span class="n">column_titles</span><span class="p">,</span> <span class="n">max_widths</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_fd</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">rst_table_head</span><span class="p">)</span>
-
-        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">:</span>
-            <span class="n">rst_table_row</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rst_append_table_row</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">max_widths</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_fd</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">rst_table_row</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_document</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">RstTable</span><span class="p">(</span><span class="n">column_titles</span><span class="p">,</span> <span class="n">rows</span><span class="p">))</span>
 
         <span class="k">return</span> <span class="n">Ret</span><span class="o">.</span><span class="n">OK</span></div>
-
-
-<div class="viewcode-block" id="RstConverter.rst_escape">
-<a class="viewcode-back" href="../../api/pyTRLCConverter/rst_converter/index.html#pyTRLCConverter.rst_converter.RstConverter.rst_escape">[docs]</a>
-    <span class="nd">@staticmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">rst_escape</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="c1"># lobster-trace: SwRequirements.sw_req_rst_escape</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Escapes the text to be used in a reStructuredText document.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            text (str): Text to escape</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            str: Escaped text</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">characters</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;`&quot;</span><span class="p">,</span> <span class="s2">&quot;*&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="s2">&quot;{&quot;</span><span class="p">,</span> <span class="s2">&quot;}&quot;</span><span class="p">,</span> <span class="s2">&quot;[&quot;</span><span class="p">,</span> <span class="s2">&quot;]&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;&quot;</span><span class="p">,</span> <span class="s2">&quot;&gt;&quot;</span><span class="p">,</span> <span class="s2">&quot;(&quot;</span><span class="p">,</span> <span class="s2">&quot;)&quot;</span><span class="p">,</span> <span class="s2">&quot;#&quot;</span><span class="p">,</span> <span class="s2">&quot;+&quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;!&quot;</span><span class="p">,</span> <span class="s2">&quot;|&quot;</span><span class="p">]</span>
-
-        <span class="k">for</span> <span class="n">character</span> <span class="ow">in</span> <span class="n">characters</span><span class="p">:</span>
-            <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">character</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\\</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">character</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">text</span></div>
-
-
-<div class="viewcode-block" id="RstConverter.rst_create_heading">
-<a class="viewcode-back" href="../../api/pyTRLCConverter/rst_converter/index.html#pyTRLCConverter.rst_converter.RstConverter.rst_create_heading">[docs]</a>
-    <span class="nd">@staticmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">rst_create_heading</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-                           <span class="n">level</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-                           <span class="n">file_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-                           <span class="n">escape</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="c1"># lobster-trace: SwRequirements.sw_req_rst_heading</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Create a reStructuredText heading with a label.</span>
-<span class="sd">        The text will be automatically escaped for reStructuredText if necessary.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            text (str): Heading text</span>
-<span class="sd">            level (int): Heading level [1; 7]</span>
-<span class="sd">            file_name (str): File name where the heading is found</span>
-<span class="sd">            escape (bool): Escape the text (default: True).</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            str: reStructuredText heading with a label</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-
-        <span class="k">if</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">level</span> <span class="o">&lt;=</span> <span class="mi">7</span><span class="p">:</span>
-            <span class="n">text_raw</span> <span class="o">=</span> <span class="n">text</span>
-
-            <span class="k">if</span> <span class="n">escape</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-                <span class="n">text_raw</span> <span class="o">=</span> <span class="n">RstConverter</span><span class="o">.</span><span class="n">rst_escape</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
-
-            <span class="n">label</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">file_name</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">text_raw</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;-&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
-
-            <span class="n">underline_char</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="s2">&quot;#&quot;</span><span class="p">,</span> <span class="s2">&quot;~&quot;</span><span class="p">,</span> <span class="s2">&quot;^&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\&quot;</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;+&quot;</span><span class="p">,</span> <span class="s2">&quot;&#39;&quot;</span><span class="p">][</span><span class="n">level</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
-            <span class="n">underline</span> <span class="o">=</span> <span class="n">underline_char</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">text_raw</span><span class="p">)</span>
-
-            <span class="n">result</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;.. _</span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2">:</span><span class="se">\n\n</span><span class="si">{</span><span class="n">text_raw</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">underline</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
-
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">log_error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid heading level </span><span class="si">{</span><span class="n">level</span><span class="si">}</span><span class="s2"> for </span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">result</span></div>
-
-
-<div class="viewcode-block" id="RstConverter.rst_create_admonition">
-<a class="viewcode-back" href="../../api/pyTRLCConverter/rst_converter/index.html#pyTRLCConverter.rst_converter.RstConverter.rst_create_admonition">[docs]</a>
-    <span class="nd">@staticmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">rst_create_admonition</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-                              <span class="n">file_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-                              <span class="n">escape</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="c1"># lobster-trace: SwRequirements.sw_req_rst_admonition</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Create a reStructuredText admonition with a label.</span>
-<span class="sd">        The text will be automatically escaped for reStructuredText if necessary.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            text (str): Admonition text</span>
-<span class="sd">            file_name (str): File name where the heading is found</span>
-<span class="sd">            escape (bool): Escape the text (default: True).</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            str: reStructuredText admonition with a label</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">text_raw</span> <span class="o">=</span> <span class="n">text</span>
-
-        <span class="k">if</span> <span class="n">escape</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="n">text_raw</span> <span class="o">=</span> <span class="n">RstConverter</span><span class="o">.</span><span class="n">rst_escape</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
-
-        <span class="n">label</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">file_name</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">text_raw</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;-&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
-        <span class="n">admonition_label</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;.. admonition:: </span><span class="si">{</span><span class="n">text_raw</span><span class="si">}</span><span class="s2">&quot;</span>
-
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;.. _</span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2">:</span><span class="se">\n\n</span><span class="si">{</span><span class="n">admonition_label</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span></div>
-
-
-<div class="viewcode-block" id="RstConverter.rst_create_table_head">
-<a class="viewcode-back" href="../../api/pyTRLCConverter/rst_converter/index.html#pyTRLCConverter.rst_converter.RstConverter.rst_create_table_head">[docs]</a>
-    <span class="nd">@staticmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">rst_create_table_head</span><span class="p">(</span><span class="n">column_titles</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">max_widths</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">escape</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="c1"># lobster-trace: SwRequirements.sw_req_rst_table</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Create the table head for a reStructuredText table in grid format.</span>
-<span class="sd">        The titles will be automatically escaped for reStructuredText if necessary.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            column_titles ([str]): List of column titles.</span>
-<span class="sd">            max_widths ([int]): List of maximum widths for each column.</span>
-<span class="sd">            escape (bool): Escape the titles (default: True).</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            str: Table head</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">escape</span><span class="p">:</span>
-            <span class="n">column_titles</span> <span class="o">=</span> <span class="p">[</span><span class="n">RstConverter</span><span class="o">.</span><span class="n">rst_escape</span><span class="p">(</span><span class="n">title</span><span class="p">)</span> <span class="k">for</span> <span class="n">title</span> <span class="ow">in</span> <span class="n">column_titles</span><span class="p">]</span>
-
-        <span class="c1"># Create the top border of the table</span>
-        <span class="n">table_head</span> <span class="o">=</span> <span class="s2">&quot;    +&quot;</span> <span class="o">+</span> <span class="s2">&quot;+&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="p">(</span><span class="n">width</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">width</span> <span class="ow">in</span> <span class="n">max_widths</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;+</span><span class="se">\n</span><span class="s2">&quot;</span>
-
-        <span class="c1"># Create the title row</span>
-        <span class="n">table_head</span> <span class="o">+=</span> <span class="s2">&quot;    |&quot;</span>
-        <span class="n">table_head</span> <span class="o">+=</span> <span class="s2">&quot;|&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s2">&quot; </span><span class="si">{</span><span class="n">title</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="n">max_widths</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span><span class="si">}</span><span class="s2"> &quot;</span> <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">title</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">column_titles</span><span class="p">)])</span> <span class="o">+</span> <span class="s2">&quot;|</span><span class="se">\n</span><span class="s2">&quot;</span>
-
-        <span class="c1"># Create the separator row</span>
-        <span class="n">table_head</span> <span class="o">+=</span> <span class="s2">&quot;    +&quot;</span> <span class="o">+</span> <span class="s2">&quot;+&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="p">(</span><span class="n">width</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">width</span> <span class="ow">in</span> <span class="n">max_widths</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;+</span><span class="se">\n</span><span class="s2">&quot;</span>
-
-        <span class="k">return</span> <span class="n">table_head</span></div>
-
-
-<div class="viewcode-block" id="RstConverter.rst_append_table_row">
-<a class="viewcode-back" href="../../api/pyTRLCConverter/rst_converter/index.html#pyTRLCConverter.rst_converter.RstConverter.rst_append_table_row">[docs]</a>
-    <span class="nd">@staticmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">rst_append_table_row</span><span class="p">(</span><span class="n">row_values</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">max_widths</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">escape</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="c1"># lobster-trace: SwRequirements.sw_req_rst_table</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Append a row to a reStructuredText table in grid format.</span>
-<span class="sd">        The values will be automatically escaped for reStructuredText if necessary.</span>
-<span class="sd">        Supports multi-line cell values.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            row_values ([str]): List of row values.</span>
-<span class="sd">            max_widths ([int]): List of maximum widths for each column.</span>
-<span class="sd">            escape (bool): Escapes every row value (default: True).</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            str: Table row</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">escape</span><span class="p">:</span>
-            <span class="n">row_values</span> <span class="o">=</span> <span class="p">[</span><span class="n">RstConverter</span><span class="o">.</span><span class="n">rst_escape</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">row_values</span><span class="p">]</span>
-
-        <span class="c1"># Split each cell value into lines.</span>
-        <span class="n">split_values</span> <span class="o">=</span> <span class="p">[</span><span class="n">value</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">row_values</span><span class="p">]</span>
-        <span class="n">max_lines</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span> <span class="k">for</span> <span class="n">lines</span> <span class="ow">in</span> <span class="n">split_values</span><span class="p">)</span>
-
-        <span class="c1"># Create the row with multi-line support.</span>
-        <span class="n">table_row</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-        <span class="k">for</span> <span class="n">line_idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_lines</span><span class="p">):</span>
-            <span class="n">table_row</span> <span class="o">+=</span> <span class="s2">&quot;    |&quot;</span>
-            <span class="k">for</span> <span class="n">col_idx</span><span class="p">,</span> <span class="n">lines</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">split_values</span><span class="p">):</span>
-                <span class="k">if</span> <span class="n">line_idx</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">):</span>
-                    <span class="n">table_row</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot; </span><span class="si">{</span><span class="n">lines</span><span class="p">[</span><span class="n">line_idx</span><span class="p">]</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="n">max_widths</span><span class="p">[</span><span class="n">col_idx</span><span class="p">])</span><span class="si">}</span><span class="s2"> &quot;</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">table_row</span> <span class="o">+=</span> <span class="s2">&quot; &quot;</span> <span class="o">*</span> <span class="p">(</span><span class="n">max_widths</span><span class="p">[</span><span class="n">col_idx</span><span class="p">]</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span>
-                <span class="n">table_row</span> <span class="o">+=</span> <span class="s2">&quot;|&quot;</span>
-            <span class="n">table_row</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
-
-        <span class="c1"># Create the separator row.</span>
-        <span class="n">separator_row</span> <span class="o">=</span> <span class="s2">&quot;    +&quot;</span> <span class="o">+</span> <span class="s2">&quot;+&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="p">(</span><span class="n">width</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">width</span> <span class="ow">in</span> <span class="n">max_widths</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;+</span><span class="se">\n</span><span class="s2">&quot;</span>
-
-        <span class="k">return</span> <span class="n">table_row</span> <span class="o">+</span> <span class="n">separator_row</span></div>
-
-
-<div class="viewcode-block" id="RstConverter.rst_create_list">
-<a class="viewcode-back" href="../../api/pyTRLCConverter/rst_converter/index.html#pyTRLCConverter.rst_converter.RstConverter.rst_create_list">[docs]</a>
-    <span class="nd">@staticmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">rst_create_list</span><span class="p">(</span><span class="n">list_values</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">escape</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="c1"># lobster-trace: SwRequirements.sw_req_rst_list</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a unordered reStructuredText list.</span>
-<span class="sd">        The values will be automatically escaped for reStructuredText if necessary.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            list_values (List[str]): List of list values.</span>
-<span class="sd">            escape (bool): Escapes every list value (default: True).</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            str: reStructuredText list</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">list_str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-
-        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">value_raw</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">list_values</span><span class="p">):</span>
-            <span class="n">value</span> <span class="o">=</span> <span class="n">value_raw</span>
-
-            <span class="k">if</span> <span class="n">escape</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>  <span class="c1"># Escape the value if necessary.</span>
-                <span class="n">value</span> <span class="o">=</span> <span class="n">RstConverter</span><span class="o">.</span><span class="n">rst_escape</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-
-            <span class="n">list_str</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;* </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span>
-
-            <span class="c1"># The last list value must not have a newline at the end.</span>
-            <span class="k">if</span> <span class="n">idx</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">list_values</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="n">list_str</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
-
-        <span class="k">return</span> <span class="n">list_str</span></div>
-
-
-<div class="viewcode-block" id="RstConverter.rst_create_link">
-<a class="viewcode-back" href="../../api/pyTRLCConverter/rst_converter/index.html#pyTRLCConverter.rst_converter.RstConverter.rst_create_link">[docs]</a>
-    <span class="nd">@staticmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">rst_create_link</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">escape</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="c1"># lobster-trace: SwRequirements.sw_req_rst_link</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Create a reStructuredText cross-reference.</span>
-<span class="sd">        The text will be automatically escaped for reStructuredText if necessary.</span>
-<span class="sd">        There will be no newline appended at the end.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            text (str): Link text</span>
-<span class="sd">            target (str): Cross-reference target</span>
-<span class="sd">            escape (bool): Escapes text (default: True).</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            str: reStructuredText cross-reference</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">text_raw</span> <span class="o">=</span> <span class="n">text</span>
-
-        <span class="k">if</span> <span class="n">escape</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="n">text_raw</span> <span class="o">=</span> <span class="n">RstConverter</span><span class="o">.</span><span class="n">rst_escape</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;:ref:`</span><span class="si">{</span><span class="n">text_raw</span><span class="si">}</span><span class="s2"> &lt;</span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2">&gt;`&quot;</span></div>
-
-
-<div class="viewcode-block" id="RstConverter.rst_create_diagram_link">
-<a class="viewcode-back" href="../../api/pyTRLCConverter/rst_converter/index.html#pyTRLCConverter.rst_converter.RstConverter.rst_create_diagram_link">[docs]</a>
-    <span class="nd">@staticmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">rst_create_diagram_link</span><span class="p">(</span><span class="n">diagram_file_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">diagram_caption</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">escape</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="c1"># lobster-trace: SwRequirements.sw_req_rst_image</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Create a reStructuredText diagram link.</span>
-<span class="sd">        The caption will be automatically escaped for reStructuredText if necessary.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            diagram_file_name (str): Diagram file name</span>
-<span class="sd">            diagram_caption (str): Diagram caption</span>
-<span class="sd">            escape (bool): Escapes caption (default: True).</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            str: reStructuredText diagram link</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">diagram_caption_raw</span> <span class="o">=</span> <span class="n">diagram_caption</span>
-
-        <span class="k">if</span> <span class="n">escape</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="n">diagram_caption_raw</span> <span class="o">=</span> <span class="n">RstConverter</span><span class="o">.</span><span class="n">rst_escape</span><span class="p">(</span><span class="n">diagram_caption</span><span class="p">)</span>
-
-        <span class="c1"># Allowed are absolute and relative to source paths.</span>
-        <span class="n">diagram_file_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">diagram_file_name</span><span class="p">)</span>
-
-        <span class="n">result</span> <span class="o">=</span>  <span class="sa">f</span><span class="s2">&quot;.. figure:: </span><span class="si">{</span><span class="n">diagram_file_name</span><span class="si">}</span><span class="se">\n</span><span class="s2">    :alt: </span><span class="si">{</span><span class="n">diagram_caption_raw</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
-
-        <span class="k">if</span> <span class="n">diagram_caption_raw</span><span class="p">:</span>
-            <span class="n">result</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    </span><span class="si">{</span><span class="n">diagram_caption_raw</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
-
-        <span class="k">return</span> <span class="n">result</span></div>
-
-
-<div class="viewcode-block" id="RstConverter.rst_role">
-<a class="viewcode-back" href="../../api/pyTRLCConverter/rst_converter/index.html#pyTRLCConverter.rst_converter.RstConverter.rst_role">[docs]</a>
-    <span class="nd">@staticmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">rst_role</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">role</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">escape</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="c1"># lobster-trace: SwRequirements.sw_req_rst_role</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Create role text in reStructuredText.</span>
-<span class="sd">        The text will be automatically escaped for reStructuredText if necessary.</span>
-<span class="sd">        There will be no newline appended at the end.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            text (str): Text</span>
-<span class="sd">            color (str): Role</span>
-<span class="sd">            escape (bool): Escapes text (default: True).</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            str: Text with role</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">text_raw</span> <span class="o">=</span> <span class="n">text</span>
-
-        <span class="k">if</span> <span class="n">escape</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="n">text_raw</span> <span class="o">=</span> <span class="n">RstConverter</span><span class="o">.</span><span class="n">rst_escape</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;:</span><span class="si">{</span><span class="n">role</span><span class="si">}</span><span class="s2">:`</span><span class="si">{</span><span class="n">text_raw</span><span class="si">}</span><span class="s2">`&quot;</span></div>
 </div>
 
 

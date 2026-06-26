@@ -1,0 +1,387 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pyTRLCConverter.markdown.element &mdash; pyTRLCConverter  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=c87a014e" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/version_selector.js?v=02fa0f40"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #0C2C40" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            pyTRLCConverter
+              <img src="../../../_static/NewTec_Logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../sw_requirements.html">SW Requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../sw_architecture.html">SW Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../sw_detail_design.html">SW Detailed Design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../sw_tests.html">SW Test Cases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../sw_tracing_report.html">SW Tracing Report</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../sw_test_result_report.html">SW Test Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../coverage_report.html">Coverage Report</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../license_include.html">License information</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #0C2C40" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">pyTRLCConverter</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">pyTRLCConverter.markdown.element</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pyTRLCConverter.markdown.element</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Markdown block elements.</span>
+<span class="sd">    Each element renders itself into a Markdown string. Elements are collected</span>
+<span class="sd">    by the MarkdownDocument and rendered once when the output file is written.</span>
+
+<span class="sd">    Author: Andreas Merkle (andreas.merkle@newtec.de)</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># pyTRLCConverter - A tool to convert TRLC files to specific formats.</span>
+<span class="c1"># Copyright (c) 2024 - 2026 NewTec GmbH</span>
+<span class="c1">#</span>
+<span class="c1"># This file is part of pyTRLCConverter program.</span>
+<span class="c1">#</span>
+<span class="c1"># The pyTRLCConverter program is free software: you can redistribute it and/or modify it under</span>
+<span class="c1"># the terms of the GNU General Public License as published by the Free Software Foundation,</span>
+<span class="c1"># either version 3 of the License, or (at your option) any later version.</span>
+<span class="c1">#</span>
+<span class="c1"># The pyTRLCConverter program is distributed in the hope that it will be useful, but</span>
+<span class="c1"># WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or</span>
+<span class="c1"># FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1"># You should have received a copy of the GNU General Public License along with pyTRLCConverter.</span>
+<span class="c1"># If not, see &lt;https://www.gnu.org/licenses/&gt;.</span>
+
+<span class="c1"># Imports **********************************************************************</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyTRLCConverter.logger</span><span class="w"> </span><span class="kn">import</span> <span class="n">log_error</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyTRLCConverter.markdown.text</span><span class="w"> </span><span class="kn">import</span> <span class="n">MarkdownText</span>
+
+<span class="c1"># Variables ********************************************************************</span>
+
+<span class="c1"># Classes **********************************************************************</span>
+
+<span class="c1"># pylint: disable-next=too-few-public-methods</span>
+<div class="viewcode-block" id="MarkdownElement">
+<a class="viewcode-back" href="../../../api/pyTRLCConverter/markdown/element/index.html#pyTRLCConverter.markdown.element.MarkdownElement">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">MarkdownElement</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Abstract base class for Markdown block elements.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="MarkdownElement.render">
+<a class="viewcode-back" href="../../../api/pyTRLCConverter/markdown/element/index.html#pyTRLCConverter.markdown.element.MarkdownElement.render">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Render the element into a Markdown string.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: Rendered Markdown</span>
+<span class="sd">        &quot;&quot;&quot;</span></div>
+</div>
+
+
+<span class="c1"># pylint: disable-next=too-few-public-methods</span>
+<div class="viewcode-block" id="Heading">
+<a class="viewcode-back" href="../../../api/pyTRLCConverter/markdown/element/index.html#pyTRLCConverter.markdown.element.Heading">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Heading</span><span class="p">(</span><span class="n">MarkdownElement</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Markdown heading block element.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">escape</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the heading element.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            text (str): Heading text</span>
+<span class="sd">            level (int): Heading level [1; inf]</span>
+<span class="sd">            escape (bool): Escape the text (default: True).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_text</span> <span class="o">=</span> <span class="n">text</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_level</span> <span class="o">=</span> <span class="n">level</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_escape</span> <span class="o">=</span> <span class="n">escape</span>
+
+<div class="viewcode-block" id="Heading.render">
+<a class="viewcode-back" href="../../../api/pyTRLCConverter/markdown/element/index.html#pyTRLCConverter.markdown.element.Heading.render">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="c1"># lobster-trace: SwRequirements.sw_req_markdown_heading</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Render the heading.</span>
+<span class="sd">        The text will be automatically escaped for Markdown if necessary.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: Markdown heading</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_level</span><span class="p">:</span>
+            <span class="n">text_raw</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_text</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_escape</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="n">text_raw</span> <span class="o">=</span> <span class="n">MarkdownText</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_text</span><span class="p">)</span>
+
+            <span class="n">result</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;#&#39;</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">_level</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">text_raw</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">log_error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid heading level </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_level</span><span class="si">}</span><span class="s2"> for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_text</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">result</span></div>
+</div>
+
+
+<span class="c1"># pylint: disable-next=too-few-public-methods</span>
+<div class="viewcode-block" id="Table">
+<a class="viewcode-back" href="../../../api/pyTRLCConverter/markdown/element/index.html#pyTRLCConverter.markdown.element.Table">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Table</span><span class="p">(</span><span class="n">MarkdownElement</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Markdown table block element.</span>
+<span class="sd">    Rendered as HTML to support multi-line cells and other complex content.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">column_titles</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">rows</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the table element.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            column_titles (List[str]): List of column titles.</span>
+<span class="sd">            rows (List[List[str]]): List of row values.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_column_titles</span> <span class="o">=</span> <span class="n">column_titles</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rows</span> <span class="o">=</span> <span class="n">rows</span>
+
+<div class="viewcode-block" id="Table.render">
+<a class="viewcode-back" href="../../../api/pyTRLCConverter/markdown/element/index.html#pyTRLCConverter.markdown.element.Table.render">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="c1"># lobster-trace: SwRequirements.sw_req_markdown_table</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Render the table in HTML format.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: Markdown table</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">table</span> <span class="o">=</span> <span class="s2">&quot;&lt;table&gt;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">table</span> <span class="o">+=</span> <span class="s2">&quot;&lt;thead&gt;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">table</span> <span class="o">+=</span> <span class="s2">&quot;&lt;tr&gt;</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+        <span class="k">for</span> <span class="n">column_title</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_column_titles</span><span class="p">:</span>
+            <span class="n">table</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;&lt;th&gt;</span><span class="si">{</span><span class="n">column_title</span><span class="si">}</span><span class="s2">&lt;/th&gt;</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+        <span class="n">table</span> <span class="o">+=</span> <span class="s2">&quot;&lt;/tr&gt;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">table</span> <span class="o">+=</span> <span class="s2">&quot;&lt;/thead&gt;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">table</span> <span class="o">+=</span> <span class="s2">&quot;&lt;tbody&gt;</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+        <span class="k">for</span> <span class="n">row_values</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rows</span><span class="p">:</span>
+            <span class="n">table</span> <span class="o">+=</span> <span class="s2">&quot;&lt;tr&gt;</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+            <span class="k">for</span> <span class="n">cell_value</span> <span class="ow">in</span> <span class="n">row_values</span><span class="p">:</span>
+                <span class="c1"># To allow Markdown content inside table cells, a blank line is required</span>
+                <span class="c1"># before and after the cell content.</span>
+                <span class="c1"># See https://spec.commonmark.org/0.31.2/#html-blocks</span>
+                <span class="n">table</span> <span class="o">+=</span> <span class="s2">&quot;&lt;td&gt;</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="n">table</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="n">table</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">cell_value</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="n">table</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="n">table</span> <span class="o">+=</span> <span class="s2">&quot;&lt;/td&gt;</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+            <span class="n">table</span> <span class="o">+=</span> <span class="s2">&quot;&lt;/tr&gt;</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+        <span class="n">table</span> <span class="o">+=</span> <span class="s2">&quot;&lt;/tbody&gt;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">table</span> <span class="o">+=</span> <span class="s2">&quot;&lt;/table&gt;</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+        <span class="k">return</span> <span class="n">table</span></div>
+</div>
+
+
+<span class="c1"># pylint: disable-next=too-few-public-methods</span>
+<div class="viewcode-block" id="BulletList">
+<a class="viewcode-back" href="../../../api/pyTRLCConverter/markdown/element/index.html#pyTRLCConverter.markdown.element.BulletList">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">BulletList</span><span class="p">(</span><span class="n">MarkdownElement</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Unordered Markdown list block element.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">escape</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the list element.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            values (List[str]): List of list values.</span>
+<span class="sd">            escape (bool): Escapes every list value (default: True).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_values</span> <span class="o">=</span> <span class="n">values</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_escape</span> <span class="o">=</span> <span class="n">escape</span>
+
+<div class="viewcode-block" id="BulletList.render">
+<a class="viewcode-back" href="../../../api/pyTRLCConverter/markdown/element/index.html#pyTRLCConverter.markdown.element.BulletList.render">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="c1"># lobster-trace: SwRequirements.sw_req_markdown_list</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Render the unordered list.</span>
+<span class="sd">        The values will be automatically escaped for Markdown if necessary.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: Markdown list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">list_str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+        <span class="k">for</span> <span class="n">value_raw</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">value_raw</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_escape</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>  <span class="c1"># Escape the value if necessary.</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="n">MarkdownText</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+            <span class="n">list_str</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;- </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+        <span class="k">return</span> <span class="n">list_str</span></div>
+</div>
+
+
+<span class="c1"># pylint: disable-next=too-few-public-methods</span>
+<div class="viewcode-block" id="Image">
+<a class="viewcode-back" href="../../../api/pyTRLCConverter/markdown/element/index.html#pyTRLCConverter.markdown.element.Image">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Image</span><span class="p">(</span><span class="n">MarkdownElement</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Markdown image / diagram link block element.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">caption</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">escape</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the image element.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            file_name (str): Diagram file name</span>
+<span class="sd">            caption (str): Diagram caption</span>
+<span class="sd">            escape (bool): Escapes caption (default: True).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_file_name</span> <span class="o">=</span> <span class="n">file_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_caption</span> <span class="o">=</span> <span class="n">caption</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_escape</span> <span class="o">=</span> <span class="n">escape</span>
+
+<div class="viewcode-block" id="Image.render">
+<a class="viewcode-back" href="../../../api/pyTRLCConverter/markdown/element/index.html#pyTRLCConverter.markdown.element.Image.render">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="c1"># lobster-trace: SwRequirements.sw_req_markdown_image</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Render the image link.</span>
+<span class="sd">        The caption will be automatically escaped for Markdown if necessary.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: Markdown diagram link</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">caption_raw</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_caption</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_escape</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">caption_raw</span> <span class="o">=</span> <span class="n">MarkdownText</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_caption</span><span class="p">)</span>
+
+        <span class="c1"># Allowed are absolute and relative to source paths.</span>
+        <span class="n">file_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_file_name</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;![</span><span class="si">{</span><span class="n">caption_raw</span><span class="si">}</span><span class="s2">](</span><span class="si">{</span><span class="n">file_name</span><span class="si">}</span><span class="s2">)</span><span class="se">\n</span><span class="s2">&quot;</span></div>
+</div>
+
+
+<span class="c1"># pylint: disable-next=too-few-public-methods</span>
+<div class="viewcode-block" id="RawText">
+<a class="viewcode-back" href="../../../api/pyTRLCConverter/markdown/element/index.html#pyTRLCConverter.markdown.element.RawText">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">RawText</span><span class="p">(</span><span class="n">MarkdownElement</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Raw Markdown text block element passed through unchanged.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the raw text element.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            text (str): Raw Markdown text</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_text</span> <span class="o">=</span> <span class="n">text</span>
+
+<div class="viewcode-block" id="RawText.render">
+<a class="viewcode-back" href="../../../api/pyTRLCConverter/markdown/element/index.html#pyTRLCConverter.markdown.element.RawText.render">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="c1"># lobster-trace: SwRequirements.sw_req_markdown_record</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Render the raw text.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: Raw Markdown text</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_text</span></div>
+</div>
+
+
+<span class="c1"># Functions ********************************************************************</span>
+
+<span class="c1"># Main *************************************************************************</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024 - 2026, NewTec GmbH.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

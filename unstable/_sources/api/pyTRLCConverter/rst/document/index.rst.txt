@@ -1,0 +1,68 @@
+pyTRLCConverter.rst.document
+============================
+
+.. py:module:: pyTRLCConverter.rst.document
+
+.. autoapi-nested-parse::
+
+   reStructuredText document container.
+   Collects reStructuredText block elements and renders them into a single
+   string. Consecutive blocks are separated by a single blank line, the first
+   block has no leading blank line and the document ends with a single newline.
+
+   Author: Gabryel Reyes (gabryel.reyes@newtec.de)
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   pyTRLCConverter.rst.document.RstDocument
+
+
+Module Contents
+---------------
+
+.. py:class:: RstDocument
+
+   In-memory reStructuredText document built from block elements.
+
+
+
+   .. py:method:: add(element: pyTRLCConverter.rst.element.RstElement) -> None
+
+      Append a block element to the document.
+
+      :param element: Block element to append.
+      :type element: RstElement
+
+
+
+   .. py:method:: is_empty() -> bool
+
+      Return whether the document has no elements yet.
+
+      :returns: True if no element has been added, otherwise False.
+      :rtype: bool
+
+
+
+   .. py:method:: render() -> str
+
+      Render the whole document.
+      Blocks are separated by a single blank line, the first block has no
+      leading blank line and the document ends with a single newline.
+
+      :returns: Rendered reStructuredText document
+      :rtype: str
+
+
+
+   .. py:attribute:: _elements
+      :type:  List[pyTRLCConverter.rst.element.RstElement]
+      :value: []
+
+
+
