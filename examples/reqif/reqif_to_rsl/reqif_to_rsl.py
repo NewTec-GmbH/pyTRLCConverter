@@ -1,5 +1,10 @@
 """Analyse a .reqif or .reqifz file and generate TRLC source files.
 
+DEPRECATED: This standalone script is superseded by the built-in ``reqif-import``
+subcommand (``pyTRLCConverter --out <dir> reqif-import <INPUT> --package <name>``),
+which is tested, traceable and additionally supports merging changes back into
+existing TRLC files. This script is kept for reference only.
+
 Reads a ReqIF file compliant with the ProSTEP ReqIF Implementation Guideline
 and produces five files ready for use with pyTRLCConverter:
 

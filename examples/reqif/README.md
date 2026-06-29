@@ -117,6 +117,53 @@ Example:
 }
 ```
 
+#### Keep Internal-Only Attributes (Export Mapping)
+
+A project may have TRLC attributes that shall never be exported (e.g. internal notes). Provide an
+export mapping file via `--export-map` to exclude them. The matching uses the same
+`(package, type, attribute)` regex triplet as the render configuration; a missing key matches
+anything.
+
+```json
+{
+    "exclude": [
+        { "package": ".*", "type": "SwReq", "attribute": "internal_note" }
+    ]
+}
+```
+
+```bash
+pyTRLCConverter --source <trlc-dir> --out ./out reqif --export-map export_map.json
+```
+
+## ReqIF Roundtrip
+
+The `reqif-import` subcommand imports a ReqIF file (`.reqif` or `.reqifz`) into TRLC. It has two
+modes selected automatically by whether existing TRLC is provided via `--source`:
+
+- **Initial import (bootstrap)** — no existing TRLC. A new TRLC project is generated from the ReqIF
+  file: `<package>.rsl`, `<package>.trlc` (following the SPEC-HIERARCHY), and the companion
+  `renderCfg.json`, `translation.json` and `id_store.json`. SPEC-RELATIONs are reverse-mapped to TRLC
+  reference fields. Use `--package` to set the package name and `--out` for the output directory.
+
+  ```bash
+  pyTRLCConverter --out ./out reqif-import input.reqif --package Req
+  ```
+
+- **Merge import (re-import)** — existing TRLC provided via `--source`. The existing `.trlc` files are
+  updated in place: objects are matched via the identifier store (`--id-store`, required), changed
+  string attribute values are updated, and comments, formatting and attributes that are not part of
+  the exchange are preserved.
+
+  ```bash
+  pyTRLCConverter --source ./trlc reqif-import input.reqif --id-store id_store.json
+  ```
+
+The identifier store keeps the identifiers of ReqIF Identifiable elements immutable across the
+roundtrip. Export with `--id-store`, exchange the ReqIF with the other tool, and import back with the
+same store so identities are preserved. Markdown/GFM attributes are not reversed automatically on a
+merge (they are preserved), since the XHTML-to-Markdown conversion is lossy.
+
 ## Supporting Tools
 
 ### Analyze ReqIF File
@@ -143,7 +190,12 @@ python ./validate_reqif/validate_reqif.py <INPUT>
 
 If no output option is used, the files will be written to the same location as the ReqIF file.
 
-### Prepare pyTRLCConverter Inputs from ReqIF File
+### Prepare pyTRLCConverter Inputs from ReqIF File (legacy)
+
+> **Note:** This standalone script is superseded by the built-in `reqif-import` subcommand (see
+> [ReqIF Roundtrip](#reqif-roundtrip) above), which is tested, traceable and also supports merging
+> changes back into existing TRLC. Prefer `pyTRLCConverter --out <dir> reqif-import <INPUT> --package Req`.
+> The script is kept for reference.
 
 Prepare .trlc, .rsl, render configuration and translation from a given ReqIF file (.reqif or .reqifz).
 
