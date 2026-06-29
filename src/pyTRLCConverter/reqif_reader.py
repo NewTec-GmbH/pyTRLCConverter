@@ -81,6 +81,7 @@ class ReqifReader:
         self._spec_object_map: dict[str, Any] = {}
         self._type_info: dict[str, Any] = {}
         self._type_id_to_trlc_name: dict[str, str] = {}
+        self._relations_by_source: dict[str, list] = {}
 
     def load(self, reqif_path: str) -> bool:
         # lobster-trace: SwRequirements.sw_req_reqif_import
@@ -171,6 +172,17 @@ class ReqifReader:
         """
         return self._attr_def_map
 
+    @property
+    def relations_by_source(self) -> dict[str, list]:
+        """Returns the relations keyed by source spec-object identifier.
+
+        Each value is a list of (relation name, target spec-object identifier) tuples.
+
+        Returns:
+            dict[str, list]: The relations grouped by source spec-object identifier.
+        """
+        return self._relations_by_source
+
     def _resolve_reqif_path(self, reqif_path: str, tmpdir: str) -> list[str]:
         # lobster-trace: SwRequirements.sw_req_reqif_import
         """Return the .reqif file paths to process, extracting .reqifz archives first.
@@ -210,6 +222,8 @@ class ReqifReader:
             for attr in type_data["attrs"]:
                 if attr["attr_def_id"] in path_attr_def_ids:
                     attr["is_path"] = True
+
+        self._collect_relations()
 
     def _build_datatype_map(self) -> dict[str, Any]:
         # lobster-trace: SwRequirements.sw_req_reqif_import
@@ -333,10 +347,67 @@ class ReqifReader:
                         "long_name": long_name,
                         "is_section": is_section,
                         "attrs": attrs,
+                        "refs": [],
                     }
                     type_id_to_trlc_name[type_identifier] = trlc_type_name
 
         return type_info, type_id_to_trlc_name
+
+    def _collect_relations(self) -> None:
+        # lobster-trace: SwRequirements.sw_req_reqif_import_relation
+        """Collect SPEC-RELATIONs grouped by source and augment the type info with reference fields.
+        """
+        type_long_name = {
+            getattr(spec_type, "identifier", None): getattr(spec_type, "long_name", None)
+            for spec_type in (getattr(self._content, "spec_types", None) or [])
+        }
+        ref_target_types: dict[tuple, set] = {}
+
+        for relation in (getattr(self._content, "spec_relations", None) or []):
+            source = getattr(relation, "source", None)
+            target = getattr(relation, "target", None)
+            relation_name = (getattr(relation, "long_name", None)
+                             or type_long_name.get(getattr(relation, "relation_type", None))
+                             or "ref")
+
+            if source and target:
+                self._relations_by_source.setdefault(source, []).append((relation_name, target))
+                source_obj = self._spec_object_map.get(source)
+                target_obj = self._spec_object_map.get(target)
+                if source_obj is not None and target_obj is not None:
+                    source_type = getattr(source_obj, "spec_object_type", None)
+                    target_type = getattr(target_obj, "spec_object_type", None)
+                    if source_type and target_type:
+                        ref_target_types.setdefault((source_type, relation_name), set()).add(target_type)
+
+        self._augment_refs(ref_target_types)
+
+    def _augment_refs(self, ref_target_types: dict[tuple, set]) -> None:
+        # lobster-trace: SwRequirements.sw_req_reqif_import_relation
+        """Augment the spec-object type info with reference field metadata.
+
+        A reference field is only created when all targets of a relation share a single type.
+
+        Args:
+            ref_target_types (dict[tuple, set]): Mapping from (source type id, relation name) to
+                the set of target type identifiers.
+        """
+        for (source_type_id, relation_name), target_type_ids in ref_target_types.items():
+            type_data = self._type_info.get(source_type_id)
+
+            if type_data is not None:
+                if len(target_type_ids) == 1:
+                    target_type_data = self._type_info.get(next(iter(target_type_ids)))
+                    if target_type_data is not None and target_type_data["is_section"] is False:
+                        used = ({attr["trlc_name"] for attr in type_data["attrs"]}
+                                | {ref["trlc_name"] for ref in type_data["refs"]})
+                        type_data["refs"].append({
+                            "trlc_name": unique_name(sanitize_identifier(relation_name), used),
+                            "ref_type": target_type_data["trlc_name"],
+                            "long_name": relation_name,
+                        })
+                else:
+                    log_verbose(f"Relation '{relation_name}' has mixed target types; not reverse-mapped.")
 
     def _build_attr_meta(self, attr_def: Any, used_attr_names: set[str]) -> dict[str, Any]:
         # lobster-trace: SwRequirements.sw_req_reqif_import

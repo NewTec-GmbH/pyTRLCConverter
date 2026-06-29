@@ -298,4 +298,45 @@ def test_tc_reqif_import_merge(record_property, capsys, monkeypatch, tmp_path: P
     assert "// This comment must survive the merge." in merged
     assert "index = 7" in merged
 
+
+def test_tc_reqif_import_relation(record_property, capsys, monkeypatch, tmp_path: Path):
+    # lobster-trace: SwTests.tc_reqif_import_relation
+    """Initial import reverse-maps SPEC-RELATIONs into TRLC reference fields.
+
+    Args:
+        record_property (Any): Used to inject the test case reference into the test results.
+        capsys (Any): Used to capture stdout and stderr.
+        monkeypatch (Any): Used to mock program arguments.
+        tmp_path (Path): Used to create a temporary output directory.
+    """
+    record_property("lobster-trace", "SwTests.tc_reqif_import_relation")
+
+    reqif_dir = tmp_path / "reqif"
+    imported_dir = tmp_path / "imported"
+
+    reqif_file = _export_reqif(
+        monkeypatch, reqif_dir,
+        ["./tests/utils/req_array_refs.rsl", "./tests/utils/array_ref_records.trlc"]
+    )
+    assert capsys.readouterr().err == ""
+
+    _import_reqif(monkeypatch, imported_dir, reqif_file, package="Spec")
+    assert capsys.readouterr().err == ""
+
+    rsl_content = (imported_dir / "Spec.rsl").read_text(encoding="utf-8")
+    trlc_content = (imported_dir / "Spec.trlc").read_text(encoding="utf-8")
+
+    # The relation became a typed reference field in the generated type.
+    assert "verifies" in rsl_content
+    assert "[0 .. *]" in rsl_content
+    # The source instance references both target records.
+    assert "verifies = [req_a, req_b]" in trlc_content
+
+    # The generated TRLC parses without errors.
+    symbols = get_trlc_symbols(
+        [str(imported_dir / "Spec.rsl"), str(imported_dir / "Spec.trlc")], None
+    )
+    assert symbols is not None
+    assert capsys.readouterr().err == ""
+
 # Main *************************************************************************

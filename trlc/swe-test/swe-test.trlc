@@ -463,6 +463,11 @@ section "SW Test Cases" {
             description = "This test case checks whether a merge import updates a changed attribute value in an existing .trlc file in place, matching the object via the identifier store, while preserving comments and unchanged content."
             verifies = [SwRequirements.sw_req_reqif_import_merge]
         }
+
+        SwTestCase tc_reqif_import_relation {
+            description = "This test case checks whether the initial import reverse-maps SPEC-RELATIONs into a TRLC reference field in the generated .rsl and references the target records in the generated .trlc instance."
+            verifies = [SwRequirements.sw_req_reqif_import_relation]
+        }
     }
 
     section "Docx" {

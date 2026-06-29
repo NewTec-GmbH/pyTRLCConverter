@@ -61,6 +61,7 @@ class TrlcGenerator:  # pylint: disable=too-few-public-methods
         self._reader = reader
         self._package_name = package_name
         self._id_store: dict[str, str] = {}
+        self._obj_name_by_id: dict[str, str] = {}
 
     def generate(self, output_dir: str, gfm_format: bool = False) -> Ret:
         # lobster-trace: SwRequirements.sw_req_reqif_import_initial
@@ -119,9 +120,14 @@ class TrlcGenerator:  # pylint: disable=too-few-public-methods
         for type_data in self._reader.type_info.values():
             if type_data["is_section"] is False:
                 lines.append(f'type {type_data["trlc_name"]} "{type_data["long_name"]}" {{')
-                max_attr_len = max((len(attr["trlc_name"]) for attr in type_data["attrs"]), default=0)
+                names = ([attr["trlc_name"] for attr in type_data["attrs"]]
+                         + [ref["trlc_name"] for ref in type_data["refs"]])
+                max_attr_len = max((len(name) for name in names), default=0)
                 for attr in type_data["attrs"]:
                     lines.append(self._format_rsl_attribute(attr, max_attr_len))
+                for ref in type_data["refs"]:
+                    lines.append(f'    {ref["trlc_name"]:<{max_attr_len}}    optional    '
+                                 f'{ref["ref_type"]}    [0 .. *]')
                 lines.append("}")
                 lines.append("")
 
@@ -159,7 +165,7 @@ class TrlcGenerator:  # pylint: disable=too-few-public-methods
             trlc_path (str): Destination file path.
         """
         lines: list[str] = [f"package {self._package_name}", ""]
-        used_obj_names: set[str] = set()
+        self._collect_object_names()
 
         for spec in (getattr(self._reader.content, "specifications", None) or []):
             spec_title = getattr(spec, "long_name", None) or "Specification"
@@ -167,15 +173,48 @@ class TrlcGenerator:  # pylint: disable=too-few-public-methods
             lines.append(f'section "{safe_title}" {{')
             lines.append("")
             for hierarchy in (getattr(spec, "children", None) or []):
-                self._write_hierarchy(lines, hierarchy, 1, used_obj_names)
+                self._write_hierarchy(lines, hierarchy, 1)
             lines.append("}")
             lines.append("")
 
         with open(trlc_path, "w", encoding="utf-8") as fh:
             fh.write("\n".join(lines) + "\n")
 
-    def _write_hierarchy(self, lines: list[str], hierarchy: Any, indent: int,
-                         used_obj_names: set[str]) -> None:
+    def _collect_object_names(self) -> None:
+        # lobster-trace: SwRequirements.sw_req_reqif_import_relation
+        """Assign a unique TRLC object name to every record spec-object before writing.
+
+        Pre-assigning names lets reference fields resolve their targets to the names that
+        are written for the target records.
+        """
+        used_obj_names: set[str] = set()
+
+        for spec in (getattr(self._reader.content, "specifications", None) or []):
+            for hierarchy in (getattr(spec, "children", None) or []):
+                self._collect_names_hierarchy(hierarchy, used_obj_names)
+
+    def _collect_names_hierarchy(self, hierarchy: Any, used_obj_names: set[str]) -> None:
+        # lobster-trace: SwRequirements.sw_req_reqif_import_relation
+        """Recursively assign object names following the same branching as the writer.
+
+        Args:
+            hierarchy (Any): The SPEC-HIERARCHY node.
+            used_obj_names (set[str]): Set of already-taken object names; updated in place.
+        """
+        spec_obj_ref = getattr(hierarchy, "spec_object", None)
+        children = getattr(hierarchy, "children", None) or []
+        spec_obj = self._reader.spec_object_map.get(spec_obj_ref) if spec_obj_ref else None
+        type_ref = getattr(spec_obj, "spec_object_type", None) if spec_obj is not None else None
+        type_data = self._reader.type_info.get(type_ref) if type_ref else None
+
+        if spec_obj is not None and type_data is not None and type_data["is_section"] is False:
+            obj_name = self._reader.get_object_name(spec_obj, used_obj_names)
+            self._obj_name_by_id[getattr(spec_obj, "identifier", None)] = obj_name
+
+        for child in children:
+            self._collect_names_hierarchy(child, used_obj_names)
+
+    def _write_hierarchy(self, lines: list[str], hierarchy: Any, indent: int) -> None:
         # lobster-trace: SwRequirements.sw_req_reqif_import_initial
         """Recursively append TRLC lines for a SPEC-HIERARCHY node and its children.
 
@@ -183,7 +222,6 @@ class TrlcGenerator:  # pylint: disable=too-few-public-methods
             lines (list[str]): Line buffer to append to.
             hierarchy (Any): The SPEC-HIERARCHY node.
             indent (int): Current indentation level.
-            used_obj_names (set[str]): Set of already-taken object names; updated in place.
         """
         pad = "    " * indent
         spec_obj_ref = getattr(hierarchy, "spec_object", None)
@@ -194,7 +232,7 @@ class TrlcGenerator:  # pylint: disable=too-few-public-methods
 
         if spec_obj is None:
             for child in children:
-                self._write_hierarchy(lines, child, indent, used_obj_names)
+                self._write_hierarchy(lines, child, indent)
         elif type_data is None or type_data["is_section"]:
             safe_title = (getattr(hierarchy, "long_name", None)
                           or getattr(spec_obj, "long_name", None)
@@ -202,11 +240,11 @@ class TrlcGenerator:  # pylint: disable=too-few-public-methods
             lines.append(f'{pad}section "{safe_title}" {{')
             lines.append("")
             for child in children:
-                self._write_hierarchy(lines, child, indent + 1, used_obj_names)
+                self._write_hierarchy(lines, child, indent + 1)
             lines.append(f"{pad}}}")
             lines.append("")
         else:
-            obj_name = self._reader.get_object_name(spec_obj, used_obj_names)
+            obj_name = self._obj_name_by_id.get(getattr(spec_obj, "identifier", None))
             self._write_spec_object_instance(lines, spec_obj, indent, type_data, obj_name)
             self._seed_hierarchy_id(hierarchy, spec_obj, obj_name, bool(children))
             if children:
@@ -214,7 +252,7 @@ class TrlcGenerator:  # pylint: disable=too-few-public-methods
                 lines.append(f'{pad}section "{safe_title}" {{')
                 lines.append("")
                 for child in children:
-                    self._write_hierarchy(lines, child, indent + 1, used_obj_names)
+                    self._write_hierarchy(lines, child, indent + 1)
                 lines.append(f"{pad}}}")
                 lines.append("")
 
@@ -236,10 +274,41 @@ class TrlcGenerator:  # pylint: disable=too-few-public-methods
         if spec_obj_id:
             self._id_store[f"spec-object:{self._package_name}.{obj_name}"] = spec_obj_id
 
+        ref_lines = self._ref_value_lines(spec_obj, type_data, "    " * indent)
         lines.extend(
-            render_record_block(self._reader, self._package_name, type_data, spec_obj, obj_name, indent)
+            render_record_block(self._reader, self._package_name, type_data, spec_obj, obj_name,
+                                indent, ref_lines)
         )
         lines.append("")
+
+    def _ref_value_lines(self, spec_obj: Any, type_data: dict[str, Any], pad: str) -> list[str]:
+        # lobster-trace: SwRequirements.sw_req_reqif_import_relation
+        """Return the TRLC reference field assignment lines for a record instance.
+
+        Args:
+            spec_obj (Any): The spec-object whose relations to render.
+            type_data (dict[str, Any]): Type metadata for this spec-object's type.
+            pad (str): Indentation prefix for the enclosing block.
+
+        Returns:
+            list[str]: The reference field assignment lines.
+        """
+        lines: list[str] = []
+        relations = self._reader.relations_by_source.get(getattr(spec_obj, "identifier", None), [])
+
+        if relations and type_data["refs"]:
+            targets_by_name: dict[str, list] = {}
+            for relation_name, target_id in relations:
+                target_name = self._obj_name_by_id.get(target_id)
+                if target_name is not None:
+                    targets_by_name.setdefault(relation_name, []).append(target_name)
+
+            for ref in type_data["refs"]:
+                targets = targets_by_name.get(ref["long_name"], [])
+                if targets:
+                    lines.append(f"{pad}    {ref['trlc_name']} = [{', '.join(targets)}]")
+
+        return lines
 
     def _write_render_config(self, cfg_path: str, gfm_format: bool) -> None:
         # lobster-trace: SwRequirements.sw_req_reqif_import_initial
@@ -465,11 +534,12 @@ def format_enum_attr_value(reader: ReqifReader, package_name: str,
     return formatted
 
 
-# pylint: disable-next=too-many-arguments,too-many-positional-arguments
+# pylint: disable-next=too-many-arguments,too-many-positional-arguments,too-many-locals
 def render_record_block(reader: ReqifReader, package_name: str, type_data: dict[str, Any],
-                        spec_obj: Any, obj_name: str, indent: int) -> list[str]:
+                        spec_obj: Any, obj_name: str, indent: int,
+                        ref_lines: Optional[list[str]] = None) -> list[str]:
     # lobster-trace: SwRequirements.sw_req_reqif_import_initial
-    # lobster-trace: SwRequirements.sw_req_reqif_import_merge
+    # lobster-trace: SwRequirements.sw_req_reqif_import_relation
     """Render the TRLC lines for a single record object instance.
 
     Args:
@@ -479,6 +549,8 @@ def render_record_block(reader: ReqifReader, package_name: str, type_data: dict[
         spec_obj (Any): The spec-object to render.
         obj_name (str): The unique TRLC object name for this instance.
         indent (int): Current indentation level.
+        ref_lines (Optional[list[str]]): Reference field assignment lines to append before the
+            closing brace.
 
     Returns:
         list[str]: The TRLC lines of the record block (including the closing brace).
@@ -500,6 +572,9 @@ def render_record_block(reader: ReqifReader, package_name: str, type_data: dict[
                 if extracted is not None:
                     value_str = extracted
             append_string_attr(lines, pad, attr_meta["trlc_name"], value_str)
+
+    if ref_lines:
+        lines.extend(ref_lines)
 
     lines.append(f"{pad}}}")
 
