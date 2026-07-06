@@ -1,0 +1,8 @@
+package Requirements
+
+type ScalarReq {
+    description             String
+    count                   Integer
+    ratio                   Decimal
+    approved                Boolean
+}

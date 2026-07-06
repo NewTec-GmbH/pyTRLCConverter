@@ -629,6 +629,16 @@ section "SW Requirements" {
                 }
             }
 
+            section "ReqIF Scalar Datatypes" {
+
+                SwReq sw_req_reqif_scalar {
+                    description = "The ReqIF converter shall map TRLC Integer, Decimal and Boolean attributes to the native ReqIF datatypes (DATATYPE-DEFINITION-INTEGER, DATATYPE-DEFINITION-REAL and DATATYPE-DEFINITION-BOOLEAN) and emit the corresponding ATTRIBUTE-VALUE-INTEGER, ATTRIBUTE-VALUE-REAL or ATTRIBUTE-VALUE-BOOLEAN, instead of rendering them as XHTML. Optional scalar attributes with a null value shall be omitted."
+                    verification_criteria = "Verify by converting a TRLC record with Integer, Decimal and Boolean attributes and checking that the generated ReqIF contains the native scalar datatype definitions and attribute values."
+                    valid_status = AbstractRequirements.VALID_STATUS.valid
+                    derived = [sw_req_reqif]
+                }
+            }
+
             section "ReqIF Render Configuration" {
 
                 SwReq sw_req_reqif_render_md {
@@ -724,6 +734,13 @@ section "SW Requirements" {
                 SwReq sw_req_reqif_import_relation {
                     description = "On the initial import the ReqIF import shall reverse-map SPEC-RELATIONs into TRLC record reference fields. For each relation a reference field shall be declared in the generated type (as an array of the target type) and the source record instance shall reference the target records. A relation whose targets do not share a single type shall be skipped."
                     verification_criteria = "Verify by importing a ReqIF file with SPEC-RELATIONs and checking that the generated .rsl declares a reference field and the .trlc instance references the target records."
+                    valid_status = AbstractRequirements.VALID_STATUS.valid
+                    derived = [sw_req_reqif_import]
+                }
+
+                SwReq sw_req_reqif_import_scalar {
+                    description = "The ReqIF import shall map the native ReqIF scalar datatypes (INTEGER, REAL, BOOLEAN) back to TRLC Integer, Decimal and Boolean. On the initial import the generated type shall declare the builtin type and the instance shall emit the value unquoted (Boolean values as the lowercase TRLC literals). On a merge a changed scalar value shall be updated in place."
+                    verification_criteria = "Verify by importing a ReqIF file with native scalar attributes and checking that the generated .rsl declares the builtin types, the .trlc emits unquoted values, and a merge updates a changed scalar value in place."
                     valid_status = AbstractRequirements.VALID_STATUS.valid
                     derived = [sw_req_reqif_import]
                 }

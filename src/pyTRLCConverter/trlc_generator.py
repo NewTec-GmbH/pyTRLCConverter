@@ -152,6 +152,8 @@ class TrlcGenerator:  # pylint: disable=too-few-public-methods
                         f'{attr["enum_trlc_name"]}    [0 .. *]')
             else:
                 line = f'    {attr["trlc_name"]:<{max_attr_len}}    optional    {attr["enum_trlc_name"]}'
+        elif attr["scalar_type"] is not None:
+            line = f'    {attr["trlc_name"]:<{max_attr_len}}    optional    {attr["scalar_type"]}'
         else:
             line = f'    {attr["trlc_name"]:<{max_attr_len}}    optional    String'
 
@@ -355,7 +357,7 @@ class TrlcGenerator:  # pylint: disable=too-few-public-methods
             entry = {**base, "format": "path"}
         elif attr["is_xhtml"]:
             entry = {**base, "format": "xhtml"}
-        elif gfm_format and not attr["is_enum"]:
+        elif gfm_format and not attr["is_enum"] and attr["scalar_type"] is None:
             entry = {
                 **base,
                 "format": "gfm",
@@ -502,6 +504,28 @@ def append_string_attr(lines: list[str], pad: str, attr_name: str, value_str: st
             lines.append(f"{pad}    {attr_name} = {trlc_lit}")
 
 
+def scalar_trlc_value(attr_meta: dict[str, Any], value_str: str) -> str:
+    # lobster-trace: SwRequirements.sw_req_reqif_import_scalar
+    """Return the TRLC literal for a scalar attribute value (unquoted).
+
+    Boolean values are normalized to the lowercase TRLC literals; Integer and Decimal values
+    are passed through as written.
+
+    Args:
+        attr_meta (dict[str, Any]): Attribute metadata.
+        value_str (str): The raw ReqIF value string.
+
+    Returns:
+        str: The TRLC scalar literal.
+    """
+    if attr_meta["scalar_type"] == "Boolean":
+        literal = value_str.strip().lower()
+    else:
+        literal = value_str.strip()
+
+    return literal
+
+
 def format_enum_attr_value(reader: ReqifReader, package_name: str,
                            attr_meta: dict[str, Any], enum_refs: list[str]) -> Optional[str]:
     # lobster-trace: SwRequirements.sw_req_reqif_import_enum
@@ -565,6 +589,10 @@ def render_record_block(reader: ReqifReader, package_name: str, type_data: dict[
             formatted = format_enum_attr_value(reader, package_name, attr_meta, refs)
             if formatted:
                 lines.append(f"{pad}    {attr_meta['trlc_name']} = {formatted}")
+        elif attr_meta["scalar_type"] is not None:
+            value_str = value_map.get(attr_meta["attr_def_id"], "")
+            if value_str:
+                lines.append(f"{pad}    {attr_meta['trlc_name']} = {scalar_trlc_value(attr_meta, value_str)}")
         else:
             value_str = value_map.get(attr_meta["attr_def_id"], "")
             if attr_meta["is_path"] and value_str:

@@ -19,6 +19,7 @@
 # Imports **********************************************************************
 import json
 import os
+import re
 from pathlib import Path
 from pyTRLCConverter.__main__ import main
 from pyTRLCConverter.reqif_converter import ReqifConverter
@@ -338,5 +339,72 @@ def test_tc_reqif_import_relation(record_property, capsys, monkeypatch, tmp_path
     )
     assert symbols is not None
     assert capsys.readouterr().err == ""
+
+
+def test_tc_reqif_import_scalar(record_property, capsys, monkeypatch, tmp_path: Path):
+    # lobster-trace: SwTests.tc_reqif_import_scalar
+    """Native ReqIF scalar datatypes map back to TRLC Integer/Decimal/Boolean and merge in place.
+
+    Args:
+        record_property (Any): Used to inject the test case reference into the test results.
+        capsys (Any): Used to capture stdout and stderr.
+        monkeypatch (Any): Used to mock program arguments.
+        tmp_path (Path): Used to create a temporary output directory.
+    """
+    record_property("lobster-trace", "SwTests.tc_reqif_import_scalar")
+
+    trlc_dir = tmp_path / "trlc"
+    trlc_dir.mkdir()
+    reqif_dir = tmp_path / "reqif"
+    imported_dir = tmp_path / "imported"
+    id_store = str(tmp_path / "ids.json")
+
+    rsl_file = trlc_dir / "req_scalars.rsl"
+    rsl_file.write_text(Path("./tests/utils/req_scalars.rsl").read_text(encoding="utf-8"), encoding="utf-8")
+    data_file = trlc_dir / "data.trlc"
+    data_file.write_text(Path("./tests/utils/single_req_scalars.trlc").read_text(encoding="utf-8"),
+                         encoding="utf-8")
+
+    reqif_file = _export_reqif(monkeypatch, reqif_dir, [str(rsl_file), str(data_file)], id_store=id_store)
+    assert capsys.readouterr().err == ""
+
+    # Initial import: declared builtin types and unquoted values.
+    _import_reqif(monkeypatch, imported_dir, reqif_file, package="Req")
+    assert capsys.readouterr().err == ""
+
+    rsl_content = (imported_dir / "Req.rsl").read_text(encoding="utf-8")
+    trlc_content = (imported_dir / "Req.trlc").read_text(encoding="utf-8")
+    assert re.search(r"count\s+optional\s+Integer", rsl_content) is not None
+    assert re.search(r"ratio\s+optional\s+Decimal", rsl_content) is not None
+    assert re.search(r"approved\s+optional\s+Boolean", rsl_content) is not None
+    assert "count = 42" in trlc_content
+    assert "ratio = 3.14" in trlc_content
+    assert "approved = true" in trlc_content
+
+    assert get_trlc_symbols([str(imported_dir / "Req.rsl"), str(imported_dir / "Req.trlc")], None) is not None
+    assert capsys.readouterr().err == ""
+
+    # Merge: change scalar values in the ReqIF and update the original TRLC in place.
+    Path(reqif_file).write_text(
+        Path(reqif_file).read_text(encoding="utf-8")
+        .replace('THE-VALUE="42"', 'THE-VALUE="7"').replace('THE-VALUE="true"', 'THE-VALUE="false"'),
+        encoding="utf-8"
+    )
+
+    monkeypatch.setattr("sys.argv", [
+        "pyTRLCConverter",
+        "--source", str(rsl_file),
+        "--source", str(data_file),
+        "reqif-import", str(reqif_file),
+        "--id-store", id_store
+    ])
+    main()
+    assert capsys.readouterr().err == ""
+
+    merged = data_file.read_text(encoding="utf-8")
+    assert "count = 7" in merged
+    assert "approved = false" in merged
+    # Unchanged scalar preserved.
+    assert "ratio = 3.14" in merged
 
 # Main *************************************************************************

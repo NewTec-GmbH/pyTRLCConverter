@@ -35,7 +35,10 @@ from reqif.reqif_bundle import ReqIFBundle
 from reqif.unparser import ReqIFUnparser
 from reqif.models.reqif_core_content import ReqIFCoreContent
 from reqif.models.reqif_data_type import (
+    ReqIFDataTypeDefinitionBoolean,
     ReqIFDataTypeDefinitionEnumeration,
+    ReqIFDataTypeDefinitionInteger,
+    ReqIFDataTypeDefinitionReal,
     ReqIFDataTypeDefinitionString,
     ReqIFDataTypeDefinitionXHTML,
     ReqIFEnumValue
@@ -52,7 +55,8 @@ from reqif.models.reqif_specification import ReqIFSpecification
 from reqif.models.reqif_specification_type import ReqIFSpecificationType
 from reqif.models.reqif_types import SpecObjectAttributeType
 from trlc.ast import (
-    Array_Aggregate, Enumeration_Literal, Enumeration_Type, Implicit_Null,
+    Array_Aggregate, Builtin_Boolean, Builtin_Decimal, Builtin_Integer,
+    Enumeration_Literal, Enumeration_Type, Implicit_Null,
     Record_Object, Record_Reference, String_Literal, Expression, Symbol_Table
 )
 from pyTRLCConverter.base_converter import BaseConverter
@@ -84,6 +88,9 @@ class ReqifConverter(BaseConverter):
 
     DATATYPE_XHTML_IDENTIFIER = "datatype-xhtml"
     DATATYPE_STRING_IDENTIFIER = "datatype-string"
+    DATATYPE_INTEGER_IDENTIFIER = "datatype-integer"
+    DATATYPE_REAL_IDENTIFIER = "datatype-real"
+    DATATYPE_BOOLEAN_IDENTIFIER = "datatype-boolean"
     SPECIFICATION_TYPE_IDENTIFIER = "specification-type-trlc"
     XSI_NAMESPACE = "http://www.w3.org/2001/XMLSchema-instance"
 
@@ -127,6 +134,7 @@ class ReqifConverter(BaseConverter):
         self._pending_hierarchy_args: Optional[tuple] = None
         self._spec_title_captured: bool = False
         self._external_files: list = []
+        self._used_scalar_datatypes: set = set()
 
     @staticmethod
     def get_subcommand() -> str:
@@ -405,6 +413,18 @@ class ReqifConverter(BaseConverter):
                     }
                 continue
 
+            scalar_type = self._get_field_scalar_type(record, name)
+
+            if scalar_type is not None:
+                scalar_value = self._scalar_value_from_expression(value, scalar_type)
+                if scalar_value is not None:
+                    attribute_value_map[f"field_{name}"] = {
+                        "long_name": attribute_name,
+                        "value": scalar_value,
+                        "attribute_type": scalar_type,
+                    }
+                continue
+
             walker_result = trlc_ast_walker.walk(value)
 
             attribute_value = ""
@@ -560,6 +580,8 @@ class ReqifConverter(BaseConverter):
             max_length="255"
         )
 
+        scalar_data_types = self._build_scalar_data_types(last_change)
+
         spec_object_type_list = [
             ReqIFSpecObjectType.create(
                 identifier=type_info["identifier"],
@@ -625,7 +647,7 @@ class ReqifConverter(BaseConverter):
         ]
 
         content = ReqIFReqIFContent(
-            data_types=[data_type, string_data_type, *enum_data_types],
+            data_types=[data_type, string_data_type, *scalar_data_types, *enum_data_types],
             spec_types=[*spec_object_type_list, *spec_relation_type_list, specification_type],
             spec_objects=self._spec_objects,
             spec_relations=self._build_spec_relations(),
@@ -640,6 +662,46 @@ class ReqifConverter(BaseConverter):
             lookup=ReqIFObjectLookup.empty(),
             exceptions=[]
         )
+
+    def _build_scalar_data_types(self, last_change: str) -> list:
+        # lobster-trace: SwRequirements.sw_req_reqif_scalar
+        """Build the ReqIF datatype definitions for the scalar attribute types in use.
+
+        Args:
+            last_change (str): ReqIF timestamp used for the datatype definitions.
+
+        Returns:
+            list: The datatype definitions for the used scalar attribute types.
+        """
+        scalar_data_types = []
+
+        if SpecObjectAttributeType.INTEGER in self._used_scalar_datatypes:
+            scalar_data_types.append(ReqIFDataTypeDefinitionInteger(
+                identifier=ReqifConverter.DATATYPE_INTEGER_IDENTIFIER,
+                last_change=last_change,
+                long_name="Integer",
+                min_value="-9223372036854775808",
+                max_value="9223372036854775807"
+            ))
+
+        if SpecObjectAttributeType.REAL in self._used_scalar_datatypes:
+            scalar_data_types.append(ReqIFDataTypeDefinitionReal(
+                identifier=ReqifConverter.DATATYPE_REAL_IDENTIFIER,
+                last_change=last_change,
+                long_name="Real",
+                accuracy=15,
+                min_value="-1.7976931348623157E308",
+                max_value="1.7976931348623157E308"
+            ))
+
+        if SpecObjectAttributeType.BOOLEAN in self._used_scalar_datatypes:
+            scalar_data_types.append(ReqIFDataTypeDefinitionBoolean(
+                identifier=ReqifConverter.DATATYPE_BOOLEAN_IDENTIFIER,
+                last_change=last_change,
+                long_name="Boolean"
+            ))
+
+        return scalar_data_types
 
     def _reset_document_state(self, title: str) -> None:
         # lobster-trace: SwRequirements.sw_req_reqif_multiple_doc_mode
@@ -665,6 +727,7 @@ class ReqifConverter(BaseConverter):
         self._pending_hierarchy_args = None
         self._spec_title_captured = False
         self._external_files = []
+        self._used_scalar_datatypes = set()
 
     def _flush_pending_hierarchy(self) -> None:
         # lobster-trace: SwRequirements.sw_req_reqif_section
@@ -754,13 +817,15 @@ class ReqifConverter(BaseConverter):
             attribute_info = attribute_value_map[key]
             attribute_type = attribute_info.get("attribute_type", SpecObjectAttributeType.XHTML)
 
-            if attribute_type == SpecObjectAttributeType.STRING:
+            if attribute_type in (SpecObjectAttributeType.STRING, SpecObjectAttributeType.INTEGER,
+                                  SpecObjectAttributeType.REAL, SpecObjectAttributeType.BOOLEAN):
                 attributes.append(
-                    self._create_string_attribute(
+                    self._create_simple_attribute(
                         type_key,
                         key,
                         attribute_info["long_name"],
-                        attribute_info["value"]
+                        attribute_info["value"],
+                        attribute_type
                     )
                 )
             elif attribute_type == SpecObjectAttributeType.ENUMERATION:
@@ -822,16 +887,19 @@ class ReqifConverter(BaseConverter):
             value=xhtml_value
         )
 
-    def _create_string_attribute(self, type_key: str, definition_key: str, long_name: str,
-                                 value: str) -> SpecObjectAttribute:
+    # pylint: disable-next=too-many-arguments,too-many-positional-arguments
+    def _create_simple_attribute(self, type_key: str, definition_key: str, long_name: str,
+                                 value: str, attribute_type: SpecObjectAttributeType) -> SpecObjectAttribute:
         # lobster-trace: SwRequirements.sw_req_reqif_record
-        """Create a SpecObjectAttribute of type STRING for the given ReqIF spec-object type.
+        # lobster-trace: SwRequirements.sw_req_reqif_scalar
+        """Create a simple-valued SpecObjectAttribute (String, Integer, Real or Boolean).
 
         Args:
             type_key (str): Internal key of the owning ReqIF spec-object type.
             definition_key (str): Internal dictionary key used to look up or create the attribute definition.
             long_name (str): Human-readable attribute name registered in the spec-object type.
-            value (str): String attribute value.
+            value (str): Attribute value string.
+            attribute_type (SpecObjectAttributeType): ReqIF attribute type (String, Integer, Real or Boolean).
 
         Returns:
             SpecObjectAttribute: The created attribute.
@@ -840,11 +908,11 @@ class ReqifConverter(BaseConverter):
             type_key,
             definition_key,
             long_name,
-            SpecObjectAttributeType.STRING
+            attribute_type
         )
 
         return SpecObjectAttribute(
-            attribute_type=SpecObjectAttributeType.STRING,
+            attribute_type=attribute_type,
             definition_ref=definition_identifier,
             value=value
         )
@@ -986,6 +1054,65 @@ class ReqifConverter(BaseConverter):
         return None
 
     @staticmethod
+    def _get_field_scalar_type(record: Record_Object, field_name: str) -> Optional[SpecObjectAttributeType]:
+        # lobster-trace: SwRequirements.sw_req_reqif_scalar
+        """Return the ReqIF scalar attribute type for the named field, or None if it is not scalar.
+
+        Maps a TRLC builtin Integer, Decimal or Boolean field to the corresponding ReqIF
+        attribute type. Traverses the component hierarchy including inherited components.
+
+        Args:
+            record (Record_Object): The TRLC record object.
+            field_name (str): The field name to look up.
+
+        Returns:
+            Optional[SpecObjectAttributeType]: The ReqIF scalar attribute type, or None.
+        """
+        simplified = Symbol_Table.simplified_name(field_name)
+        stab = getattr(record.n_typ, "components", None)
+        component = None
+
+        while stab is not None and component is None:
+            component = stab.table.get(simplified)
+            stab = stab.parent
+
+        scalar_type = None
+        if component is not None:
+            if isinstance(component.n_typ, Builtin_Integer):
+                scalar_type = SpecObjectAttributeType.INTEGER
+            elif isinstance(component.n_typ, Builtin_Decimal):
+                scalar_type = SpecObjectAttributeType.REAL
+            elif isinstance(component.n_typ, Builtin_Boolean):
+                scalar_type = SpecObjectAttributeType.BOOLEAN
+
+        return scalar_type
+
+    @staticmethod
+    def _scalar_value_from_expression(value: Expression,
+                                      attribute_type: SpecObjectAttributeType) -> Optional[str]:
+        # lobster-trace: SwRequirements.sw_req_reqif_scalar
+        """Return the ReqIF scalar value string for a field expression, or None if null.
+
+        Args:
+            value (Expression): The TRLC field expression.
+            attribute_type (SpecObjectAttributeType): The ReqIF scalar attribute type.
+
+        Returns:
+            Optional[str]: The ReqIF value string, or None for a null value.
+        """
+        scalar_value = None
+
+        if isinstance(value, Implicit_Null) is False:
+            python_value = value.to_python_object()
+            if python_value is not None:
+                if attribute_type == SpecObjectAttributeType.BOOLEAN:
+                    scalar_value = "true" if python_value else "false"
+                else:
+                    scalar_value = str(python_value)
+
+        return scalar_value
+
+    @staticmethod
     def _collect_enum_values_from_expression(value: Expression) -> Optional[list]:
         # lobster-trace: SwRequirements.sw_req_reqif_enum
         # lobster-trace: SwRequirements.sw_req_reqif_enum_null
@@ -1069,6 +1196,10 @@ class ReqifConverter(BaseConverter):
         type_identifier = self._ensure_spec_object_type(type_key, type_key)
         sanitized_name = self._sanitize_identifier_token(definition_key)
         definition_identifier = f"attribute-{type_identifier}-{sanitized_name}"
+
+        if attribute_type in (SpecObjectAttributeType.INTEGER, SpecObjectAttributeType.REAL,
+                              SpecObjectAttributeType.BOOLEAN):
+            self._used_scalar_datatypes.add(attribute_type)
 
         definition = SpecAttributeDefinition(
             attribute_type=attribute_type,
@@ -1222,13 +1353,18 @@ class ReqifConverter(BaseConverter):
         Returns:
             str: Matching datatype definition identifier.
         """
-        if attribute_type == SpecObjectAttributeType.STRING:
-            return ReqifConverter.DATATYPE_STRING_IDENTIFIER
+        datatype_by_attribute_type = {
+            SpecObjectAttributeType.STRING: ReqifConverter.DATATYPE_STRING_IDENTIFIER,
+            SpecObjectAttributeType.XHTML: ReqifConverter.DATATYPE_XHTML_IDENTIFIER,
+            SpecObjectAttributeType.INTEGER: ReqifConverter.DATATYPE_INTEGER_IDENTIFIER,
+            SpecObjectAttributeType.REAL: ReqifConverter.DATATYPE_REAL_IDENTIFIER,
+            SpecObjectAttributeType.BOOLEAN: ReqifConverter.DATATYPE_BOOLEAN_IDENTIFIER,
+        }
 
-        if attribute_type == SpecObjectAttributeType.XHTML:
-            return ReqifConverter.DATATYPE_XHTML_IDENTIFIER
+        if attribute_type not in datatype_by_attribute_type:
+            raise NotImplementedError(attribute_type)
 
-        raise NotImplementedError(attribute_type)
+        return datatype_by_attribute_type[attribute_type]
 
     @staticmethod
     def _sanitize_identifier_token(value: str) -> str:

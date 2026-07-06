@@ -27,7 +27,10 @@
 
 # Imports **********************************************************************
 from typing import Any, Optional
-from trlc.ast import String_Literal, Implicit_Null
+from trlc.ast import (
+    Boolean_Literal, Builtin_Boolean, Builtin_Decimal, Builtin_Integer,
+    Decimal_Literal, Implicit_Null, Integer_Literal, String_Literal, Symbol_Table
+)
 from pyTRLCConverter.import_config import ImportConfig
 from pyTRLCConverter.logger import log_verbose
 from pyTRLCConverter.reqif_identifier_store import ReqifIdentifierStore
@@ -206,14 +209,115 @@ class ReqifMerger:  # pylint: disable=too-few-public-methods
                 patcher.replace(field_value.location.start_pos, field_value.location.end_pos,
                                 trlc_string(desired))
                 self._summary["updated"] += 1
+        elif isinstance(field_value, (Integer_Literal, Decimal_Literal, Boolean_Literal)):
+            literal = self._scalar_literal(field_value, desired)
+            if self._scalar_text(field_value) != literal:
+                patcher.replace(field_value.location.start_pos, field_value.location.end_pos, literal)
+                self._summary["updated"] += 1
         elif isinstance(field_value, Implicit_Null) and len(desired) > 0:
             close_pos = find_block_close(content, record.location.start_pos)
             if close_pos is not None:
                 indent = line_indent(content, close_pos)
                 brace_line_start = content.rfind("\n", 0, close_pos) + 1
-                new_line = f"{indent}    {field_name} = {trlc_string(desired)}\n"
+                value_literal = self._insert_literal(record, field_name, desired)
+                new_line = f"{indent}    {field_name} = {value_literal}\n"
                 patcher.insert(brace_line_start, new_line)
                 self._summary["inserted"] += 1
+
+    @staticmethod
+    def _scalar_text(field_value: Any) -> str:
+        # lobster-trace: SwRequirements.sw_req_reqif_import_scalar
+        """Return the normalized TRLC text of a scalar literal's current value.
+
+        Args:
+            field_value (Any): The scalar literal (Integer, Decimal or Boolean).
+
+        Returns:
+            str: The normalized value text.
+        """
+        python_value = field_value.to_python_object()
+
+        if isinstance(python_value, bool):
+            text = "true" if python_value else "false"
+        else:
+            text = str(python_value)
+
+        return text
+
+    @staticmethod
+    def _scalar_literal(field_value: Any, desired: str) -> str:
+        # lobster-trace: SwRequirements.sw_req_reqif_import_scalar
+        """Return the desired scalar value normalized to a TRLC literal.
+
+        Args:
+            field_value (Any): The current scalar literal (used to detect boolean).
+            desired (str): The desired value string.
+
+        Returns:
+            str: The TRLC scalar literal (unquoted).
+        """
+        if isinstance(field_value, Boolean_Literal):
+            literal = desired.strip().lower()
+        else:
+            literal = desired.strip()
+
+        return literal
+
+    def _insert_literal(self, record: Any, field_name: str, desired: str) -> str:
+        # lobster-trace: SwRequirements.sw_req_reqif_import_scalar
+        """Return the TRLC literal to insert for a previously unset optional field.
+
+        Scalar fields are inserted unquoted; all other fields are inserted as a string literal.
+
+        Args:
+            record (Any): The TRLC record object.
+            field_name (str): The TRLC field name.
+            desired (str): The desired value string.
+
+        Returns:
+            str: The TRLC literal to insert.
+        """
+        scalar_type = self._field_scalar_type(record, field_name)
+
+        if scalar_type == "Boolean":
+            literal = desired.strip().lower()
+        elif scalar_type is not None:
+            literal = desired.strip()
+        else:
+            literal = trlc_string(desired)
+
+        return literal
+
+    @staticmethod
+    def _field_scalar_type(record: Any, field_name: str) -> Optional[str]:
+        # lobster-trace: SwRequirements.sw_req_reqif_import_scalar
+        """Return the TRLC builtin scalar type name of a field, or None if not scalar.
+
+        Args:
+            record (Any): The TRLC record object.
+            field_name (str): The TRLC field name.
+
+        Returns:
+            Optional[str]: "Integer", "Decimal" or "Boolean", or None.
+        """
+        simplified = Symbol_Table.simplified_name(field_name)
+        stab = getattr(record.n_typ, "components", None)
+        component = None
+
+        while stab is not None and component is None:
+            component = stab.table.get(simplified)
+            stab = stab.parent
+
+        scalar_type = None
+        if component is not None:
+            if isinstance(component.n_typ, Builtin_Integer):
+                scalar_type = "Integer"
+            elif isinstance(component.n_typ, Builtin_Decimal):
+                scalar_type = "Decimal"
+            elif isinstance(component.n_typ, Builtin_Boolean):
+                scalar_type = "Boolean"
+
+        return scalar_type
 
     def _warn_orphans(self, matched: set) -> None:
         # lobster-trace: SwRequirements.sw_req_reqif_import_merge

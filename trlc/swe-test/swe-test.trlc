@@ -468,6 +468,16 @@ section "SW Test Cases" {
             description = "This test case checks whether the initial import reverse-maps SPEC-RELATIONs into a TRLC reference field in the generated .rsl and references the target records in the generated .trlc instance."
             verifies = [SwRequirements.sw_req_reqif_import_relation]
         }
+
+        SwTestCase tc_reqif_scalar {
+            description = "This test case checks whether TRLC Integer, Decimal and Boolean attributes are converted to the native ReqIF scalar datatypes and attribute values."
+            verifies = [SwRequirements.sw_req_reqif_scalar]
+        }
+
+        SwTestCase tc_reqif_import_scalar {
+            description = "This test case checks whether the initial import maps native ReqIF scalar datatypes back to TRLC Integer, Decimal and Boolean (declared builtin types, unquoted values) and whether a merge updates a changed scalar value in place."
+            verifies = [SwRequirements.sw_req_reqif_import_scalar]
+        }
     }
 
     section "Docx" {

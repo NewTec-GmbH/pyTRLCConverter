@@ -1,0 +1,8 @@
+package Requirements
+
+ScalarReq req_scalar_1 {
+    description = "A requirement with scalar attributes."
+    count = 42
+    ratio = 3.14
+    approved = true
+}

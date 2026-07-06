@@ -447,6 +447,7 @@ class ReqifReader:
             "is_enum": is_enum,
             "enum_trlc_name": enum_trlc_name,
             "is_multi_valued": is_multi_valued,
+            "scalar_type": _scalar_trlc_type(attr_type),
             "datatype_ref": datatype_ref,
             "attr_def_id": attr_def.identifier,
             "datatype": datatype,
@@ -630,6 +631,28 @@ class ReqifReader:
 
 
 # Functions ********************************************************************
+
+
+def _scalar_trlc_type(attribute_type: Any) -> Optional[str]:
+    # lobster-trace: SwRequirements.sw_req_reqif_import_scalar
+    """Return the TRLC builtin type name for a ReqIF scalar attribute type, or None.
+
+    Args:
+        attribute_type (Any): The ReqIF attribute type.
+
+    Returns:
+        Optional[str]: "Integer", "Decimal" or "Boolean", or None if not a scalar type.
+    """
+    scalar_type = None
+
+    if attribute_type == SpecObjectAttributeType.INTEGER:
+        scalar_type = "Integer"
+    elif attribute_type == SpecObjectAttributeType.REAL:
+        scalar_type = "Decimal"
+    elif attribute_type == SpecObjectAttributeType.BOOLEAN:
+        scalar_type = "Boolean"
+
+    return scalar_type
 
 
 def sanitize_identifier(name: str) -> str:

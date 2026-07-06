@@ -388,6 +388,7 @@ section "SW Architecture" {
                     * Converts configured CommonMark and GFM fields into ReqIF XHTML.
                     * Passes configured XHTML fields through to ReqIF XHTML without modification.
                     * Renders inline PlantUML fenced code blocks as embedded SVG images in XHTML attributes.
+                    * Converts TRLC Integer, Decimal and Boolean attributes to the native ReqIF scalar datatypes and attribute values.
                     * Converts TRLC enumeration type attributes to DATATYPE-DEFINITION-ENUMERATION with 0-based consecutive ENUM-VALUE keys in RSL declaration order.
                     * Omits optional enumeration attributes with null value from the generated spec-object.
                     * Converts TRLC record reference attributes to ReqIF SPEC-RELATION entries.
@@ -421,6 +422,7 @@ section "SW Architecture" {
                     SwRequirements.sw_req_reqif_identifier_store_init,
                     SwRequirements.sw_req_reqif_identifier_store_reuse,
                     SwRequirements.sw_req_reqif_export_map,
+                    SwRequirements.sw_req_reqif_scalar,
                     SwRequirements.sw_req_destination_format
                 ]
             }
@@ -440,6 +442,7 @@ section "SW Architecture" {
                     * Seeds the identifiers of the source ReqIF Identifiable elements into id_store.json so they stay immutable on the roundtrip.
                     * On a re-import with existing TRLC it merges the changes into the existing .trlc files in place (ReqifMerger and TrlcSourcePatcher), matching objects via the identifier store and preserving comments, formatting and attributes that are not part of the exchange.
                     * Reverse-maps SPEC-RELATIONs into TRLC record reference fields on the initial import.
+                    * Maps native ReqIF scalar datatypes (INTEGER, REAL, BOOLEAN) back to TRLC Integer, Decimal and Boolean.
                     """
                 verification_criteria = "Call the tool using the `pyTRLCConverter` frontend with the reqif-import subcommand."
                 satisfies = [
@@ -450,7 +453,8 @@ section "SW Architecture" {
                     SwRequirements.sw_req_reqif_import_path,
                     SwRequirements.sw_req_reqif_import_identifier,
                     SwRequirements.sw_req_reqif_import_merge,
-                    SwRequirements.sw_req_reqif_import_relation
+                    SwRequirements.sw_req_reqif_import_relation,
+                    SwRequirements.sw_req_reqif_import_scalar
                 ]
             }
         }

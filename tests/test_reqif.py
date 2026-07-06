@@ -29,6 +29,7 @@ from tests.reqif_test_utils import (
     _find_spec_object_by_long_name,
     _find_attribute_by_identifier,
     _find_attribute_identifier,
+    _find_datatype_by_long_name,
     _assert_reqif_v12_compliance,
     _collect_identifiers,
 )
@@ -880,6 +881,52 @@ def test_tc_reqif_export_map(record_property, capsys, monkeypatch, tmp_path: Pat
 
     # The excluded 'index' attribute is not part of the output at all.
     assert _find_attribute_identifier(bundle, "index") is None
+
+    _assert_reqif_v12_compliance(output_file, tmp_path)
+
+
+def test_tc_reqif_scalar(record_property, capsys, monkeypatch, tmp_path: Path):
+    # lobster-trace: SwTests.tc_reqif_scalar
+    """TRLC Integer, Decimal and Boolean attributes export as native ReqIF scalar datatypes.
+
+    Args:
+        record_property (Any): Used to inject the test case reference into the test results.
+        capsys (Any): Used to capture stdout and stderr.
+        monkeypatch (Any): Used to mock program arguments.
+        tmp_path (Path): Used to create a temporary output directory.
+    """
+    record_property("lobster-trace", "SwTests.tc_reqif_scalar")
+
+    monkeypatch.setattr("sys.argv", [
+        "pyTRLCConverter",
+        "--source", "./tests/utils/req_scalars.rsl",
+        "--source", "./tests/utils/single_req_scalars.trlc",
+        "--out", str(tmp_path),
+        "reqif",
+        "--single-document"
+    ])
+
+    main()
+    assert capsys.readouterr().err == ""
+
+    output_file = os.path.join(tmp_path, ReqifConverter.OUTPUT_FILE_NAME_DEFAULT)
+    bundle = _parse_reqif(output_file)
+    spec_object = _find_spec_object_by_long_name(bundle, "req_scalar_1")
+    assert spec_object is not None
+
+    # The native scalar datatype definitions are present.
+    assert _find_datatype_by_long_name(bundle, "Integer") is not None
+    assert _find_datatype_by_long_name(bundle, "Real") is not None
+    assert _find_datatype_by_long_name(bundle, "Boolean") is not None
+
+    # The scalar attribute values are emitted natively (not wrapped in XHTML).
+    count_attr = _find_attribute_by_identifier(spec_object, _find_attribute_identifier(bundle, "count"))
+    ratio_attr = _find_attribute_by_identifier(spec_object, _find_attribute_identifier(bundle, "ratio"))
+    approved_attr = _find_attribute_by_identifier(spec_object, _find_attribute_identifier(bundle, "approved"))
+
+    assert count_attr.value == "42"
+    assert ratio_attr.value == "3.14"
+    assert approved_attr.value == "true"
 
     _assert_reqif_v12_compliance(output_file, tmp_path)
 
