@@ -30,6 +30,7 @@
 import os
 from typing import Any, Optional
 from pyTRLCConverter.import_config import ImportConfig
+from pyTRLCConverter.import_filter import ImportFilter
 from pyTRLCConverter.logger import log_error, log_verbose
 from pyTRLCConverter.render_config import RenderConfig
 from pyTRLCConverter.reqif_identifier_store import ReqifIdentifierStore
@@ -110,6 +111,15 @@ class ReqifImporter:
                  "match objects on a merge import."
         )
 
+        parser.add_argument(
+            "--import-filter",
+            type=str,
+            default=None,
+            required=False,
+            help="Path to a JSON import filter used by the initial import to restrict which ReqIF "
+                 "spec-object types are imported (includeTypes) and which attributes are dropped (exclude)."
+        )
+
     def run(self) -> Ret:
         # lobster-trace: SwRequirements.sw_req_reqif_import
         """Run the import.
@@ -124,16 +134,46 @@ class ReqifImporter:
             log_error(f"ReqIF input file not found: {input_path}")
             result = Ret.ERROR
         else:
-            reader = ReqifReader()
+            is_merge = self._has_existing_trlc()
+            import_filter = self._load_import_filter(is_merge)
 
-            if reader.load(input_path) is False:
+            if import_filter is None:
                 result = Ret.ERROR
-            elif self._has_existing_trlc() is True:
-                result = self._run_merge(reader)
             else:
-                result = self._run_initial(reader)
+                reader = ReqifReader(import_filter)
+                if reader.load(input_path) is False:
+                    result = Ret.ERROR
+                elif is_merge is True:
+                    result = self._run_merge(reader)
+                else:
+                    result = self._run_initial(reader)
 
         return result
+
+    def _load_import_filter(self, is_merge: bool) -> Optional[ImportFilter]:
+        # lobster-trace: SwRequirements.sw_req_reqif_import_filter
+        """Load the import filter for the initial import, or a permissive one.
+
+        The filter only applies to the initial import; on a merge a permissive filter is used
+        and a provided --import-filter is ignored with a note.
+
+        Args:
+            is_merge (bool): Whether the run is a merge import.
+
+        Returns:
+            Optional[ImportFilter]: The import filter, or None on a load error.
+        """
+        import_filter = ImportFilter()
+        filter_path = self._args.import_filter
+
+        if filter_path is not None:
+            if is_merge is True:
+                log_verbose("The --import-filter is ignored on a merge import.")
+            elif import_filter.load(filter_path) is False:
+                log_error(f"Failed to load import filter file {filter_path}.")
+                import_filter = None
+
+        return import_filter
 
     def _has_existing_trlc(self) -> bool:
         # lobster-trace: SwRequirements.sw_req_reqif_import

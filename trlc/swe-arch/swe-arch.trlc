@@ -443,6 +443,7 @@ section "SW Architecture" {
                     * On a re-import with existing TRLC it merges the changes into the existing .trlc files in place (ReqifMerger and TrlcSourcePatcher), matching objects via the identifier store and preserving comments, formatting and attributes that are not part of the exchange.
                     * Reverse-maps SPEC-RELATIONs into TRLC record reference fields on the initial import.
                     * Maps native ReqIF scalar datatypes (INTEGER, REAL, BOOLEAN) back to TRLC Integer, Decimal and Boolean.
+                    * Supports an optional import filter (ImportFilter) on the initial import to restrict imported spec-object types and drop attributes.
                     """
                 verification_criteria = "Call the tool using the `pyTRLCConverter` frontend with the reqif-import subcommand."
                 satisfies = [
@@ -454,7 +455,8 @@ section "SW Architecture" {
                     SwRequirements.sw_req_reqif_import_identifier,
                     SwRequirements.sw_req_reqif_import_merge,
                     SwRequirements.sw_req_reqif_import_relation,
-                    SwRequirements.sw_req_reqif_import_scalar
+                    SwRequirements.sw_req_reqif_import_scalar,
+                    SwRequirements.sw_req_reqif_import_filter
                 ]
             }
         }

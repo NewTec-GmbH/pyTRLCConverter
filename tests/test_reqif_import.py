@@ -407,4 +407,59 @@ def test_tc_reqif_import_scalar(record_property, capsys, monkeypatch, tmp_path: 
     # Unchanged scalar preserved.
     assert "ratio = 3.14" in merged
 
+
+def test_tc_reqif_import_filter(record_property, capsys, monkeypatch, tmp_path: Path):
+    # lobster-trace: SwTests.tc_reqif_import_filter
+    """The initial import filter restricts imported types and drops excluded attributes.
+
+    Args:
+        record_property (Any): Used to inject the test case reference into the test results.
+        capsys (Any): Used to capture stdout and stderr.
+        monkeypatch (Any): Used to mock program arguments.
+        tmp_path (Path): Used to create a temporary output directory.
+    """
+    record_property("lobster-trace", "SwTests.tc_reqif_import_filter")
+
+    reqif_dir = tmp_path / "reqif"
+    imported_dir = tmp_path / "imported"
+
+    reqif_file = _export_reqif(
+        monkeypatch, reqif_dir,
+        ["./tests/utils/req_array_refs.rsl", "./tests/utils/array_ref_records.trlc"]
+    )
+    assert capsys.readouterr().err == ""
+
+    # Import only the Requirement type and drop the foreign identifier attribute.
+    filter_file = tmp_path / "filter.json"
+    with open(filter_file, "w", encoding="utf-8") as fd:
+        json.dump(
+            {"includeTypes": ["Requirement"], "exclude": [{"type": ".*", "attribute": "ReqIF.ForeignID"}]},
+            fd
+        )
+
+    monkeypatch.setattr("sys.argv", [
+        "pyTRLCConverter",
+        "--out", str(imported_dir),
+        "reqif-import", str(reqif_file),
+        "--package", "Spec",
+        "--import-filter", str(filter_file)
+    ])
+    main()
+    assert capsys.readouterr().err == ""
+
+    rsl_content = (imported_dir / "Spec.rsl").read_text(encoding="utf-8")
+    trlc_content = (imported_dir / "Spec.trlc").read_text(encoding="utf-8")
+
+    # The included type is present; the excluded type and attribute are gone.
+    assert "type Requirement" in rsl_content
+    assert "TestCase" not in rsl_content
+    assert "tc_array" not in trlc_content
+    assert "ForeignID" not in rsl_content
+    assert "ForeignID" not in trlc_content
+
+    # The generated TRLC parses without errors.
+    symbols = get_trlc_symbols([str(imported_dir / "Spec.rsl"), str(imported_dir / "Spec.trlc")], None)
+    assert symbols is not None
+    assert capsys.readouterr().err == ""
+
 # Main *************************************************************************

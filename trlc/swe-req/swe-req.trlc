@@ -745,6 +745,13 @@ section "SW Requirements" {
                     derived = [sw_req_reqif_import]
                 }
 
+                SwReq sw_req_reqif_import_filter {
+                    description = "The initial ReqIF import shall support an optional import filter, provided via the --import-filter JSON file and matched against the ReqIF long names, that restricts which spec-object types are imported (includeTypes) and which attributes are dropped (exclude). Filtered types, their spec-objects and relations, and filtered attributes shall not appear in any generated file. The filter applies to the initial import only."
+                    verification_criteria = "Verify by importing a ReqIF file with an --import-filter that includes only one type and excludes an attribute, and checking that the excluded type and attribute are absent from the generated files."
+                    valid_status = AbstractRequirements.VALID_STATUS.valid
+                    derived = [sw_req_reqif_import]
+                }
+
                 SwReq sw_req_reqif_import_merge {
                     description = "When existing TRLC source is provided, the ReqIF import shall update the existing .trlc files in place. ReqIF objects shall be matched to TRLC records via the identifier store (the ReqIF identifier mapped back to the stable logical key). For a matched record the changed string attribute values shall be updated: a set field is replaced and a previously unset optional field receives a new line. Attributes that are not part of the exchange, comments and formatting shall be preserved. TRLC records without a matching ReqIF object shall be kept unchanged and ReqIF objects without a matching TRLC record shall be reported. The --id-store argument is required."
                     verification_criteria = "Verify by exporting a TRLC file with --id-store, changing an attribute value in the ReqIF, merging it back with --id-store and checking that the .trlc value is updated in place while comments and unchanged content are preserved."

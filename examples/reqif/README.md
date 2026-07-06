@@ -150,6 +150,23 @@ modes selected automatically by whether existing TRLC is provided via `--source`
   pyTRLCConverter --out ./out reqif-import input.reqif --package Req
   ```
 
+  An optional `--import-filter <file.json>` restricts what the initial import brings in. It is
+  matched against the ReqIF long names: `includeTypes` keeps only the listed spec-object types
+  (others, their objects and relations are skipped) and `exclude` drops matching attributes.
+  Filtered items appear in none of the generated files. The filter applies to the initial import
+  only.
+
+  ```json
+  {
+      "includeTypes": ["Requirement", "TestCase"],
+      "exclude": [ { "type": ".*", "attribute": "ReqIF.ForeignModified" } ]
+  }
+  ```
+
+  ```bash
+  pyTRLCConverter --out ./out reqif-import input.reqif --package Req --import-filter filter.json
+  ```
+
 - **Merge import (re-import)** — existing TRLC provided via `--source`. The existing `.trlc` files are
   updated in place: objects are matched via the identifier store (`--id-store`, required), changed
   string attribute values are updated, and comments, formatting and attributes that are not part of

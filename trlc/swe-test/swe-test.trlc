@@ -478,6 +478,11 @@ section "SW Test Cases" {
             description = "This test case checks whether the initial import maps native ReqIF scalar datatypes back to TRLC Integer, Decimal and Boolean (declared builtin types, unquoted values) and whether a merge updates a changed scalar value in place."
             verifies = [SwRequirements.sw_req_reqif_import_scalar]
         }
+
+        SwTestCase tc_reqif_import_filter {
+            description = "This test case checks whether the initial import applies an --import-filter that includes only selected spec-object types and excludes selected attributes, so the excluded type and attribute are absent from the generated files."
+            verifies = [SwRequirements.sw_req_reqif_import_filter]
+        }
     }
 
     section "Docx" {

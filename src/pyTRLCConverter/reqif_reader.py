@@ -32,6 +32,7 @@ import zipfile
 from typing import Any, Optional
 from reqif.parser import ReqIFParser
 from reqif.models.reqif_types import SpecObjectAttributeType
+from pyTRLCConverter.import_filter import ImportFilter
 from pyTRLCConverter.logger import log_error, log_verbose
 
 # Variables ********************************************************************
@@ -69,10 +70,16 @@ _INTERNAL_UUID_RE = re.compile(
 class ReqifReader:
     """Parses a ReqIF file and provides a normalized model for the import."""
 
-    def __init__(self) -> None:
+    def __init__(self, import_filter: Optional[ImportFilter] = None) -> None:
         # lobster-trace: SwRequirements.sw_req_reqif_import
+        # lobster-trace: SwRequirements.sw_req_reqif_import_filter
         """Initializes the ReqIF reader.
+
+        Args:
+            import_filter (Optional[ImportFilter]): Filter restricting which types and attributes
+                are imported. If None, everything is imported.
         """
+        self._import_filter = import_filter if import_filter is not None else ImportFilter()
         self._bundle: Any = None
         self._content: Any = None
         self._datatype_map: dict[str, Any] = {}
@@ -217,6 +224,13 @@ class ReqifReader:
         self._spec_object_map = self._build_spec_object_map()
         self._type_info, self._type_id_to_trlc_name = self._collect_type_info()
 
+        # Drop spec-objects whose type was filtered out so they never reach the generated files.
+        self._spec_object_map = {
+            identifier: obj
+            for identifier, obj in self._spec_object_map.items()
+            if getattr(obj, "spec_object_type", None) in self._type_info
+        }
+
         path_attr_def_ids = self._detect_path_attributes()
         for type_data in self._type_info.values():
             for attr in type_data["attrs"]:
@@ -339,9 +353,10 @@ class ReqifReader:
                 attrs = [
                     self._build_attr_meta(attr_def, used_attr_names)
                     for attr_def in attr_definitions
+                    if self._is_attribute_kept(long_name, attr_def)
                 ]
 
-                if type_identifier:
+                if type_identifier and self._import_filter.is_type_included(long_name):
                     type_info[type_identifier] = {
                         "trlc_name": trlc_type_name,
                         "long_name": long_name,
@@ -408,6 +423,21 @@ class ReqifReader:
                         })
                 else:
                     log_verbose(f"Relation '{relation_name}' has mixed target types; not reverse-mapped.")
+
+    def _is_attribute_kept(self, type_long_name: str, attr_def: Any) -> bool:
+        # lobster-trace: SwRequirements.sw_req_reqif_import_filter
+        """Return whether the given attribute definition shall be kept (not filtered out).
+
+        Args:
+            type_long_name (str): The ReqIF spec-object type long name.
+            attr_def (Any): The attribute definition.
+
+        Returns:
+            bool: True if the attribute is kept, False if the import filter excludes it.
+        """
+        attr_long_name = getattr(attr_def, "long_name", None) or getattr(attr_def, "identifier", "")
+
+        return self._import_filter.is_attribute_excluded(type_long_name, attr_long_name) is False
 
     def _build_attr_meta(self, attr_def: Any, used_attr_names: set[str]) -> dict[str, Any]:
         # lobster-trace: SwRequirements.sw_req_reqif_import
