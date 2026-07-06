@@ -231,6 +231,20 @@ class ReqifReader:
             if getattr(obj, "spec_object_type", None) in self._type_info
         }
 
+        # Drop enumeration datatypes no longer referenced by any kept attribute so unused
+        # enum types are not written to the generated .rsl.
+        used_enum_datatypes = {
+            attr["datatype_ref"]
+            for type_data in self._type_info.values()
+            for attr in type_data["attrs"]
+            if attr["is_enum"] and attr["datatype_ref"]
+        }
+        self._enum_info = {
+            datatype_id: info
+            for datatype_id, info in self._enum_info.items()
+            if datatype_id in used_enum_datatypes
+        }
+
         path_attr_def_ids = self._detect_path_attributes()
         for type_data in self._type_info.values():
             for attr in type_data["attrs"]:

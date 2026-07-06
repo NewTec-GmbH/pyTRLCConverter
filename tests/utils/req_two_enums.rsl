@@ -1,0 +1,21 @@
+package Requirements
+
+enum Colour {
+    Red
+    Green
+}
+
+enum Size {
+    Small
+    Large
+}
+
+type Widget {
+    description             String
+    colour                  Colour
+}
+
+type Gadget {
+    description             String
+    size                    Size
+}

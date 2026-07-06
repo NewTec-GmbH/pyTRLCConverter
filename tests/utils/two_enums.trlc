@@ -1,0 +1,11 @@
+package Requirements
+
+Widget w1 {
+    description = "A widget."
+    colour = Colour.Red
+}
+
+Gadget g1 {
+    description = "A gadget."
+    size = Size.Large
+}

@@ -425,15 +425,15 @@ def test_tc_reqif_import_filter(record_property, capsys, monkeypatch, tmp_path: 
 
     reqif_file = _export_reqif(
         monkeypatch, reqif_dir,
-        ["./tests/utils/req_array_refs.rsl", "./tests/utils/array_ref_records.trlc"]
+        ["./tests/utils/req_two_enums.rsl", "./tests/utils/two_enums.trlc"]
     )
     assert capsys.readouterr().err == ""
 
-    # Import only the Requirement type and drop the foreign identifier attribute.
+    # Import only the Widget type and drop the foreign identifier attribute.
     filter_file = tmp_path / "filter.json"
     with open(filter_file, "w", encoding="utf-8") as fd:
         json.dump(
-            {"includeTypes": ["Requirement"], "exclude": [{"type": ".*", "attribute": "ReqIF.ForeignID"}]},
+            {"includeTypes": ["Widget"], "exclude": [{"type": ".*", "attribute": "ReqIF.ForeignID"}]},
             fd
         )
 
@@ -451,11 +451,15 @@ def test_tc_reqif_import_filter(record_property, capsys, monkeypatch, tmp_path: 
     trlc_content = (imported_dir / "Spec.trlc").read_text(encoding="utf-8")
 
     # The included type is present; the excluded type and attribute are gone.
-    assert "type Requirement" in rsl_content
-    assert "TestCase" not in rsl_content
-    assert "tc_array" not in trlc_content
+    assert "type Widget" in rsl_content
+    assert "Gadget" not in rsl_content
+    assert "g1" not in trlc_content
     assert "ForeignID" not in rsl_content
     assert "ForeignID" not in trlc_content
+
+    # The enum used by the kept type remains; the enum only used by the excluded type is dropped.
+    assert "enum Colour" in rsl_content
+    assert "enum Size" not in rsl_content
 
     # The generated TRLC parses without errors.
     symbols = get_trlc_symbols([str(imported_dir / "Spec.rsl"), str(imported_dir / "Spec.trlc")], None)

@@ -746,8 +746,8 @@ section "SW Requirements" {
                 }
 
                 SwReq sw_req_reqif_import_filter {
-                    description = "The initial ReqIF import shall support an optional import filter, provided via the --import-filter JSON file and matched against the ReqIF long names, that restricts which spec-object types are imported (includeTypes) and which attributes are dropped (exclude). Filtered types, their spec-objects and relations, and filtered attributes shall not appear in any generated file. The filter applies to the initial import only."
-                    verification_criteria = "Verify by importing a ReqIF file with an --import-filter that includes only one type and excludes an attribute, and checking that the excluded type and attribute are absent from the generated files."
+                    description = "The initial ReqIF import shall support an optional import filter, provided via the --import-filter JSON file and matched against the ReqIF long names, that restricts which spec-object types are imported (includeTypes) and which attributes are dropped (exclude). Filtered types, their spec-objects and relations, and filtered attributes shall not appear in any generated file. Enumeration datatypes that are no longer referenced by any kept attribute shall not be generated either. The filter applies to the initial import only."
+                    verification_criteria = "Verify by importing a ReqIF file with an --import-filter that includes only one type and excludes an attribute, and checking that the excluded type, attribute and any enumeration datatype that is no longer referenced are absent from the generated files."
                     valid_status = AbstractRequirements.VALID_STATUS.valid
                     derived = [sw_req_reqif_import]
                 }
