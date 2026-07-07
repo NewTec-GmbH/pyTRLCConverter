@@ -522,6 +522,13 @@ section "SW Requirements" {
                 valid_status = AbstractRequirements.VALID_STATUS.valid
             }
 
+            SwReq sw_req_reqif_foreign_id {
+                description = "The ReqIF converter shall write the ReqIF.ForeignID attribute of each exported spec-object as a single STRING attribute holding the identifier issued by the originating tool. When the record has a ForeignID field its value shall be used and that field shall not be exported as a separate attribute; otherwise the TRLC object name shall be used. This keeps the ReqIF.ForeignID value immutable across an import and export round-trip."
+                verification_criteria = "Verify by exporting a record that has a ForeignID field and checking that the spec-object has exactly one STRING ReqIF.ForeignID attribute equal to the field value and no separate ForeignID attribute."
+                valid_status = AbstractRequirements.VALID_STATUS.valid
+                derived = [sw_req_reqif]
+            }
+
             section "ReqIF Multiple Documents Mode" {
                 SwReq sw_req_reqif_multiple_doc_mode {
                     description = "The software shall create a ReqIF file for each TRLC file by default."
@@ -701,6 +708,13 @@ section "SW Requirements" {
                     verification_criteria = "Verify by importing a ReqIF file into an empty output directory and checking that the generated .rsl and .trlc parse and that the companion configuration files are created."
                     valid_status = AbstractRequirements.VALID_STATUS.valid
                     derived = [sw_req_reqif_import]
+                }
+
+                SwReq sw_req_reqif_import_translation {
+                    description = "The generated translation.json shall map each TRLC attribute name back to its original ReqIF long name verbatim whenever the two differ, so the ReqIF long names are reproduced faithfully on the export. This applies to all attributes whose long name deviates from the sanitized TRLC field name, including ReqIF system attributes such as ReqIF.ForeignCreatedBy or ReqIF.ChapterName that are not part of the mandatory set."
+                    verification_criteria = "Verify by importing a ReqIF file with an attribute whose long name is a prefixed system name (e.g. ReqIF.ForeignCreatedBy) and checking that the generated translation.json maps the TRLC field name back to that original long name."
+                    valid_status = AbstractRequirements.VALID_STATUS.valid
+                    derived = [sw_req_reqif_import_initial]
                 }
 
                 SwReq sw_req_reqif_import_enum {

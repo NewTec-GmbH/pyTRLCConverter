@@ -31,8 +31,6 @@ from typing import Any, Optional
 from pyTRLCConverter.logger import log_error, log_verbose
 from pyTRLCConverter.reqif_reader import (
     ReqifReader,
-    REQIF_SYSTEM_PREFIX,
-    REQIF_MANDATORY_LONG_NAMES,
     extract_object_data,
     sanitize_identifier
 )
@@ -368,7 +366,12 @@ class TrlcGenerator:  # pylint: disable=too-few-public-methods
 
     def _write_translation(self, trans_path: str) -> None:
         # lobster-trace: SwRequirements.sw_req_reqif_import_initial
+        # lobster-trace: SwRequirements.sw_req_reqif_import_translation
         """Write the translation.json mapping TRLC attribute names to ReqIF long names.
+
+        Each TRLC attribute name is mapped back to its original ReqIF long name verbatim
+        whenever the two differ, so the ReqIF long names are reproduced faithfully on the
+        export round-trip.
 
         Args:
             trans_path (str): Destination file path.
@@ -380,7 +383,7 @@ class TrlcGenerator:  # pylint: disable=too-few-public-methods
                 trlc_type = type_data["trlc_name"]
                 attr_map: dict[str, str] = {}
                 for attr in type_data["attrs"]:
-                    long_name = self._translation_long_name(attr["long_name"])
+                    long_name = attr["long_name"]
                     if attr["trlc_name"] != long_name:
                         attr_map[attr["trlc_name"]] = long_name
                 if attr_map:
@@ -389,26 +392,6 @@ class TrlcGenerator:  # pylint: disable=too-few-public-methods
         with open(trans_path, "w", encoding="utf-8") as fh:
             json.dump(translation, fh, indent=4, ensure_ascii=False)
             fh.write("\n")
-
-    @staticmethod
-    def _translation_long_name(original: str) -> str:
-        # lobster-trace: SwRequirements.sw_req_reqif_import_initial
-        """Return the long name to store in the translation for an attribute.
-
-        The ReqIF system prefix is stripped except for the mandatory system attributes.
-
-        Args:
-            original (str): The original ReqIF long name.
-
-        Returns:
-            str: The long name to store in the translation.
-        """
-        if original.startswith(REQIF_SYSTEM_PREFIX) and original not in REQIF_MANDATORY_LONG_NAMES:
-            long_name = original[len(REQIF_SYSTEM_PREFIX):]
-        else:
-            long_name = original
-
-        return long_name
 
     def _seed_hierarchy_id(self, hierarchy: Any, spec_obj: Any, obj_name: str,
                            has_children: bool) -> None:

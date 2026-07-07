@@ -180,6 +180,10 @@ def test_tc_reqif_single_doc_custom(record_property, capsys, monkeypatch, tmp_pa
     bundle = _parse_reqif(output_file)
     assert bundle.core_content is not None
 
+    # A top-level title containing spaces must not leak into the SPECIFICATION IDENTIFIER
+    # (xs:ID forbids whitespace); the generated file must remain XSD compliant.
+    _assert_reqif_v12_compliance(output_file, tmp_path)
+
 
 def test_tc_reqif_render_md(record_property, capsys, monkeypatch, tmp_path: Path):
     # lobster-trace: SwTests.tc_reqif_render_md
@@ -927,6 +931,50 @@ def test_tc_reqif_scalar(record_property, capsys, monkeypatch, tmp_path: Path):
     assert count_attr.value == "42"
     assert ratio_attr.value == "3.14"
     assert approved_attr.value == "true"
+
+    _assert_reqif_v12_compliance(output_file, tmp_path)
+
+
+def test_tc_reqif_foreign_id(record_property, capsys, monkeypatch, tmp_path: Path):
+    # lobster-trace: SwTests.tc_reqif_foreign_id
+    """A record with a ForeignID field yields a single ReqIF.ForeignID and no separate ForeignID attribute.
+
+    Args:
+        record_property (Any): Used to inject the test case reference into the test results.
+        capsys (Any): Used to capture stdout and stderr.
+        monkeypatch (Any): Used to mock program arguments.
+        tmp_path (Path): Used to create a temporary output directory.
+    """
+    record_property("lobster-trace", "SwTests.tc_reqif_foreign_id")
+
+    monkeypatch.setattr("sys.argv", [
+        "pyTRLCConverter",
+        "--source", "./tests/utils/req_foreign.rsl",
+        "--source", "./tests/utils/single_req_foreign.trlc",
+        "--out", str(tmp_path),
+        "reqif",
+        "--single-document"
+    ])
+
+    main()
+    assert capsys.readouterr().err == ""
+
+    output_file = os.path.join(tmp_path, ReqifConverter.OUTPUT_FILE_NAME_DEFAULT)
+    bundle = _parse_reqif(output_file)
+
+    # The spec-object long-name is the TRLC object name.
+    spec_object = _find_spec_object_by_long_name(bundle, "x456552")
+    assert spec_object is not None
+
+    # Exactly one STRING ReqIF.ForeignID attribute, holding the ForeignID field value.
+    foreign_id_identifier = _find_attribute_identifier(bundle, "ReqIF.ForeignID")
+    assert foreign_id_identifier is not None
+    foreign_id_attr = _find_attribute_by_identifier(spec_object, foreign_id_identifier)
+    assert foreign_id_attr is not None
+    assert foreign_id_attr.value == "456552"
+
+    # The ForeignID field is not exported as a separate attribute.
+    assert _find_attribute_identifier(bundle, "ForeignID") is None
 
     _assert_reqif_v12_compliance(output_file, tmp_path)
 

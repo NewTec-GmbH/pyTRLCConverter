@@ -1,0 +1,7 @@
+package Requirements
+
+Requirement x456552 {
+    ForeignID = "456552"
+    ForeignCreatedBy = "MuecJoe0"
+    description = "Test description"
+}

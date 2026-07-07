@@ -43,13 +43,6 @@ REQIF_SYSTEM_PREFIX = "ReqIF."
 # Long name of the foreign identifier attribute written by the ReqIF export.
 REQIF_FOREIGN_ID_LONG_NAME = "ReqIF.ForeignID"
 
-# ReqIF system attributes whose full long name (including the prefix) must be preserved.
-REQIF_MANDATORY_LONG_NAMES = frozenset({
-    "ReqIF.Name",
-    "ReqIF.Text",
-    "ReqIF.Description",
-})
-
 # TRLC keywords which must not be used as identifiers.
 TRLC_KEYWORDS = frozenset({
     "abs", "abstract", "and", "checks", "else", "elsif", "enum", "error",

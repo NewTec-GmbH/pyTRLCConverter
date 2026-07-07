@@ -96,6 +96,7 @@ class ReqifConverter(BaseConverter):
 
     SYSTEM_ATTRIBUTE_PREFIX = "ReqIF."
     ATTRIBUTE_KEY_RECORD_FOREIGN_ID = "foreignID"
+    RECORD_FOREIGN_ID_FIELD = "ForeignID"
 
     def __init__(self, args: Any) -> None:
         # lobster-trace: SwRequirements.sw_req_reqif
@@ -370,6 +371,7 @@ class ReqifConverter(BaseConverter):
     def convert_record_object_generic(self, record: Record_Object, level: int, translation: Optional[dict]) -> Ret:
         # lobster-trace: SwRequirements.sw_req_reqif_record
         # lobster-trace: SwRequirements.sw_req_reqif_export_map
+        # lobster-trace: SwRequirements.sw_req_reqif_foreign_id
         """Convert a record object generically to a ReqIF spec-object.
 
         Args:
@@ -386,13 +388,16 @@ class ReqifConverter(BaseConverter):
         attribute_value_map = {
             ReqifConverter.ATTRIBUTE_KEY_RECORD_FOREIGN_ID: {
                 "long_name": f"{ReqifConverter.SYSTEM_ATTRIBUTE_PREFIX}ForeignID",
-                "value": record.name,
+                "value": self._resolve_foreign_id(record),
                 "attribute_type": SpecObjectAttributeType.STRING
             }
         }
         type_key = self._get_record_type_key(record)
 
         for name, value in record.field.items():
+            if name == ReqifConverter.RECORD_FOREIGN_ID_FIELD:
+                continue
+
             if self._export_map.is_excluded(record.n_package.name, record.n_typ.name, name) is True:
                 continue
 
@@ -611,7 +616,7 @@ class ReqifConverter(BaseConverter):
         )
 
         specification = ReqIFSpecification(
-            identifier=self._document_title,
+            identifier=self._obtain_identifier(f"specification:{self._document_title}", "specification"),
             long_name=self._document_title,
             last_change=last_change,
             specification_type=ReqifConverter.SPECIFICATION_TYPE_IDENTIFIER,
@@ -1086,6 +1091,33 @@ class ReqifConverter(BaseConverter):
                 scalar_type = SpecObjectAttributeType.BOOLEAN
 
         return scalar_type
+
+    @staticmethod
+    def _resolve_foreign_id(record: Record_Object) -> str:
+        # lobster-trace: SwRequirements.sw_req_reqif_foreign_id
+        """Return the ReqIF.ForeignID value of a record.
+
+        The identifier issued by the originating tool is preferred: it is taken from the
+        record's ForeignID field when present, so an imported identifier is reproduced
+        exactly on the round-trip. When the field is absent or null, the TRLC object name
+        is used as a fallback.
+
+        Args:
+            record (Record_Object): The record object.
+
+        Returns:
+            str: The ReqIF.ForeignID value.
+        """
+        foreign_id = record.name
+
+        field_value = record.field.get(ReqifConverter.RECORD_FOREIGN_ID_FIELD)
+        if field_value is not None:
+            scalar_value = ReqifConverter._scalar_value_from_expression(
+                field_value, SpecObjectAttributeType.STRING)
+            if scalar_value is not None:
+                foreign_id = scalar_value
+
+        return foreign_id
 
     @staticmethod
     def _scalar_value_from_expression(value: Expression,

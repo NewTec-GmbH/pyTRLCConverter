@@ -466,4 +466,47 @@ def test_tc_reqif_import_filter(record_property, capsys, monkeypatch, tmp_path: 
     assert symbols is not None
     assert capsys.readouterr().err == ""
 
+
+def test_tc_reqif_import_translation(record_property, capsys, monkeypatch, tmp_path: Path):
+    # lobster-trace: SwTests.tc_reqif_import_translation
+    """The generated translation.json maps a TRLC attribute name back to its prefixed ReqIF long name.
+
+    Args:
+        record_property (Any): Used to inject the test case reference into the test results.
+        capsys (Any): Used to capture stdout and stderr.
+        monkeypatch (Any): Used to mock program arguments.
+        tmp_path (Path): Used to create a temporary output directory.
+    """
+    record_property("lobster-trace", "SwTests.tc_reqif_import_translation")
+
+    reqif_dir = tmp_path / "reqif"
+    imported_dir = tmp_path / "imported"
+
+    # Export with a translation so the source ReqIF carries a prefixed system long name.
+    translation_file = os.path.join(tmp_path, "translation.json")
+    with open(translation_file, "w", encoding="utf-8") as fd:
+        json.dump({"Requirement": {"ForeignCreatedBy": "ReqIF.ForeignCreatedBy"}}, fd)
+
+    monkeypatch.setattr("sys.argv", [
+        "pyTRLCConverter",
+        "--source", "./tests/utils/req_foreign.rsl",
+        "--source", "./tests/utils/single_req_foreign.trlc",
+        "--translation", translation_file,
+        "--out", str(reqif_dir),
+        "reqif",
+        "--single-document"
+    ])
+    main()
+    reqif_file = os.path.join(reqif_dir, ReqifConverter.OUTPUT_FILE_NAME_DEFAULT)
+    assert capsys.readouterr().err == ""
+
+    _import_reqif(monkeypatch, imported_dir, reqif_file)
+    assert capsys.readouterr().err == ""
+
+    # The generated translation restores the original prefixed ReqIF long name.
+    with open(os.path.join(imported_dir, "translation.json"), "r", encoding="utf-8") as fd:
+        translation = json.load(fd)
+
+    assert translation["Requirement"]["ForeignCreatedBy"] == "ReqIF.ForeignCreatedBy"
+
 # Main *************************************************************************

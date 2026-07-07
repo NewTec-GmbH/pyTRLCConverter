@@ -1,0 +1,7 @@
+package Requirements
+
+type Requirement {
+    ForeignID           optional    String
+    ForeignCreatedBy    optional    String
+    description                     String
+}
