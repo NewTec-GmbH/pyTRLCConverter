@@ -1,0 +1,13 @@
+package Requirements
+
+enum Method {
+    Analysis
+    Demonstration
+    Inspection
+    Test
+}
+
+type Requirement {
+    description         String
+    methods optional    Method    [0 .. *]
+}

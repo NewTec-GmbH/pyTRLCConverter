@@ -343,6 +343,56 @@ def test_tc_reqif_enum(record_property, capsys, monkeypatch, tmp_path: Path):
     _assert_reqif_v12_compliance(output_file, tmp_path)
 
 
+def test_tc_reqif_enum_array(record_property, capsys, monkeypatch, tmp_path: Path):
+    # lobster-trace: SwTests.tc_reqif_enum_array
+    """A multi-valued TRLC enumeration attribute becomes an ATTRIBUTE-VALUE-ENUMERATION.
+
+    Args:
+        record_property (Any): Used to inject the test case reference into the test results.
+        capsys (Any): Used to capture stdout and stderr.
+        monkeypatch (Any): Used to mock program arguments.
+        tmp_path (Path): Used to create a temporary output directory.
+    """
+    record_property("lobster-trace", "SwTests.tc_reqif_enum_array")
+
+    monkeypatch.setattr("sys.argv", [
+        "pyTRLCConverter",
+        "--source", "./tests/utils/req_enum_array.rsl",
+        "--source", "./tests/utils/single_req_with_enum_array.trlc",
+        "--out", str(tmp_path),
+        "reqif",
+        "--single-document"
+    ])
+
+    main()
+    assert capsys.readouterr().err == ""
+
+    output_file = os.path.join(tmp_path, ReqifConverter.OUTPUT_FILE_NAME_DEFAULT)
+    bundle = _parse_reqif(output_file)
+
+    # The element enumeration datatype is generated.
+    method_datatype = _find_datatype_by_long_name(bundle, "Method")
+    assert method_datatype is not None
+    assert len(method_datatype.values) == 4
+
+    spec_object = _find_spec_object_by_long_name(bundle, "req_enum_array_1")
+    assert spec_object is not None
+
+    # The attribute is an ENUMERATION value (not XHTML) referencing both selected literals.
+    methods_def_identifier = _find_attribute_identifier(bundle, "methods")
+    assert methods_def_identifier is not None
+    methods_attribute = _find_attribute_by_identifier(spec_object, methods_def_identifier)
+    assert methods_attribute is not None
+    assert methods_attribute.attribute_type == SpecObjectAttributeType.ENUMERATION
+
+    analysis_value = next(v for v in method_datatype.values if v.long_name == "Analysis")
+    test_value = next(v for v in method_datatype.values if v.long_name == "Test")
+    assert analysis_value.identifier in methods_attribute.value
+    assert test_value.identifier in methods_attribute.value
+
+    _assert_reqif_v12_compliance(output_file, tmp_path)
+
+
 def test_tc_reqif_enum_null(record_property, capsys, monkeypatch, tmp_path: Path):
     # lobster-trace: SwTests.tc_reqif_enum_null
     """An optional TRLC enumeration attribute with null value shall be omitted from the spec-object.

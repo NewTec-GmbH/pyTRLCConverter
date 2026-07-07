@@ -616,8 +616,8 @@ section "SW Requirements" {
             section "ReqIF Enumeration" {
 
                 SwReq sw_req_reqif_enum {
-                    description = "The ReqIF converter shall convert a TRLC enumeration type attribute into a DATATYPE-DEFINITION-ENUMERATION and emit ATTRIBUTE-VALUE-ENUMERATION for the corresponding spec-object attribute."
-                    verification_criteria = "Verify by converting a TRLC record with an enumeration field and checking that the generated ReqIF document contains a DATATYPE-DEFINITION-ENUMERATION and the spec-object contains an ATTRIBUTE-VALUE-ENUMERATION with the correct enum value reference."
+                    description = "The ReqIF converter shall convert a TRLC enumeration type attribute into a DATATYPE-DEFINITION-ENUMERATION and emit ATTRIBUTE-VALUE-ENUMERATION for the corresponding spec-object attribute. This shall also apply to multi-valued (array) enumeration attributes, whose element type is used and whose selected literals are all emitted as enum value references."
+                    verification_criteria = "Verify by converting a TRLC record with a single-valued and a multi-valued enumeration field and checking that the generated ReqIF document contains a DATATYPE-DEFINITION-ENUMERATION and the spec-object contains an ATTRIBUTE-VALUE-ENUMERATION with the correct enum value references."
                     valid_status = AbstractRequirements.VALID_STATUS.valid
                 }
 

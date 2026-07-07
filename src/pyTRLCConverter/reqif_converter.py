@@ -55,7 +55,7 @@ from reqif.models.reqif_specification import ReqIFSpecification
 from reqif.models.reqif_specification_type import ReqIFSpecificationType
 from reqif.models.reqif_types import SpecObjectAttributeType
 from trlc.ast import (
-    Array_Aggregate, Builtin_Boolean, Builtin_Decimal, Builtin_Integer,
+    Array_Aggregate, Array_Type, Builtin_Boolean, Builtin_Decimal, Builtin_Integer,
     Enumeration_Literal, Enumeration_Type, Implicit_Null,
     Record_Object, Record_Reference, String_Literal, Expression, Symbol_Table
 )
@@ -1036,7 +1036,8 @@ class ReqifConverter(BaseConverter):
         # lobster-trace: SwRequirements.sw_req_reqif_enum_null
         """Return the TRLC Enumeration_Type for the named field, or None if it is not an enum field.
 
-        Traverses the component hierarchy including inherited components.
+        Traverses the component hierarchy including inherited components. Multi-valued
+        (array) enum fields are unwrapped to their element type.
 
         Args:
             record (Record_Object): The TRLC record object.
@@ -1053,10 +1054,15 @@ class ReqifConverter(BaseConverter):
             component = stab.table.get(simplified)
             stab = stab.parent
 
-        if component is not None and isinstance(component.n_typ, Enumeration_Type):
-            return component.n_typ
+        enum_type = None
+        if component is not None:
+            field_type = component.n_typ
+            if isinstance(field_type, Array_Type):
+                field_type = field_type.element_type
+            if isinstance(field_type, Enumeration_Type):
+                enum_type = field_type
 
-        return None
+        return enum_type
 
     @staticmethod
     def _get_field_scalar_type(record: Record_Object, field_name: str) -> Optional[SpecObjectAttributeType]:

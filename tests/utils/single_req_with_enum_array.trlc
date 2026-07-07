@@ -1,0 +1,6 @@
+package Requirements
+
+Requirement req_enum_array_1 {
+    description = "Requirement with a multi-valued enumeration attribute."
+    methods = [Method.Analysis, Method.Test]
+}

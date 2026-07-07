@@ -404,6 +404,11 @@ section "SW Test Cases" {
             verifies = [SwRequirements.sw_req_reqif_enum, SwRequirements.sw_req_reqif_enum_key_order]
         }
 
+        SwTestCase tc_reqif_enum_array {
+            description = "This test case checks whether a multi-valued (array) TRLC enumeration attribute is converted to a DATATYPE-DEFINITION-ENUMERATION and emitted as an ATTRIBUTE-VALUE-ENUMERATION referencing all selected enum values, instead of being rendered as XHTML text."
+            verifies = [SwRequirements.sw_req_reqif_enum]
+        }
+
         SwTestCase tc_reqif_enum_null {
             description = "This test case checks whether an optional TRLC enumeration attribute with a null value is omitted from the generated ReqIF spec-object."
             verifies = [SwRequirements.sw_req_reqif_enum_null]
