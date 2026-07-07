@@ -67,6 +67,12 @@ Example for writing MyReqType::description in GitHub Flavored Markdown:
 }
 ```
 
+Note: a string attribute **without** a render configuration entry is exported as a plain
+`ATTRIBUTE-VALUE-STRING`. Only attributes configured as `md`, `gfm`, `xhtml` or `path` become
+`ATTRIBUTE-VALUE-XHTML`. TRLC `Integer`, `Decimal` and `Boolean` attributes are exported as the
+native ReqIF scalar datatypes, and enumeration attributes (single or array) as
+`DATATYPE-DEFINITION-ENUMERATION`.
+
 #### Style GFM Tables
 
 When an attribute is rendered in GitHub Flavored Markdown (`"format": "gfm"`), tables contained in that attribute are converted to XHTML. You can control the visual style of those tables by adding the optional `tableOptions` key to the render configuration item.
@@ -176,11 +182,20 @@ modes selected automatically by whether existing TRLC is provided via `--source`
   pyTRLCConverter --source ./trlc reqif-import input.reqif --meta-data meta_data.json
   ```
 
-The ReqIF metadata store keeps the identifiers of ReqIF Identifiable elements immutable across the
-roundtrip and preserves additional ReqIF metadata (e.g. the specification-type identity). Export with
-`--meta-data`, exchange the ReqIF with the other tool, and import back with the same store so
-identities are preserved. Markdown/GFM attributes are not reversed automatically on a merge (they are
-preserved), since the XHTML-to-Markdown conversion is lossy.
+The ReqIF metadata store keeps the identity of the imported ReqIF immutable across the roundtrip.
+On the initial import it is seeded with:
+
+- the identifiers of the `SPEC-OBJECT`s, `SPEC-HIERARCHY` nodes, `SPEC-OBJECT-TYPE`s, their
+  `ATTRIBUTE-DEFINITION`s, the `DATATYPE-DEFINITION-ENUMERATION`s and `ENUM-VALUE`s, and the
+  `SPECIFICATION`;
+- the `SPECIFICATION-TYPE` identifier and long name as metadata;
+- each attribute's original ReqIF datatype (`STRING`, `DATE`, `XHTML`).
+
+Export with `--meta-data`, exchange the ReqIF with the other tool, and import back with the same
+store. Because the identifiers, long names and datatypes are reproduced, the receiving tool (e.g.
+DOORS Next) does not flag the round-tripped elements as modified. Markdown/GFM attributes are not
+reversed automatically on a merge (they are preserved), since the XHTML-to-Markdown conversion is
+lossy.
 
 ## Supporting Tools
 

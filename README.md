@@ -28,6 +28,7 @@ Find the requirements, test cases, coverage and etc. on the [github pages](https
   - [Conversion to docx format](#conversion-to-docx-format)
   - [Conversion to reStructuredText format](#conversion-to-restructuredtext-format)
   - [Conversion to ReqIF format](#conversion-to-reqif-format)
+  - [ReqIF import and round-trip](#reqif-import-and-round-trip)
   - [Dump TRLC item list to console](#dump-trlc-item-list-to-console)
   - [Apply attribute name translation](#apply-attribute-name-translation)
   - [Requirement description in Markdown](#requirement-description-in-markdown)
@@ -200,7 +201,7 @@ The converter supports additional arguments that are shown by adding the `--help
 ```bash
 pyTRLCConverter reqif --help
 
-usage: pyTRLCConverter reqif [-h] [-e EMPTY] [-n NAME] [-sd] [-tl TOP_LEVEL] [--reqifz] [--id-store ID_STORE]
+usage: pyTRLCConverter reqif [-h] [-e EMPTY] [-n NAME] [-sd] [-tl TOP_LEVEL] [--reqifz] [--meta-data META_DATA] [--export-map EXPORT_MAP]
 
 options:
   -h, --help            show this help message and exit
@@ -212,15 +213,20 @@ options:
   -tl TOP_LEVEL, --top-level TOP_LEVEL
                         Name of the top level heading, required in single document mode (default = Specification).
   --reqifz              Archive the ReqIF output as a ZIP file with the .reqifz extension. The default is to write plain .reqif files.
-  --id-store ID_STORE   Path to a JSON file used to keep the identifiers of ReqIF Identifiable elements immutable across consecutive exports. On the initial conversion the file is created with the generated identifiers; on subsequent conversions the stored identifiers are reused and new elements are added.
+  --meta-data META_DATA
+                        Path to a JSON ReqIF metadata store used to keep the identifiers of ReqIF Identifiable elements immutable across consecutive exports and to reproduce additional ReqIF metadata. On the initial conversion the file is created; on subsequent conversions the stored identifiers and metadata are reused and new elements are added.
+  --export-map EXPORT_MAP
+                        Path to a JSON file that lists TRLC attributes which shall be excluded from the export.
 ```
 
-**Immutable identifiers:**
+**ReqIF metadata store (immutable identifiers):**
 
-The ReqIF standard requires the identifier of every `Identifiable` element to stay immutable across consecutive exports and imports. By default each conversion generates fresh identifiers. To keep them stable, pass `--id-store <file.json>`:
+The ReqIF standard requires the identifier of every `Identifiable` element to stay immutable across consecutive exports and imports. By default each conversion generates fresh (readable) identifiers. To keep them stable, pass `--meta-data <file.json>`:
 
-- On the **initial** conversion the JSON file does not exist yet; the generated identifiers (for `SPEC-OBJECT`, `SPEC-HIERARCHY`, `SPEC-RELATION` and the ReqIF header) are stored in it, keyed by a stable logical key.
-- On **subsequent** conversions the file is loaded and the stored identifiers are reused for already known elements. New elements receive new identifiers which are written back to the file.
+- On the **initial** conversion the JSON file does not exist yet; the generated identifiers are stored in it, keyed by a stable logical key. This covers the `SPEC-OBJECT`, `SPEC-HIERARCHY`, `SPEC-RELATION`, `SPEC-OBJECT-TYPE`, `ATTRIBUTE-DEFINITION`, `DATATYPE-DEFINITION-ENUMERATION`, `ENUM-VALUE`, `SPECIFICATION` and ReqIF header identifiers. The store also holds additional ReqIF metadata, such as the `SPECIFICATION-TYPE` identity and each attribute's original ReqIF datatype.
+- On **subsequent** conversions the file is loaded and the stored identifiers and metadata are reused for already known elements. New elements receive new identifiers which are written back to the file.
+
+When the store was seeded by a `reqif-import` of a foreign ReqIF file (see [ReqIF import](#reqif-import-and-round-trip)), re-exporting reproduces that file's identifiers, long names and datatypes, so the receiving tool (e.g. DOORS Next) does not flag the round-tripped elements as modified.
 
 Markdown-formatted requirement attributes configured via `--renderCfg` are automatically converted to ReqIF-compatible XHTML content.
 
@@ -234,17 +240,25 @@ Conversion rules:
 
 **Attribute mapping by field type:**
 
-| TRLC field type                        | ReqIF datatype                    | ReqIF attribute value                                                                                                |
-| -------------------------------------- | --------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| String / Integer / Boolean / Decimal   | `DATATYPE-DEFINITION-XHTML`       | `ATTRIBUTE-VALUE-XHTML` — plain text is HTML-escaped and wrapped in `<p>` tags                                       |
-| String with Markdown render config     | `DATATYPE-DEFINITION-XHTML`       | `ATTRIBUTE-VALUE-XHTML` — Markdown is converted to XHTML via `marko`                                                 |
-| Enumeration                            | `DATATYPE-DEFINITION-ENUMERATION` | `ATTRIBUTE-VALUE-ENUMERATION` — enum value keys start at 0 and follow the literal declaration order in the RSL model |
-| Record reference / array of references | —                                 | Converted to `SPEC-RELATION` entries (see below)                                                                     |
-| Optional field with `null` value       | —                                 | Attribute is omitted from the `SPEC-OBJECT`                                                                          |
+| TRLC field type                     | ReqIF datatype                    | ReqIF attribute value              |
+| ----------------------------------- | --------------------------------- | ---------------------------------- |
+| String (plain, no render config)    | `DATATYPE-DEFINITION-STRING`      | `ATTRIBUTE-VALUE-STRING`           |
+| String with Markdown / XHTML config | `DATATYPE-DEFINITION-XHTML`       | `ATTRIBUTE-VALUE-XHTML`            |
+| Integer / Decimal / Boolean         | native scalar datatype            | `ATTRIBUTE-VALUE-*` (native value) |
+| Enumeration (single or array)       | `DATATYPE-DEFINITION-ENUMERATION` | `ATTRIBUTE-VALUE-ENUMERATION`      |
+| Record reference / array            | —                                 | `SPEC-RELATION` (see below)        |
+| Optional field with `null` value    | —                                 | omitted from the `SPEC-OBJECT`     |
 
-**Record name:**
+Notes:
 
-- The TRLC record name is mapped to an explicit `ATTRIBUTE-VALUE-STRING` attribute named `ReqIF.ForeignID` on the owning `SPEC-OBJECT-TYPE`.
+- Enumeration value keys start at 0 and follow the literal declaration order in the RSL model; array (`[0 .. *]`) enum fields are flagged multi-valued and emit all selected values.
+- The `SPEC-OBJECT-TYPE`, `DATATYPE-DEFINITION-ENUMERATION` and `ENUM-VALUE` long names use the TRLC quoted long name (the type/enumeration/literal description) when present, so ReqIF long names that are not valid TRLC identifiers (for example `Figure.Image`) are reproduced.
+- A plain string attribute becomes `ATTRIBUTE-VALUE-STRING`; only attributes configured as `md`, `gfm`, `xhtml` or `path` in the render configuration become XHTML.
+- When a metadata store recorded an attribute's original datatype, that datatype is reproduced instead of the rule above — including `DATATYPE-DEFINITION-DATE`, for which TRLC has no native type.
+
+**Record foreign id:**
+
+- Each `SPEC-OBJECT` carries a `ReqIF.ForeignID` `ATTRIBUTE-VALUE-STRING` holding the exporting system's identifier: the record's `ForeignID` field value when present, otherwise the TRLC record name. The `ForeignID` field itself is not additionally emitted.
 
 **Record references:**
 
@@ -253,6 +267,20 @@ Conversion rules:
 - The reference field is not emitted as a regular object attribute.
 - This preserves traceability links in a form that can be imported by DOORS Next.
 - The source and target records must be part of the same generated ReqIF document. Use `--single-document` when references span multiple TRLC files.
+
+### ReqIF import and round-trip
+
+The `reqif-import` subcommand imports a `.reqif` or `.reqifz` file into TRLC, which enables a round-trip exchange with a foreign requirements tool (for example DOORS Next).
+
+```bash
+pyTRLCConverter --out ./out reqif-import input.reqif --package Req --meta-data meta_data.json
+```
+
+- **Initial import (bootstrap)** — no existing TRLC. A new TRLC project is generated from the ReqIF file: `<package>.rsl`, `<package>.trlc` (following the SPEC-HIERARCHY), and the companion `renderCfg.json`, `translation.json` and `meta_data.json`. The metadata store is seeded with the source identifiers, long names and datatypes.
+- **Merge import (re-import)** — existing TRLC provided via `--source`. The existing `.trlc` files are updated in place; objects are matched via the metadata store (`--meta-data`, required) and comments, formatting and non-exchanged attributes are preserved.
+- **`--import-filter <file.json>`** restricts which spec-object types and attributes the initial import brings in.
+
+Because the initial import seeds `meta_data.json`, re-exporting the generated TRLC with the same `--meta-data` reproduces the source ReqIF's identifiers, long names and datatypes, so the round-tripped elements are not flagged as modified. See [`examples/reqif`](./examples/reqif/README.md) for a full walkthrough.
 
 ### Dump TRLC item list to console
 
