@@ -414,6 +414,16 @@ section "SW Test Cases" {
             verifies = [SwRequirements.sw_req_reqif_type_long_name]
         }
 
+        SwTestCase tc_reqif_datatype {
+            description = "This test case checks whether a plain TRLC string attribute without render configuration is exported as an ATTRIBUTE-VALUE-STRING while a markdown/XHTML-configured attribute is exported as an ATTRIBUTE-VALUE-XHTML."
+            verifies = [SwRequirements.sw_req_reqif_datatype]
+        }
+
+        SwTestCase tc_reqif_datatype_date {
+            description = "This test case checks whether the initial import records an attribute's ReqIF datatype in the metadata store and whether an attribute whose recorded datatype is DATE is reproduced as a native ATTRIBUTE-DEFINITION-DATE with an ATTRIBUTE-VALUE-DATE on the round-trip export."
+            verifies = [SwRequirements.sw_req_reqif_datatype]
+        }
+
         SwTestCase tc_reqif_enum_null {
             description = "This test case checks whether an optional TRLC enumeration attribute with a null value is omitted from the generated ReqIF spec-object."
             verifies = [SwRequirements.sw_req_reqif_enum_null]

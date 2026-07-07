@@ -621,6 +621,13 @@ section "SW Requirements" {
                     valid_status = AbstractRequirements.VALID_STATUS.valid
                 }
 
+                SwReq sw_req_reqif_datatype {
+                    description = "The ReqIF converter shall emit a non-enumeration, non-scalar TRLC string attribute as an ATTRIBUTE-VALUE-STRING when the attribute has no rich-text render configuration, and as an ATTRIBUTE-VALUE-XHTML when it is configured as markdown, GFM, XHTML or path. When the ReqIF metadata store records the attribute's original ReqIF datatype (STRING, DATE or XHTML), that datatype shall be reproduced instead, so an imported DATE attribute round-trips as an ATTRIBUTE-DEFINITION-DATE with an ATTRIBUTE-VALUE-DATE. The initial ReqIF import shall record each imported attribute's original ReqIF datatype in the metadata store."
+                    verification_criteria = "Verify by converting a plain TRLC string attribute without render configuration and checking it becomes an ATTRIBUTE-VALUE-STRING, by converting a markdown/XHTML-configured attribute and checking it becomes an ATTRIBUTE-VALUE-XHTML, and by round-tripping an attribute whose recorded datatype is DATE and checking it is emitted as an ATTRIBUTE-VALUE-DATE."
+                    valid_status = AbstractRequirements.VALID_STATUS.valid
+                    derived = [sw_req_reqif]
+                }
+
                 SwReq sw_req_reqif_type_long_name {
                     description = "The ReqIF converter shall use the TRLC quoted long name (the type or enumeration description) as the ReqIF LONG-NAME of the SPEC-OBJECT-TYPE, the DATATYPE-DEFINITION-ENUMERATION and its ENUM-VALUEs, falling back to the TRLC identifier when no quoted long name is defined. This reproduces ReqIF long names that are not valid TRLC identifiers, such as names containing a dot."
                     verification_criteria = "Verify by converting a TRLC type and enumeration that declare quoted long names containing a dot and checking that the generated SPEC-OBJECT-TYPE, DATATYPE-DEFINITION-ENUMERATION and ENUM-VALUE long names reproduce the quoted names."

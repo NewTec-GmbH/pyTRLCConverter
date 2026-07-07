@@ -21,13 +21,16 @@ import json
 import os
 import re
 from pathlib import Path
+from reqif.models.reqif_types import SpecObjectAttributeType
 from pyTRLCConverter.__main__ import main
 from pyTRLCConverter.reqif_converter import ReqifConverter
 from pyTRLCConverter.trlc_helper import get_trlc_symbols
 from tests.reqif_test_utils import (
     _parse_reqif,
     _collect_identifiers,
+    _find_spec_object_by_long_name,
     _find_spec_type_by_long_name,
+    _find_attribute_by_identifier,
     _find_attribute_identifier,
     _find_datatype_by_long_name,
 )
@@ -577,5 +580,53 @@ def test_tc_reqif_import_type_identity(record_property, capsys, monkeypatch, tmp
     spec_type = _find_spec_type_by_long_name(bundle, "Doc.Type")
     assert spec_type is not None
     assert spec_type.identifier == "_orig-spectype"
+
+
+def test_tc_reqif_datatype_date(record_property, capsys, monkeypatch, tmp_path: Path):
+    # lobster-trace: SwTests.tc_reqif_datatype_date
+    """The import records an attribute datatype and a recorded DATE round-trips as DATE.
+
+    Args:
+        record_property (Any): Used to inject the test case reference into the test results.
+        capsys (Any): Used to capture stdout and stderr.
+        monkeypatch (Any): Used to mock program arguments.
+        tmp_path (Path): Used to create a temporary output directory.
+    """
+    record_property("lobster-trace", "SwTests.tc_reqif_datatype_date")
+
+    imported_dir = tmp_path / "imported"
+
+    reqif_file = _export_reqif(
+        monkeypatch, tmp_path / "reqif",
+        ["./tests/utils/req_date.rsl", "./tests/utils/single_req_date.trlc"]
+    )
+    assert capsys.readouterr().err == ""
+
+    _import_reqif(monkeypatch, imported_dir, reqif_file)
+    assert capsys.readouterr().err == ""
+
+    # The import recorded the original datatype; force it to DATE for the round-trip.
+    meta_data_file = os.path.join(imported_dir, "meta_data.json")
+    with open(meta_data_file, "r", encoding="utf-8") as fd:
+        meta_data = json.load(fd)
+    assert meta_data["metadata"]["attribute-datatype:Requirement.changed_on"] == "STRING"
+    meta_data["metadata"]["attribute-datatype:Requirement.changed_on"] = "DATE"
+    with open(meta_data_file, "w", encoding="utf-8") as fd:
+        json.dump(meta_data, fd, indent=4, sort_keys=True)
+
+    bundle = _parse_reqif(_export_reqif(
+        monkeypatch, tmp_path / "reqif2",
+        [str(imported_dir / "Req.rsl"), str(imported_dir / "Req.trlc")],
+        render_cfg=str(imported_dir / "renderCfg.json"),
+        id_store=meta_data_file
+    ))
+    assert capsys.readouterr().err == ""
+
+    # The DATE datatype is emitted and the attribute reproduces it with its value.
+    assert _find_datatype_by_long_name(bundle, "Date") is not None
+    obj = _find_spec_object_by_long_name(bundle, "req_date_1")
+    changed_on = _find_attribute_by_identifier(obj, _find_attribute_identifier(bundle, "changed_on"))
+    assert changed_on.attribute_type == SpecObjectAttributeType.DATE
+    assert changed_on.value == "2026-03-05T12:24:50.788Z"
 
 # Main *************************************************************************

@@ -389,6 +389,7 @@ section "SW Architecture" {
                     * Passes configured XHTML fields through to ReqIF XHTML without modification.
                     * Renders inline PlantUML fenced code blocks as embedded SVG images in XHTML attributes.
                     * Converts TRLC Integer, Decimal and Boolean attributes to the native ReqIF scalar datatypes and attribute values.
+                    * Emits a plain (non rich-text) string attribute as ATTRIBUTE-VALUE-STRING and a markdown/XHTML/path attribute as ATTRIBUTE-VALUE-XHTML; reproduces the original ReqIF datatype (STRING, DATE or XHTML) when the metadata store records it, including native ATTRIBUTE-DEFINITION-DATE.
                     * Converts TRLC enumeration type attributes to DATATYPE-DEFINITION-ENUMERATION with 0-based consecutive ENUM-VALUE keys in RSL declaration order; multi-valued (array) enum attributes are marked multi-valued and emit all selected enum value references.
                     * Uses the TRLC quoted long name (type or enumeration description) as the ReqIF LONG-NAME of the SPEC-OBJECT-TYPE, DATATYPE-DEFINITION-ENUMERATION and ENUM-VALUEs, so ReqIF long names that are not valid TRLC identifiers are reproduced.
                     * Omits optional enumeration attributes with null value from the generated spec-object.
@@ -427,6 +428,7 @@ section "SW Architecture" {
                     SwRequirements.sw_req_reqif_scalar,
                     SwRequirements.sw_req_reqif_foreign_id,
                     SwRequirements.sw_req_reqif_type_long_name,
+                    SwRequirements.sw_req_reqif_datatype,
                     SwRequirements.sw_req_reqif_import_type_identity,
                     SwRequirements.sw_req_destination_format
                 ]
@@ -447,6 +449,7 @@ section "SW Architecture" {
                     * Stores XHTML attribute values with the outer div wrapper removed and marks them as xhtml; object elements referencing a local file are stored as path.
                     * Seeds the identifiers of the source ReqIF Identifiable elements into meta_data.json so they stay immutable on the roundtrip.
                     * Seeds the type-system identity into the ReqIF metadata store: the SPEC-OBJECT-TYPE, ATTRIBUTE-DEFINITION, DATATYPE-DEFINITION-ENUMERATION, ENUM-VALUE and SPECIFICATION identifiers, and the SPECIFICATION-TYPE identifier and long name as metadata.
+                    * Records each imported attribute's original ReqIF datatype (STRING, DATE, XHTML) in the metadata store so the export can reproduce it.
                     * On a re-import with existing TRLC it merges the changes into the existing .trlc files in place (ReqifMerger and TrlcSourcePatcher), matching objects via the identifier store and preserving comments, formatting and attributes that are not part of the exchange.
                     * Reverse-maps SPEC-RELATIONs into TRLC record reference fields on the initial import.
                     * Maps native ReqIF scalar datatypes (INTEGER, REAL, BOOLEAN) back to TRLC Integer, Decimal and Boolean.
@@ -458,6 +461,7 @@ section "SW Architecture" {
                     SwRequirements.sw_req_reqif_import_initial,
                     SwRequirements.sw_req_reqif_import_translation,
                     SwRequirements.sw_req_reqif_import_type_identity,
+                    SwRequirements.sw_req_reqif_datatype,
                     SwRequirements.sw_req_reqif_import_enum,
                     SwRequirements.sw_req_reqif_import_xhtml,
                     SwRequirements.sw_req_reqif_import_path,

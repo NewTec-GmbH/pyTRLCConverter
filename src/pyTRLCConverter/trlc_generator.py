@@ -34,6 +34,7 @@ from pyTRLCConverter.reqif_meta_data import (
     METADATA_SPECIFICATION_TYPE_LONG_NAME,
     spec_object_type_key,
     attribute_definition_key,
+    attribute_datatype_key,
     enum_datatype_key,
     enum_value_key,
     specification_key
@@ -460,6 +461,8 @@ class TrlcGenerator:  # pylint: disable=too-few-public-methods
                     else:
                         definition_key = f'field_{attr["trlc_name"]}'
                     self._identifiers[attribute_definition_key(trlc_type, definition_key)] = attr["attr_def_id"]
+                    if attr["reqif_datatype"] is not None:
+                        self._metadata[attribute_datatype_key(trlc_type, attr["trlc_name"])] = attr["reqif_datatype"]
 
         for datatype_identifier, enum_data in self._reader.enum_info.items():
             trlc_enum = enum_data["trlc_name"]

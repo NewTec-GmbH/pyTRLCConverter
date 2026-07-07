@@ -485,6 +485,7 @@ class ReqifReader:
             "enum_trlc_name": enum_trlc_name,
             "is_multi_valued": is_multi_valued,
             "scalar_type": _scalar_trlc_type(attr_type),
+            "reqif_datatype": _string_family_datatype(attr_type),
             "datatype_ref": datatype_ref,
             "attr_def_id": attr_def.identifier,
             "datatype": datatype,
@@ -690,6 +691,32 @@ def _scalar_trlc_type(attribute_type: Any) -> Optional[str]:
         scalar_type = "Boolean"
 
     return scalar_type
+
+
+def _string_family_datatype(attribute_type: Any) -> Optional[str]:
+    # lobster-trace: SwRequirements.sw_req_reqif_datatype
+    """Return the ReqIF datatype name for a string-family attribute, or None.
+
+    The string family covers the attribute types that map to a TRLC String field
+    (STRING, DATE, XHTML). Enumeration and scalar types are handled separately and
+    return None.
+
+    Args:
+        attribute_type (Any): The ReqIF attribute type.
+
+    Returns:
+        Optional[str]: "STRING", "DATE" or "XHTML", or None if not a string-family type.
+    """
+    string_family = None
+
+    if attribute_type == SpecObjectAttributeType.STRING:
+        string_family = "STRING"
+    elif attribute_type == SpecObjectAttributeType.DATE:
+        string_family = "DATE"
+    elif attribute_type == SpecObjectAttributeType.XHTML:
+        string_family = "XHTML"
+
+    return string_family
 
 
 def sanitize_identifier(name: str) -> str:

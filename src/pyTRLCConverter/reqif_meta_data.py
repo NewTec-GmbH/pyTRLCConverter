@@ -292,4 +292,18 @@ def specification_key(spec_long_name: str) -> str:
     return f"specification:{spec_long_name}"
 
 
+def attribute_datatype_key(trlc_type_name: str, field_name: str) -> str:
+    # lobster-trace: SwRequirements.sw_req_reqif_datatype
+    """Return the metadata key of an attribute's original ReqIF datatype.
+
+    Args:
+        trlc_type_name (str): The TRLC type name owning the attribute.
+        field_name (str): The TRLC field name.
+
+    Returns:
+        str: The metadata key.
+    """
+    return f"attribute-datatype:{trlc_type_name}.{field_name}"
+
+
 # Main *************************************************************************

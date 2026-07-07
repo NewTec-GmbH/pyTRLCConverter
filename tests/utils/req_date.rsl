@@ -1,0 +1,6 @@
+package Requirements
+
+type Requirement {
+    description                String
+    changed_on    optional     String
+}

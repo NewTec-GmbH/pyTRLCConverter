@@ -36,6 +36,7 @@ from reqif.unparser import ReqIFUnparser
 from reqif.models.reqif_core_content import ReqIFCoreContent
 from reqif.models.reqif_data_type import (
     ReqIFDataTypeDefinitionBoolean,
+    ReqIFDataTypeDefinitionDateIdentifier,
     ReqIFDataTypeDefinitionEnumeration,
     ReqIFDataTypeDefinitionInteger,
     ReqIFDataTypeDefinitionReal,
@@ -67,6 +68,7 @@ from pyTRLCConverter.reqif_meta_data import (
     METADATA_SPECIFICATION_TYPE_LONG_NAME,
     spec_object_type_key,
     attribute_definition_key,
+    attribute_datatype_key,
     enum_datatype_key,
     enum_value_key,
     specification_key
@@ -97,6 +99,7 @@ class ReqifConverter(BaseConverter):
 
     DATATYPE_XHTML_IDENTIFIER = "datatype-xhtml"
     DATATYPE_STRING_IDENTIFIER = "datatype-string"
+    DATATYPE_DATE_IDENTIFIER = "datatype-date"
     DATATYPE_INTEGER_IDENTIFIER = "datatype-integer"
     DATATYPE_REAL_IDENTIFIER = "datatype-real"
     DATATYPE_BOOLEAN_IDENTIFIER = "datatype-boolean"
@@ -452,17 +455,20 @@ class ReqifConverter(BaseConverter):
             if len(attribute_value) == 0:
                 attribute_value = self._empty_attribute_value
 
-            rendered_value = self._render(
-                package_name=record.n_package.name,
-                type_name=record.n_typ.name,
-                attribute_name=name,
-                attribute_value=attribute_value
-            )
+            reqif_type = self._resolve_attribute_datatype(record, name)
+
+            if reqif_type == SpecObjectAttributeType.XHTML:
+                attribute_value = self._render(
+                    package_name=record.n_package.name,
+                    type_name=record.n_typ.name,
+                    attribute_name=name,
+                    attribute_value=attribute_value
+                )
 
             attribute_value_map[f"field_{name}"] = {
                 "long_name": attribute_name,
-                "value": rendered_value,
-                "attribute_type": SpecObjectAttributeType.XHTML
+                "value": attribute_value,
+                "attribute_type": reqif_type
             }
 
         spec_object = self._create_spec_object(
@@ -719,6 +725,13 @@ class ReqifConverter(BaseConverter):
                 long_name="Boolean"
             ))
 
+        if SpecObjectAttributeType.DATE in self._used_scalar_datatypes:
+            scalar_data_types.append(ReqIFDataTypeDefinitionDateIdentifier(
+                identifier=ReqifConverter.DATATYPE_DATE_IDENTIFIER,
+                last_change=last_change,
+                long_name="Date"
+            ))
+
         return scalar_data_types
 
     def _reset_document_state(self, title: str) -> None:
@@ -836,7 +849,8 @@ class ReqifConverter(BaseConverter):
             attribute_type = attribute_info.get("attribute_type", SpecObjectAttributeType.XHTML)
 
             if attribute_type in (SpecObjectAttributeType.STRING, SpecObjectAttributeType.INTEGER,
-                                  SpecObjectAttributeType.REAL, SpecObjectAttributeType.BOOLEAN):
+                                  SpecObjectAttributeType.REAL, SpecObjectAttributeType.BOOLEAN,
+                                  SpecObjectAttributeType.DATE):
                 attributes.append(
                     self._create_simple_attribute(
                         type_key,
@@ -1148,6 +1162,39 @@ class ReqifConverter(BaseConverter):
 
         return scalar_type
 
+    def _resolve_attribute_datatype(self, record: Record_Object,
+                                    field_name: str) -> SpecObjectAttributeType:
+        # lobster-trace: SwRequirements.sw_req_reqif_datatype
+        """Return the ReqIF attribute type for a non-enumeration, non-scalar string field.
+
+        When the ReqIF metadata store records the attribute's original ReqIF datatype it is
+        reproduced (STRING, DATE or XHTML). Otherwise the render configuration decides: a
+        field with a rich-text format (markdown, GFM, XHTML, path) becomes XHTML, and a plain
+        field becomes STRING.
+
+        Args:
+            record (Record_Object): The TRLC record object.
+            field_name (str): The TRLC field name.
+
+        Returns:
+            SpecObjectAttributeType: The resolved ReqIF attribute type.
+        """
+        reqif_type = None
+
+        if self._meta_data is not None:
+            stored = self._meta_data.get_metadata(
+                attribute_datatype_key(record.n_typ.name, field_name))
+            if stored is not None:
+                reqif_type = getattr(SpecObjectAttributeType, stored)
+
+        if reqif_type is None:
+            if self._render_cfg.is_format_plain(record.n_package.name, record.n_typ.name, field_name):
+                reqif_type = SpecObjectAttributeType.STRING
+            else:
+                reqif_type = SpecObjectAttributeType.XHTML
+
+        return reqif_type
+
     @staticmethod
     def _resolve_foreign_id(record: Record_Object) -> str:
         # lobster-trace: SwRequirements.sw_req_reqif_foreign_id
@@ -1289,7 +1336,7 @@ class ReqifConverter(BaseConverter):
             f"attribute-{type_identifier}-{sanitized_name}")
 
         if attribute_type in (SpecObjectAttributeType.INTEGER, SpecObjectAttributeType.REAL,
-                              SpecObjectAttributeType.BOOLEAN):
+                              SpecObjectAttributeType.BOOLEAN, SpecObjectAttributeType.DATE):
             self._used_scalar_datatypes.add(attribute_type)
 
         definition = SpecAttributeDefinition(
@@ -1447,6 +1494,7 @@ class ReqifConverter(BaseConverter):
         datatype_by_attribute_type = {
             SpecObjectAttributeType.STRING: ReqifConverter.DATATYPE_STRING_IDENTIFIER,
             SpecObjectAttributeType.XHTML: ReqifConverter.DATATYPE_XHTML_IDENTIFIER,
+            SpecObjectAttributeType.DATE: ReqifConverter.DATATYPE_DATE_IDENTIFIER,
             SpecObjectAttributeType.INTEGER: ReqifConverter.DATATYPE_INTEGER_IDENTIFIER,
             SpecObjectAttributeType.REAL: ReqifConverter.DATATYPE_REAL_IDENTIFIER,
             SpecObjectAttributeType.BOOLEAN: ReqifConverter.DATATYPE_BOOLEAN_IDENTIFIER,

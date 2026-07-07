@@ -435,6 +435,62 @@ def test_tc_reqif_type_long_name(record_property, capsys, monkeypatch, tmp_path:
     _assert_reqif_v12_compliance(output_file, tmp_path)
 
 
+def test_tc_reqif_datatype(record_property, capsys, monkeypatch, tmp_path: Path):
+    # lobster-trace: SwTests.tc_reqif_datatype
+    """A plain string attribute exports as STRING; a rich-text attribute exports as XHTML.
+
+    Args:
+        record_property (Any): Used to inject the test case reference into the test results.
+        capsys (Any): Used to capture stdout and stderr.
+        monkeypatch (Any): Used to mock program arguments.
+        tmp_path (Path): Used to create a temporary output directory.
+    """
+    record_property("lobster-trace", "SwTests.tc_reqif_datatype")
+
+    # Without a rich-text render configuration, the plain 'description' attribute is STRING.
+    plain_dir = tmp_path / "plain"
+    monkeypatch.setattr("sys.argv", [
+        "pyTRLCConverter",
+        "--source", "./tests/utils/req.rsl",
+        "--source", "./tests/utils/single_req_no_section.trlc",
+        "--out", str(plain_dir),
+        "reqif",
+        "--single-document"
+    ])
+    main()
+    assert capsys.readouterr().err == ""
+
+    plain_file = os.path.join(plain_dir, ReqifConverter.OUTPUT_FILE_NAME_DEFAULT)
+    plain_bundle = _parse_reqif(plain_file)
+    plain_object = _find_spec_object_by_long_name(plain_bundle, "req_id_1")
+    plain_attribute = _find_attribute_by_identifier(
+        plain_object, _find_attribute_identifier(plain_bundle, "description"))
+    assert plain_attribute.attribute_type == SpecObjectAttributeType.STRING
+    _assert_reqif_v12_compliance(plain_file, plain_dir)
+
+    # With an xhtml render configuration, the same attribute is XHTML.
+    xhtml_dir = tmp_path / "xhtml"
+    monkeypatch.setattr("sys.argv", [
+        "pyTRLCConverter",
+        "--source", "./tests/utils/req.rsl",
+        "--source", "./tests/utils/single_req_description_xhtml.trlc",
+        "--renderCfg", "./tests/utils/renderCfgXhtml.json",
+        "--out", str(xhtml_dir),
+        "reqif",
+        "--single-document"
+    ])
+    main()
+    assert capsys.readouterr().err == ""
+
+    xhtml_file = os.path.join(xhtml_dir, ReqifConverter.OUTPUT_FILE_NAME_DEFAULT)
+    xhtml_bundle = _parse_reqif(xhtml_file)
+    xhtml_object = _find_spec_object_by_long_name(xhtml_bundle, "req_id_xhtml")
+    xhtml_attribute = _find_attribute_by_identifier(
+        xhtml_object, _find_attribute_identifier(xhtml_bundle, "description"))
+    assert xhtml_attribute.attribute_type == SpecObjectAttributeType.XHTML
+    _assert_reqif_v12_compliance(xhtml_file, xhtml_dir)
+
+
 def test_tc_reqif_enum_null(record_property, capsys, monkeypatch, tmp_path: Path):
     # lobster-trace: SwTests.tc_reqif_enum_null
     """An optional TRLC enumeration attribute with null value shall be omitted from the spec-object.
