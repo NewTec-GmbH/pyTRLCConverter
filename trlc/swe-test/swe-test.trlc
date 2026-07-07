@@ -405,8 +405,13 @@ section "SW Test Cases" {
         }
 
         SwTestCase tc_reqif_enum_array {
-            description = "This test case checks whether a multi-valued (array) TRLC enumeration attribute is converted to a DATATYPE-DEFINITION-ENUMERATION and emitted as an ATTRIBUTE-VALUE-ENUMERATION referencing all selected enum values, instead of being rendered as XHTML text."
+            description = "This test case checks whether a multi-valued (array) TRLC enumeration attribute is converted to a DATATYPE-DEFINITION-ENUMERATION and emitted as an ATTRIBUTE-VALUE-ENUMERATION referencing all selected enum values with the attribute definition flagged multi-valued, instead of being rendered as XHTML text."
             verifies = [SwRequirements.sw_req_reqif_enum]
+        }
+
+        SwTestCase tc_reqif_type_long_name {
+            description = "This test case checks whether the TRLC quoted long names (type and enumeration descriptions) containing a dot are reproduced as the ReqIF SPEC-OBJECT-TYPE, DATATYPE-DEFINITION-ENUMERATION and ENUM-VALUE long names."
+            verifies = [SwRequirements.sw_req_reqif_type_long_name]
         }
 
         SwTestCase tc_reqif_enum_null {

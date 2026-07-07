@@ -1,0 +1,6 @@
+package Requirements
+
+Widget widget_1 {
+    description = "Widget with a dotted type and enumeration long name."
+    colour = Colour.Red
+}

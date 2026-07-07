@@ -1,0 +1,11 @@
+package Requirements
+
+enum Colour "Col.our" {
+    Red      "R.ed"
+    Green    "Green"
+}
+
+type Widget "Wid.get" {
+    description         String
+    colour  optional    Colour
+}

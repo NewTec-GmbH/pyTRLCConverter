@@ -390,6 +390,48 @@ def test_tc_reqif_enum_array(record_property, capsys, monkeypatch, tmp_path: Pat
     assert analysis_value.identifier in methods_attribute.value
     assert test_value.identifier in methods_attribute.value
 
+    # The multi-valued (array) enum attribute definition is flagged multi-valued.
+    with open(output_file, "r", encoding="utf-8") as fd:
+        assert 'MULTI-VALUED="true"' in fd.read()
+
+    _assert_reqif_v12_compliance(output_file, tmp_path)
+
+
+def test_tc_reqif_type_long_name(record_property, capsys, monkeypatch, tmp_path: Path):
+    # lobster-trace: SwTests.tc_reqif_type_long_name
+    """TRLC quoted long names containing a dot are reproduced as ReqIF long names.
+
+    Args:
+        record_property (Any): Used to inject the test case reference into the test results.
+        capsys (Any): Used to capture stdout and stderr.
+        monkeypatch (Any): Used to mock program arguments.
+        tmp_path (Path): Used to create a temporary output directory.
+    """
+    record_property("lobster-trace", "SwTests.tc_reqif_type_long_name")
+
+    monkeypatch.setattr("sys.argv", [
+        "pyTRLCConverter",
+        "--source", "./tests/utils/req_type_longname.rsl",
+        "--source", "./tests/utils/single_req_type_longname.trlc",
+        "--out", str(tmp_path),
+        "reqif",
+        "--single-document"
+    ])
+
+    main()
+    assert capsys.readouterr().err == ""
+
+    output_file = os.path.join(tmp_path, ReqifConverter.OUTPUT_FILE_NAME_DEFAULT)
+    bundle = _parse_reqif(output_file)
+
+    # The SPEC-OBJECT-TYPE long-name is the quoted TRLC type long name.
+    assert _find_spec_type_by_long_name(bundle, "Wid.get") is not None
+
+    # The enumeration datatype and one of its values keep their quoted long names.
+    colour_datatype = _find_datatype_by_long_name(bundle, "Col.our")
+    assert colour_datatype is not None
+    assert any(v.long_name == "R.ed" for v in colour_datatype.values)
+
     _assert_reqif_v12_compliance(output_file, tmp_path)
 
 

@@ -415,6 +415,7 @@ class ReqifConverter(BaseConverter):
                         "value": enum_values,
                         "attribute_type": SpecObjectAttributeType.ENUMERATION,
                         "enum_type": enum_type,
+                        "multi_valued": self._is_multi_valued_field(record, name),
                     }
                 continue
 
@@ -457,7 +458,7 @@ class ReqifConverter(BaseConverter):
         spec_object = self._create_spec_object(
             item_name=record.name,
             type_key=type_key,
-            type_long_name=record.n_typ.name,
+            type_long_name=getattr(record.n_typ, "description", None) or record.n_typ.name,
             attribute_value_map=attribute_value_map,
             identifier_key=f"spec-object:{record.n_package.name}.{record.name}"
         )
@@ -840,7 +841,8 @@ class ReqifConverter(BaseConverter):
                         key,
                         attribute_info["long_name"],
                         attribute_info["value"],
-                        attribute_info["enum_type"]
+                        attribute_info["enum_type"],
+                        attribute_info.get("multi_valued", False)
                     )
                 )
             else:
@@ -924,7 +926,8 @@ class ReqifConverter(BaseConverter):
 
     # pylint: disable-next=too-many-arguments,too-many-positional-arguments
     def _create_enum_attribute(self, type_key: str, definition_key: str, long_name: str,
-                               literal_names: list, enum_type: Enumeration_Type) -> SpecObjectAttribute:
+                               literal_names: list, enum_type: Enumeration_Type,
+                               multi_valued: bool = False) -> SpecObjectAttribute:
         # lobster-trace: SwRequirements.sw_req_reqif_enum
         """Create a SpecObjectAttribute of type ENUMERATION for the given ReqIF spec-object type.
 
@@ -934,12 +937,13 @@ class ReqifConverter(BaseConverter):
             long_name (str): Human-readable attribute name registered in the spec-object type.
             literal_names (list): List of TRLC enumeration literal names for the attribute value.
             enum_type (Enumeration_Type): The TRLC enumeration type.
+            multi_valued (bool): Whether the attribute definition is multi-valued (array field).
 
         Returns:
             SpecObjectAttribute: The created attribute.
         """
         definition_identifier = self._ensure_enum_attribute_definition(
-            type_key, definition_key, long_name, enum_type
+            type_key, definition_key, long_name, enum_type, multi_valued
         )
         registry = self._enum_datatype_registry[enum_type.name]
         value_identifiers = [registry["literal_identifier_by_name"][name] for name in literal_names]
@@ -978,7 +982,7 @@ class ReqifConverter(BaseConverter):
             enum_values.append(ReqIFEnumValue(
                 identifier=value_identifier,
                 key=str(key_idx),
-                long_name=literal_spec.name,
+                long_name=getattr(literal_spec, "description", None) or literal_spec.name,
                 last_change=last_change,
                 other_content=""
             ))
@@ -986,15 +990,17 @@ class ReqifConverter(BaseConverter):
 
         self._enum_datatype_registry[enum_type.name] = {
             "identifier": datatype_identifier,
-            "long_name": enum_type.name,
+            "long_name": getattr(enum_type, "description", None) or enum_type.name,
             "values": enum_values,
             "literal_identifier_by_name": literal_identifier_by_name
         }
 
         return datatype_identifier
 
+    # pylint: disable-next=too-many-arguments,too-many-positional-arguments
     def _ensure_enum_attribute_definition(self, type_key: str, definition_key: str,
-                                          long_name: str, enum_type: Enumeration_Type) -> str:
+                                          long_name: str, enum_type: Enumeration_Type,
+                                          multi_valued: bool = False) -> str:
         # lobster-trace: SwRequirements.sw_req_reqif_enum
         """Return the identifier of an existing ATTRIBUTE-DEFINITION-ENUMERATION, or create and register a new one.
 
@@ -1003,6 +1009,7 @@ class ReqifConverter(BaseConverter):
             definition_key (str): Internal dictionary key for the attribute definition.
             long_name (str): Human-readable name to assign when creating a new definition.
             enum_type (Enumeration_Type): The TRLC enumeration type.
+            multi_valued (bool): Whether the attribute definition is multi-valued (array field).
 
         Returns:
             str: The attribute definition identifier.
@@ -1023,7 +1030,7 @@ class ReqifConverter(BaseConverter):
             datatype_definition=enum_datatype_identifier,
             long_name=long_name,
             last_change=self._get_reqif_timestamp(),
-            multi_valued=False
+            multi_valued=multi_valued
         )
 
         attribute_definitions[definition_key] = definition
@@ -1063,6 +1070,32 @@ class ReqifConverter(BaseConverter):
                 enum_type = field_type
 
         return enum_type
+
+    @staticmethod
+    def _is_multi_valued_field(record: Record_Object, field_name: str) -> bool:
+        # lobster-trace: SwRequirements.sw_req_reqif_enum
+        """Return whether the named field is a multi-valued (array) field.
+
+        Traverses the component hierarchy including inherited components.
+
+        Args:
+            record (Record_Object): The TRLC record object.
+            field_name (str): The field name to look up.
+
+        Returns:
+            bool: True if the field is declared as an array, False otherwise.
+        """
+        simplified = Symbol_Table.simplified_name(field_name)
+        stab = getattr(record.n_typ, "components", None)
+        component = None
+
+        while stab is not None and component is None:
+            component = stab.table.get(simplified)
+            stab = stab.parent
+
+        is_multi_valued = component is not None and isinstance(component.n_typ, Array_Type)
+
+        return is_multi_valued
 
     @staticmethod
     def _get_field_scalar_type(record: Record_Object, field_name: str) -> Optional[SpecObjectAttributeType]:

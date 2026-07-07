@@ -389,7 +389,8 @@ section "SW Architecture" {
                     * Passes configured XHTML fields through to ReqIF XHTML without modification.
                     * Renders inline PlantUML fenced code blocks as embedded SVG images in XHTML attributes.
                     * Converts TRLC Integer, Decimal and Boolean attributes to the native ReqIF scalar datatypes and attribute values.
-                    * Converts TRLC enumeration type attributes to DATATYPE-DEFINITION-ENUMERATION with 0-based consecutive ENUM-VALUE keys in RSL declaration order.
+                    * Converts TRLC enumeration type attributes to DATATYPE-DEFINITION-ENUMERATION with 0-based consecutive ENUM-VALUE keys in RSL declaration order; multi-valued (array) enum attributes are marked multi-valued and emit all selected enum value references.
+                    * Uses the TRLC quoted long name (type or enumeration description) as the ReqIF LONG-NAME of the SPEC-OBJECT-TYPE, DATATYPE-DEFINITION-ENUMERATION and ENUM-VALUEs, so ReqIF long names that are not valid TRLC identifiers are reproduced.
                     * Omits optional enumeration attributes with null value from the generated spec-object.
                     * Converts TRLC record reference attributes to ReqIF SPEC-RELATION entries.
                     * Writes the ReqIF.ForeignID as a single STRING attribute from the record's ForeignID field (or the object name as fallback), so the identifier stays immutable across a round-trip.
@@ -425,6 +426,7 @@ section "SW Architecture" {
                     SwRequirements.sw_req_reqif_export_map,
                     SwRequirements.sw_req_reqif_scalar,
                     SwRequirements.sw_req_reqif_foreign_id,
+                    SwRequirements.sw_req_reqif_type_long_name,
                     SwRequirements.sw_req_destination_format
                 ]
             }
