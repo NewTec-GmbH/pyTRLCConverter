@@ -717,6 +717,13 @@ section "SW Requirements" {
                     derived = [sw_req_reqif_import]
                 }
 
+                SwReq sw_req_reqif_import_type_identity {
+                    description = "On the initial import the ReqIF import shall seed the ReqIF metadata store with the original identifiers of the type system so they stay immutable on the round-trip export: the SPEC-OBJECT-TYPEs, their ATTRIBUTE-DEFINITIONs, the DATATYPE-DEFINITION-ENUMERATIONs and their ENUM-VALUEs, and the SPECIFICATION. The original SPECIFICATION-TYPE identifier and long name shall be stored as ReqIF metadata so the export reproduces the document type. The ReqIF export shall reuse these seeded identifiers and metadata when the store is provided, and otherwise generate readable identifiers unchanged."
+                    verification_criteria = "Verify by importing a ReqIF file with the metadata store seeded, re-exporting the generated TRLC with the same store, and checking that the SPEC-OBJECT-TYPE, ATTRIBUTE-DEFINITION, DATATYPE-DEFINITION-ENUMERATION, ENUM-VALUE, SPECIFICATION and SPECIFICATION-TYPE identifiers and the SPECIFICATION-TYPE long name are identical to the source."
+                    valid_status = AbstractRequirements.VALID_STATUS.valid
+                    derived = [sw_req_reqif_import]
+                }
+
                 SwReq sw_req_reqif_import_translation {
                     description = "The generated translation.json shall map each TRLC attribute name back to its original ReqIF long name verbatim whenever the two differ, so the ReqIF long names are reproduced faithfully on the export. This applies to all attributes whose long name deviates from the sanitized TRLC field name, including ReqIF system attributes such as ReqIF.ForeignCreatedBy or ReqIF.ChapterName that are not part of the mandatory set."
                     verification_criteria = "Verify by importing a ReqIF file with an attribute whose long name is a prefixed system name (e.g. ReqIF.ForeignCreatedBy) and checking that the generated translation.json maps the TRLC field name back to that original long name."

@@ -143,7 +143,7 @@ modes selected automatically by whether existing TRLC is provided via `--source`
 
 - **Initial import (bootstrap)** — no existing TRLC. A new TRLC project is generated from the ReqIF
   file: `<package>.rsl`, `<package>.trlc` (following the SPEC-HIERARCHY), and the companion
-  `renderCfg.json`, `translation.json` and `id_store.json`. SPEC-RELATIONs are reverse-mapped to TRLC
+  `renderCfg.json`, `translation.json` and `meta_data.json`. SPEC-RELATIONs are reverse-mapped to TRLC
   reference fields. Use `--package` to set the package name and `--out` for the output directory.
 
   ```bash
@@ -168,18 +168,19 @@ modes selected automatically by whether existing TRLC is provided via `--source`
   ```
 
 - **Merge import (re-import)** — existing TRLC provided via `--source`. The existing `.trlc` files are
-  updated in place: objects are matched via the identifier store (`--id-store`, required), changed
+  updated in place: objects are matched via the ReqIF metadata store (`--meta-data`, required), changed
   string attribute values are updated, and comments, formatting and attributes that are not part of
   the exchange are preserved.
 
   ```bash
-  pyTRLCConverter --source ./trlc reqif-import input.reqif --id-store id_store.json
+  pyTRLCConverter --source ./trlc reqif-import input.reqif --meta-data meta_data.json
   ```
 
-The identifier store keeps the identifiers of ReqIF Identifiable elements immutable across the
-roundtrip. Export with `--id-store`, exchange the ReqIF with the other tool, and import back with the
-same store so identities are preserved. Markdown/GFM attributes are not reversed automatically on a
-merge (they are preserved), since the XHTML-to-Markdown conversion is lossy.
+The ReqIF metadata store keeps the identifiers of ReqIF Identifiable elements immutable across the
+roundtrip and preserves additional ReqIF metadata (e.g. the specification-type identity). Export with
+`--meta-data`, exchange the ReqIF with the other tool, and import back with the same store so
+identities are preserved. Markdown/GFM attributes are not reversed automatically on a merge (they are
+preserved), since the XHTML-to-Markdown conversion is lossy.
 
 ## Supporting Tools
 

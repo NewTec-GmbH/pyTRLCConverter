@@ -33,7 +33,7 @@ from pyTRLCConverter.import_config import ImportConfig
 from pyTRLCConverter.import_filter import ImportFilter
 from pyTRLCConverter.logger import log_error, log_verbose
 from pyTRLCConverter.render_config import RenderConfig
-from pyTRLCConverter.reqif_identifier_store import ReqifIdentifierStore
+from pyTRLCConverter.reqif_meta_data import ReqifMetaData
 from pyTRLCConverter.reqif_merger import ReqifMerger
 from pyTRLCConverter.reqif_reader import ReqifReader, sanitize_identifier
 from pyTRLCConverter.ret import Ret
@@ -103,11 +103,11 @@ class ReqifImporter:
         )
 
         parser.add_argument(
-            "--id-store",
+            "--meta-data",
             type=str,
             default=None,
             required=False,
-            help="Path to the JSON identifier store. Seeded on the initial import; required to "
+            help="Path to the JSON ReqIF metadata store. Seeded on the initial import; required to "
                  "match objects on a merge import."
         )
 
@@ -228,9 +228,9 @@ class ReqifImporter:
         # lobster-trace: SwRequirements.sw_req_reqif_import_merge
         """Run the merge import (update existing TRLC files in place).
 
-        Objects are matched via the identifier store. The matched records' string attribute
+        Objects are matched via the ReqIF metadata store. The matched records' string attribute
         values are updated in place; unmatched attributes, comments and formatting are
-        preserved. Requires the --id-store argument.
+        preserved. Requires the --meta-data argument.
 
         Args:
             reader (ReqifReader): The loaded ReqIF reader.
@@ -240,14 +240,14 @@ class ReqifImporter:
         """
         result = Ret.OK
 
-        if self._args.id_store is None:
-            log_error("Merge import requires --id-store to match ReqIF objects to TRLC records.")
+        if self._args.meta_data is None:
+            log_error("Merge import requires --meta-data to match ReqIF objects to TRLC records.")
             result = Ret.ERROR
         else:
-            id_store = ReqifIdentifierStore()
+            meta_data = ReqifMetaData()
             symbols = get_trlc_symbols(self._args.source, self._args.include)
 
-            if id_store.load(self._args.id_store) is False or symbols is None:
+            if meta_data.load(self._args.meta_data) is False or symbols is None:
                 result = Ret.ERROR
             else:
                 import_config = self._build_import_config()
@@ -255,7 +255,7 @@ class ReqifImporter:
                     result = Ret.ERROR
                 else:
                     log_verbose("Merge ReqIF import into existing TRLC files.")
-                    result = ReqifMerger(reader, id_store, import_config).merge(symbols)
+                    result = ReqifMerger(reader, meta_data, import_config).merge(symbols)
 
         return result
 

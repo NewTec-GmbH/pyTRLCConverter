@@ -24,7 +24,7 @@ and produces five files ready for use with pyTRLCConverter:
 - id_store.json        Identifier store seeded with the identifiers of the source ReqIF
                        Identifiable elements (SPEC-OBJECTs and SPEC-HIERARCHY nodes plus
                        the ReqIF header), keyed by the same stable logical keys
-                       pyTRLCConverter uses.  Passing it back via ``--id-store`` keeps
+                       pyTRLCConverter uses.  Passing it back via ``--meta-data`` keeps
                        those identifiers immutable across the round-trip conversion.
 
 Round-trip fidelity
@@ -32,7 +32,7 @@ Round-trip fidelity
 The generated TRLC files are intended so that a subsequent::
 
     pyTRLCConverter --source <dir> --renderCfg renderCfg.json \\
-                    --translation translation.json reqif --id-store id_store.json
+                    --translation translation.json reqif --meta-data id_store.json
 
 run reproduces THE-VALUE content identical (or as close as possible) to the
 analysed source.  The following constraints apply:

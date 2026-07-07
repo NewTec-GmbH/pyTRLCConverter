@@ -61,7 +61,16 @@ from trlc.ast import (
 )
 from pyTRLCConverter.base_converter import BaseConverter
 from pyTRLCConverter.export_map import ExportMap
-from pyTRLCConverter.reqif_identifier_store import ReqifIdentifierStore
+from pyTRLCConverter.reqif_meta_data import (
+    ReqifMetaData,
+    METADATA_SPECIFICATION_TYPE_IDENTIFIER,
+    METADATA_SPECIFICATION_TYPE_LONG_NAME,
+    spec_object_type_key,
+    attribute_definition_key,
+    enum_datatype_key,
+    enum_value_key,
+    specification_key
+)
 from pyTRLCConverter.marko.md2reqif_renderer import Md2ReqifRenderer
 from pyTRLCConverter.marko.gfm2reqif_renderer import Gfm2ReqifRenderer
 from pyTRLCConverter.ret import Ret
@@ -113,8 +122,8 @@ class ReqifConverter(BaseConverter):
         self._markdown_renderer_gfm = Markdown(renderer=Gfm2ReqifRenderer, extensions=["gfm"])
         self._plantuml_tmp_dir: Optional[tempfile.TemporaryDirectory] = None
 
-        self._id_store_path = getattr(args, "id_store", None)
-        self._id_store: Optional[ReqifIdentifierStore] = None
+        self._meta_data_path = getattr(args, "meta_data", None)
+        self._meta_data: Optional[ReqifMetaData] = None
 
         self._export_map_path = getattr(args, "export_map", None)
         self._export_map = ExportMap()
@@ -230,14 +239,15 @@ class ReqifConverter(BaseConverter):
         )
 
         BaseConverter._parser.add_argument(
-            "--id-store",
+            "--meta-data",
             type=str,
             default=None,
             required=False,
-            help="Path to a JSON file used to keep the identifiers of ReqIF Identifiable "
-                 "elements immutable across consecutive exports. On the initial conversion "
-                 "the file is created with the generated identifiers; on subsequent "
-                 "conversions the stored identifiers are reused and new elements are added."
+            help="Path to a JSON ReqIF metadata store used to keep the identifiers of ReqIF "
+                 "Identifiable elements immutable across consecutive exports and to reproduce "
+                 "additional ReqIF metadata. On the initial conversion the file is created with "
+                 "the generated identifiers; on subsequent conversions the stored identifiers "
+                 "and metadata are reused and new elements are added."
         )
 
         BaseConverter._parser.add_argument(
@@ -271,9 +281,9 @@ class ReqifConverter(BaseConverter):
                 if self._export_map.load(self._export_map_path) is False:
                     result = Ret.ERROR
 
-            if result == Ret.OK and self._id_store_path is not None:
-                self._id_store = ReqifIdentifierStore()
-                if self._id_store.load(self._id_store_path) is False:
+            if result == Ret.OK and self._meta_data_path is not None:
+                self._meta_data = ReqifMetaData()
+                if self._meta_data.load(self._meta_data_path) is False:
                     result = Ret.ERROR
 
             # Temporary directory for inline PlantUML images generated while
@@ -475,8 +485,8 @@ class ReqifConverter(BaseConverter):
         # lobster-trace: SwRequirements.sw_req_reqif_identifier_store_reuse
         """Finish the conversion process and write the output in single document mode.
 
-        The persistent identifier store, if enabled, is written back so that the
-        generated identifiers stay immutable on subsequent conversions.
+        The persistent ReqIF metadata store, if enabled, is written back so that the
+        generated identifiers and metadata stay immutable on subsequent conversions.
 
         Returns:
             Ret: Status
@@ -487,8 +497,8 @@ class ReqifConverter(BaseConverter):
             self._flush_pending_hierarchy()
             result = self._write_document(self._args.name)
 
-        if self._id_store is not None:
-            if self._id_store.save(self._id_store_path) is False:
+        if self._meta_data is not None:
+            if self._meta_data.save(self._meta_data_path) is False:
                 result = Ret.ERROR
 
         if self._plantuml_tmp_dir is not None:
@@ -609,18 +619,20 @@ class ReqifConverter(BaseConverter):
             for relation_type_info in self._spec_relation_type_info.values()
         ]
 
+        spec_type_identifier, spec_type_long_name = self._resolve_specification_type()
+
         specification_type = ReqIFSpecificationType(
-            identifier=ReqifConverter.SPECIFICATION_TYPE_IDENTIFIER,
+            identifier=spec_type_identifier,
             last_change=last_change,
-            long_name="TRLC Specification",
+            long_name=spec_type_long_name,
             spec_attributes=[]
         )
 
         specification = ReqIFSpecification(
-            identifier=self._obtain_identifier(f"specification:{self._document_title}", "specification"),
+            identifier=self._obtain_identifier(specification_key(self._document_title), "specification"),
             long_name=self._document_title,
             last_change=last_change,
-            specification_type=ReqifConverter.SPECIFICATION_TYPE_IDENTIFIER,
+            specification_type=spec_type_identifier,
             values=[],
             children=self._root_hierarchies
         )
@@ -973,12 +985,15 @@ class ReqifConverter(BaseConverter):
 
         last_change = self._get_reqif_timestamp()
         sanitized = self._sanitize_identifier_token(enum_type.name)
-        datatype_identifier = f"datatype-enum-{sanitized}"
+        datatype_identifier = self._resolve_identifier(
+            enum_datatype_key(enum_type.name), f"datatype-enum-{sanitized}")
 
         enum_values = []
         literal_identifier_by_name = {}
         for key_idx, literal_spec in enumerate(enum_type.literals.table.values()):
-            value_identifier = f"{datatype_identifier}-value-{key_idx}"
+            value_identifier = self._resolve_identifier(
+                enum_value_key(enum_type.name, literal_spec.name),
+                f"{datatype_identifier}-value-{key_idx}")
             enum_values.append(ReqIFEnumValue(
                 identifier=value_identifier,
                 key=str(key_idx),
@@ -1021,7 +1036,9 @@ class ReqifConverter(BaseConverter):
 
         type_identifier = self._ensure_spec_object_type(type_key, type_key)
         sanitized_name = self._sanitize_identifier_token(definition_key)
-        definition_identifier = f"attribute-{type_identifier}-{sanitized_name}"
+        definition_identifier = self._resolve_identifier(
+            attribute_definition_key(type_key, definition_key),
+            f"attribute-{type_identifier}-{sanitized_name}")
         enum_datatype_identifier = self._ensure_enum_datatype(enum_type)
 
         definition = SpecAttributeDefinition(
@@ -1219,7 +1236,8 @@ class ReqifConverter(BaseConverter):
             return self._spec_object_type_info[type_key]["identifier"]
 
         sanitized_name = self._sanitize_identifier_token(type_key)
-        type_identifier = f"spec-object-type-{sanitized_name}"
+        type_identifier = self._resolve_identifier(
+            spec_object_type_key(type_key), f"spec-object-type-{sanitized_name}")
 
         self._spec_object_type_info[type_key] = {
             "identifier": type_identifier,
@@ -1266,7 +1284,9 @@ class ReqifConverter(BaseConverter):
 
         type_identifier = self._ensure_spec_object_type(type_key, type_key)
         sanitized_name = self._sanitize_identifier_token(definition_key)
-        definition_identifier = f"attribute-{type_identifier}-{sanitized_name}"
+        definition_identifier = self._resolve_identifier(
+            attribute_definition_key(type_key, definition_key),
+            f"attribute-{type_identifier}-{sanitized_name}")
 
         if attribute_type in (SpecObjectAttributeType.INTEGER, SpecObjectAttributeType.REAL,
                               SpecObjectAttributeType.BOOLEAN):
@@ -1790,7 +1810,7 @@ class ReqifConverter(BaseConverter):
         # lobster-trace: SwRequirements.sw_req_reqif_identifier_immutable
         """Obtain an identifier for an Identifiable element, persistent if a store is enabled.
 
-        When an identifier store is enabled (``--id-store``) the identifier is looked up
+        When a ReqIF metadata store is enabled (``--meta-data``) the identifier is looked up
         by its stable logical key and reused if known, keeping it immutable across
         consecutive exports. Otherwise a volatile auto-incremented identifier is used.
 
@@ -1801,9 +1821,57 @@ class ReqifConverter(BaseConverter):
         Returns:
             str: The identifier associated with the element.
         """
-        if self._id_store is not None:
-            identifier = self._id_store.get_or_create(key, prefix)
+        if self._meta_data is not None:
+            identifier = self._meta_data.get_or_create(key, prefix)
         else:
             identifier = self._new_identifier(prefix)
 
         return identifier
+
+    def _resolve_identifier(self, key: str, default_identifier: str) -> str:
+        # lobster-trace: SwRequirements.sw_req_reqif_identifier_immutable
+        # lobster-trace: SwRequirements.sw_req_reqif_import_type_identity
+        """Resolve an identifier that has a readable default, persistent if a store is enabled.
+
+        When a ReqIF metadata store is enabled (``--meta-data``) the identifier is looked up
+        by its stable logical key and reused if known (e.g. an original identifier seeded on
+        import), otherwise the given readable default is stored and returned. Without a store
+        the readable default is used directly, keeping the generated identifier stable.
+
+        Args:
+            key (str): Stable logical key identifying the ReqIF element.
+            default_identifier (str): Readable identifier to use when the key is unknown.
+
+        Returns:
+            str: The identifier associated with the element.
+        """
+        if self._meta_data is not None:
+            identifier = self._meta_data.resolve(key, default_identifier)
+        else:
+            identifier = default_identifier
+
+        return identifier
+
+    def _resolve_specification_type(self) -> tuple[str, str]:
+        # lobster-trace: SwRequirements.sw_req_reqif_import_type_identity
+        """Resolve the SPECIFICATION-TYPE identifier and long name.
+
+        When the ReqIF metadata store holds a preserved SPECIFICATION-TYPE identity, it is
+        reused so the round-trip reproduces the original document type. Otherwise the default
+        TRLC specification type identity is used.
+
+        Returns:
+            tuple[str, str]: The specification-type identifier and long name.
+        """
+        identifier = ReqifConverter.SPECIFICATION_TYPE_IDENTIFIER
+        long_name = "TRLC Specification"
+
+        if self._meta_data is not None:
+            stored_identifier = self._meta_data.get_metadata(METADATA_SPECIFICATION_TYPE_IDENTIFIER)
+            stored_long_name = self._meta_data.get_metadata(METADATA_SPECIFICATION_TYPE_LONG_NAME)
+            if stored_identifier is not None:
+                identifier = stored_identifier
+            if stored_long_name is not None:
+                long_name = stored_long_name
+
+        return identifier, long_name

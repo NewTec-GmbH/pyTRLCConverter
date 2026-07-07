@@ -2,7 +2,7 @@
 
     Used by the initial ReqIF import (bootstrap) to create a brand-new TRLC project
     from a ReqIF file: the type definitions (.rsl), the requirement instances (.trlc)
-    and the companion render configuration, translation and identifier store files.
+    and the companion render configuration, translation and ReqIF metadata store files.
 
     Author: Andreas Merkle (andreas.merkle@newtec.de)
 """
@@ -29,8 +29,18 @@ import os
 import re
 from typing import Any, Optional
 from pyTRLCConverter.logger import log_error, log_verbose
+from pyTRLCConverter.reqif_meta_data import (
+    METADATA_SPECIFICATION_TYPE_IDENTIFIER,
+    METADATA_SPECIFICATION_TYPE_LONG_NAME,
+    spec_object_type_key,
+    attribute_definition_key,
+    enum_datatype_key,
+    enum_value_key,
+    specification_key
+)
 from pyTRLCConverter.reqif_reader import (
     ReqifReader,
+    REQIF_FOREIGN_ID_LONG_NAME,
     extract_object_data,
     sanitize_identifier
 )
@@ -41,6 +51,10 @@ from pyTRLCConverter.ret import Ret
 # Default CSS values applied to GFM-rendered tables when GFM format is requested.
 _GFM_TABLE_BORDER = "border: 1px solid black; border-collapse: collapse;"
 _GFM_TABLE_HEADING_STYLE = "background-color: #c0c0c0;"
+
+# Internal attribute-definition key of the synthetic ReqIF.ForeignID attribute; must match
+# ReqifConverter.ATTRIBUTE_KEY_RECORD_FOREIGN_ID so import seeding and export lookup align.
+_FOREIGN_ID_DEFINITION_KEY = "foreignID"
 
 # Classes **********************************************************************
 
@@ -58,7 +72,8 @@ class TrlcGenerator:  # pylint: disable=too-few-public-methods
         """
         self._reader = reader
         self._package_name = package_name
-        self._id_store: dict[str, str] = {}
+        self._identifiers: dict[str, str] = {}
+        self._metadata: dict[str, str] = {}
         self._obj_name_by_id: dict[str, str] = {}
 
     def generate(self, output_dir: str, gfm_format: bool = False) -> Ret:
@@ -87,7 +102,9 @@ class TrlcGenerator:  # pylint: disable=too-few-public-methods
             self._write_render_config(cfg_path, gfm_format)
             self._write_translation(trans_path)
             self._seed_header_id()
-            store_path = self._write_identifier_store(output_dir)
+            self._seed_type_identifiers()
+            self._seed_specification_identity()
+            store_path = self._write_meta_data(output_dir)
 
             log_verbose(f"Generated: {rsl_path}, {trlc_path}, {cfg_path}, {trans_path}, {store_path}")
 
@@ -272,7 +289,7 @@ class TrlcGenerator:  # pylint: disable=too-few-public-methods
         """
         spec_obj_id = getattr(spec_obj, "identifier", None)
         if spec_obj_id:
-            self._id_store[f"spec-object:{self._package_name}.{obj_name}"] = spec_obj_id
+            self._identifiers[f"spec-object:{self._package_name}.{obj_name}"] = spec_obj_id
 
         ref_lines = self._ref_value_lines(spec_obj, type_data, "    " * indent)
         lines.extend(
@@ -396,7 +413,7 @@ class TrlcGenerator:  # pylint: disable=too-few-public-methods
     def _seed_hierarchy_id(self, hierarchy: Any, spec_obj: Any, obj_name: str,
                            has_children: bool) -> None:
         # lobster-trace: SwRequirements.sw_req_reqif_import_identifier
-        """Seed the SPEC-HIERARCHY identifier of a record node into the id store.
+        """Seed the SPEC-HIERARCHY identifier of a record node into the ReqIF metadata store.
 
         Args:
             hierarchy (Any): The SPEC-HIERARCHY node being rendered.
@@ -409,11 +426,11 @@ class TrlcGenerator:  # pylint: disable=too-few-public-methods
 
         if spec_obj_id and hierarchy_id:
             long_name = (getattr(spec_obj, "long_name", None) or obj_name) if has_children else obj_name
-            self._id_store[f"hierarchy:{spec_obj_id}:{long_name}"] = hierarchy_id
+            self._identifiers[f"hierarchy:{spec_obj_id}:{long_name}"] = hierarchy_id
 
     def _seed_header_id(self) -> None:
         # lobster-trace: SwRequirements.sw_req_reqif_import_identifier
-        """Seed the ReqIF header identifier into the id store.
+        """Seed the ReqIF header identifier into the ReqIF metadata store.
         """
         header = getattr(self._reader.bundle, "req_if_header", None)
         header_id = getattr(header, "identifier", None) if header is not None else None
@@ -423,23 +440,92 @@ class TrlcGenerator:  # pylint: disable=too-few-public-methods
             document_title = "Specification"
             if specifications:
                 document_title = getattr(specifications[0], "long_name", None) or "Specification"
-            self._id_store[f"req-if-header:{document_title}"] = header_id
+            self._identifiers[f"req-if-header:{document_title}"] = header_id
 
-    def _write_identifier_store(self, output_dir: str) -> str:
-        # lobster-trace: SwRequirements.sw_req_reqif_import_identifier
-        """Write the id_store.json compatible with the converter's --id-store option.
+    def _seed_type_identifiers(self) -> None:
+        # lobster-trace: SwRequirements.sw_req_reqif_import_type_identity
+        """Seed the type-system identifiers into the ReqIF metadata store.
+
+        Seeds the original identifiers of the SPEC-OBJECT-TYPEs, their
+        ATTRIBUTE-DEFINITIONs, the DATATYPE-DEFINITION-ENUMERATIONs and their
+        ENUM-VALUEs, so they stay immutable on the round-trip export.
+        """
+        for type_identifier, type_data in self._reader.type_info.items():
+            if type_data["is_section"] is False:
+                trlc_type = type_data["trlc_name"]
+                self._identifiers[spec_object_type_key(trlc_type)] = type_identifier
+                for attr in type_data["attrs"]:
+                    if attr["long_name"] == REQIF_FOREIGN_ID_LONG_NAME:
+                        definition_key = _FOREIGN_ID_DEFINITION_KEY
+                    else:
+                        definition_key = f'field_{attr["trlc_name"]}'
+                    self._identifiers[attribute_definition_key(trlc_type, definition_key)] = attr["attr_def_id"]
+
+        for datatype_identifier, enum_data in self._reader.enum_info.items():
+            trlc_enum = enum_data["trlc_name"]
+            self._identifiers[enum_datatype_key(trlc_enum)] = datatype_identifier
+            for value_id, literal in enum_data["literals"].items():
+                self._identifiers[enum_value_key(trlc_enum, literal["trlc_name"])] = value_id
+
+    def _seed_specification_identity(self) -> None:
+        # lobster-trace: SwRequirements.sw_req_reqif_import_type_identity
+        """Seed the SPECIFICATION identifier and the SPECIFICATION-TYPE identity.
+
+        The SPECIFICATION identifier is seeded under its long-name key (the long-name
+        also drives the first generated TRLC section). The SPECIFICATION-TYPE identifier
+        and long-name are stored as metadata so the export reproduces the document type.
+        """
+        specifications = getattr(self._reader.content, "specifications", None) or []
+
+        if specifications:
+            specification = specifications[0]
+            spec_long_name = getattr(specification, "long_name", None) or "Specification"
+            spec_identifier = getattr(specification, "identifier", None)
+            if spec_identifier:
+                self._identifiers[specification_key(spec_long_name)] = spec_identifier
+
+            spec_type_identifier = getattr(specification, "specification_type", None)
+            if spec_type_identifier:
+                self._metadata[METADATA_SPECIFICATION_TYPE_IDENTIFIER] = spec_type_identifier
+                spec_type_long_name = self._specification_type_long_name(spec_type_identifier)
+                if spec_type_long_name is not None:
+                    self._metadata[METADATA_SPECIFICATION_TYPE_LONG_NAME] = spec_type_long_name
+
+    def _specification_type_long_name(self, spec_type_identifier: str) -> Optional[str]:
+        # lobster-trace: SwRequirements.sw_req_reqif_import_type_identity
+        """Return the long-name of the SPECIFICATION-TYPE with the given identifier, or None.
 
         Args:
-            output_dir (str): Directory in which to write id_store.json.
+            spec_type_identifier (str): The SPECIFICATION-TYPE identifier.
+
+        Returns:
+            Optional[str]: The SPECIFICATION-TYPE long-name, or None if not found.
+        """
+        long_name = None
+
+        for spec_type in (getattr(self._reader.content, "spec_types", None) or []):
+            if getattr(spec_type, "identifier", None) == spec_type_identifier:
+                long_name = getattr(spec_type, "long_name", None)
+                break
+
+        return long_name
+
+    def _write_meta_data(self, output_dir: str) -> str:
+        # lobster-trace: SwRequirements.sw_req_reqif_import_identifier
+        """Write the meta_data.json compatible with the converter's --meta-data option.
+
+        Args:
+            output_dir (str): Directory in which to write meta_data.json.
 
         Returns:
             str: The path of the written file.
         """
-        store_path = os.path.join(output_dir, "id_store.json")
+        store_path = os.path.join(output_dir, "meta_data.json")
         data = {
-            "version": 1,
+            "version": 2,
             "next_id": self._compute_next_id(),
-            "identifiers": self._id_store,
+            "identifiers": self._identifiers,
+            "metadata": self._metadata,
         }
 
         with open(store_path, "w", encoding="utf-8") as fh:
@@ -457,7 +543,7 @@ class TrlcGenerator:  # pylint: disable=too-few-public-methods
         """
         max_id = 0
 
-        for value in self._id_store.values():
+        for value in self._identifiers.values():
             match = re.search(r"-(\d+)$", value)
             if match:
                 max_id = max(max_id, int(match.group(1)))

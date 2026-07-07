@@ -24,7 +24,13 @@ from pathlib import Path
 from pyTRLCConverter.__main__ import main
 from pyTRLCConverter.reqif_converter import ReqifConverter
 from pyTRLCConverter.trlc_helper import get_trlc_symbols
-from tests.reqif_test_utils import _parse_reqif, _collect_identifiers
+from tests.reqif_test_utils import (
+    _parse_reqif,
+    _collect_identifiers,
+    _find_spec_type_by_long_name,
+    _find_attribute_identifier,
+    _find_datatype_by_long_name,
+)
 
 # Variables ********************************************************************
 
@@ -53,7 +59,7 @@ def _export_reqif(monkeypatch, out_dir, sources, render_cfg=None, id_store=None)
         argv += ["--renderCfg", render_cfg]
     argv += ["--out", str(out_dir), "reqif", "--single-document"]
     if id_store is not None:
-        argv += ["--id-store", id_store]
+        argv += ["--meta-data", id_store]
 
     monkeypatch.setattr("sys.argv", argv)
     main()
@@ -115,7 +121,7 @@ def test_tc_reqif_import_initial(record_property, capsys, monkeypatch, tmp_path:
     assert capsys.readouterr().err == ""
 
     # The expected files have been generated.
-    for name in ("Req.rsl", "Req.trlc", "renderCfg.json", "translation.json", "id_store.json"):
+    for name in ("Req.rsl", "Req.trlc", "renderCfg.json", "translation.json", "meta_data.json"):
         assert os.path.exists(os.path.join(imported_dir, name)) is True
 
     # The generated TRLC parses without errors.
@@ -126,12 +132,12 @@ def test_tc_reqif_import_initial(record_property, capsys, monkeypatch, tmp_path:
     assert symbols is not None
     assert capsys.readouterr().err == ""
 
-    # Re-export the generated TRLC with the seeded identifier store.
+    # Re-export the generated TRLC with the seeded ReqIF metadata store.
     reqif_file2 = _export_reqif(
         monkeypatch, reqif2_dir,
         [str(imported_dir / "Req.rsl"), str(imported_dir / "Req.trlc")],
         render_cfg=str(imported_dir / "renderCfg.json"),
-        id_store=str(imported_dir / "id_store.json")
+        id_store=str(imported_dir / "meta_data.json")
     )
     assert capsys.readouterr().err == ""
 
@@ -285,7 +291,7 @@ def test_tc_reqif_import_merge(record_property, capsys, monkeypatch, tmp_path: P
         "--source", str(rsl_file),
         "--source", str(data_file),
         "reqif-import", str(reqif_file),
-        "--id-store", id_store
+        "--meta-data", id_store
     ])
     main()
     assert capsys.readouterr().err == ""
@@ -396,7 +402,7 @@ def test_tc_reqif_import_scalar(record_property, capsys, monkeypatch, tmp_path: 
         "--source", str(rsl_file),
         "--source", str(data_file),
         "reqif-import", str(reqif_file),
-        "--id-store", id_store
+        "--meta-data", id_store
     ])
     main()
     assert capsys.readouterr().err == ""
@@ -508,5 +514,68 @@ def test_tc_reqif_import_translation(record_property, capsys, monkeypatch, tmp_p
         translation = json.load(fd)
 
     assert translation["Requirement"]["ForeignCreatedBy"] == "ReqIF.ForeignCreatedBy"
+
+
+def test_tc_reqif_import_type_identity(record_property, capsys, monkeypatch, tmp_path: Path):
+    # lobster-trace: SwTests.tc_reqif_import_type_identity
+    """The seeded type-system identity is reused on the round-trip export.
+
+    Args:
+        record_property (Any): Used to inject the test case reference into the test results.
+        capsys (Any): Used to capture stdout and stderr.
+        monkeypatch (Any): Used to mock program arguments.
+        tmp_path (Path): Used to create a temporary output directory.
+    """
+    record_property("lobster-trace", "SwTests.tc_reqif_import_type_identity")
+
+    imported_dir = tmp_path / "imported"
+
+    # Export a small TRLC (with an enumeration) to ReqIF, then import it (seeds the store).
+    reqif_file = _export_reqif(
+        monkeypatch, tmp_path / "reqif",
+        ["./tests/utils/req_enum.rsl", "./tests/utils/single_req_with_enum.trlc"]
+    )
+    assert capsys.readouterr().err == ""
+
+    _import_reqif(monkeypatch, imported_dir, reqif_file)
+    assert capsys.readouterr().err == ""
+
+    # Rewrite the seeded identifiers to distinctive values and set a distinctive
+    # SPECIFICATION-TYPE long name. These can only reappear on the re-export if the export
+    # reuses the store under the same keys the import seeded.
+    meta_data_file = os.path.join(imported_dir, "meta_data.json")
+    with open(meta_data_file, "r", encoding="utf-8") as fd:
+        meta_data = json.load(fd)
+
+    prefixes = ("spec-object-type:", "attribute-definition:", "enum-datatype:",
+                "enum-value:", "specification:")
+    for key in meta_data["identifiers"]:
+        if key.startswith(prefixes):
+            meta_data["identifiers"][key] = "_orig-" + meta_data["identifiers"][key]
+    meta_data["metadata"]["specification-type-identifier"] = "_orig-spectype"
+    meta_data["metadata"]["specification-type-long-name"] = "Doc.Type"
+
+    with open(meta_data_file, "w", encoding="utf-8") as fd:
+        json.dump(meta_data, fd, indent=4, sort_keys=True)
+
+    # Re-export the generated TRLC with the edited metadata store.
+    bundle = _parse_reqif(_export_reqif(
+        monkeypatch, tmp_path / "reqif2",
+        [str(imported_dir / "Req.rsl"), str(imported_dir / "Req.trlc")],
+        render_cfg=str(imported_dir / "renderCfg.json"),
+        id_store=meta_data_file
+    ))
+    assert capsys.readouterr().err == ""
+
+    # The type, attribute, enum datatype and specification identifiers are reused.
+    assert _find_spec_type_by_long_name(bundle, "Requirement").identifier.startswith("_orig-")
+    assert _find_attribute_identifier(bundle, "status").startswith("_orig-")
+    assert _find_datatype_by_long_name(bundle, "Status").identifier.startswith("_orig-")
+    assert bundle.core_content.req_if_content.specifications[0].identifier.startswith("_orig-")
+
+    # The SPECIFICATION-TYPE identity is reproduced from the metadata.
+    spec_type = _find_spec_type_by_long_name(bundle, "Doc.Type")
+    assert spec_type is not None
+    assert spec_type.identifier == "_orig-spectype"
 
 # Main *************************************************************************

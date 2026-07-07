@@ -1,6 +1,6 @@
 """Merges a ReqIF model into existing TRLC files in place.
 
-    Matched records are identified via the identifier store (the ReqIF identifier is mapped
+    Matched records are identified via the ReqIF metadata store (the ReqIF identifier is mapped
     back to the stable logical key the export used). For each matched record the attribute
     values are updated in place: set string fields are spliced and previously unset optional
     string fields get a new line. Everything that is not edited stays byte-identical, so
@@ -33,7 +33,7 @@ from trlc.ast import (
 )
 from pyTRLCConverter.import_config import ImportConfig
 from pyTRLCConverter.logger import log_verbose
-from pyTRLCConverter.reqif_identifier_store import ReqifIdentifierStore
+from pyTRLCConverter.reqif_meta_data import ReqifMetaData
 from pyTRLCConverter.reqif_reader import ReqifReader
 from pyTRLCConverter.ret import Ret
 from pyTRLCConverter.trlc_generator import trlc_string
@@ -48,18 +48,18 @@ from pyTRLCConverter.trlc_source_patcher import TrlcSourcePatcher, find_block_cl
 class ReqifMerger:  # pylint: disable=too-few-public-methods
     """Merges a ReqIF model into existing TRLC files in place."""
 
-    def __init__(self, reader: ReqifReader, id_store: ReqifIdentifierStore,
+    def __init__(self, reader: ReqifReader, meta_data: ReqifMetaData,
                  import_config: ImportConfig) -> None:
         # lobster-trace: SwRequirements.sw_req_reqif_import_merge
         """Initializes the merger.
 
         Args:
             reader (ReqifReader): The loaded ReqIF reader.
-            id_store (ReqifIdentifierStore): The loaded identifier store (reverse-mapping anchor).
+            meta_data (ReqifMetaData): The loaded ReqIF metadata store (reverse-mapping anchor).
             import_config (ImportConfig): The import configuration (translation and render config).
         """
         self._reader = reader
-        self._reverse_map = id_store.get_reverse_map()
+        self._reverse_map = meta_data.get_reverse_map()
         self._import_config = import_config
         self._records: dict[tuple, Any] = {}
         self._patchers: dict[str, TrlcSourcePatcher] = {}
@@ -129,7 +129,7 @@ class ReqifMerger:  # pylint: disable=too-few-public-methods
         """Return the TRLC record for a spec-object logical key, or None.
 
         Args:
-            key (Optional[str]): The logical key from the identifier store.
+            key (Optional[str]): The logical key from the ReqIF metadata store.
 
         Returns:
             Optional[Any]: The matching TRLC record object, or None.

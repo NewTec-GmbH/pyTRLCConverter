@@ -698,7 +698,7 @@ def test_tc_reqif_identifier_store_init(record_property, capsys, monkeypatch, tm
         "--out", str(tmp_path),
         "reqif",
         "--single-document",
-        "--id-store", id_store_file
+        "--meta-data", id_store_file
     ])
 
     main()
@@ -744,7 +744,7 @@ def test_tc_reqif_identifier_immutable(record_property, capsys, monkeypatch, tmp
         "--out", str(tmp_path),
         "reqif",
         "--single-document",
-        "--id-store", id_store_file
+        "--meta-data", id_store_file
     ]
     output_file = os.path.join(tmp_path, ReqifConverter.OUTPUT_FILE_NAME_DEFAULT)
 
@@ -791,7 +791,7 @@ def test_tc_reqif_identifier_store_reuse(record_property, capsys, monkeypatch, t
         "--out", str(tmp_path),
         "reqif",
         "--single-document",
-        "--id-store", id_store_file
+        "--meta-data", id_store_file
     ])
     main()
     assert capsys.readouterr().err == ""
@@ -812,7 +812,7 @@ def test_tc_reqif_identifier_store_reuse(record_property, capsys, monkeypatch, t
         "--out", str(tmp_path),
         "reqif",
         "--single-document",
-        "--id-store", id_store_file
+        "--meta-data", id_store_file
     ])
     main()
     assert capsys.readouterr().err == ""

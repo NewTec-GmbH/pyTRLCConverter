@@ -469,6 +469,11 @@ section "SW Test Cases" {
             verifies = [SwRequirements.sw_req_reqif_import_translation]
         }
 
+        SwTestCase tc_reqif_import_type_identity {
+            description = "This test case checks whether an import with the ReqIF metadata store seeded and a re-export with the same store reproduce the SPEC-OBJECT-TYPE, ATTRIBUTE-DEFINITION, DATATYPE-DEFINITION-ENUMERATION, ENUM-VALUE, SPECIFICATION and SPECIFICATION-TYPE identifiers and the SPECIFICATION-TYPE long name identical to the source."
+            verifies = [SwRequirements.sw_req_reqif_import_type_identity]
+        }
+
         SwTestCase tc_reqif_import_xhtml {
             description = "This test case checks whether the ReqIF import marks an XHTML attribute as xhtml in the generated render configuration."
             verifies = [SwRequirements.sw_req_reqif_import_xhtml]

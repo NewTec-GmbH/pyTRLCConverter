@@ -395,7 +395,7 @@ section "SW Architecture" {
                     * Converts TRLC record reference attributes to ReqIF SPEC-RELATION entries.
                     * Writes the ReqIF.ForeignID as a single STRING attribute from the record's ForeignID field (or the object name as fallback), so the identifier stays immutable across a round-trip.
                     * Optionally archives the generated .reqif output as a .reqifz ZIP archive.
-                    * Optionally persists the identifiers of ReqIF Identifiable elements in a JSON store so that they stay immutable across consecutive exports.
+                    * Optionally persists the identifiers of ReqIF Identifiable elements in a JSON ReqIF metadata store so that they stay immutable across consecutive exports, and reuses the seeded type-system identity (types, attribute definitions, enum datatypes and values, specification and specification-type) and metadata when the store is provided.
                     * Optionally excludes configured TRLC attributes from the export via an export mapping file, so that internal-only attributes are never written to the ReqIF output.
                     """
                 verification_criteria = "Call the tool using the `pyTRLCConverter` frontend with reqif output format."
@@ -427,6 +427,7 @@ section "SW Architecture" {
                     SwRequirements.sw_req_reqif_scalar,
                     SwRequirements.sw_req_reqif_foreign_id,
                     SwRequirements.sw_req_reqif_type_long_name,
+                    SwRequirements.sw_req_reqif_import_type_identity,
                     SwRequirements.sw_req_destination_format
                 ]
             }
@@ -444,7 +445,8 @@ section "SW Architecture" {
                     * Maps each TRLC attribute name back to its original ReqIF long name verbatim in the generated translation.json, so the ReqIF long names are reproduced faithfully on the export.
                     * Converts DATATYPE-DEFINITION-ENUMERATION datatypes into TRLC enum types.
                     * Stores XHTML attribute values with the outer div wrapper removed and marks them as xhtml; object elements referencing a local file are stored as path.
-                    * Seeds the identifiers of the source ReqIF Identifiable elements into id_store.json so they stay immutable on the roundtrip.
+                    * Seeds the identifiers of the source ReqIF Identifiable elements into meta_data.json so they stay immutable on the roundtrip.
+                    * Seeds the type-system identity into the ReqIF metadata store: the SPEC-OBJECT-TYPE, ATTRIBUTE-DEFINITION, DATATYPE-DEFINITION-ENUMERATION, ENUM-VALUE and SPECIFICATION identifiers, and the SPECIFICATION-TYPE identifier and long name as metadata.
                     * On a re-import with existing TRLC it merges the changes into the existing .trlc files in place (ReqifMerger and TrlcSourcePatcher), matching objects via the identifier store and preserving comments, formatting and attributes that are not part of the exchange.
                     * Reverse-maps SPEC-RELATIONs into TRLC record reference fields on the initial import.
                     * Maps native ReqIF scalar datatypes (INTEGER, REAL, BOOLEAN) back to TRLC Integer, Decimal and Boolean.
@@ -455,6 +457,7 @@ section "SW Architecture" {
                     SwRequirements.sw_req_reqif_import,
                     SwRequirements.sw_req_reqif_import_initial,
                     SwRequirements.sw_req_reqif_import_translation,
+                    SwRequirements.sw_req_reqif_import_type_identity,
                     SwRequirements.sw_req_reqif_import_enum,
                     SwRequirements.sw_req_reqif_import_xhtml,
                     SwRequirements.sw_req_reqif_import_path,
