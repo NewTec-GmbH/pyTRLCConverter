@@ -32,6 +32,7 @@ from pyTRLCConverter.logger import log_verbose
 
 class RenderConfig():
     # lobster-trace: SwRequirements.sw_req_render_configuration
+    # lobster-trace: SwRequirements.sw_req_reqif_render_table_options
     """Render configuration provider.
     """
 
@@ -161,7 +162,6 @@ class RenderConfig():
         return format_specifier
 
     def get_table_options(self, trlc_package: str, trlc_type: str, trlc_type_attribute: str) -> dict:
-        # lobster-trace: SwRequirements.sw_req_reqif_render_table_options
         """Returns the table rendering options for the given TRLC package, type and attribute.
 
         The returned dictionary may contain the following optional keys:
