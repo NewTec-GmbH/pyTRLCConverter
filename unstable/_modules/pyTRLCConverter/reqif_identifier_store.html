@@ -18,7 +18,7 @@
       <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
-      <script src="../../_static/version_selector.js?v=02fa0f40"></script>
+      <script src="../../_static/version_selector.js?v=5b8b8d8b"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -83,7 +83,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for pyTRLCConverter.reqif_identifier_store</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""</span>
 <span class="sd">This module implements the persistent ReqIF identifier store.</span>
 
 <span class="sd">The store keeps the identifiers of ReqIF Identifiable elements immutable across</span>
@@ -91,7 +91,7 @@
 <span class="sd">generated identifier in a JSON file.</span>
 
 <span class="sd">Author: Andreas Merkle (andreas.merkle@newtec.de)</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="c1"># pyTRLCConverter - A tool to convert TRLC files to specific formats.</span>
 <span class="c1"># Copyright (c) 2024 - 2026 NewTec GmbH</span>
@@ -121,19 +121,19 @@
 <div class="viewcode-block" id="ReqifIdentifierStore">
 <a class="viewcode-back" href="../../api/pyTRLCConverter/reqif_identifier_store/index.html#pyTRLCConverter.reqif_identifier_store.ReqifIdentifierStore">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ReqifIdentifierStore</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Persistent store mapping stable logical keys to immutable ReqIF identifiers.</span>
+<span class="w">    </span><span class="sd">"""Persistent store mapping stable logical keys to immutable ReqIF identifiers.</span>
 
 <span class="sd">    On the initial conversion the store is empty and identifiers are generated on</span>
 <span class="sd">    demand. The mapping can be persisted to a JSON file and loaded again on</span>
 <span class="sd">    subsequent conversions so that already known elements keep their identifiers</span>
 <span class="sd">    while new elements receive new identifiers.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">SCHEMA_VERSION</span> <span class="o">=</span> <span class="mi">1</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_reqif_identifier_immutable</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Construct an empty identifier store.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Construct an empty identifier store."""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_identifiers</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_next_id</span> <span class="o">=</span> <span class="mi">1</span>
 
@@ -142,7 +142,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_reqif_identifier_store_init</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_reqif_identifier_store_reuse</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Load the identifier store from a JSON file.</span>
+<span class="w">        </span><span class="sd">"""Load the identifier store from a JSON file.</span>
 
 <span class="sd">        A missing file is treated as the initial conversion and leaves the store</span>
 <span class="sd">        empty without reporting an error.</span>
@@ -152,23 +152,23 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            bool: True if loading succeeded or the file does not exist yet, False on error.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">status</span> <span class="o">=</span> <span class="kc">True</span>
 
-        <span class="n">log_verbose</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loading ReqIF identifier store </span><span class="si">{</span><span class="n">file_name</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+        <span class="n">log_verbose</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Loading ReqIF identifier store </span><span class="si">{</span><span class="n">file_name</span><span class="si">}</span><span class="s2">."</span><span class="p">)</span>
 
         <span class="k">try</span><span class="p">:</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="s2">"r"</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
                 <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">_identifiers</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;identifiers&quot;</span><span class="p">,</span> <span class="p">{}))</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_next_id</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;next_id&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_identifiers</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_identifiers</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"identifiers"</span><span class="p">,</span> <span class="p">{}))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_next_id</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"next_id"</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_identifiers</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
 
         <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
-            <span class="n">log_verbose</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ReqIF identifier store </span><span class="si">{</span><span class="n">file_name</span><span class="si">}</span><span class="s2"> does not exist yet; starting empty.&quot;</span><span class="p">)</span>
+            <span class="n">log_verbose</span><span class="p">(</span><span class="sa">f</span><span class="s2">"ReqIF identifier store </span><span class="si">{</span><span class="n">file_name</span><span class="si">}</span><span class="s2"> does not exist yet; starting empty."</span><span class="p">)</span>
 
         <span class="k">except</span> <span class="p">(</span><span class="ne">OSError</span><span class="p">,</span> <span class="ne">IOError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
-            <span class="n">log_error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to load ReqIF identifier store </span><span class="si">{</span><span class="n">file_name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">log_error</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Failed to load ReqIF identifier store </span><span class="si">{</span><span class="n">file_name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
             <span class="n">status</span> <span class="o">=</span> <span class="kc">False</span>
 
         <span class="k">return</span> <span class="n">status</span></div>
@@ -179,22 +179,22 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">get_or_create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">prefix</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_reqif_identifier_immutable</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_reqif_identifier_store_reuse</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the stored identifier for the given key or create a new immutable one.</span>
+<span class="w">        </span><span class="sd">"""Return the stored identifier for the given key or create a new immutable one.</span>
 
 <span class="sd">        A new identifier is built from the given prefix and a monotonic counter that</span>
 <span class="sd">        never reuses a number, so identifiers stay unique and stable.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            key (str): Stable logical key identifying the ReqIF element.</span>
-<span class="sd">            prefix (str): Identifier prefix (e.g. ``&quot;spec-object&quot;`` or ``&quot;hierarchy&quot;``).</span>
+<span class="sd">            prefix (str): Identifier prefix (e.g. ``"spec-object"`` or ``"hierarchy"``).</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            str: The immutable identifier associated with the key.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">identifier</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_identifiers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">identifier</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">identifier</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_next_id</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="n">identifier</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_next_id</span><span class="si">}</span><span class="s2">"</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_next_id</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_identifiers</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">identifier</span>
 
@@ -206,30 +206,30 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_reqif_identifier_store_init</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_reqif_identifier_store_reuse</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Persist the identifier store to a JSON file.</span>
+<span class="w">        </span><span class="sd">"""Persist the identifier store to a JSON file.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            file_name (str): The name of the JSON file to write.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            bool: True if the file was written successfully, False otherwise.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">status</span> <span class="o">=</span> <span class="kc">True</span>
 
-        <span class="n">log_verbose</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saving ReqIF identifier store </span><span class="si">{</span><span class="n">file_name</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+        <span class="n">log_verbose</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Saving ReqIF identifier store </span><span class="si">{</span><span class="n">file_name</span><span class="si">}</span><span class="s2">."</span><span class="p">)</span>
 
         <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;version&quot;</span><span class="p">:</span> <span class="n">ReqifIdentifierStore</span><span class="o">.</span><span class="n">SCHEMA_VERSION</span><span class="p">,</span>
-            <span class="s2">&quot;next_id&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_next_id</span><span class="p">,</span>
-            <span class="s2">&quot;identifiers&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_identifiers</span>
+            <span class="s2">"version"</span><span class="p">:</span> <span class="n">ReqifIdentifierStore</span><span class="o">.</span><span class="n">SCHEMA_VERSION</span><span class="p">,</span>
+            <span class="s2">"next_id"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_next_id</span><span class="p">,</span>
+            <span class="s2">"identifiers"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_identifiers</span>
         <span class="p">}</span>
 
         <span class="k">try</span><span class="p">:</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="s2">"w"</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
                 <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="k">except</span> <span class="p">(</span><span class="ne">OSError</span><span class="p">,</span> <span class="ne">IOError</span><span class="p">)</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
-            <span class="n">log_error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to save ReqIF identifier store </span><span class="si">{</span><span class="n">file_name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">log_error</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Failed to save ReqIF identifier store </span><span class="si">{</span><span class="n">file_name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
             <span class="n">status</span> <span class="o">=</span> <span class="kc">False</span>
 
         <span class="k">return</span> <span class="n">status</span></div>

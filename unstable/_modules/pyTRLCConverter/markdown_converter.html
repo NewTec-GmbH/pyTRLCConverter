@@ -18,7 +18,7 @@
       <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
-      <script src="../../_static/version_selector.js?v=02fa0f40"></script>
+      <script src="../../_static/version_selector.js?v=5b8b8d8b"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -83,10 +83,10 @@
            <div itemprop="articleBody">
              
   <h1>Source code for pyTRLCConverter.markdown_converter</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Converter to Markdown format.</span>
+<span></span><span class="sd">"""Converter to Markdown format.</span>
 
 <span class="sd">    Author: Andreas Merkle (andreas.merkle@newtec.de)</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="c1"># pyTRLCConverter - A tool to convert TRLC files to specific formats.</span>
 <span class="c1"># Copyright (c) 2024 - 2026 NewTec GmbH</span>
@@ -129,27 +129,27 @@
 <div class="viewcode-block" id="MarkdownConverter">
 <a class="viewcode-back" href="../../api/pyTRLCConverter/markdown_converter/index.html#pyTRLCConverter.markdown_converter.MarkdownConverter">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">MarkdownConverter</span><span class="p">(</span><span class="n">BaseConverter</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    MarkdownConverter provides functionality for converting to a markdown format.</span>
 
 <span class="sd">    The converter builds a Markdown AST (MarkdownDocument made of block elements)</span>
 <span class="sd">    while walking the TRLC symbols and writes the output file(s) only once the</span>
 <span class="sd">    document is complete (in leave_file() for multiple-document mode and in</span>
 <span class="sd">    finish() for single-document mode).</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
-    <span class="n">OUTPUT_FILE_NAME_DEFAULT</span> <span class="o">=</span> <span class="s2">&quot;output.md&quot;</span>
-    <span class="n">TOP_LEVEL_DEFAULT</span> <span class="o">=</span> <span class="s2">&quot;Specification&quot;</span>
+    <span class="n">OUTPUT_FILE_NAME_DEFAULT</span> <span class="o">=</span> <span class="s2">"output.md"</span>
+    <span class="n">TOP_LEVEL_DEFAULT</span> <span class="o">=</span> <span class="s2">"Specification"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_no_prj_spec</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_markdown</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Initializes the converter.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            args (Any): The parsed program arguments.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
 
         <span class="c1"># The path to the given output folder.</span>
@@ -186,13 +186,13 @@
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_subcommand</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_markdown</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Return subcommand token for this converter.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            str: Parser subcommand token</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="s2">&quot;markdown&quot;</span></div>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="s2">"markdown"</span></div>
 
 
 <div class="viewcode-block" id="MarkdownConverter.get_description">
@@ -200,13 +200,13 @@
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_description</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_markdown</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Return converter description.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            str: Converter description</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="s2">&quot;Convert into markdown format.&quot;</span></div>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="s2">"Convert into markdown format."</span></div>
 
 
 <div class="viewcode-block" id="MarkdownConverter.register">
@@ -221,63 +221,63 @@
         <span class="c1"># lobster-trace: SwRequirements.sw_req_markdown_out_file_name_custom</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_markdown_render_plantuml</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_cli_render_plantuml</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Register converter specific argument parser.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            args_parser (Any): Argument parser</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">args_parser</span><span class="p">)</span>
 
         <span class="k">assert</span> <span class="n">BaseConverter</span><span class="o">.</span><span class="n">_parser</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
 
         <span class="n">BaseConverter</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-            <span class="s2">&quot;-e&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;--empty&quot;</span><span class="p">,</span>
+            <span class="s2">"-e"</span><span class="p">,</span>
+            <span class="s2">"--empty"</span><span class="p">,</span>
             <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
             <span class="n">default</span><span class="o">=</span><span class="n">BaseConverter</span><span class="o">.</span><span class="n">EMPTY_ATTRIBUTE_DEFAULT</span><span class="p">,</span>
             <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Every attribute value which is empty will output the string &quot;</span> \
-                <span class="sa">f</span><span class="s2">&quot;(default = </span><span class="si">{</span><span class="n">BaseConverter</span><span class="o">.</span><span class="n">EMPTY_ATTRIBUTE_DEFAULT</span><span class="si">}</span><span class="s2">).&quot;</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">"Every attribute value which is empty will output the string "</span> \
+                <span class="sa">f</span><span class="s2">"(default = </span><span class="si">{</span><span class="n">BaseConverter</span><span class="o">.</span><span class="n">EMPTY_ATTRIBUTE_DEFAULT</span><span class="si">}</span><span class="s2">)."</span>
         <span class="p">)</span>
 
         <span class="n">BaseConverter</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-            <span class="s2">&quot;-n&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;--name&quot;</span><span class="p">,</span>
+            <span class="s2">"-n"</span><span class="p">,</span>
+            <span class="s2">"--name"</span><span class="p">,</span>
             <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
             <span class="n">default</span><span class="o">=</span><span class="n">MarkdownConverter</span><span class="o">.</span><span class="n">OUTPUT_FILE_NAME_DEFAULT</span><span class="p">,</span>
             <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Name of the generated output file inside the output folder &quot;</span> \
-                <span class="sa">f</span><span class="s2">&quot;(default = </span><span class="si">{</span><span class="n">MarkdownConverter</span><span class="o">.</span><span class="n">OUTPUT_FILE_NAME_DEFAULT</span><span class="si">}</span><span class="s2">) in &quot;</span> \
-                <span class="s2">&quot;case a single document is generated.&quot;</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">"Name of the generated output file inside the output folder "</span> \
+                <span class="sa">f</span><span class="s2">"(default = </span><span class="si">{</span><span class="n">MarkdownConverter</span><span class="o">.</span><span class="n">OUTPUT_FILE_NAME_DEFAULT</span><span class="si">}</span><span class="s2">) in "</span> \
+                <span class="s2">"case a single document is generated."</span>
         <span class="p">)</span>
 
         <span class="n">BaseConverter</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-            <span class="s2">&quot;-sd&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;--single-document&quot;</span><span class="p">,</span>
-            <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
+            <span class="s2">"-sd"</span><span class="p">,</span>
+            <span class="s2">"--single-document"</span><span class="p">,</span>
+            <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">,</span>
             <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
             <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Generate a single document instead of multiple files. The default is to generate multiple files.&quot;</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">"Generate a single document instead of multiple files. The default is to generate multiple files."</span>
         <span class="p">)</span>
 
         <span class="n">BaseConverter</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-            <span class="s2">&quot;-tl&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;--top-level&quot;</span><span class="p">,</span>
+            <span class="s2">"-tl"</span><span class="p">,</span>
+            <span class="s2">"--top-level"</span><span class="p">,</span>
             <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
             <span class="n">default</span><span class="o">=</span><span class="n">MarkdownConverter</span><span class="o">.</span><span class="n">TOP_LEVEL_DEFAULT</span><span class="p">,</span>
             <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Name of the top level heading, required in single document mode &quot;</span> \
-                <span class="sa">f</span><span class="s2">&quot;(default = </span><span class="si">{</span><span class="n">MarkdownConverter</span><span class="o">.</span><span class="n">TOP_LEVEL_DEFAULT</span><span class="si">}</span><span class="s2">).&quot;</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">"Name of the top level heading, required in single document mode "</span> \
+                <span class="sa">f</span><span class="s2">"(default = </span><span class="si">{</span><span class="n">MarkdownConverter</span><span class="o">.</span><span class="n">TOP_LEVEL_DEFAULT</span><span class="si">}</span><span class="s2">)."</span>
         <span class="p">)</span>
 
         <span class="n">BaseConverter</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-            <span class="s2">&quot;--render-plantuml&quot;</span><span class="p">,</span>
-            <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
+            <span class="s2">"--render-plantuml"</span><span class="p">,</span>
+            <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">,</span>
             <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
             <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Render plantuml fenced code blocks as SVG image references. &quot;</span>
-                 <span class="s2">&quot;Without this option plantuml blocks are passed through unchanged.&quot;</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">"Render plantuml fenced code blocks as SVG image references. "</span>
+                 <span class="s2">"Without this option plantuml blocks are passed through unchanged."</span>
         <span class="p">)</span></div>
 
 
@@ -286,12 +286,12 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">begin</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Ret</span><span class="p">:</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_markdown_single_doc_mode</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_markdown_sd_top_level</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Begin the conversion process.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Ret: Status</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_document</span> <span class="ow">is</span> <span class="kc">None</span>
 
         <span class="c1"># Call the base converter to initialize the common stuff.</span>
@@ -301,19 +301,19 @@
 
             <span class="c1"># Single document mode?</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_args</span><span class="o">.</span><span class="n">single_document</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-                <span class="n">log_verbose</span><span class="p">(</span><span class="s2">&quot;Single document mode.&quot;</span><span class="p">)</span>
+                <span class="n">log_verbose</span><span class="p">(</span><span class="s2">"Single document mode."</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">log_verbose</span><span class="p">(</span><span class="s2">&quot;Multiple document mode.&quot;</span><span class="p">)</span>
+                <span class="n">log_verbose</span><span class="p">(</span><span class="s2">"Multiple document mode."</span><span class="p">)</span>
 
             <span class="c1"># Set the value for empty attributes.</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_empty_attribute_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_args</span><span class="o">.</span><span class="n">empty</span>
 
-            <span class="n">log_verbose</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Empty attribute value: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_empty_attribute_value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">log_verbose</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Empty attribute value: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_empty_attribute_value</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_args</span><span class="o">.</span><span class="n">render_plantuml</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
                 <span class="c1"># pylint: disable-next=consider-using-with</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_plantuml_tmp_dir</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">(</span>
-                    <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;pyTRLCConverter_markdown_&quot;</span>
+                    <span class="n">prefix</span><span class="o">=</span><span class="s2">"pyTRLCConverter_markdown_"</span>
                 <span class="p">)</span>
 
             <span class="c1"># Single document mode?</span>
@@ -334,7 +334,7 @@
 <a class="viewcode-back" href="../../api/pyTRLCConverter/markdown_converter/index.html#pyTRLCConverter.markdown_converter.MarkdownConverter.enter_file">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">enter_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Ret</span><span class="p">:</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_markdown_multiple_doc_mode</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Enter a file.</span>
 
 <span class="sd">        Args:</span>
@@ -342,7 +342,7 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Ret: Status</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Multiple document mode?</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_args</span><span class="o">.</span><span class="n">single_document</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
             <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_document</span> <span class="ow">is</span> <span class="kc">None</span>
@@ -359,7 +359,7 @@
 <a class="viewcode-back" href="../../api/pyTRLCConverter/markdown_converter/index.html#pyTRLCConverter.markdown_converter.MarkdownConverter.leave_file">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">leave_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Ret</span><span class="p">:</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_markdown_multiple_doc_mode</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Leave a file.</span>
 
 <span class="sd">        Args:</span>
@@ -367,7 +367,7 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Ret: Status</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">Ret</span><span class="o">.</span><span class="n">OK</span>
 
         <span class="c1"># Multiple document mode?</span>
@@ -390,7 +390,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">convert_section</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">section</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Ret</span><span class="p">:</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_markdown_section</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_markdown_md_top_level</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Process the given section item.</span>
 <span class="sd">        It will create a Markdown heading with the given section name and level.</span>
 
@@ -400,7 +400,7 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Ret: Status</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">section</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_document</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
 
@@ -417,7 +417,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">convert_record_object_generic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">:</span> <span class="n">Record_Object</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">translation</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Ret</span><span class="p">:</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_markdown_record</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_markdown_md_top_level</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Process the given record object in a generic way.</span>
 
 <span class="sd">        The handler is called by the base converter if no specific handler is</span>
@@ -431,7 +431,7 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Ret: Status</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_document</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_add_top_level_heading_on_demand</span><span class="p">()</span>
@@ -443,12 +443,12 @@
 <a class="viewcode-back" href="../../api/pyTRLCConverter/markdown_converter/index.html#pyTRLCConverter.markdown_converter.MarkdownConverter.finish">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">finish</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_markdown_single_doc_mode</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Finish the conversion process.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Ret: Status</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">Ret</span><span class="o">.</span><span class="n">OK</span>
 
         <span class="c1"># Single document mode?</span>
@@ -473,8 +473,8 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">_add_top_level_heading_on_demand</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_markdown_md_top_level</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_markdown_sd_top_level</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add the top level heading to the document if necessary.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Add the top level heading to the document if necessary.</span>
+<span class="sd">        """</span>
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_document</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_top_level_heading_req</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
@@ -486,7 +486,7 @@
 <a class="viewcode-back" href="../../api/pyTRLCConverter/markdown_converter/index.html#pyTRLCConverter.markdown_converter.MarkdownConverter._get_markdown_heading_level">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_get_markdown_heading_level</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_markdown_record</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the Markdown heading level from the TRLC object level.</span>
+<span class="w">        </span><span class="sd">"""Get the Markdown heading level from the TRLC object level.</span>
 <span class="sd">            Its mandatory to use this method to calculate the Markdown heading level.</span>
 <span class="sd">            Otherwise in single document mode the top level heading will be wrong.</span>
 
@@ -495,7 +495,7 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            int: Markdown heading level</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base_level</span> <span class="o">+</span> <span class="n">level</span></div>
 
 
@@ -503,7 +503,7 @@
 <a class="viewcode-back" href="../../api/pyTRLCConverter/markdown_converter/index.html#pyTRLCConverter.markdown_converter.MarkdownConverter._file_name_trlc_to_md">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_file_name_trlc_to_md</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name_trlc</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_markdown_multiple_doc_mode</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Convert a TRLC file name to a Markdown file name.</span>
 
 <span class="sd">        Args:</span>
@@ -511,9 +511,9 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            str: Markdown file name</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">file_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">file_name_trlc</span><span class="p">)</span>
-        <span class="n">file_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">file_name</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;.md&quot;</span>
+        <span class="n">file_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">file_name</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">".md"</span>
 
         <span class="k">return</span> <span class="n">file_name</span></div>
 
@@ -522,7 +522,7 @@
 <a class="viewcode-back" href="../../api/pyTRLCConverter/markdown_converter/index.html#pyTRLCConverter.markdown_converter.MarkdownConverter._write_document">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_write_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Ret</span><span class="p">:</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_markdown_out_folder</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Write the current Markdown document to the output file.</span>
 
 <span class="sd">        Args:</span>
@@ -530,7 +530,7 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Ret: Status</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_document</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
 
         <span class="n">result</span> <span class="o">=</span> <span class="n">Ret</span><span class="o">.</span><span class="n">OK</span>
@@ -541,10 +541,10 @@
             <span class="n">file_name_with_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_out_path</span><span class="p">,</span> <span class="n">file_name</span><span class="p">)</span>
 
         <span class="k">try</span><span class="p">:</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_name_with_path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">out_file</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_name_with_path</span><span class="p">,</span> <span class="s2">"w"</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">)</span> <span class="k">as</span> <span class="n">out_file</span><span class="p">:</span>
                 <span class="n">out_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_document</span><span class="o">.</span><span class="n">render</span><span class="p">())</span>
         <span class="k">except</span> <span class="ne">IOError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="n">log_error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to open file </span><span class="si">{</span><span class="n">file_name_with_path</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">log_error</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Failed to open file </span><span class="si">{</span><span class="n">file_name_with_path</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
             <span class="n">result</span> <span class="o">=</span> <span class="n">Ret</span><span class="o">.</span><span class="n">ERROR</span>
 
         <span class="k">return</span> <span class="n">result</span></div>
@@ -554,12 +554,12 @@
 <a class="viewcode-back" href="../../api/pyTRLCConverter/markdown_converter/index.html#pyTRLCConverter.markdown_converter.MarkdownConverter._on_implict_null">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_on_implict_null</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_</span><span class="p">:</span> <span class="n">Implicit_Null</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_markdown_record</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Process the given implicit null value.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            str: The implicit null value.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="n">MarkdownText</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_empty_attribute_value</span><span class="p">)</span></div>
 
 
@@ -567,7 +567,7 @@
 <a class="viewcode-back" href="../../api/pyTRLCConverter/markdown_converter/index.html#pyTRLCConverter.markdown_converter.MarkdownConverter._on_record_reference">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_on_record_reference</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record_reference</span><span class="p">:</span> <span class="n">Record_Reference</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_markdown_record</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Process the given record reference value and return a markdown link.</span>
 
 <span class="sd">        Args:</span>
@@ -575,7 +575,7 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            str: Markdown link to the record reference.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_markdown_link_from_record_object_reference</span><span class="p">(</span><span class="n">record_reference</span><span class="p">)</span></div>
 
 
@@ -585,7 +585,7 @@
         <span class="c1"># lobster-trace: SwRequirements.sw_req_markdown_string_format</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_markdown_render_md</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_markdown_render_gfm</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Process the given string literal value.</span>
 
 <span class="sd">        Args:</span>
@@ -593,13 +593,13 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            str: The string literal value.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">string_literal</span><span class="o">.</span><span class="n">to_string</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ast_meta_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">package_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ast_meta_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;package_name&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
-            <span class="n">type_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ast_meta_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type_name&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
-            <span class="n">attribute_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ast_meta_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;attribute_name&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="n">package_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ast_meta_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"package_name"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span>
+            <span class="n">type_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ast_meta_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"type_name"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span>
+            <span class="n">attribute_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ast_meta_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"attribute_name"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span>
 
             <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_render</span><span class="p">(</span><span class="n">package_name</span><span class="p">,</span> <span class="n">type_name</span><span class="p">,</span> <span class="n">attribute_name</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
 
@@ -611,7 +611,7 @@
 <a class="viewcode-back" href="../../api/pyTRLCConverter/markdown_converter/index.html#pyTRLCConverter.markdown_converter.MarkdownConverter._create_markdown_link_from_record_object_reference">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_create_markdown_link_from_record_object_reference</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record_reference</span><span class="p">:</span> <span class="n">Record_Reference</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_markdown_record</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create a Markdown link from a record reference.</span>
 <span class="sd">        It considers the file name, the package name, and the record name.</span>
 
@@ -620,10 +620,10 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            str: Markdown link</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">assert</span> <span class="n">record_reference</span><span class="o">.</span><span class="n">target</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
 
-        <span class="n">file_name</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">file_name</span> <span class="o">=</span> <span class="s2">""</span>
 
         <span class="c1"># Single document mode?</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_args</span><span class="o">.</span><span class="n">single_document</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
@@ -642,7 +642,7 @@
 
         <span class="n">record_name</span> <span class="o">=</span> <span class="n">record_reference</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">name</span>
 
-        <span class="n">anchor_tag</span> <span class="o">=</span> <span class="n">file_name</span> <span class="o">+</span> <span class="s2">&quot;#&quot;</span> <span class="o">+</span> <span class="n">record_name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">)</span>
+        <span class="n">anchor_tag</span> <span class="o">=</span> <span class="n">file_name</span> <span class="o">+</span> <span class="s2">"#"</span> <span class="o">+</span> <span class="n">record_name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">" "</span><span class="p">,</span> <span class="s2">"-"</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">MarkdownText</span><span class="o">.</span><span class="n">link</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">record_reference</span><span class="o">.</span><span class="n">to_python_object</span><span class="p">()),</span> <span class="n">anchor_tag</span><span class="p">)</span></div>
 
@@ -652,7 +652,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">_other_dispatcher</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">expression</span><span class="p">:</span> <span class="n">Expression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_markdown_record</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_markdown_escape</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Dispatcher for all other expressions.</span>
 
 <span class="sd">        Args:</span>
@@ -660,7 +660,7 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            str: The processed expression.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="n">MarkdownText</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">expression</span><span class="o">.</span><span class="n">to_string</span><span class="p">())</span></div>
 
 
@@ -670,7 +670,7 @@
         <span class="c1"># lobster-trace: SwRequirements.sw_req_markdown_record</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_markdown_escape</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_markdown_string_format</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        If a record object contains a record reference, the record reference will be converted to</span>
 <span class="sd">        a Markdown link.</span>
 <span class="sd">        If a record object contains an array of record references, the array will be converted to</span>
@@ -679,7 +679,7 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            TrlcAstWalker: The TRLC AST walker.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">trlc_ast_walker</span> <span class="o">=</span> <span class="n">TrlcAstWalker</span><span class="p">()</span>
         <span class="n">trlc_ast_walker</span><span class="o">.</span><span class="n">add_dispatcher</span><span class="p">(</span>
             <span class="n">Implicit_Null</span><span class="p">,</span>
@@ -711,7 +711,7 @@
         <span class="c1"># lobster-trace: SwRequirements.sw_req_markdown_render_md</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_markdown_render_gfm</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_markdown_render_plantuml</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Render the attribute value depending on its format.</span>
+<span class="w">        </span><span class="sd">"""Render the attribute value depending on its format.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            package_name (str): The package name.</span>
@@ -721,7 +721,7 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            str: The rendered attribute value.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">attribute_value</span>
 
         <span class="c1"># If the attribute value is not already in Markdown format, it will be escaped.</span>
@@ -742,7 +742,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">_render_plantuml_blocks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_markdown_render_plantuml</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_plantuml</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Replace plantuml fenced code blocks with SVG image references.</span>
+<span class="w">        </span><span class="sd">"""Replace plantuml fenced code blocks with SVG image references.</span>
 
 <span class="sd">        Each ```plantuml ... ``` block is replaced by ``![](plantuml_&lt;hash&gt;.svg)``.</span>
 <span class="sd">        The SVG is written to the temporary image directory and registered in</span>
@@ -754,36 +754,36 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            str: Text with plantuml blocks replaced.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_plantuml_tmp_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">_replace</span><span class="p">(</span><span class="n">match</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">Match</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
             <span class="n">diagram_source</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">plantuml</span> <span class="o">=</span> <span class="n">PlantUML</span><span class="p">()</span>
-                <span class="n">svg_bytes</span> <span class="o">=</span> <span class="n">plantuml</span><span class="o">.</span><span class="n">generate_to_bytes</span><span class="p">(</span><span class="s2">&quot;svg&quot;</span><span class="p">,</span> <span class="n">diagram_source</span><span class="p">)</span>
-                <span class="n">digest</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha1</span><span class="p">(</span><span class="n">diagram_source</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()[:</span><span class="mi">12</span><span class="p">]</span>
-                <span class="n">local_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;plantuml_</span><span class="si">{</span><span class="n">digest</span><span class="si">}</span><span class="s2">.svg&quot;</span>
+                <span class="n">svg_bytes</span> <span class="o">=</span> <span class="n">plantuml</span><span class="o">.</span><span class="n">generate_to_bytes</span><span class="p">(</span><span class="s2">"svg"</span><span class="p">,</span> <span class="n">diagram_source</span><span class="p">)</span>
+                <span class="n">digest</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha1</span><span class="p">(</span><span class="n">diagram_source</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">"utf-8"</span><span class="p">))</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()[:</span><span class="mi">12</span><span class="p">]</span>
+                <span class="n">local_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"plantuml_</span><span class="si">{</span><span class="n">digest</span><span class="si">}</span><span class="s2">.svg"</span>
                 <span class="n">svg_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_plantuml_tmp_dir</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">local_name</span><span class="p">)</span>
-                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">svg_path</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">svg_file</span><span class="p">:</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">svg_path</span><span class="p">,</span> <span class="s2">"wb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">svg_file</span><span class="p">:</span>
                     <span class="n">svg_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">svg_bytes</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_external_files</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">svg_path</span><span class="p">,</span> <span class="n">local_name</span><span class="p">))</span>
-                <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;![](</span><span class="si">{</span><span class="n">local_name</span><span class="si">}</span><span class="s2">)&quot;</span>
+                <span class="k">return</span> <span class="sa">f</span><span class="s2">"![](</span><span class="si">{</span><span class="n">local_name</span><span class="si">}</span><span class="s2">)"</span>
             <span class="k">except</span> <span class="p">(</span><span class="ne">FileNotFoundError</span><span class="p">,</span> <span class="ne">OSError</span><span class="p">)</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
-                <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;[PlantUML error: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">]&quot;</span>
+                <span class="k">return</span> <span class="sa">f</span><span class="s2">"[PlantUML error: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">]"</span>
 
-        <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;```plantuml\n(.*?)```&quot;</span><span class="p">,</span> <span class="n">_replace</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">DOTALL</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">"```plantuml\n(.*?)```"</span><span class="p">,</span> <span class="n">_replace</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">DOTALL</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="MarkdownConverter._copy_external_files">
 <a class="viewcode-back" href="../../api/pyTRLCConverter/markdown_converter/index.html#pyTRLCConverter.markdown_converter.MarkdownConverter._copy_external_files">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_copy_external_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dest_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_markdown_render_plantuml</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Copy all collected external files to the given destination directory.</span>
+<span class="w">        </span><span class="sd">"""Copy all collected external files to the given destination directory.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            dest_dir (str): Destination directory path.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">copied_sources</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
 
         <span class="k">for</span> <span class="n">source_path</span><span class="p">,</span> <span class="n">local_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_external_files</span><span class="p">:</span>
@@ -796,14 +796,14 @@
                 <span class="n">shutil</span><span class="o">.</span><span class="n">copy2</span><span class="p">(</span><span class="n">source_path</span><span class="p">,</span> <span class="n">dest_path</span><span class="p">)</span>
                 <span class="n">copied_sources</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">source_path</span><span class="p">)</span>
             <span class="k">except</span> <span class="p">(</span><span class="ne">OSError</span><span class="p">,</span> <span class="ne">IOError</span><span class="p">)</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
-                <span class="n">log_error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to copy external file &#39;</span><span class="si">{</span><span class="n">source_path</span><span class="si">}</span><span class="s2">&#39;: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span></div>
+                <span class="n">log_error</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Failed to copy external file '</span><span class="si">{</span><span class="n">source_path</span><span class="si">}</span><span class="s2">': </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="MarkdownConverter._convert_record_object">
 <a class="viewcode-back" href="../../api/pyTRLCConverter/markdown_converter/index.html#pyTRLCConverter.markdown_converter.MarkdownConverter._convert_record_object">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_convert_record_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">:</span> <span class="n">Record_Object</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">translation</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Ret</span><span class="p">:</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_markdown_record</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Process the given record object.</span>
 
 <span class="sd">        Args:</span>
@@ -814,7 +814,7 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Ret: Status</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_document</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
 
         <span class="c1"># The record name will be the heading.</span>
@@ -822,7 +822,7 @@
 
         <span class="c1"># The record fields will be written to a table.</span>
         <span class="c1"># First define the table column titles.</span>
-        <span class="n">table_column_titles</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Attribute Name&quot;</span><span class="p">,</span> <span class="s2">&quot;Attribute Value&quot;</span><span class="p">]</span>
+        <span class="n">table_column_titles</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"Attribute Name"</span><span class="p">,</span> <span class="s2">"Attribute Value"</span><span class="p">]</span>
         <span class="n">table_rows</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="c1"># Walk through the record object fields and build the table rows.</span>
@@ -840,13 +840,13 @@
             <span class="c1"># its formatting.</span>
             <span class="c1"># Otherwise the result will be the attribute value in a proper format.</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_ast_meta_data</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="s2">&quot;package_name&quot;</span><span class="p">:</span> <span class="n">record</span><span class="o">.</span><span class="n">n_package</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-                <span class="s2">&quot;type_name&quot;</span><span class="p">:</span> <span class="n">record</span><span class="o">.</span><span class="n">n_typ</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-                <span class="s2">&quot;attribute_name&quot;</span><span class="p">:</span> <span class="n">name</span>
+                <span class="s2">"package_name"</span><span class="p">:</span> <span class="n">record</span><span class="o">.</span><span class="n">n_package</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                <span class="s2">"type_name"</span><span class="p">:</span> <span class="n">record</span><span class="o">.</span><span class="n">n_typ</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                <span class="s2">"attribute_name"</span><span class="p">:</span> <span class="n">name</span>
             <span class="p">}</span>
             <span class="n">walker_result</span> <span class="o">=</span> <span class="n">trlc_ast_walker</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 
-            <span class="n">attribute_value</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+            <span class="n">attribute_value</span> <span class="o">=</span> <span class="s2">""</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">walker_result</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
                 <span class="n">attribute_value</span> <span class="o">=</span> <span class="n">BulletList</span><span class="p">(</span><span class="n">walker_result</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
             <span class="k">else</span><span class="p">:</span>

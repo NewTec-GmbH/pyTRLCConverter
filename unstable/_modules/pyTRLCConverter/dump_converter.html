@@ -18,7 +18,7 @@
       <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
-      <script src="../../_static/version_selector.js?v=02fa0f40"></script>
+      <script src="../../_static/version_selector.js?v=5b8b8d8b"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -83,10 +83,10 @@
            <div itemprop="articleBody">
              
   <h1>Source code for pyTRLCConverter.dump_converter</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot; Converter base class which does nothing (besides printing call names in verbose mode.)</span>
+<span></span><span class="sd">""" Converter base class which does nothing (besides printing call names in verbose mode.)</span>
 
 <span class="sd">    Author: Norbert Schulz (norbert.schulz@newtec.de)</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="c1"># pyTRLCConverter - A tool to convert TRLC files to specific formats.</span>
 <span class="c1"># Copyright (c) 2024 - 2026 NewTec GmbH</span>
@@ -119,67 +119,67 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">DumpConverter</span><span class="p">(</span><span class="n">BaseConverter</span><span class="p">):</span>
     <span class="c1"># lobster-trace: SwRequirements.sw_req_no_prj_spec</span>
     <span class="c1"># lobster-trace: SwRequirements.sw_req_ascii_conversion</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Simple converter implementation that just dumps all items.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Simple converter implementation that just dumps all items.</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="DumpConverter.get_subcommand">
 <a class="viewcode-back" href="../../api/pyTRLCConverter/dump_converter/index.html#pyTRLCConverter.dump_converter.DumpConverter.get_subcommand">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_subcommand</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Return subcommand token for this converter.</span>
+<span class="w">        </span><span class="sd">""" Return subcommand token for this converter.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            str: Parser subcommand token</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="s2">&quot;dump&quot;</span></div>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="s2">"dump"</span></div>
 
 
 <div class="viewcode-block" id="DumpConverter.get_description">
 <a class="viewcode-back" href="../../api/pyTRLCConverter/dump_converter/index.html#pyTRLCConverter.dump_converter.DumpConverter.get_description">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_description</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Return converter description.</span>
+<span class="w">        </span><span class="sd">""" Return converter description.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            str: Converter description</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="s2">&quot;Dump TRCL item list to console.&quot;</span></div>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="s2">"Dump TRCL item list to console."</span></div>
 
 
 <div class="viewcode-block" id="DumpConverter.enter_file">
 <a class="viewcode-back" href="../../api/pyTRLCConverter/dump_converter/index.html#pyTRLCConverter.dump_converter.DumpConverter.enter_file">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">enter_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Ret</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Enter a file.</span>
+<span class="w">        </span><span class="sd">"""Enter a file.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            file_name (str): File name</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Ret: Status</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Entering file: </span><span class="si">{</span><span class="n">file_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Entering file: </span><span class="si">{</span><span class="n">file_name</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">Ret</span><span class="o">.</span><span class="n">OK</span></div>
 
 
 <div class="viewcode-block" id="DumpConverter.leave_file">
 <a class="viewcode-back" href="../../api/pyTRLCConverter/dump_converter/index.html#pyTRLCConverter.dump_converter.DumpConverter.leave_file">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">leave_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Ret</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Leave a file.</span>
+<span class="w">        </span><span class="sd">"""Leave a file.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            file_name (str): File name</span>
 <span class="sd">        </span>
 <span class="sd">        Returns:</span>
 <span class="sd">            Ret: Status</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Leaving file: </span><span class="si">{</span><span class="n">file_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Leaving file: </span><span class="si">{</span><span class="n">file_name</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">Ret</span><span class="o">.</span><span class="n">OK</span></div>
 
 
 <div class="viewcode-block" id="DumpConverter.convert_section">
 <a class="viewcode-back" href="../../api/pyTRLCConverter/dump_converter/index.html#pyTRLCConverter.dump_converter.DumpConverter.convert_section">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">convert_section</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">section</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Ret</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Process the given section item.</span>
+<span class="w">        </span><span class="sd">"""Process the given section item.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            section (str): The section name</span>
@@ -187,15 +187,15 @@
 <span class="sd">        </span>
 <span class="sd">        Returns:</span>
 <span class="sd">            Ret: Status</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39; &#39;</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">level</span><span class="si">}</span><span class="s2">Section: </span><span class="si">{</span><span class="n">section</span><span class="si">}</span><span class="s2"> at level: </span><span class="si">{</span><span class="n">level</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="s1">' '</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">level</span><span class="si">}</span><span class="s2">Section: </span><span class="si">{</span><span class="n">section</span><span class="si">}</span><span class="s2"> at level: </span><span class="si">{</span><span class="n">level</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">Ret</span><span class="o">.</span><span class="n">OK</span></div>
 
 
 <div class="viewcode-block" id="DumpConverter.convert_record_object_generic">
 <a class="viewcode-back" href="../../api/pyTRLCConverter/dump_converter/index.html#pyTRLCConverter.dump_converter.DumpConverter.convert_record_object_generic">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">convert_record_object_generic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">:</span> <span class="n">Record_Object</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">translation</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Ret</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Process the given record object in a generic way.</span>
 
 <span class="sd">        The handler is called by the base converter if no specific handler is</span>
@@ -209,22 +209,22 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Ret: Status</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39; &#39;</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">level</span><span class="si">}</span><span class="s2">Record </span><span class="si">{</span><span class="n">record</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">, Level: </span><span class="si">{</span><span class="n">level</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">record</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">indent</span><span class="o">=</span><span class="n">level</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="s1">' '</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">level</span><span class="si">}</span><span class="s2">Record </span><span class="si">{</span><span class="n">record</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">, Level: </span><span class="si">{</span><span class="n">level</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">record</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">indent</span><span class="o">=</span><span class="n">level</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">Ret</span><span class="o">.</span><span class="n">OK</span></div>
 
 
 <div class="viewcode-block" id="DumpConverter.finish">
 <a class="viewcode-back" href="../../api/pyTRLCConverter/dump_converter/index.html#pyTRLCConverter.dump_converter.DumpConverter.finish">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">finish</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">-&gt;</span> <span class="n">Ret</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Finish the conversion process.</span>
+<span class="w">        </span><span class="sd">"""Finish the conversion process.</span>
 
 <span class="sd">         Returns:</span>
 <span class="sd">            Ret: Status</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Finishing conversion process.&quot;</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"Finishing conversion process."</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">Ret</span><span class="o">.</span><span class="n">OK</span></div>
 </div>
 

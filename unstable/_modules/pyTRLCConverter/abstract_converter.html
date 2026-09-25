@@ -18,7 +18,7 @@
       <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
-      <script src="../../_static/version_selector.js?v=02fa0f40"></script>
+      <script src="../../_static/version_selector.js?v=5b8b8d8b"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -83,10 +83,10 @@
            <div itemprop="articleBody">
              
   <h1>Source code for pyTRLCConverter.abstract_converter</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Abstract converter interface which all implementations must fullfill.</span>
+<span></span><span class="sd">"""Abstract converter interface which all implementations must fullfill.</span>
 
 <span class="sd">Author: Norbert Schulz (norbert.schulz@newtec.de)</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="c1"># pyTRLCConverter - A tool to convert TRLC files to specific formats.</span>
 <span class="c1"># Copyright (c) 2024 - 2026 NewTec GmbH</span>
@@ -118,17 +118,17 @@
 <a class="viewcode-back" href="../../api/pyTRLCConverter/abstract_converter/index.html#pyTRLCConverter.abstract_converter.AbstractConverter">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">AbstractConverter</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
     <span class="c1"># lobster-trace: SwRequirements.sw_req_prj_spec_interface</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Abstract converter interface.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Abstract converter interface.</span>
+<span class="sd">    """</span>
 <div class="viewcode-block" id="AbstractConverter.register">
 <a class="viewcode-back" href="../../api/pyTRLCConverter/abstract_converter/index.html#pyTRLCConverter.abstract_converter.AbstractConverter.register">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">register</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">args_parser</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Register converter specific argument parser.</span>
+<span class="w">        </span><span class="sd">"""Register converter specific argument parser.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            args_parser (Any): Argument parser</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
 
@@ -136,11 +136,11 @@
 <a class="viewcode-back" href="../../api/pyTRLCConverter/abstract_converter/index.html#pyTRLCConverter.abstract_converter.AbstractConverter.begin">[docs]</a>
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">begin</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Ret</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Begin the conversion process.</span>
+<span class="w">        </span><span class="sd">""" Begin the conversion process.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Ret: Status</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
 
@@ -148,14 +148,14 @@
 <a class="viewcode-back" href="../../api/pyTRLCConverter/abstract_converter/index.html#pyTRLCConverter.abstract_converter.AbstractConverter.enter_file">[docs]</a>
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">enter_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span> <span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Ret</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Enter a file.</span>
+<span class="w">        </span><span class="sd">"""Enter a file.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            file_name (str): File name</span>
 <span class="sd">        </span>
 <span class="sd">        Returns:</span>
 <span class="sd">            Ret: Status</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
 
@@ -163,14 +163,14 @@
 <a class="viewcode-back" href="../../api/pyTRLCConverter/abstract_converter/index.html#pyTRLCConverter.abstract_converter.AbstractConverter.leave_file">[docs]</a>
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">leave_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span> <span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Ret</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Leave a file.</span>
+<span class="w">        </span><span class="sd">"""Leave a file.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            file_name (str): File name</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Ret: Status</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
 
@@ -178,7 +178,7 @@
 <a class="viewcode-back" href="../../api/pyTRLCConverter/abstract_converter/index.html#pyTRLCConverter.abstract_converter.AbstractConverter.convert_section">[docs]</a>
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">convert_section</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">section</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Ret</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Process the given section item.</span>
+<span class="w">        </span><span class="sd">""" Process the given section item.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            section (str): The section name</span>
@@ -186,7 +186,7 @@
 <span class="sd">        </span>
 <span class="sd">        Returns:</span>
 <span class="sd">            Ret: Status</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
 
@@ -194,7 +194,7 @@
 <a class="viewcode-back" href="../../api/pyTRLCConverter/abstract_converter/index.html#pyTRLCConverter.abstract_converter.AbstractConverter.convert_record_object">[docs]</a>
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">convert_record_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span> <span class="p">:</span> <span class="n">Record_Object</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Ret</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Process the given  record object</span>
+<span class="w">        </span><span class="sd">""" Process the given  record object</span>
 <span class="sd">        </span>
 <span class="sd">        Args:</span>
 <span class="sd">            record (Record_Object): The record object</span>
@@ -202,7 +202,7 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Ret: Status</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
 
@@ -210,11 +210,11 @@
 <a class="viewcode-back" href="../../api/pyTRLCConverter/abstract_converter/index.html#pyTRLCConverter.abstract_converter.AbstractConverter.finish">[docs]</a>
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">finish</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Ret</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Finish the conversion process.</span>
+<span class="w">        </span><span class="sd">""" Finish the conversion process.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Ret: Status</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
 
@@ -222,11 +222,11 @@
 <a class="viewcode-back" href="../../api/pyTRLCConverter/abstract_converter/index.html#pyTRLCConverter.abstract_converter.AbstractConverter.get_subcommand">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_subcommand</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Return subcommand token for this converter.</span>
+<span class="w">        </span><span class="sd">""" Return subcommand token for this converter.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            str: subcomand argument token</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
 
@@ -234,11 +234,11 @@
 <a class="viewcode-back" href="../../api/pyTRLCConverter/abstract_converter/index.html#pyTRLCConverter.abstract_converter.AbstractConverter.get_description">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_description</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Return converter description. </span>
+<span class="w">        </span><span class="sd">""" Return converter description. </span>
 <span class="sd">        </span>
 <span class="sd">        Returns:</span>
 <span class="sd">            str: Converter description</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 </div>
 
