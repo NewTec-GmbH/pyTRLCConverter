@@ -77,6 +77,7 @@ dmypy.json
 
 # Requirement conversion output files
 examples/plantuml/out/
+examples/plantuml_inline/out/
 examples/simple_req/out/
 examples/simple_req_multi/out/
 examples/simple_req_multi_single_out/out/

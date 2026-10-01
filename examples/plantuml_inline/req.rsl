@@ -1,0 +1,5 @@
+package Requirements
+
+type Requirement {
+    description String
+}

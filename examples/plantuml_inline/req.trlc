@@ -1,0 +1,18 @@
+package Requirements
+
+section "Heading" {
+
+    Requirement context_diagram_inline {
+        description =
+        '''
+        This is a requirement with an inline PlantUML diagram.
+
+        ```plantuml
+        @startuml
+        Alice -> Bob: Hello
+        Bob --> Alice: Hi
+        @enduml
+        ```
+        '''
+    }
+}
