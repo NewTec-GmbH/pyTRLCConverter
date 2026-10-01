@@ -54,7 +54,6 @@ class ExamplePlantumlMarkdownConverter(MarkdownConverter):
         self._set_project_record_handlers(
             {
                 "PlantUML": self._print_diagram,
-                "Requirement": self._print_req
             }
         )
         self._record_policy = RecordsPolicy.RECORD_CONVERT_ALL
@@ -69,7 +68,7 @@ class ExamplePlantumlMarkdownConverter(MarkdownConverter):
         return "Convert into project extended markdown format."
 
     # pylint: disable-next=unused-argument
-    def _print_diagram(self, diagram: Record_Object, level: int) -> Ret:
+    def _print_diagram(self, diagram: Record_Object, level: int, translation: Optional[dict]) -> Ret:
         """Prints the diagram.
 
         Args:
@@ -123,27 +122,6 @@ class ExamplePlantumlMarkdownConverter(MarkdownConverter):
             file_dst_path = os.path.basename(full_file_path)
 
         self._document.add(Image(file_dst_path, caption))
-
-        return Ret.OK
-
-    def _print_req(self, req: Record_Object, level: int) -> Ret:
-        """Prints the requirement.
-
-        Args:
-            req (Record_Object): Requirement to print
-            level (int): Current level of the record object
-
-        Returns:
-            Ret: Status
-        """
-        assert self._document is not None
-
-        description = self._get_attribute(req, "description")
-
-        markdown_description = MarkdownText.escape(description)
-
-        self._document.add(Heading(req.name, level + 1))
-        self._document.add(Table(["Attribute", "Value"], [["Description", markdown_description]]))
 
         return Ret.OK
 
