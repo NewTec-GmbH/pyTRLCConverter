@@ -29,6 +29,8 @@ Tests:
 
 # Imports **********************************************************************
 import os
+import base64
+import zlib
 from unittest.mock import patch, mock_open
 import pytest
 from pyTRLCConverter.plantuml import PlantUML
@@ -57,6 +59,41 @@ def plantuml_instance():
         return PlantUML()
 
 
+def _decode_plantuml_url(url: str) -> str:
+    """Decode the PlantUML payload from a server URL.
+
+    PlantUML uses a custom Base64 alphabet for the raw DEFLATE stream.
+    This helper reverses that encoding and decompresses the payload so
+    the test can verify the actual diagram content instead of relying
+    on a specific zlib implementation/compression result.
+    """
+    plantuml_encode_chars = (
+        "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_"
+    )
+    base64_encode_chars = (
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
+    )
+
+    encoded_data = url.rsplit("/", 1)[-1]
+
+    translation = str.maketrans(
+        plantuml_encode_chars,
+        base64_encode_chars,
+    )
+
+    base64_data = encoded_data.translate(translation)
+
+    # PlantUML's payload is Base64 without padding.
+    base64_data += "=" * (-len(base64_data) % 4)
+
+    compressed_data = base64.b64decode(base64_data)
+
+    return zlib.decompress(
+        compressed_data,
+        -zlib.MAX_WBITS,
+    ).decode("utf-8")
+
+
 # pylint: disable-next=redefined-outer-name
 def test_make_server_url(record_property, plantuml_instance: PlantUML):
     # lobster-trace: SwTests.tc_plantuml
@@ -76,7 +113,6 @@ def test_make_server_url(record_property, plantuml_instance: PlantUML):
 
     diagram_type = "svg"
     diagram_path = "test_diagram.puml"
-    expected_url = "http://plantuml.com/plantuml/svg/SoWkIImgAStDuNBCoKnELT2rKt3AJx9Iy4ZDoSddSaZDIm7A0G0%3D"
 
     mock_diagram_content = "@startuml\nAlice -> Bob: Hello\n@enduml"
 
@@ -85,11 +121,11 @@ def test_make_server_url(record_property, plantuml_instance: PlantUML):
         result_url = plantuml_instance._make_server_url(diagram_type, diagram_path)
 
     assert result_url.startswith("http://plantuml.com/plantuml/svg/")
-    assert result_url == expected_url
+    assert _decode_plantuml_url(result_url) == mock_diagram_content
 
     # Repeat the test by giving the diagram_content directly to the function.
     result_url = plantuml_instance._make_server_url(diagram_type, mock_diagram_content, source_is_file=False)
     assert result_url.startswith("http://plantuml.com/plantuml/svg/")
-    assert result_url == expected_url
+    assert _decode_plantuml_url(result_url) == mock_diagram_content
 
 # Main *************************************************************************
