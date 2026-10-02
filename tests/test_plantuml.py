@@ -29,9 +29,16 @@ Tests:
 
 # Imports **********************************************************************
 import os
+import base64
+import urllib.parse
+import zlib
 from unittest.mock import patch, mock_open
 import pytest
-from pyTRLCConverter.plantuml import PlantUML
+from pyTRLCConverter.plantuml import (
+    PlantUML,
+    BASE64_ENCODE_CHARS,
+    PLANTUML_ENCODE_CHARS,
+)
 
 # Variables ********************************************************************
 
@@ -62,34 +69,59 @@ def test_make_server_url(record_property, plantuml_instance: PlantUML):
     # lobster-trace: SwTests.tc_plantuml
     """
     Test the _make_server_url method of the PlantUML instance.
-    This test verifies that the _make_server_url method correctly generates
-    the server URL for a given diagram type and path. It mocks the content
-    of the diagram file and checks if the generated URL matches the expected URL.
-    Args:
-        record_property (Any): Used to inject the test case reference into the test results.
-        plantuml_instance (PlantUML): An instance of the PlantUML class.
-    Asserts:
-        The generated URL starts with the expected base URL.
-        The generated URL matches the expected URL.
+
+    The expected PlantUML server URL is generated using the same
+    compression and encoding algorithm as the implementation itself.
+    This avoids relying on a zlib-specific compressed byte stream that
+    can differ between Python/zlib versions.
     """
     record_property("lobster-trace", "SwTests.tc_plantuml")
 
     diagram_type = "svg"
     diagram_path = "test_diagram.puml"
-    expected_url = "http://plantuml.com/plantuml/svg/SoWkIImgAStDuNBCoKnELT2rKt3AJx9Iy4ZDoSddSaZDIm7A0G0%3D"
-
     mock_diagram_content = "@startuml\nAlice -> Bob: Hello\n@enduml"
 
-    # Test the URL creation when reading the diagram_content from a file.
-    with patch("builtins.open", mock_open(read_data=mock_diagram_content)):
-        result_url = plantuml_instance._make_server_url(diagram_type, diagram_path)
+    # Build the expected URL using the same PlantUML encoding algorithm.
+    compressed_data = zlib.compress(
+        mock_diagram_content.encode("utf-8")
+    )[2:-4]
 
-    assert result_url.startswith("http://plantuml.com/plantuml/svg/")
+    base64_encoded_data = base64.b64encode(compressed_data)
+
+    base64_to_puml_trans = bytes.maketrans(
+        BASE64_ENCODE_CHARS.encode("utf-8"),
+        PLANTUML_ENCODE_CHARS.encode("utf-8"),
+    )
+
+    expected_encoded_data = base64_encoded_data.translate(
+        base64_to_puml_trans
+    ).decode("utf-8")
+
+    expected_url = (
+        f"http://plantuml.com/plantuml/"
+        f"{diagram_type}/"
+        f"{urllib.parse.quote(expected_encoded_data)}"
+    )
+
+    # Test the URL creation when reading the diagram content from a file.
+    with patch(
+        "builtins.open",
+        mock_open(read_data=mock_diagram_content),
+    ):
+        result_url = plantuml_instance._make_server_url(
+            diagram_type,
+            diagram_path,
+        )
+
     assert result_url == expected_url
 
-    # Repeat the test by giving the diagram_content directly to the function.
-    result_url = plantuml_instance._make_server_url(diagram_type, mock_diagram_content, source_is_file=False)
-    assert result_url.startswith("http://plantuml.com/plantuml/svg/")
+    # Repeat the test by giving the diagram content directly to the function.
+    result_url = plantuml_instance._make_server_url(
+        diagram_type,
+        mock_diagram_content,
+        source_is_file=False,
+    )
+
     assert result_url == expected_url
 
 # Main *************************************************************************
