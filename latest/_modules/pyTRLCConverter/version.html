@@ -18,7 +18,7 @@
       <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
-      <script src="../../_static/version_selector.js?v=02fa0f40"></script>
+      <script src="../../_static/version_selector.js?v=5b8b8d8b"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -83,10 +83,10 @@
            <div itemprop="articleBody">
              
   <h1>Source code for pyTRLCConverter.version</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;This module provides version and author information.</span>
+<span></span><span class="sd">"""This module provides version and author information.</span>
 
 <span class="sd">    Author: Andreas Merkle (andreas.merkle@newtec.de)</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="c1"># pyTRLCConverter - A tool to convert TRLC files to specific formats.</span>
 <span class="c1"># Copyright (c) 2024 - 2026 NewTec GmbH</span>
@@ -112,11 +112,11 @@
 
 <span class="c1"># Variables ********************************************************************</span>
 
-<span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;???&quot;</span>
-<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;???&quot;</span>
-<span class="n">__email__</span> <span class="o">=</span> <span class="s2">&quot;???&quot;</span>
-<span class="n">__repository__</span> <span class="o">=</span> <span class="s2">&quot;???&quot;</span>
-<span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;???&quot;</span>
+<span class="n">__version__</span> <span class="o">=</span> <span class="s2">"???"</span>
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">"???"</span>
+<span class="n">__email__</span> <span class="o">=</span> <span class="s2">"???"</span>
+<span class="n">__repository__</span> <span class="o">=</span> <span class="s2">"???"</span>
+<span class="n">__license__</span> <span class="o">=</span> <span class="s2">"???"</span>
 
 <span class="c1"># Classes **********************************************************************</span>
 
@@ -126,12 +126,12 @@
 <a class="viewcode-back" href="../../api/pyTRLCConverter/version/index.html#pyTRLCConverter.version.resource_path">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">resource_path</span><span class="p">(</span><span class="n">relative_path</span><span class="p">):</span>
     <span class="c1"># lobster-trace: SwRequirements.sw_req_version</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Get the absolute path to the resource, works for dev and for PyInstaller &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">""" Get the absolute path to the resource, works for dev and for PyInstaller """</span>
 
     <span class="c1"># Use getattr to avoid static analyzers complaining about sys._MEIPASS</span>
-    <span class="n">base_path</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">sys</span><span class="p">,</span> <span class="s2">&quot;_MEIPASS&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">base_path</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">sys</span><span class="p">,</span> <span class="s2">"_MEIPASS"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">base_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">base_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+        <span class="n">base_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="s2">"."</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_path</span><span class="p">,</span> <span class="n">relative_path</span><span class="p">)</span></div>
 
@@ -140,51 +140,51 @@
 <a class="viewcode-back" href="../../api/pyTRLCConverter/version/index.html#pyTRLCConverter.version.init_from_metadata">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">init_from_metadata</span><span class="p">():</span>
     <span class="c1"># lobster-trace: SwRequirements.sw_req_version</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialize dunders from importlib.metadata</span>
+<span class="w">    </span><span class="sd">"""Initialize dunders from importlib.metadata</span>
 <span class="sd">    Requires that the package was installed.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        list: Tool related information</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
-    <span class="n">my_metadata</span> <span class="o">=</span> <span class="n">meta</span><span class="o">.</span><span class="n">metadata</span><span class="p">(</span><span class="s1">&#39;pyTRLCConverter&#39;</span><span class="p">)</span>
+    <span class="n">my_metadata</span> <span class="o">=</span> <span class="n">meta</span><span class="o">.</span><span class="n">metadata</span><span class="p">(</span><span class="s1">'pyTRLCConverter'</span><span class="p">)</span>
 
     <span class="k">return</span> \
-        <span class="n">my_metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Version&#39;</span><span class="p">,</span> <span class="s1">&#39;???&#39;</span><span class="p">),</span> \
-        <span class="n">my_metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Author&#39;</span><span class="p">,</span> <span class="s1">&#39;???&#39;</span><span class="p">),</span> \
-        <span class="n">my_metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Author-email&#39;</span><span class="p">,</span> <span class="s1">&#39;???&#39;</span><span class="p">),</span> \
-        <span class="nb">next</span><span class="p">((</span><span class="n">u</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;, &quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="p">(</span><span class="n">my_metadata</span><span class="o">.</span><span class="n">get_all</span><span class="p">(</span><span class="s1">&#39;Project-URL&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">[])</span>
-              <span class="k">if</span> <span class="n">u</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;repository,&quot;</span><span class="p">)),</span> <span class="s1">&#39;???&#39;</span><span class="p">),</span> \
-        <span class="n">my_metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;License&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">my_metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;License-Expression&#39;</span><span class="p">,</span> <span class="s1">&#39;???&#39;</span><span class="p">)</span></div>
+        <span class="n">my_metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'Version'</span><span class="p">,</span> <span class="s1">'???'</span><span class="p">),</span> \
+        <span class="n">my_metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'Author'</span><span class="p">,</span> <span class="s1">'???'</span><span class="p">),</span> \
+        <span class="n">my_metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'Author-email'</span><span class="p">,</span> <span class="s1">'???'</span><span class="p">),</span> \
+        <span class="nb">next</span><span class="p">((</span><span class="n">u</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">", "</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="p">(</span><span class="n">my_metadata</span><span class="o">.</span><span class="n">get_all</span><span class="p">(</span><span class="s1">'Project-URL'</span><span class="p">)</span> <span class="ow">or</span> <span class="p">[])</span>
+              <span class="k">if</span> <span class="n">u</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"repository,"</span><span class="p">)),</span> <span class="s1">'???'</span><span class="p">),</span> \
+        <span class="n">my_metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'License'</span><span class="p">)</span> <span class="ow">or</span> <span class="n">my_metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'License-Expression'</span><span class="p">,</span> <span class="s1">'???'</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="init_from_toml">
 <a class="viewcode-back" href="../../api/pyTRLCConverter/version/index.html#pyTRLCConverter.version.init_from_toml">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">init_from_toml</span><span class="p">():</span>
     <span class="c1"># lobster-trace: SwRequirements.sw_req_version</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialize dunders from pypackage.toml file</span>
+<span class="w">    </span><span class="sd">"""Initialize dunders from pypackage.toml file</span>
 
-<span class="sd">    Tried if package wasn&#39;t installed.</span>
+<span class="sd">    Tried if package wasn't installed.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        list: Tool related information</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
-    <span class="n">toml_file</span> <span class="o">=</span> <span class="n">resource_path</span><span class="p">(</span><span class="s2">&quot;pyproject.toml&quot;</span><span class="p">)</span>
+    <span class="n">toml_file</span> <span class="o">=</span> <span class="n">resource_path</span><span class="p">(</span><span class="s2">"pyproject.toml"</span><span class="p">)</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">toml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">toml_file</span><span class="p">)</span>
 
     <span class="c1"># Handle license as either a string or a dictionary</span>
-    <span class="n">license_field</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;project&quot;</span><span class="p">][</span><span class="s2">&quot;license&quot;</span><span class="p">]</span>
+    <span class="n">license_field</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">"project"</span><span class="p">][</span><span class="s2">"license"</span><span class="p">]</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">license_field</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-        <span class="n">license_text</span> <span class="o">=</span> <span class="n">license_field</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="s2">&quot;???&quot;</span><span class="p">)</span>
+        <span class="n">license_text</span> <span class="o">=</span> <span class="n">license_field</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"text"</span><span class="p">,</span> <span class="s2">"???"</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">license_text</span> <span class="o">=</span> <span class="n">license_field</span>
 
     <span class="k">return</span> \
-        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;project&quot;</span><span class="p">][</span><span class="s2">&quot;version&quot;</span><span class="p">],</span> \
-        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;project&quot;</span><span class="p">][</span><span class="s2">&quot;authors&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> \
-        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;project&quot;</span><span class="p">][</span><span class="s2">&quot;authors&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;email&quot;</span><span class="p">],</span> \
-        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;project&quot;</span><span class="p">][</span><span class="s2">&quot;urls&quot;</span><span class="p">][</span><span class="s2">&quot;repository&quot;</span><span class="p">],</span> \
+        <span class="n">data</span><span class="p">[</span><span class="s2">"project"</span><span class="p">][</span><span class="s2">"version"</span><span class="p">],</span> \
+        <span class="n">data</span><span class="p">[</span><span class="s2">"project"</span><span class="p">][</span><span class="s2">"authors"</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">"name"</span><span class="p">],</span> \
+        <span class="n">data</span><span class="p">[</span><span class="s2">"project"</span><span class="p">][</span><span class="s2">"authors"</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">"email"</span><span class="p">],</span> \
+        <span class="n">data</span><span class="p">[</span><span class="s2">"project"</span><span class="p">][</span><span class="s2">"urls"</span><span class="p">][</span><span class="s2">"repository"</span><span class="p">],</span> \
         <span class="n">license_text</span></div>
 
 

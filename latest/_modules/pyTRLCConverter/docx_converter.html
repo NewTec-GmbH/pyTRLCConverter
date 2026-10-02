@@ -18,7 +18,7 @@
       <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
-      <script src="../../_static/version_selector.js?v=02fa0f40"></script>
+      <script src="../../_static/version_selector.js?v=5b8b8d8b"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -83,10 +83,10 @@
            <div itemprop="articleBody">
              
   <h1>Source code for pyTRLCConverter.docx_converter</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Converter to Word docx format.</span>
+<span></span><span class="sd">"""Converter to Word docx format.</span>
 
 <span class="sd">    Author: Norbert Schulz (norbert.schulz@newtec.de)</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="c1"># pyTRLCConverter - A tool to convert TRLC files to specific formats.</span>
 <span class="c1"># Copyright (c) 2024 - 2026 NewTec GmbH</span>
@@ -129,7 +129,7 @@
 <div class="viewcode-block" id="DocxConverter">
 <a class="viewcode-back" href="../../api/pyTRLCConverter/docx_converter/index.html#pyTRLCConverter.docx_converter.DocxConverter">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">DocxConverter</span><span class="p">(</span><span class="n">BaseConverter</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Converter to docx format.</span>
+<span class="w">    </span><span class="sd">"""Converter to docx format.</span>
 
 <span class="sd">    The following Word docx objects are used:</span>
 
@@ -137,30 +137,30 @@
 <span class="sd">    - **Paragraph**: A block of text in the document with its own formatting properties.</span>
 <span class="sd">    - **Run**: A contiguous run of text with the same formatting within a paragraph.</span>
 <span class="sd">    - **Table**: A two-dimensional structure for presenting data in rows and columns.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
-    <span class="n">OUTPUT_FILE_NAME_DEFAULT</span> <span class="o">=</span> <span class="s2">&quot;output.docx&quot;</span>
+    <span class="n">OUTPUT_FILE_NAME_DEFAULT</span> <span class="o">=</span> <span class="s2">"output.docx"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_no_prj_spec</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_docx</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_docx_template</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Initialize the docx converter.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            args (Any): The parsed program arguments.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">template</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">log_verbose</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loading template file </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">template</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+            <span class="n">log_verbose</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Loading template file </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">template</span><span class="si">}</span><span class="s2">."</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_docx</span> <span class="o">=</span> <span class="n">docx</span><span class="o">.</span><span class="n">Document</span><span class="p">(</span><span class="n">docx</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">template</span><span class="p">)</span>
 
         <span class="c1"># Ensure default table style is present in the document.</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="s1">&#39;Table Grid&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_docx</span><span class="o">.</span><span class="n">styles</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_docx</span><span class="o">.</span><span class="n">styles</span><span class="o">.</span><span class="n">add_style</span><span class="p">(</span><span class="s1">&#39;Table Grid&#39;</span><span class="p">,</span> <span class="n">WD_STYLE_TYPE</span><span class="o">.</span><span class="n">TABLE</span><span class="p">,</span> <span class="n">builtin</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="s1">'Table Grid'</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_docx</span><span class="o">.</span><span class="n">styles</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_docx</span><span class="o">.</span><span class="n">styles</span><span class="o">.</span><span class="n">add_style</span><span class="p">(</span><span class="s1">'Table Grid'</span><span class="p">,</span> <span class="n">WD_STYLE_TYPE</span><span class="o">.</span><span class="n">TABLE</span><span class="p">,</span> <span class="n">builtin</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="c1"># The AST walker meta data for processing the record object fields.</span>
         <span class="c1"># This will hold the information about the current package, type and attribute being processed.</span>
@@ -177,12 +177,12 @@
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_subcommand</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_docx</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Return subcommand token for this converter.</span>
+<span class="w">        </span><span class="sd">""" Return subcommand token for this converter.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Ret: Status</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="s2">&quot;docx&quot;</span></div>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="s2">"docx"</span></div>
 
 
 <div class="viewcode-block" id="DocxConverter.get_description">
@@ -190,12 +190,12 @@
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_description</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_docx</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Return converter description.</span>
+<span class="w">        </span><span class="sd">""" Return converter description.</span>
 <span class="sd"> </span>
 <span class="sd">        Returns:</span>
 <span class="sd">            Ret: Status</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="s2">&quot;Convert into docx format.&quot;</span></div>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="s2">"Convert into docx format."</span></div>
 
 
 <div class="viewcode-block" id="DocxConverter.register">
@@ -203,31 +203,31 @@
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">register</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">args_parser</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_docx</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Register converter specific argument parser.</span>
+<span class="w">        </span><span class="sd">"""Register converter specific argument parser.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            args_parser (Any): Argument parser</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">args_parser</span><span class="p">)</span>
 
         <span class="k">assert</span> <span class="n">BaseConverter</span><span class="o">.</span><span class="n">_parser</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
 
         <span class="n">BaseConverter</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-            <span class="s2">&quot;-t&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;--template&quot;</span><span class="p">,</span>
+            <span class="s2">"-t"</span><span class="p">,</span>
+            <span class="s2">"--template"</span><span class="p">,</span>
             <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
             <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
             <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Load the given docx file as a template to append to.&quot;</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">"Load the given docx file as a template to append to."</span>
         <span class="p">)</span>
         <span class="n">BaseConverter</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-            <span class="s2">&quot;-n&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;--name&quot;</span><span class="p">,</span>
+            <span class="s2">"-n"</span><span class="p">,</span>
+            <span class="s2">"--name"</span><span class="p">,</span>
             <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
             <span class="n">default</span><span class="o">=</span><span class="n">DocxConverter</span><span class="o">.</span><span class="n">OUTPUT_FILE_NAME_DEFAULT</span><span class="p">,</span>
             <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-            <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Name of the generated output file inside the output folder &quot;</span> \
-                <span class="sa">f</span><span class="s2">&quot;(default = </span><span class="si">{</span><span class="n">DocxConverter</span><span class="o">.</span><span class="n">OUTPUT_FILE_NAME_DEFAULT</span><span class="si">}</span><span class="s2">).&quot;</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">"Name of the generated output file inside the output folder "</span> \
+                <span class="sa">f</span><span class="s2">"(default = </span><span class="si">{</span><span class="n">DocxConverter</span><span class="o">.</span><span class="n">OUTPUT_FILE_NAME_DEFAULT</span><span class="si">}</span><span class="s2">)."</span>
         <span class="p">)</span></div>
 
 
@@ -235,7 +235,7 @@
 <a class="viewcode-back" href="../../api/pyTRLCConverter/docx_converter/index.html#pyTRLCConverter.docx_converter.DocxConverter.convert_section">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">convert_section</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">section</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Ret</span><span class="p">:</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_docx_section</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Process the given section item.</span>
+<span class="w">        </span><span class="sd">"""Process the given section item.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            section (str): The section name</span>
@@ -243,7 +243,7 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Ret: Status</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_docx</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_docx</span><span class="o">.</span><span class="n">add_heading</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="n">level</span><span class="p">)</span>
@@ -255,7 +255,7 @@
 <a class="viewcode-back" href="../../api/pyTRLCConverter/docx_converter/index.html#pyTRLCConverter.docx_converter.DocxConverter.convert_record_object_generic">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">convert_record_object_generic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">:</span> <span class="n">Record_Object</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">translation</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Ret</span><span class="p">:</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_docx_record</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Process the given record object in a generic way.</span>
 
 <span class="sd">        The handler is called by the base converter if no specific handler is</span>
@@ -270,7 +270,7 @@
 <span class="sd">        </span>
 <span class="sd">        Returns:</span>
 <span class="sd">            Ret: Status</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_convert_record_object</span><span class="p">(</span><span class="n">record</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">translation</span><span class="p">)</span></div>
 
 
@@ -278,11 +278,11 @@
 <a class="viewcode-back" href="../../api/pyTRLCConverter/docx_converter/index.html#pyTRLCConverter.docx_converter.DocxConverter.finish">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">finish</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Ret</span><span class="p">:</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_docx_file</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Finish the conversion.</span>
+<span class="w">        </span><span class="sd">"""Finish the conversion.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Ret: Status</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">Ret</span><span class="o">.</span><span class="n">ERROR</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_docx</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -290,7 +290,7 @@
             <span class="k">if</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_args</span><span class="o">.</span><span class="n">out</span><span class="p">):</span>
                 <span class="n">output_file_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_args</span><span class="o">.</span><span class="n">out</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_args</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 
-            <span class="n">log_verbose</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Writing docx </span><span class="si">{</span><span class="n">output_file_name</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+            <span class="n">log_verbose</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Writing docx </span><span class="si">{</span><span class="n">output_file_name</span><span class="si">}</span><span class="s2">."</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_docx</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">output_file_name</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_docx</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="n">result</span> <span class="o">=</span> <span class="n">Ret</span><span class="o">.</span><span class="n">OK</span>
@@ -302,9 +302,9 @@
 <a class="viewcode-back" href="../../api/pyTRLCConverter/docx_converter/index.html#pyTRLCConverter.docx_converter.DocxConverter._on_implict_null">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_on_implict_null</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_</span><span class="p">:</span> <span class="n">Implicit_Null</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_docx_record</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Process the given implicit null value.        </span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_block_item_container</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_block_item_container</span><span class="o">.</span><span class="n">add_paragraph</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_empty_attribute_value</span><span class="p">)</span></div>
 
@@ -314,12 +314,12 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">_on_record_reference</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record_reference</span><span class="p">:</span> <span class="n">Record_Reference</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_docx_record</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_docx_reference</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Process the given record reference value and return a hyperlink paragraph.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            record_reference (Record_Reference): The record reference value.        </span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">assert</span> <span class="n">record_reference</span><span class="o">.</span><span class="n">target</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_block_item_container</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
 
@@ -327,7 +327,7 @@
 
         <span class="n">DocxConverter</span><span class="o">.</span><span class="n">docx_add_link_to_bookmark</span><span class="p">(</span><span class="n">paragraph</span><span class="p">,</span>
                                                 <span class="n">record_reference</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-                                                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">record_reference</span><span class="o">.</span><span class="n">package</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">record_reference</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+                                                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">record_reference</span><span class="o">.</span><span class="n">package</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">record_reference</span><span class="o">.</span><span class="n">target</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="DocxConverter._on_string_literal">
@@ -335,20 +335,20 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">_on_string_literal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">string_literal</span><span class="p">:</span> <span class="n">String_Literal</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_docx_render_md</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_docx_render_gfm</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Process the given string literal value.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            string_literal (String_Literal): The string literal value.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_block_item_container</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
 
         <span class="n">is_handled</span> <span class="o">=</span> <span class="kc">False</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ast_meta_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">package_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ast_meta_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;package_name&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
-            <span class="n">type_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ast_meta_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type_name&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
-            <span class="n">attribute_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ast_meta_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;attribute_name&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="n">package_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ast_meta_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"package_name"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span>
+            <span class="n">type_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ast_meta_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"type_name"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span>
+            <span class="n">attribute_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ast_meta_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"attribute_name"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">_render</span><span class="p">(</span><span class="n">package_name</span><span class="p">,</span> <span class="n">type_name</span><span class="p">,</span> <span class="n">attribute_name</span><span class="p">,</span> <span class="n">string_literal</span><span class="o">.</span><span class="n">to_string</span><span class="p">())</span>
             <span class="n">is_handled</span> <span class="o">=</span> <span class="kc">True</span>
@@ -362,12 +362,12 @@
 <a class="viewcode-back" href="../../api/pyTRLCConverter/docx_converter/index.html#pyTRLCConverter.docx_converter.DocxConverter._on_array_aggregate_begin">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_on_array_aggregate_begin</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">array_aggregate</span><span class="p">:</span> <span class="n">Array_Aggregate</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_docx_record</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Handle the beginning of a list.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            array_aggregate (Array_Aggregate): The AST node.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_list_item_indent_level</span> <span class="o">+=</span> <span class="mi">1</span></div>
 
 
@@ -376,7 +376,7 @@
 <a class="viewcode-back" href="../../api/pyTRLCConverter/docx_converter/index.html#pyTRLCConverter.docx_converter.DocxConverter._on_list_item">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_on_list_item</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">expression</span><span class="p">:</span> <span class="n">Expression</span><span class="p">,</span> <span class="n">item_result</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_docx_record</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Handle the list item by adding a bullet point.</span>
 
 <span class="sd">        Args:</span>
@@ -385,16 +385,16 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Any: The processed list item.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_block_item_container</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
 
         <span class="c1"># Add list item style to last added paragraph.</span>
         <span class="n">last_paragraph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_block_item_container</span><span class="o">.</span><span class="n">paragraphs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 
-        <span class="n">style</span> <span class="o">=</span> <span class="s1">&#39;List Bullet&#39;</span>
+        <span class="n">style</span> <span class="o">=</span> <span class="s1">'List Bullet'</span>
 
         <span class="k">if</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_list_item_indent_level</span><span class="p">:</span>
-            <span class="n">style</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_list_item_indent_level</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">style</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">' </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_list_item_indent_level</span><span class="si">}</span><span class="s1">'</span>
 
         <span class="n">last_paragraph</span><span class="o">.</span><span class="n">style</span> <span class="o">=</span> <span class="n">style</span>
 
@@ -406,12 +406,12 @@
 <a class="viewcode-back" href="../../api/pyTRLCConverter/docx_converter/index.html#pyTRLCConverter.docx_converter.DocxConverter._on_array_aggregate_finish">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_on_array_aggregate_finish</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">array_aggregate</span><span class="p">:</span> <span class="n">Array_Aggregate</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_docx_record</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Handle the end of a list.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            array_aggregate (Array_Aggregate): The AST node.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_list_item_indent_level</span> <span class="o">-=</span> <span class="mi">1</span></div>
 
 
@@ -419,12 +419,12 @@
 <a class="viewcode-back" href="../../api/pyTRLCConverter/docx_converter/index.html#pyTRLCConverter.docx_converter.DocxConverter._other_dispatcher">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_other_dispatcher</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">expression</span><span class="p">:</span> <span class="n">Expression</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_docx_record</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Dispatcher for all other expressions.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            expression (Expression): The expression to process.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_block_item_container</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_block_item_container</span><span class="o">.</span><span class="n">add_paragraph</span><span class="p">(</span><span class="n">expression</span><span class="o">.</span><span class="n">to_string</span><span class="p">())</span></div>
 
@@ -433,7 +433,7 @@
 <a class="viewcode-back" href="../../api/pyTRLCConverter/docx_converter/index.html#pyTRLCConverter.docx_converter.DocxConverter._get_trlc_ast_walker">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_get_trlc_ast_walker</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TrlcAstWalker</span><span class="p">:</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_docx_record</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        If a record object contains a record reference, the record reference will be converted to</span>
 <span class="sd">        a hyperlink.</span>
 <span class="sd">        If a record object contains an array of record references, the array will be converted to</span>
@@ -442,7 +442,7 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            TrlcAstWalker: The TRLC AST walker.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">trlc_ast_walker</span> <span class="o">=</span> <span class="n">TrlcAstWalker</span><span class="p">()</span>
         <span class="n">trlc_ast_walker</span><span class="o">.</span><span class="n">add_dispatcher</span><span class="p">(</span>
             <span class="n">Implicit_Null</span><span class="p">,</span>
@@ -479,14 +479,14 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">_render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">package_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">type_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">attribute_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">attribute_value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_docx_render_md</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_docx_render_gfm</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Render the attribute value depened on its format.</span>
+<span class="w">        </span><span class="sd">"""Render the attribute value depened on its format.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            package_name (str): The package name.</span>
 <span class="sd">            type_name (str): The type name.</span>
 <span class="sd">            attribute_name (str): The attribute name.</span>
 <span class="sd">            attribute_value (str): The attribute value.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_block_item_container</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
 
         <span class="c1"># If the attribute is marked as CommonMark Markdown format, convert it.</span>
@@ -500,7 +500,7 @@
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_render_cfg</span><span class="o">.</span><span class="n">is_format_gfm</span><span class="p">(</span><span class="n">package_name</span><span class="p">,</span> <span class="n">type_name</span><span class="p">,</span> <span class="n">attribute_name</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
             <span class="n">Gfm2DocxRenderer</span><span class="o">.</span><span class="n">block_item_container</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_block_item_container</span>
             <span class="n">Gfm2DocxRenderer</span><span class="p">()</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
-            <span class="n">markdown</span> <span class="o">=</span> <span class="n">Markdown</span><span class="p">(</span><span class="n">renderer</span><span class="o">=</span><span class="n">Gfm2DocxRenderer</span><span class="p">,</span> <span class="n">extensions</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;gfm&#39;</span><span class="p">])</span>
+            <span class="n">markdown</span> <span class="o">=</span> <span class="n">Markdown</span><span class="p">(</span><span class="n">renderer</span><span class="o">=</span><span class="n">Gfm2DocxRenderer</span><span class="p">,</span> <span class="n">extensions</span><span class="o">=</span><span class="p">[</span><span class="s1">'gfm'</span><span class="p">])</span>
             <span class="n">markdown</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="n">attribute_value</span><span class="p">)</span>
 
         <span class="k">else</span><span class="p">:</span>
@@ -511,7 +511,7 @@
 <a class="viewcode-back" href="../../api/pyTRLCConverter/docx_converter/index.html#pyTRLCConverter.docx_converter.DocxConverter._convert_record_object">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_convert_record_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">:</span> <span class="n">Record_Object</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">translation</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Ret</span><span class="p">:</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_docx_record</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Process the given record object.</span>
 
 <span class="sd">        Args:</span>
@@ -522,20 +522,20 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Ret: Status</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_docx</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
 
-        <span class="n">heading</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_docx</span><span class="o">.</span><span class="n">add_heading</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">record</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">record</span><span class="o">.</span><span class="n">n_typ</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span> <span class="n">level</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">heading</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_docx</span><span class="o">.</span><span class="n">add_heading</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">record</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">record</span><span class="o">.</span><span class="n">n_typ</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">)"</span><span class="p">,</span> <span class="n">level</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
         <span class="n">DocxConverter</span><span class="o">.</span><span class="n">docx_add_bookmark</span><span class="p">(</span><span class="n">heading</span><span class="p">,</span> <span class="n">record</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 
         <span class="n">table</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_docx</span><span class="o">.</span><span class="n">add_table</span><span class="p">(</span><span class="n">rows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-        <span class="n">table</span><span class="o">.</span><span class="n">style</span> <span class="o">=</span> <span class="s1">&#39;Table Grid&#39;</span>
+        <span class="n">table</span><span class="o">.</span><span class="n">style</span> <span class="o">=</span> <span class="s1">'Table Grid'</span>
         <span class="n">table</span><span class="o">.</span><span class="n">autofit</span> <span class="o">=</span> <span class="kc">True</span>
 
         <span class="c1"># Set table headers</span>
         <span class="n">header_cells</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">rows</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">cells</span>
-        <span class="n">header_cells</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Element&quot;</span>
-        <span class="n">header_cells</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Value&quot;</span>
+        <span class="n">header_cells</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="s2">"Element"</span>
+        <span class="n">header_cells</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="s2">"Value"</span>
 
         <span class="c1"># Walk through the record object fields and write the table rows.</span>
         <span class="n">trlc_ast_walker</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_trlc_ast_walker</span><span class="p">()</span>
@@ -547,9 +547,9 @@
             <span class="n">cells</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">attribute_name</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">_ast_meta_data</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="s2">&quot;package_name&quot;</span><span class="p">:</span> <span class="n">record</span><span class="o">.</span><span class="n">n_package</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-                <span class="s2">&quot;type_name&quot;</span><span class="p">:</span> <span class="n">record</span><span class="o">.</span><span class="n">n_typ</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-                <span class="s2">&quot;attribute_name&quot;</span><span class="p">:</span> <span class="n">name</span>
+                <span class="s2">"package_name"</span><span class="p">:</span> <span class="n">record</span><span class="o">.</span><span class="n">n_package</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                <span class="s2">"type_name"</span><span class="p">:</span> <span class="n">record</span><span class="o">.</span><span class="n">n_typ</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                <span class="s2">"attribute_name"</span><span class="p">:</span> <span class="n">name</span>
             <span class="p">}</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_block_item_container</span> <span class="o">=</span> <span class="n">cells</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
             <span class="n">trlc_ast_walker</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
@@ -558,14 +558,14 @@
             <span class="k">if</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">cells</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">paragraphs</span><span class="p">):</span>
                 <span class="n">first_paragraph</span> <span class="o">=</span> <span class="n">cells</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">paragraphs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
-                <span class="k">if</span> <span class="n">first_paragraph</span><span class="o">.</span><span class="n">text</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">first_paragraph</span><span class="o">.</span><span class="n">text</span> <span class="o">==</span> <span class="s2">""</span><span class="p">:</span>
                     <span class="n">p_element</span> <span class="o">=</span> <span class="n">first_paragraph</span><span class="o">.</span><span class="n">_element</span> <span class="c1"># pylint: disable=protected-access</span>
                     <span class="n">p_element</span><span class="o">.</span><span class="n">getparent</span><span class="p">()</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">p_element</span><span class="p">)</span>
                     <span class="n">p_element</span><span class="o">.</span><span class="n">_p</span> <span class="o">=</span> <span class="n">p_element</span><span class="o">.</span><span class="n">_element</span> <span class="o">=</span> <span class="kc">None</span> <span class="c1"># pylint: disable=protected-access</span>
 
         <span class="c1"># Add a paragraph with the record object location</span>
         <span class="n">paragraph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_docx</span><span class="o">.</span><span class="n">add_paragraph</span><span class="p">()</span>
-        <span class="n">paragraph</span><span class="o">.</span><span class="n">add_run</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;from </span><span class="si">{</span><span class="n">record</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">file_name</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">record</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">line_no</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">italic</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">paragraph</span><span class="o">.</span><span class="n">add_run</span><span class="p">(</span><span class="sa">f</span><span class="s2">"from </span><span class="si">{</span><span class="n">record</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">file_name</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">record</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">line_no</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span><span class="o">.</span><span class="n">italic</span> <span class="o">=</span> <span class="kc">True</span>
 
         <span class="k">return</span> <span class="n">Ret</span><span class="o">.</span><span class="n">OK</span></div>
 
@@ -575,23 +575,23 @@
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">docx_add_bookmark</span><span class="p">(</span><span class="n">paragraph</span><span class="p">:</span> <span class="n">Paragraph</span><span class="p">,</span> <span class="n">bookmark_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_docx_record</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Adds a bookmark to a paragraph.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            paragraph (Paragraph): The paragraph to add the bookmark to.</span>
 <span class="sd">            bookmark_name (str): The name of the bookmark.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">element</span> <span class="o">=</span> <span class="n">paragraph</span><span class="o">.</span><span class="n">_p</span> <span class="c1"># pylint: disable=protected-access</span>
 
         <span class="c1"># Create a bookmark start element.</span>
-        <span class="n">bookmark_start</span> <span class="o">=</span> <span class="n">OxmlElement</span><span class="p">(</span><span class="s1">&#39;w:bookmarkStart&#39;</span><span class="p">)</span>
-        <span class="n">bookmark_start</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">qn</span><span class="p">(</span><span class="s1">&#39;w:id&#39;</span><span class="p">),</span> <span class="s1">&#39;0&#39;</span><span class="p">)</span>  <span class="c1"># ID must be unique</span>
-        <span class="n">bookmark_start</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">qn</span><span class="p">(</span><span class="s1">&#39;w:name&#39;</span><span class="p">),</span> <span class="n">bookmark_name</span><span class="p">)</span>
+        <span class="n">bookmark_start</span> <span class="o">=</span> <span class="n">OxmlElement</span><span class="p">(</span><span class="s1">'w:bookmarkStart'</span><span class="p">)</span>
+        <span class="n">bookmark_start</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">qn</span><span class="p">(</span><span class="s1">'w:id'</span><span class="p">),</span> <span class="s1">'0'</span><span class="p">)</span>  <span class="c1"># ID must be unique</span>
+        <span class="n">bookmark_start</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">qn</span><span class="p">(</span><span class="s1">'w:name'</span><span class="p">),</span> <span class="n">bookmark_name</span><span class="p">)</span>
 
         <span class="c1"># Create a bookmark end element.</span>
-        <span class="n">bookmark_end</span> <span class="o">=</span> <span class="n">OxmlElement</span><span class="p">(</span><span class="s1">&#39;w:bookmarkEnd&#39;</span><span class="p">)</span>
-        <span class="n">bookmark_end</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">qn</span><span class="p">(</span><span class="s1">&#39;w:id&#39;</span><span class="p">),</span> <span class="s1">&#39;0&#39;</span><span class="p">)</span>
+        <span class="n">bookmark_end</span> <span class="o">=</span> <span class="n">OxmlElement</span><span class="p">(</span><span class="s1">'w:bookmarkEnd'</span><span class="p">)</span>
+        <span class="n">bookmark_end</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">qn</span><span class="p">(</span><span class="s1">'w:id'</span><span class="p">),</span> <span class="s1">'0'</span><span class="p">)</span>
 
         <span class="c1"># Add the bookmark to the paragraph.</span>
         <span class="n">element</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">bookmark_start</span><span class="p">)</span>
@@ -603,31 +603,31 @@
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">docx_add_link_to_bookmark</span><span class="p">(</span><span class="n">paragraph</span><span class="p">:</span> <span class="n">Paragraph</span><span class="p">,</span> <span class="n">bookmark_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">link_text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># lobster-trace: SwRequirements.sw_req_docx_reference</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Add a hyperlink to a bookmark in a paragraph.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            paragraph (Paragraph): The paragraph to add the hyperlink to.</span>
 <span class="sd">            bookmark_name (str): The name of the bookmark.</span>
 <span class="sd">            link_text (str): The text to display for the hyperlink.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Create hyperlink element pointing to the bookmark.</span>
-        <span class="n">hyperlink</span> <span class="o">=</span> <span class="n">OxmlElement</span><span class="p">(</span><span class="s1">&#39;w:hyperlink&#39;</span><span class="p">)</span>
-        <span class="n">hyperlink</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">qn</span><span class="p">(</span><span class="s1">&#39;w:anchor&#39;</span><span class="p">),</span> <span class="n">bookmark_name</span><span class="p">)</span>
+        <span class="n">hyperlink</span> <span class="o">=</span> <span class="n">OxmlElement</span><span class="p">(</span><span class="s1">'w:hyperlink'</span><span class="p">)</span>
+        <span class="n">hyperlink</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">qn</span><span class="p">(</span><span class="s1">'w:anchor'</span><span class="p">),</span> <span class="n">bookmark_name</span><span class="p">)</span>
 
         <span class="c1"># Create a run and run properties for the hyperlink.</span>
-        <span class="n">new_run</span> <span class="o">=</span> <span class="n">OxmlElement</span><span class="p">(</span><span class="s1">&#39;w:r&#39;</span><span class="p">)</span>
-        <span class="n">run_properties</span> <span class="o">=</span> <span class="n">OxmlElement</span><span class="p">(</span><span class="s1">&#39;w:rPr&#39;</span><span class="p">)</span>
+        <span class="n">new_run</span> <span class="o">=</span> <span class="n">OxmlElement</span><span class="p">(</span><span class="s1">'w:r'</span><span class="p">)</span>
+        <span class="n">run_properties</span> <span class="o">=</span> <span class="n">OxmlElement</span><span class="p">(</span><span class="s1">'w:rPr'</span><span class="p">)</span>
 
         <span class="c1"># Use the built-in Hyperlink run style so Word will display it correctly (blue/underline).</span>
-        <span class="n">r_style</span> <span class="o">=</span> <span class="n">OxmlElement</span><span class="p">(</span><span class="s1">&#39;w:rStyle&#39;</span><span class="p">)</span>
-        <span class="n">r_style</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">qn</span><span class="p">(</span><span class="s1">&#39;w:val&#39;</span><span class="p">),</span> <span class="s1">&#39;Hyperlink&#39;</span><span class="p">)</span>
+        <span class="n">r_style</span> <span class="o">=</span> <span class="n">OxmlElement</span><span class="p">(</span><span class="s1">'w:rStyle'</span><span class="p">)</span>
+        <span class="n">r_style</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">qn</span><span class="p">(</span><span class="s1">'w:val'</span><span class="p">),</span> <span class="s1">'Hyperlink'</span><span class="p">)</span>
         <span class="n">run_properties</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r_style</span><span class="p">)</span>
 
         <span class="n">new_run</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">run_properties</span><span class="p">)</span>
 
         <span class="c1"># Add the text node inside the run (w:t).</span>
-        <span class="n">text_element</span> <span class="o">=</span> <span class="n">OxmlElement</span><span class="p">(</span><span class="s1">&#39;w:t&#39;</span><span class="p">)</span>
+        <span class="n">text_element</span> <span class="o">=</span> <span class="n">OxmlElement</span><span class="p">(</span><span class="s1">'w:t'</span><span class="p">)</span>
         <span class="n">text_element</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">link_text</span>
         <span class="n">new_run</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">text_element</span><span class="p">)</span>
 

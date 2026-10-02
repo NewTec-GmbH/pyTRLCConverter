@@ -1,0 +1,85 @@
+pyTRLCConverter.rst.text
+========================
+
+.. py:module:: pyTRLCConverter.rst.text
+
+.. autoapi-nested-parse::
+
+   reStructuredText text helpers.
+   Provides reStructuredText escaping and inline reStructuredText string builders.
+
+   Author: Gabryel Reyes (gabryel.reyes@newtec.de)
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   pyTRLCConverter.rst.text.RstText
+
+
+Module Contents
+---------------
+
+.. py:class:: RstText
+
+   Utility class providing reStructuredText escaping and inline element builders.
+
+
+
+   .. py:method:: escape(text: str) -> str
+      :staticmethod:
+
+
+      Escapes the text to be used in a reStructuredText document.
+
+      :param text: Text to escape
+      :type text: str
+
+      :returns: Escaped text
+      :rtype: str
+
+
+
+   .. py:method:: link(text: str, target: str, escape: bool = True) -> str
+      :staticmethod:
+
+
+      Create a reStructuredText cross-reference.
+      The text will be automatically escaped for reStructuredText if necessary.
+      There will be no newline appended at the end.
+
+      :param text: Link text
+      :type text: str
+      :param target: Cross-reference target
+      :type target: str
+      :param escape: Escapes text (default: True).
+      :type escape: bool
+
+      :returns: reStructuredText cross-reference
+      :rtype: str
+
+
+
+   .. py:method:: role(text: str, role: str, escape: bool = True) -> str
+      :staticmethod:
+
+
+      Create role text in reStructuredText.
+      The text will be automatically escaped for reStructuredText if necessary.
+      There will be no newline appended at the end.
+
+      :param text: Text
+      :type text: str
+      :param role: Role
+      :type role: str
+      :param escape: Escapes text (default: True).
+      :type escape: bool
+
+      :returns: Text with role
+      :rtype: str
+
+
+

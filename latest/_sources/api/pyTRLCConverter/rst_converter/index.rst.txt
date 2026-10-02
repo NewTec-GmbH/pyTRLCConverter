@@ -33,6 +33,11 @@ Module Contents
 
    RstConverter provides functionality for converting to a reStructuredText format.
 
+   The converter builds a reStructuredText AST (RstDocument made of block
+   elements) while walking the TRLC symbols and writes the output file(s) only
+   once the document is complete (in leave_file() for multiple-document mode and
+   in finish() for single-document mode).
+
 
    .. py:method:: _convert_record_object(record: trlc.ast.Record_Object, level: int, translation: Optional[dict]) -> pyTRLCConverter.ret.Ret
 
@@ -45,8 +50,9 @@ Module Contents
       :param translation: Translation dictionary for the record object.
                           If None, no translation is applied.
       :type translation: Optional[dict]
-      :param Returns:
-      :param Ret: Status
+
+      :returns: Status
+      :rtype: Ret
 
 
 
@@ -81,20 +87,6 @@ Module Contents
 
       :returns: reStructuredText file name
       :rtype: str
-
-
-
-   .. py:method:: _generate_out_file(file_name: str) -> pyTRLCConverter.ret.Ret
-
-      Generate the output file.
-
-      :param file_name: The output file name without path.
-      :type file_name: str
-      :param item_list: List of elements.
-      :type item_list: [Element]
-
-      :returns: Status
-      :rtype: Ret
 
 
 
@@ -188,14 +180,15 @@ Module Contents
 
 
 
-   .. py:method:: _write_empty_line_on_demand() -> None
+   .. py:method:: _write_document(file_name: str) -> pyTRLCConverter.ret.Ret
 
-      Write an empty line if necessary.
+      Write the current reStructuredText document to the output file.
 
-      For proper reStructuredText formatting, the first written part shall not have an empty
-      line before. But all following parts (heading, table, paragraph, image, etc.) shall
-      have an empty line before. And at the document bottom, there shall be just one empty
-      line.
+      :param file_name: The output file name without path.
+      :type file_name: str
+
+      :returns: Status
+      :rtype: Ret
 
 
 
@@ -259,6 +252,9 @@ Module Contents
 
       Finish the conversion process.
 
+      :returns: Status
+      :rtype: Ret
+
 
 
    .. py:method:: get_description() -> str
@@ -306,175 +302,6 @@ Module Contents
 
 
 
-   .. py:method:: rst_append_table_row(row_values: List[str], max_widths: List[int], escape: bool = True) -> str
-      :staticmethod:
-
-
-      Append a row to a reStructuredText table in grid format.
-      The values will be automatically escaped for reStructuredText if necessary.
-      Supports multi-line cell values.
-
-      :param row_values: List of row values.
-      :type row_values: [str]
-      :param max_widths: List of maximum widths for each column.
-      :type max_widths: [int]
-      :param escape: Escapes every row value (default: True).
-      :type escape: bool
-
-      :returns: Table row
-      :rtype: str
-
-
-
-   .. py:method:: rst_create_admonition(text: str, file_name: str, escape: bool = True) -> str
-      :staticmethod:
-
-
-      Create a reStructuredText admonition with a label.
-      The text will be automatically escaped for reStructuredText if necessary.
-
-      :param text: Admonition text
-      :type text: str
-      :param file_name: File name where the heading is found
-      :type file_name: str
-      :param escape: Escape the text (default: True).
-      :type escape: bool
-
-      :returns: reStructuredText admonition with a label
-      :rtype: str
-
-
-
-   .. py:method:: rst_create_diagram_link(diagram_file_name: str, diagram_caption: str, escape: bool = True) -> str
-      :staticmethod:
-
-
-      Create a reStructuredText diagram link.
-      The caption will be automatically escaped for reStructuredText if necessary.
-
-      :param diagram_file_name: Diagram file name
-      :type diagram_file_name: str
-      :param diagram_caption: Diagram caption
-      :type diagram_caption: str
-      :param escape: Escapes caption (default: True).
-      :type escape: bool
-
-      :returns: reStructuredText diagram link
-      :rtype: str
-
-
-
-   .. py:method:: rst_create_heading(text: str, level: int, file_name: str, escape: bool = True) -> str
-      :staticmethod:
-
-
-      Create a reStructuredText heading with a label.
-      The text will be automatically escaped for reStructuredText if necessary.
-
-      :param text: Heading text
-      :type text: str
-      :param level: Heading level [1; 7]
-      :type level: int
-      :param file_name: File name where the heading is found
-      :type file_name: str
-      :param escape: Escape the text (default: True).
-      :type escape: bool
-
-      :returns: reStructuredText heading with a label
-      :rtype: str
-
-
-
-   .. py:method:: rst_create_link(text: str, target: str, escape: bool = True) -> str
-      :staticmethod:
-
-
-      Create a reStructuredText cross-reference.
-      The text will be automatically escaped for reStructuredText if necessary.
-      There will be no newline appended at the end.
-
-      :param text: Link text
-      :type text: str
-      :param target: Cross-reference target
-      :type target: str
-      :param escape: Escapes text (default: True).
-      :type escape: bool
-
-      :returns: reStructuredText cross-reference
-      :rtype: str
-
-
-
-   .. py:method:: rst_create_list(list_values: List[str], escape: bool = True) -> str
-      :staticmethod:
-
-
-      Create a unordered reStructuredText list.
-      The values will be automatically escaped for reStructuredText if necessary.
-
-      :param list_values: List of list values.
-      :type list_values: List[str]
-      :param escape: Escapes every list value (default: True).
-      :type escape: bool
-
-      :returns: reStructuredText list
-      :rtype: str
-
-
-
-   .. py:method:: rst_create_table_head(column_titles: List[str], max_widths: List[int], escape: bool = True) -> str
-      :staticmethod:
-
-
-      Create the table head for a reStructuredText table in grid format.
-      The titles will be automatically escaped for reStructuredText if necessary.
-
-      :param column_titles: List of column titles.
-      :type column_titles: [str]
-      :param max_widths: List of maximum widths for each column.
-      :type max_widths: [int]
-      :param escape: Escape the titles (default: True).
-      :type escape: bool
-
-      :returns: Table head
-      :rtype: str
-
-
-
-   .. py:method:: rst_escape(text: str) -> str
-      :staticmethod:
-
-
-      Escapes the text to be used in a reStructuredText document.
-
-      :param text: Text to escape
-      :type text: str
-
-      :returns: Escaped text
-      :rtype: str
-
-
-
-   .. py:method:: rst_role(text: str, role: str, escape: bool = True) -> str
-      :staticmethod:
-
-
-      Create role text in reStructuredText.
-      The text will be automatically escaped for reStructuredText if necessary.
-      There will be no newline appended at the end.
-
-      :param text: Text
-      :type text: str
-      :param color: Role
-      :type color: str
-      :param escape: Escapes text (default: True).
-      :type escape: bool
-
-      :returns: Text with role
-      :rtype: str
-
-
-
    .. py:attribute:: OUTPUT_FILE_NAME_DEFAULT
       :value: 'output.rst'
 
@@ -495,8 +322,14 @@ Module Contents
 
 
 
-   .. py:attribute:: _empty_line_required
-      :value: False
+   .. py:attribute:: _current_file_name
+      :value: ''
+
+
+
+   .. py:attribute:: _document
+      :type:  Optional[pyTRLCConverter.rst.document.RstDocument]
+      :value: None
 
 
 
@@ -508,11 +341,6 @@ Module Contents
    .. py:attribute:: _external_files
       :type:  list
       :value: []
-
-
-
-   .. py:attribute:: _fd
-      :value: None
 
 
 

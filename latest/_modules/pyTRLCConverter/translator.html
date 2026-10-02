@@ -18,7 +18,7 @@
       <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
-      <script src="../../_static/version_selector.js?v=02fa0f40"></script>
+      <script src="../../_static/version_selector.js?v=5b8b8d8b"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -83,11 +83,11 @@
            <div itemprop="articleBody">
              
   <h1>Source code for pyTRLCConverter.translator</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""</span>
 <span class="sd">This module implements the requirement attribute translator.</span>
 
 <span class="sd">Author: Andreas Merkle (andreas.merkle@newtec.de)</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="c1"># pyTRLCConverter - A tool to convert TRLC files to specific formats.</span>
 <span class="c1"># Copyright (c) 2024 - 2026 NewTec GmbH</span>
@@ -118,20 +118,20 @@
 <a class="viewcode-back" href="../../api/pyTRLCConverter/translator/index.html#pyTRLCConverter.translator.Translator">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Translator</span><span class="p">():</span>
     <span class="c1"># lobster-trace: SwRequirements.sw_req_translation</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    This class implements the requirement attribute translator.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Constructs the requirement attribute translator.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_translation</span> <span class="o">=</span> <span class="p">{}</span>
 
 <div class="viewcode-block" id="Translator.load">
 <a class="viewcode-back" href="../../api/pyTRLCConverter/translator/index.html#pyTRLCConverter.translator.Translator.load">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Load the trasnlation JSON file.</span>
 
 <span class="sd">        Args:</span>
@@ -139,20 +139,20 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            bool: True if the file was loaded successfully, False otherwise.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">status</span> <span class="o">=</span> <span class="kc">False</span>
 
-        <span class="n">log_verbose</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loading translation file </span><span class="si">{</span><span class="n">file_name</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+        <span class="n">log_verbose</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Loading translation file </span><span class="si">{</span><span class="n">file_name</span><span class="si">}</span><span class="s2">."</span><span class="p">)</span>
 
         <span class="c1"># Load the JSON file</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_translation</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
 
             <span class="n">status</span> <span class="o">=</span> <span class="kc">True</span>
 
         <span class="k">except</span> <span class="ne">FileNotFoundError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="n">log_verbose</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to load file </span><span class="si">{</span><span class="n">file_name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">log_verbose</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Failed to load file </span><span class="si">{</span><span class="n">file_name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">status</span></div>
 
@@ -160,7 +160,7 @@
 <div class="viewcode-block" id="Translator.get_translation">
 <a class="viewcode-back" href="../../api/pyTRLCConverter/translator/index.html#pyTRLCConverter.translator.Translator.get_translation">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_translation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">req_type_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Get the translation for a specific requirement type.</span>
 
 <span class="sd">        Args:</span>
@@ -168,7 +168,7 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Optional[Dict]: The translation dictionary for the requirement type, or None if not found.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">translation</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="k">if</span> <span class="n">req_type_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_translation</span><span class="p">:</span>
@@ -181,7 +181,7 @@
 <div class="viewcode-block" id="Translator.translate">
 <a class="viewcode-back" href="../../api/pyTRLCConverter/translator/index.html#pyTRLCConverter.translator.Translator.translate">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">translate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">req_type_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">attr_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Translate the requirement attribute.</span>
 
 <span class="sd">        Args:</span>
@@ -190,16 +190,16 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            str: The translated attribute name.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">translation</span> <span class="o">=</span> <span class="n">attr_name</span>
 
         <span class="k">if</span> <span class="n">req_type_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_translation</span><span class="p">:</span>
-            <span class="n">log_verbose</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to translate </span><span class="si">{</span><span class="n">req_type_name</span><span class="si">}</span><span class="s2">: No translation available.&quot;</span><span class="p">)</span>
+            <span class="n">log_verbose</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Failed to translate </span><span class="si">{</span><span class="n">req_type_name</span><span class="si">}</span><span class="s2">: No translation available."</span><span class="p">)</span>
 
         <span class="k">else</span><span class="p">:</span>
 
             <span class="k">if</span> <span class="n">attr_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_translation</span><span class="p">[</span><span class="n">req_type_name</span><span class="p">]:</span>
-                <span class="n">log_verbose</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to translate </span><span class="si">{</span><span class="n">req_type_name</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">attr_name</span><span class="si">}</span><span class="s2">: No translation available.&quot;</span><span class="p">)</span>
+                <span class="n">log_verbose</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Failed to translate </span><span class="si">{</span><span class="n">req_type_name</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">attr_name</span><span class="si">}</span><span class="s2">: No translation available."</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">translation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_translation</span><span class="p">[</span><span class="n">req_type_name</span><span class="p">][</span><span class="n">attr_name</span><span class="p">]</span>
 
