@@ -1,0 +1,82 @@
+pyTRLCConverter.version
+=======================
+
+.. py:module:: pyTRLCConverter.version
+
+.. autoapi-nested-parse::
+
+   This module provides version and author information.
+
+   Author: Andreas Merkle (andreas.merkle@newtec.de)
+
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   pyTRLCConverter.version.__author__
+   pyTRLCConverter.version.__email__
+   pyTRLCConverter.version.__license__
+   pyTRLCConverter.version.__repository__
+   pyTRLCConverter.version.__version__
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   pyTRLCConverter.version.init_from_metadata
+   pyTRLCConverter.version.init_from_toml
+   pyTRLCConverter.version.resource_path
+
+
+Module Contents
+---------------
+
+.. py:function:: init_from_metadata()
+
+   Initialize dunders from importlib.metadata
+   Requires that the package was installed.
+
+   :returns: Tool related information
+   :rtype: list
+
+
+.. py:function:: init_from_toml()
+
+   Initialize dunders from pypackage.toml file
+
+   Tried if package wasn't installed.
+
+   :returns: Tool related information
+   :rtype: list
+
+
+.. py:function:: resource_path(relative_path)
+
+   Get the absolute path to the resource, works for dev and for PyInstaller
+
+
+.. py:data:: __author__
+   :value: '???'
+
+
+.. py:data:: __email__
+   :value: '???'
+
+
+.. py:data:: __license__
+   :value: '???'
+
+
+.. py:data:: __repository__
+   :value: '???'
+
+
+.. py:data:: __version__
+   :value: '???'
+
+

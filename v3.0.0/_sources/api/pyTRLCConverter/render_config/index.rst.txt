@@ -1,0 +1,252 @@
+pyTRLCConverter.render_config
+=============================
+
+.. py:module:: pyTRLCConverter.render_config
+
+.. autoapi-nested-parse::
+
+   Provides the render configuration to all converters.
+
+   Author: Andreas Merkle (andreas.merkle@newtec.de)
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   pyTRLCConverter.render_config.RenderConfig
+
+
+Module Contents
+---------------
+
+.. py:class:: RenderConfig
+
+   Render configuration provider.
+
+
+
+   .. py:method:: _is_package_match(item: dict, trlc_package: str) -> bool
+
+      Checks if the given TRLC package matches the package pattern in the given item.
+
+      :param item: Single render configuration item.
+      :type item: dict
+      :param trlc_package: The TRLC package.
+      :type trlc_package: str
+
+      :returns: If the given TRLC package matches the package pattern in the given item.
+      :rtype: bool
+
+
+
+   .. py:method:: _is_type_attribute_match(item: dict, trlc_type_attribute: str) -> bool
+
+      Checks if the given TRLC type attribute matches the type attribute pattern in the given item.
+
+      :param item: Single render configuration item.
+      :type item: dict
+      :param trlc_type: The TRLC type attribute.
+      :type trlc_type: str
+
+      :returns: If the given TRLC type attribute matches the type attribute pattern in the given item.
+      :rtype: bool
+
+
+
+   .. py:method:: _is_type_match(item: dict, trlc_type: str) -> bool
+
+      Checks if the given TRLC type matches the type pattern in the given item.
+
+      :param item: Single render configuration item.
+      :type item: dict
+      :param trlc_type: The TRLC type.
+      :type trlc_type: str
+
+      :returns: If the given TRLC type matches the type pattern in the given item.
+      :rtype: bool
+
+
+
+   .. py:method:: get_format_specifier(trlc_package: str, trlc_type: str, trlc_type_attribute: str) -> str
+
+      Returns the format specifier for the given TRLC package, type and attribute.
+
+      :param trlc_package: The TRLC package.
+      :type trlc_package: str
+      :param trlc_type: The TRLC type.
+      :type trlc_type: str
+      :param trlc_type_attribute: The TRLC type attribute.
+      :type trlc_type_attribute: str
+
+      :returns: The format specifier for the given TRLC package, type and attribute.
+      :rtype: str
+
+
+
+   .. py:method:: get_table_options(trlc_package: str, trlc_type: str, trlc_type_attribute: str) -> dict
+
+      Returns the table rendering options for the given TRLC package, type and attribute.
+
+      The returned dictionary may contain the following optional keys:
+
+      - ``"border"`` (str): CSS style value applied to the ``<table>`` element's ``style``
+        attribute (e.g. ``"border: 1px solid black; border-collapse: collapse;"``).
+      - ``"headingStyle"`` (str): CSS style value applied to each ``<th>`` cell's ``style``
+        attribute (e.g. ``"background-color: #c0c0c0;"``).
+
+      :param trlc_package: The TRLC package.
+      :type trlc_package: str
+      :param trlc_type: The TRLC type.
+      :type trlc_type: str
+      :param trlc_type_attribute: The TRLC type attribute.
+      :type trlc_type_attribute: str
+
+      :returns: Table options dict, or empty dict if no table options are configured.
+      :rtype: dict
+
+
+
+   .. py:method:: is_format_gfm(trlc_package: str, trlc_type: str, trlc_type_attribute: str) -> bool
+
+      Checks if the given TRLC package, type and attribute should be rendered in GitHub Flavored Markdown format.
+
+      :param trlc_package: The TRLC package.
+      :type trlc_package: str
+      :param trlc_type: The TRLC type.
+      :type trlc_type: str
+      :param trlc_type_attribute: The TRLC type attribute.
+      :type trlc_type_attribute: str
+
+      :returns: True if the given TRLC attribute has GitHub Flavored Markdown format, otherwise False.
+      :rtype: bool
+
+
+
+   .. py:method:: is_format_md(trlc_package: str, trlc_type: str, trlc_type_attribute: str) -> bool
+
+      Checks if the given TRLC package, type and attribute should be rendered in markdown format.
+
+      :param trlc_package: The TRLC package.
+      :type trlc_package: str
+      :param trlc_type: The TRLC type.
+      :type trlc_type: str
+      :param trlc_type_attribute: The TRLC type attribute.
+      :type trlc_type_attribute: str
+
+      :returns: True if the given TRLC attribute has Markdown format, otherwise False.
+      :rtype: bool
+
+
+
+   .. py:method:: is_format_path(trlc_package: str, trlc_type: str, trlc_type_attribute: str) -> bool
+
+      Checks if the given TRLC package, type and attribute should be rendered as a file path.
+
+      :param trlc_package: The TRLC package.
+      :type trlc_package: str
+      :param trlc_type: The TRLC type.
+      :type trlc_type: str
+      :param trlc_type_attribute: The TRLC type attribute.
+      :type trlc_type_attribute: str
+
+      :returns: True if the given TRLC attribute has path format, otherwise False.
+      :rtype: bool
+
+
+
+   .. py:method:: is_format_plain(trlc_package: str, trlc_type: str, trlc_type_attribute: str) -> bool
+
+      Checks if the given TRLC package, type and attribute should be rendered in plain text format.
+
+      :param trlc_package: The TRLC package.
+      :type trlc_package: str
+      :param trlc_type: The TRLC type.
+      :type trlc_type: str
+      :param trlc_type_attribute: The TRLC type attribute.
+      :type trlc_type_attribute: str
+
+      :returns: True if the given TRLC attribute has plain text format, otherwise False.
+      :rtype: bool
+
+
+
+   .. py:method:: is_format_rst(trlc_package: str, trlc_type: str, trlc_type_attribute: str) -> bool
+
+      Checks if the given TRLC package, type and attribute should be rendered in reStructuredText format.
+
+      :param trlc_package: The TRLC package.
+      :type trlc_package: str
+      :param trlc_type: The TRLC type.
+      :type trlc_type: str
+      :param trlc_type_attribute: The TRLC type attribute.
+      :type trlc_type_attribute: str
+
+      :returns: True if the given TRLC attribute has reStructuredText format, otherwise False.
+      :rtype: bool
+
+
+
+   .. py:method:: is_format_xhtml(trlc_package: str, trlc_type: str, trlc_type_attribute: str) -> bool
+
+      Checks if the given TRLC package, type and attribute should be rendered in XHTML format.
+
+      :param trlc_package: The TRLC package.
+      :type trlc_package: str
+      :param trlc_type: The TRLC type.
+      :type trlc_type: str
+      :param trlc_type_attribute: The TRLC type attribute.
+      :type trlc_type_attribute: str
+
+      :returns: True if the given TRLC attribute has XHTML format, otherwise False.
+      :rtype: bool
+
+
+
+   .. py:method:: load(file_name: str) -> bool
+
+      Loads the render configuration from the given file.
+
+      :param file_name: Path to the render configuration file.
+      :type file_name: str
+
+      :returns: True if successful, False otherwise.
+      :rtype: bool
+
+
+
+   .. py:attribute:: FORMAT_SPECIFIER_GFM
+      :value: 'gfm'
+
+
+
+   .. py:attribute:: FORMAT_SPECIFIER_MD
+      :value: 'md'
+
+
+
+   .. py:attribute:: FORMAT_SPECIFIER_PATH
+      :value: 'path'
+
+
+
+   .. py:attribute:: FORMAT_SPECIFIER_PLAIN
+      :value: 'plain'
+
+
+
+   .. py:attribute:: FORMAT_SPECIFIER_RST
+      :value: 'rst'
+
+
+
+   .. py:attribute:: FORMAT_SPECIFIER_XHTML
+      :value: 'xhtml'
+
+
+
+   .. py:attribute:: _cfg
+
+

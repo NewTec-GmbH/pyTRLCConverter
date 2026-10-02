@@ -1,0 +1,5 @@
+<map id="inheritance9edadfbaa2" name="inheritance9edadfbaa2">
+<area shape="rect" id="node1" title="Helper class that provides a standard way to create an ABC using" alt="" coords="41,5,113,31"/>
+<area shape="rect" id="node3" href="#pyTRLCConverter.markdown.element.MarkdownElement" target="_top" title="Abstract base class for Markdown block elements." alt="" coords="5,79,149,104"/>
+<area shape="rect" id="node2" href="#pyTRLCConverter.markdown.element.Heading" target="_top" title="Markdown heading block element." alt="" coords="39,152,115,177"/>
+</map>

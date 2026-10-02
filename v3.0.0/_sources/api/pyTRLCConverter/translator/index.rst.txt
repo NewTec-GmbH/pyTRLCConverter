@@ -1,0 +1,70 @@
+pyTRLCConverter.translator
+==========================
+
+.. py:module:: pyTRLCConverter.translator
+
+.. autoapi-nested-parse::
+
+   This module implements the requirement attribute translator.
+
+   Author: Andreas Merkle (andreas.merkle@newtec.de)
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   pyTRLCConverter.translator.Translator
+
+
+Module Contents
+---------------
+
+.. py:class:: Translator
+
+   This class implements the requirement attribute translator.
+
+
+   .. py:method:: get_translation(req_type_name: str) -> Optional[Dict]
+
+      Get the translation for a specific requirement type.
+
+      :param req_type_name: The name of the requirement type.
+      :type req_type_name: str
+
+      :returns: The translation dictionary for the requirement type, or None if not found.
+      :rtype: Optional[Dict]
+
+
+
+   .. py:method:: load(file_name: str) -> bool
+
+      Load the trasnlation JSON file.
+
+      :param file_name: The name of the JSON file to load.
+      :type file_name: str
+
+      :returns: True if the file was loaded successfully, False otherwise.
+      :rtype: bool
+
+
+
+   .. py:method:: translate(req_type_name: str, attr_name: str) -> str
+
+      Translate the requirement attribute.
+
+      :param req_type_name: The name of the requirement type.
+      :type req_type_name: str
+      :param attr_name: The name of the attribute to translate.
+      :type attr_name: str
+
+      :returns: The translated attribute name.
+      :rtype: str
+
+
+
+   .. py:attribute:: _translation
+
+

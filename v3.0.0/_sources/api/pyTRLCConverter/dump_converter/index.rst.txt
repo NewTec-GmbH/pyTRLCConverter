@@ -1,0 +1,126 @@
+pyTRLCConverter.dump_converter
+==============================
+
+.. py:module:: pyTRLCConverter.dump_converter
+
+.. autoapi-nested-parse::
+
+   Converter base class which does nothing (besides printing call names in verbose mode.)
+
+   Author: Norbert Schulz (norbert.schulz@newtec.de)
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   pyTRLCConverter.dump_converter.DumpConverter
+
+
+Module Contents
+---------------
+
+.. py:class:: DumpConverter(args: Any)
+
+   Bases: :py:obj:`pyTRLCConverter.base_converter.BaseConverter`
+
+   .. autoapi-inheritance-diagram:: pyTRLCConverter.dump_converter.DumpConverter
+      :parts: 1
+      :private-bases:
+
+
+   Simple converter implementation that just dumps all items.
+
+
+
+   .. py:method:: convert_record_object_generic(record: pyTRLCConverter.trlc_helper.Record_Object, level: int, translation: Optional[dict]) -> pyTRLCConverter.ret.Ret
+
+      Process the given record object in a generic way.
+
+      The handler is called by the base converter if no specific handler is
+      defined for the record type.
+
+      :param record: The record object.
+      :type record: Record_Object
+      :param level: The record level.
+      :type level: int
+      :param _translation: Translation dictionary for the record object.
+                           If None, no translation is applied.
+      :type _translation: Optional[dict]
+
+      :returns: Status
+      :rtype: Ret
+
+
+
+   .. py:method:: convert_section(section: str, level: int) -> pyTRLCConverter.ret.Ret
+
+      Process the given section item.
+
+      :param section: The section name
+      :type section: str
+      :param level: The section indentation level
+      :type level: int
+
+      :returns: Status
+      :rtype: Ret
+
+
+
+   .. py:method:: enter_file(file_name: str) -> pyTRLCConverter.ret.Ret
+
+      Enter a file.
+
+      :param file_name: File name
+      :type file_name: str
+
+      :returns: Status
+      :rtype: Ret
+
+
+
+   .. py:method:: finish() -> pyTRLCConverter.ret.Ret
+
+      Finish the conversion process.
+
+      :returns: Status
+      :rtype: Ret
+
+
+
+   .. py:method:: get_description() -> str
+      :staticmethod:
+
+
+      Return converter description.
+
+      :returns: Converter description
+      :rtype: str
+
+
+
+   .. py:method:: get_subcommand() -> str
+      :staticmethod:
+
+
+      Return subcommand token for this converter.
+
+      :returns: Parser subcommand token
+      :rtype: str
+
+
+
+   .. py:method:: leave_file(file_name: str) -> pyTRLCConverter.ret.Ret
+
+      Leave a file.
+
+      :param file_name: File name
+      :type file_name: str
+
+      :returns: Status
+      :rtype: Ret
+
+
+

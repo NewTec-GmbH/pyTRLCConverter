@@ -1,0 +1,26 @@
+pyTRLCConverter.rst
+===================
+
+.. py:module:: pyTRLCConverter.rst
+
+.. autoapi-nested-parse::
+
+   reStructuredText AST subpackage.
+   Provides the reStructuredText document model (block elements, document
+   container and text helpers) used by the reStructuredText converter.
+
+   Author: Gabryel Reyes (gabryel.reyes@newtec.de)
+
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /api/pyTRLCConverter/rst/document/index
+   /api/pyTRLCConverter/rst/element/index
+   /api/pyTRLCConverter/rst/text/index
+
+

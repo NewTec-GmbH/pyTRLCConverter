@@ -1,0 +1,100 @@
+pyTRLCConverter.markdown.text
+=============================
+
+.. py:module:: pyTRLCConverter.markdown.text
+
+.. autoapi-nested-parse::
+
+   Markdown text helpers.
+   Provides Markdown escaping and inline Markdown string builders.
+
+   Author: Andreas Merkle (andreas.merkle@newtec.de)
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   pyTRLCConverter.markdown.text.MarkdownText
+
+
+Module Contents
+---------------
+
+.. py:class:: MarkdownText
+
+   Utility class providing Markdown text escaping and inline element builders.
+
+
+
+   .. py:method:: colored_text(text: str, color: str, escape: bool = True) -> str
+      :staticmethod:
+
+
+      Create colored text in Markdown.
+      The text will be automatically escaped for Markdown if necessary.
+      There will be no newline appended at the end.
+
+      :param text: Text
+      :type text: str
+      :param color: HTML color
+      :type color: str
+      :param escape: Escapes text (default: True).
+      :type escape: bool
+
+      :returns: Colored text
+      :rtype: str
+
+
+
+   .. py:method:: escape(text: str) -> str
+      :staticmethod:
+
+
+      Escapes the text to be used in a Markdown document.
+
+      :param text: Text to escape
+      :type text: str
+
+      :returns: Escaped text
+      :rtype: str
+
+
+
+   .. py:method:: lf2soft_return(text: str) -> str
+      :staticmethod:
+
+
+      A single LF will be converted to backslash + LF.
+      Use it for paragraphs, but not for headings or tables.
+
+      :param text: Text
+      :type text: str
+
+      :returns: Handled text
+      :rtype: str
+
+
+
+   .. py:method:: link(text: str, url: str, escape: bool = True) -> str
+      :staticmethod:
+
+
+      Create a Markdown link.
+      The text will be automatically escaped for Markdown if necessary.
+      There will be no newline appended at the end.
+
+      :param text: Link text
+      :type text: str
+      :param url: Link URL
+      :type url: str
+      :param escape: Escapes text (default: True).
+      :type escape: bool
+
+      :returns: Markdown link
+      :rtype: str
+
+
+

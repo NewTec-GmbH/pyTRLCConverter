@@ -1,0 +1,126 @@
+pyTRLCConverter.__main__
+========================
+
+.. py:module:: pyTRLCConverter.__main__
+
+.. autoapi-nested-parse::
+
+   The main module with the program entry point.
+   The main task is to convert requirements, diagrams and etc. which are defined
+   by TRLC into markdown format.
+
+   Author: Andreas Merkle (andreas.merkle@newtec.de)
+
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   pyTRLCConverter.__main__.BUILD_IN_CONVERTER_LIST
+   pyTRLCConverter.__main__.PROG_COPYRIGHT
+   pyTRLCConverter.__main__.PROG_DESC
+   pyTRLCConverter.__main__.PROG_EPILOG
+   pyTRLCConverter.__main__.PROG_GITHUB
+   pyTRLCConverter.__main__.PROG_NAME
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   pyTRLCConverter.__main__._create_args_parser
+   pyTRLCConverter.__main__._create_out_folder
+   pyTRLCConverter.__main__._get_project_converter
+   pyTRLCConverter.__main__._setup_converters
+   pyTRLCConverter.__main__._setup_render_configuration
+   pyTRLCConverter.__main__._show_program_arguments
+   pyTRLCConverter.__main__.main
+
+
+Module Contents
+---------------
+
+.. py:function:: _create_args_parser() -> argparse.ArgumentParser
+
+   Creates parser for command line arguments.
+
+   :returns: The parser object for command line arguments.
+   :rtype: argparse.ArgumentParser
+
+
+.. py:function:: _create_out_folder(path: str) -> None
+
+   Create output folder if it doesn't exist.
+
+   :param path: The output folder path which to create.
+   :type path: str
+
+
+.. py:function:: _get_project_converter() -> Optional[pyTRLCConverter.abstract_converter.AbstractConverter]
+
+   Get the project specific converter class from a --project or -p argument.
+
+   :returns: The project specific converter or None if not found.
+   :rtype: AbstractConverter
+
+
+.. py:function:: _setup_converters(args_sub_parser: argparse._SubParsersAction) -> pyTRLCConverter.ret.Ret
+
+   Setup the converters.
+
+   :returns: Status of the setup.
+   :rtype: Ret
+
+
+.. py:function:: _setup_render_configuration(file_name: Optional[str]) -> Optional[pyTRLCConverter.render_config.RenderConfig]
+
+   Setup render configuration.
+
+   :param file_name: File name of the render configuration file.
+   :type file_name: str|None
+
+   :returns: Render configuration or None if render configuration file could not be loaded.
+   :rtype: RenderConfig|None
+
+
+.. py:function:: _show_program_arguments(args: argparse.Namespace) -> None
+
+   Show program arguments in verbose mode to the user.
+
+   :param args: Program arguments
+   :type args: argparse.Namespace
+
+
+.. py:function:: main() -> int
+
+   Main program entry point.
+
+   :returns: Program status
+   :rtype: int
+
+
+.. py:data:: BUILD_IN_CONVERTER_LIST
+
+.. py:data:: PROG_COPYRIGHT
+   :value: 'Copyright (c) 2024 - 2026 NewTec GmbH - ???'
+
+
+.. py:data:: PROG_DESC
+   :value: 'A CLI tool to convert TRLC into different formats.'
+
+
+.. py:data:: PROG_EPILOG
+   :value: 'Copyright (c) 2024 - 2026 NewTec GmbH - ??? - Find the project on GitHub: ???'
+
+
+.. py:data:: PROG_GITHUB
+   :value: 'Find the project on GitHub: ???'
+
+
+.. py:data:: PROG_NAME
+   :value: 'pyTRLCConverter'
+
+

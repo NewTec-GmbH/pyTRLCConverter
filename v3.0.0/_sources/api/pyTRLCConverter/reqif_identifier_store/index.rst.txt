@@ -1,0 +1,95 @@
+pyTRLCConverter.reqif_identifier_store
+======================================
+
+.. py:module:: pyTRLCConverter.reqif_identifier_store
+
+.. autoapi-nested-parse::
+
+   This module implements the persistent ReqIF identifier store.
+
+   The store keeps the identifiers of ReqIF Identifiable elements immutable across
+   consecutive exports by persisting a mapping from a stable logical key to the
+   generated identifier in a JSON file.
+
+   Author: Andreas Merkle (andreas.merkle@newtec.de)
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   pyTRLCConverter.reqif_identifier_store.ReqifIdentifierStore
+
+
+Module Contents
+---------------
+
+.. py:class:: ReqifIdentifierStore
+
+   Persistent store mapping stable logical keys to immutable ReqIF identifiers.
+
+   On the initial conversion the store is empty and identifiers are generated on
+   demand. The mapping can be persisted to a JSON file and loaded again on
+   subsequent conversions so that already known elements keep their identifiers
+   while new elements receive new identifiers.
+
+
+   .. py:method:: get_or_create(key: str, prefix: str) -> str
+
+      Return the stored identifier for the given key or create a new immutable one.
+
+      A new identifier is built from the given prefix and a monotonic counter that
+      never reuses a number, so identifiers stay unique and stable.
+
+      :param key: Stable logical key identifying the ReqIF element.
+      :type key: str
+      :param prefix: Identifier prefix (e.g. ``"spec-object"`` or ``"hierarchy"``).
+      :type prefix: str
+
+      :returns: The immutable identifier associated with the key.
+      :rtype: str
+
+
+
+   .. py:method:: load(file_name: str) -> bool
+
+      Load the identifier store from a JSON file.
+
+      A missing file is treated as the initial conversion and leaves the store
+      empty without reporting an error.
+
+      :param file_name: The name of the JSON file to load.
+      :type file_name: str
+
+      :returns: True if loading succeeded or the file does not exist yet, False on error.
+      :rtype: bool
+
+
+
+   .. py:method:: save(file_name: str) -> bool
+
+      Persist the identifier store to a JSON file.
+
+      :param file_name: The name of the JSON file to write.
+      :type file_name: str
+
+      :returns: True if the file was written successfully, False otherwise.
+      :rtype: bool
+
+
+
+   .. py:attribute:: SCHEMA_VERSION
+      :value: 1
+
+
+
+   .. py:attribute:: _identifiers
+
+
+   .. py:attribute:: _next_id
+      :value: 1
+
+
+

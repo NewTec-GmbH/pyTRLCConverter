@@ -1,0 +1,355 @@
+pyTRLCConverter.rst_converter
+=============================
+
+.. py:module:: pyTRLCConverter.rst_converter
+
+.. autoapi-nested-parse::
+
+   Converter to reStructuredText format.
+
+   Author: Gabryel Reyes (gabryel.reyes@newtec.de)
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   pyTRLCConverter.rst_converter.RstConverter
+
+
+Module Contents
+---------------
+
+.. py:class:: RstConverter(args: Any)
+
+   Bases: :py:obj:`pyTRLCConverter.base_converter.BaseConverter`
+
+   .. autoapi-inheritance-diagram:: pyTRLCConverter.rst_converter.RstConverter
+      :parts: 1
+      :private-bases:
+
+
+   RstConverter provides functionality for converting to a reStructuredText format.
+
+   The converter builds a reStructuredText AST (RstDocument made of block
+   elements) while walking the TRLC symbols and writes the output file(s) only
+   once the document is complete (in leave_file() for multiple-document mode and
+   in finish() for single-document mode).
+
+
+   .. py:method:: _convert_record_object(record: trlc.ast.Record_Object, level: int, translation: Optional[dict]) -> pyTRLCConverter.ret.Ret
+
+      Process the given record object.
+
+      :param record: The record object.
+      :type record: Record_Object
+      :param level: The record level.
+      :type level: int
+      :param translation: Translation dictionary for the record object.
+                          If None, no translation is applied.
+      :type translation: Optional[dict]
+
+      :returns: Status
+      :rtype: Ret
+
+
+
+   .. py:method:: _copy_external_files(dest_dir: str) -> None
+
+      Copy all collected external files to the given destination directory.
+
+      :param dest_dir: Destination directory path.
+      :type dest_dir: str
+
+
+
+   .. py:method:: _create_rst_link_from_record_object_reference(record_reference: trlc.ast.Record_Reference) -> str
+
+      Create a reStructuredText cross-reference from a record reference.
+      It considers the file name, the package name, and the record name.
+
+      :param record_reference: Record reference
+      :type record_reference: Record_Reference
+
+      :returns: reStructuredText cross-reference
+      :rtype: str
+
+
+
+   .. py:method:: _file_name_trlc_to_rst(file_name_trlc: str) -> str
+
+      Convert a TRLC file name to a reStructuredText file name.
+
+      :param file_name_trlc: TRLC file name
+      :type file_name_trlc: str
+
+      :returns: reStructuredText file name
+      :rtype: str
+
+
+
+   .. py:method:: _get_rst_heading_level(level: int) -> int
+
+      Get the reStructuredText heading level from the TRLC object level.
+      Its mandatory to use this method to calculate the reStructuredText heading level.
+      Otherwise in single document mode the top level heading will be wrong.
+
+      :param level: The TRLC object level.
+      :type level: int
+
+      :returns: reStructuredText heading level
+      :rtype: int
+
+
+
+   .. py:method:: _get_trlc_ast_walker() -> pyTRLCConverter.trlc_helper.TrlcAstWalker
+
+      If a record object contains a record reference, the record reference will be converted to
+      a Markdown link.
+      If a record object contains an array of record references, the array will be converted to
+      a reStructuredText list of links.
+      Otherwise the record object fields attribute values will be written to the reStructuredText table.
+
+      :returns: The TRLC AST walker.
+      :rtype: TrlcAstWalker
+
+
+
+   .. py:method:: _on_implicit_null(_: trlc.ast.Implicit_Null) -> str
+
+      Process the given implicit null value.
+
+      :returns: The implicit null value.
+      :rtype: str
+
+
+
+   .. py:method:: _on_record_reference(record_reference: trlc.ast.Record_Reference) -> str
+
+      Process the given record reference value and return a reStructuredText link.
+
+      :param record_reference: The record reference value.
+      :type record_reference: Record_Reference
+
+      :returns: reStructuredText link to the record reference.
+      :rtype: str
+
+
+
+   .. py:method:: _on_string_literal(string_literal: trlc.ast.String_Literal) -> str
+
+      Process the given string literal value.
+
+      :param string_literal: The string literal value.
+      :type string_literal: String_Literal
+
+      :returns: The string literal value.
+      :rtype: str
+
+
+
+   .. py:method:: _other_dispatcher(expression: trlc.ast.Expression) -> str
+
+      Dispatcher for all other expressions.
+
+      :param expression: The expression to process.
+      :type expression: Expression
+
+      :returns: The processed expression.
+      :rtype: str
+
+
+
+   .. py:method:: _render(package_name: str, type_name: str, attribute_name: str, attribute_value: str) -> str
+
+      Render the attribute value depending on its format.
+
+      :param package_name: The package name.
+      :type package_name: str
+      :param type_name: The type name.
+      :type type_name: str
+      :param attribute_name: The attribute name.
+      :type attribute_name: str
+      :param attribute_value: The attribute value.
+      :type attribute_value: str
+
+      :returns: The rendered attribute value.
+      :rtype: str
+
+
+
+   .. py:method:: _write_document(file_name: str) -> pyTRLCConverter.ret.Ret
+
+      Write the current reStructuredText document to the output file.
+
+      :param file_name: The output file name without path.
+      :type file_name: str
+
+      :returns: Status
+      :rtype: Ret
+
+
+
+   .. py:method:: begin() -> pyTRLCConverter.ret.Ret
+
+      Begin the conversion process.
+
+      :returns: Status
+      :rtype: Ret
+
+
+
+   .. py:method:: convert_record_object_generic(record: trlc.ast.Record_Object, level: int, translation: Optional[dict]) -> pyTRLCConverter.ret.Ret
+
+      Process the given record object in a generic way.
+
+      The handler is called by the base converter if no specific handler is
+      defined for the record type.
+
+      :param record: The record object.
+      :type record: Record_Object
+      :param level: The record level.
+      :type level: int
+      :param translation: Translation dictionary for the record object.
+                          If None, no translation is applied.
+      :type translation: Optional[dict]
+
+      :returns: Status
+      :rtype: Ret
+
+
+
+   .. py:method:: convert_section(section: str, level: int) -> pyTRLCConverter.ret.Ret
+
+      Process the given section item.
+      It will create a reStructuredText heading with the given section name and level.
+
+      :param section: The section name
+      :type section: str
+      :param level: The section indentation level
+      :type level: int
+
+      :returns: Status
+      :rtype: Ret
+
+
+
+   .. py:method:: enter_file(file_name: str) -> pyTRLCConverter.ret.Ret
+
+      Enter a file.
+
+      :param file_name: File name
+      :type file_name: str
+
+      :returns: Status
+      :rtype: Ret
+
+
+
+   .. py:method:: finish()
+
+      Finish the conversion process.
+
+      :returns: Status
+      :rtype: Ret
+
+
+
+   .. py:method:: get_description() -> str
+      :staticmethod:
+
+
+      Return converter description.
+
+      :returns: Converter description
+      :rtype: str
+
+
+
+   .. py:method:: get_subcommand() -> str
+      :staticmethod:
+
+
+      Return subcommand token for this converter.
+
+      :returns: Parser subcommand token
+      :rtype: str
+
+
+
+   .. py:method:: leave_file(file_name: str) -> pyTRLCConverter.ret.Ret
+
+      Leave a file.
+
+      :param file_name: File name
+      :type file_name: str
+
+      :returns: Status
+      :rtype: Ret
+
+
+
+   .. py:method:: register(args_parser: Any) -> None
+      :classmethod:
+
+
+      Register converter specific argument parser.
+
+      :param args_parser: Argument parser
+      :type args_parser: Any
+
+
+
+   .. py:attribute:: OUTPUT_FILE_NAME_DEFAULT
+      :value: 'output.rst'
+
+
+
+   .. py:attribute:: TOP_LEVEL_DEFAULT
+      :value: 'Specification'
+
+
+
+   .. py:attribute:: _ast_meta_data
+      :value: None
+
+
+
+   .. py:attribute:: _base_level
+      :value: 1
+
+
+
+   .. py:attribute:: _current_file_name
+      :value: ''
+
+
+
+   .. py:attribute:: _document
+      :type:  Optional[pyTRLCConverter.rst.document.RstDocument]
+      :value: None
+
+
+
+   .. py:attribute:: _excluded_paths
+      :value: []
+
+
+
+   .. py:attribute:: _external_files
+      :type:  list
+      :value: []
+
+
+
+   .. py:attribute:: _out_path
+
+
+   .. py:attribute:: _plantuml_tmp_dir
+      :type:  Optional[tempfile.TemporaryDirectory]
+      :value: None
+
+
+
