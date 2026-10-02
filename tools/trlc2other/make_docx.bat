@@ -40,7 +40,7 @@ if not exist "%OUTPUT_DIR%" (
 
 %TRLC_CONVERTER% --source=..\..\trlc\swe-req --include=..\..\trlc\model --verbose --out=%OUTPUT_DIR% --project=%CONVERTER% --translation=%TRANSLATION% --renderCfg=%RENDER_CFG% %OUT_FORMAT% --template=%TEMPLATE% || goto :error
 
-%TRLC_CONVERTER% --source=..\..\trlc\swe-arch --include=..\..\trlc\model --include=..\..\trlc\swe-req --exclude=..\..\trlc\swe-req --verbose --out=%OUTPUT_DIR% --project=%CONVERTER% --translation=%TRANSLATION% %OUT_FORMAT% || goto :error
+%TRLC_CONVERTER% --source=..\..\trlc\swe-arch --include=..\..\trlc\model --include=..\..\trlc\swe-req --exclude=..\..\trlc\swe-req --verbose --out=%OUTPUT_DIR% --project=%CONVERTER% --translation=%TRANSLATION% %OUT_FORMAT% --renderCfg=%RENDER_CFG% --template=%TEMPLATE% || goto :error
 
 goto finished
 

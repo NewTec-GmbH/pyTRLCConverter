@@ -15,6 +15,70 @@ class RstConverter extends BaseConverter {
     +finish() : Ret
 }
 
+note right of RstConverter
+    Builds a reStructuredText AST (RstDocument)
+    while walking the TRLC symbols and writes
+    the output file(s) only once the document
+    is complete:
+    * leave_file()  -> multiple-document mode
+    * finish()      -> single-document mode
+end note
+
+package "reStructuredText AST" {
+
+    abstract class RstElement {
+        +{abstract} render() : str
+    }
+
+    class RstHeading extends RstElement {
+        +render() : str
+    }
+    class RstAdmonition extends RstElement {
+        +render() : str
+    }
+    class RstTable extends RstElement {
+        +render() : str
+    }
+    class RstBulletList extends RstElement {
+        +render() : str
+    }
+    class RstImage extends RstElement {
+        +render() : str
+    }
+    class RstRawText extends RstElement {
+        +render() : str
+    }
+
+    class RstDocument {
+        +add(element: RstElement) : None
+        +is_empty() : bool
+        +render() : str
+    }
+
+    class RstText <<utility>> {
+        +{static} escape(text: str) : str
+        +{static} link(text: str, target: str, escape: bool) : str
+        +{static} role(text: str, role: str, escape: bool) : str
+    }
+
+    note bottom of RstDocument
+        render() concatenates the block
+        elements, separating consecutive
+        blocks by a single blank line.
+    end note
+
+    RstDocument o-- "0..*" RstElement
+    RstHeading ..> RstText
+    RstAdmonition ..> RstText
+    RstTable ..> RstText
+    RstImage ..> RstText
+    RstBulletList ..> RstText
+}
+
+RstConverter *-- RstDocument
+RstConverter ..> RstElement : builds
+RstConverter ..> RstText
+
 ' Define external dependencies
 package "Dependencies" {
 

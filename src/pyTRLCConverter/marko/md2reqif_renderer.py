@@ -62,8 +62,6 @@ class Md2ReqifRenderer(HTMLRenderer):
     external_files: Optional[list] = None
 
     def render_fenced_code(self, element: "block.FencedCode") -> str:
-        # lobster-trace: SwRequirements.sw_req_reqif_render_md
-        # lobster-trace: SwRequirements.sw_req_plantuml
         """Render a fenced code block as ReqIF XHTML.
 
         If the language tag is ``plantuml``, the diagram source is rendered as
@@ -83,8 +81,6 @@ class Md2ReqifRenderer(HTMLRenderer):
         return super().render_fenced_code(element)
 
     def _render_plantuml(self, diagram_source: str) -> str:
-        # lobster-trace: SwRequirements.sw_req_reqif_render_md
-        # lobster-trace: SwRequirements.sw_req_plantuml
         """Render a PlantUML diagram as an embedded SVG reference.
 
         Generates SVG bytes via the PlantUML tool, writes them to a temporary

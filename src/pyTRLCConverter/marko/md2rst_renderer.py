@@ -128,8 +128,6 @@ class Md2RstRenderer(Renderer):
         return quoted + "\n\n"
 
     def render_fenced_code(self, element: block.FencedCode) -> str:
-        # lobster-trace: SwRequirements.sw_req_rst_render_md
-        # lobster-trace: SwRequirements.sw_req_plantuml
         """Render a fenced code block as reStructuredText.
 
         If the language tag is ``plantuml``, the diagram source is rendered as
@@ -152,8 +150,6 @@ class Md2RstRenderer(Renderer):
         return f".. code-block:: {lang}\n\n    " + "\n    ".join(code.splitlines()) + "\n\n"
 
     def _render_plantuml(self, diagram_source: str) -> str:
-        # lobster-trace: SwRequirements.sw_req_rst_render_md
-        # lobster-trace: SwRequirements.sw_req_plantuml
         """Render a PlantUML diagram as a PNG image reference.
 
         Generates SVG bytes via the PlantUML tool, writes them to a temporary

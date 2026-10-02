@@ -24,6 +24,8 @@ from typing import Optional, Any
 from pyTRLCConverter.base_converter import RecordsPolicy
 from pyTRLCConverter.ret import Ret
 from pyTRLCConverter.markdown_converter import MarkdownConverter
+from pyTRLCConverter.markdown.element import Heading, Table
+from pyTRLCConverter.markdown.text import MarkdownText
 from pyTRLCConverter.trlc_helper import Record_Object
 
 # Variables ********************************************************************
@@ -73,11 +75,9 @@ class CustomMarkdownConverter(MarkdownConverter):
             Ret: Status
         """
         assert len(section) > 0
-        assert self._fd is not None
+        assert self._document is not None
 
-        self._write_empty_line_on_demand()
-        markdown_heading = self.markdown_create_heading(section, self._get_markdown_heading_level(level))
-        self._fd.write(markdown_heading)
+        self._document.add(Heading(section, self._get_markdown_heading_level(level)))
 
         return Ret.OK
 
@@ -94,7 +94,7 @@ class CustomMarkdownConverter(MarkdownConverter):
         Returns:
            Ret: Status
         """
-        assert self._fd is not None
+        assert self._document is not None
 
         test_case_result_attributes = test_case_result.to_python_dict()
 
@@ -103,33 +103,31 @@ class CustomMarkdownConverter(MarkdownConverter):
 
         test_case = test_case_result_attributes["relates"]
         if test_case is None:
-            test_case = self.markdown_escape("N/A")
+            test_case = MarkdownText.escape("N/A")
         elif isinstance(test_case, list):
             test_case_links = []
             for tc in test_case:
                 anchor_tag = "#" + tc.replace("SwTests.", "").lower()
                 anchor_tag = anchor_tag.replace(" ", "-")
-                test_case_links.append(self.markdown_create_link(tc, anchor_tag))
+                test_case_links.append(MarkdownText.link(tc, anchor_tag))
 
             test_case = ", ".join(test_case_links)
         else:
             anchor_tag = "#" + test_case.replace("SwTests.", "").lower()
             anchor_tag = anchor_tag.replace(" ", "-")
 
-            test_case = self.markdown_create_link(test_case, anchor_tag)
+            test_case = MarkdownText.link(test_case, anchor_tag)
 
-        test_function_name = self.markdown_escape(test_function_name)
+        test_function_name = MarkdownText.escape(test_function_name)
 
         if test_result == "PASSED":
-            test_result = self.markdown_text_color(test_result, "color:lightgreen")
+            test_result = MarkdownText.colored_text(test_result, "color:lightgreen")
         elif test_result == "FAILED":
-            test_result = self.markdown_text_color(test_result, "color:red")
+            test_result = MarkdownText.colored_text(test_result, "color:red")
 
         row = [test_case, test_function_name, test_result]
 
-        markdown_table = self.markdown_create_table(["Test Case", "Test Function", "Test Result"], [row])
-
-        self._fd.write(markdown_table)
+        self._document.add(Table(["Test Case", "Test Function", "Test Result"], [row]))
 
         return Ret.OK
 

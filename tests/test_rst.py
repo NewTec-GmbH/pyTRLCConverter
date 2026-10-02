@@ -22,11 +22,12 @@
 import os
 from unittest.mock import patch
 
-from argparse import Namespace
 from collections import namedtuple
 
 from pyTRLCConverter.__main__ import main
 from pyTRLCConverter.rst_converter import RstConverter
+from pyTRLCConverter.rst.element import RstHeading, RstAdmonition, RstTable, RstBulletList, RstImage
+from pyTRLCConverter.rst.text import RstText
 
 # Variables ********************************************************************
 
@@ -139,20 +140,15 @@ def test_tc_rst_section(record_property, capsys, monkeypatch, tmp_path):
         assert lines[17] == "    | description    | Test description |\n"
         assert lines[18] == "    +----------------+------------------+\n"
 
-def test_tc_rst_escape(record_property, tmp_path):
+def test_tc_rst_escape(record_property):
     # lobster-trace: SwTests.tc_rst_escape
     """
     The reStructuredText converter shall support reStructuredText escaping.
 
     Args:
         record_property (Any): Used to inject the test case reference into the test results.
-        capsys (Any): Used to capture stdout and stderr.
-        monkeypatch (Any): Used to mock program arguments.
-        tmp_path (Path): Used to create a temporary output directory.
     """
     record_property("lobster-trace", "SwTests.tc_rst_escape")
-
-    rst_converter = RstConverter(Namespace(out=str(tmp_path), exclude=None))
 
     # Escaping rules see https://docutils.sourceforge.io/docs/ref/rst/restructuredtext.html#escaping-mechanism
     EscapingResult = namedtuple("EscapingResult", ["initial", "escaped"])
@@ -164,199 +160,167 @@ def test_tc_rst_escape(record_property, tmp_path):
     ]
 
     for check in checks:
-        assert rst_converter.rst_escape(check.initial) == check.escaped
+        assert RstText.escape(check.initial) == check.escaped
 
-def test_tc_rst_heading(record_property, tmp_path):
+def test_tc_rst_heading(record_property):
     # lobster-trace: SwTests.tc_rst_heading
     """
     The reStructuredText converter shall provide a function to create reStructuredText headings.
 
     Args:
         record_property (Any): Used to inject the test case reference into the test results.
-        capsys (Any): Used to capture stdout and stderr.
-        monkeypatch (Any): Used to mock program arguments.
-        tmp_path (Path): Used to create a temporary output directory.
     """
     record_property("lobster-trace", "SwTests.tc_rst_heading")
-
-    rst_converter = RstConverter(Namespace(out=str(tmp_path), exclude=None))
 
     # Test the heading function. Levels 1-6 need to be supported.
     underline_chars = ["=", "#", "~", "^", "\"", "+", "'"]
 
     for level, underline_char in enumerate(underline_chars):
-        lines = rst_converter.rst_create_heading("Heading", level + 1, "test.rst").split('\n')
+        lines = RstHeading("Heading", level + 1, "test.rst").render().split('\n')
         assert lines[0] == ".. _test.rst-heading:" # Label
         assert lines[1] == ""
         assert lines[2] == "Heading"
         assert lines[3] == underline_char * len("Heading")
 
     # Invalid level shall return a empty string.
-    assert rst_converter.rst_create_heading("Heading", 0, "test.rst") == ""
-    assert rst_converter.rst_create_heading("Heading", 8, "test.rst") == ""
+    assert RstHeading("Heading", 0, "test.rst").render() == ""
+    assert RstHeading("Heading", 8, "test.rst").render() == ""
 
-def test_tc_rst_admonition(record_property, tmp_path):
+def test_tc_rst_admonition(record_property):
     # lobster-trace: SwTests.tc_rst_admonition
     """
     The reStructuredText converter shall provide a function to create reStructuredText admonition.
 
     Args:
         record_property (Any): Used to inject the test case reference into the test results.
-        capsys (Any): Used to capture stdout and stderr.
-        monkeypatch (Any): Used to mock program arguments.
-        tmp_path (Path): Used to create a temporary output directory.
     """
     record_property("lobster-trace", "SwTests.tc_rst_admonition")
 
-    rst_converter = RstConverter(Namespace(out=str(tmp_path), exclude=None))
-
     # Test the admonition function.
-    lines = rst_converter.rst_create_admonition("Test text", "test.rst").split('\n')
+    lines = RstAdmonition("Test text", "test.rst").render().split('\n')
     assert lines[0] == ".. _test.rst-test-text:" # Label
     assert lines[1] == ""
     assert lines[2] == ".. admonition:: Test text"
 
-def test_tc_rst_table(record_property, tmp_path):
+def test_tc_rst_table(record_property):
     # lobster-trace: SwTests.tc_rst_table
     """
     The reStructuredText converter shall provide the functionality to create reStructuredText tables.
 
     Args:
         record_property (Any): Used to inject the test case reference into the test results.
-        capsys (Any): Used to capture stdout and stderr.
-        monkeypatch (Any): Used to mock program arguments.
-        tmp_path (Path): Used to create a temporary output directory.
     """
     record_property("lobster-trace", "SwTests.tc_rst_table")
 
-    rst_converter = RstConverter(Namespace(out=str(tmp_path), exclude=None))
-
-    # Create a table head.
+    # Create a table with a head and two rows. The column width is driven by the
+    # widest cell content of each column.
     headers = ["Header1", "Header2"]
-    max_widths = [len(header) for header in headers]
-    table = rst_converter.rst_create_table_head(headers, max_widths)
-    table_lines = table.split('\n')
+    rows = [["Value1", "Value2"], ["Value3", "Value4"]]
+    table_lines = RstTable(headers, rows).render().split('\n')
+
+    # Table head.
     assert table_lines[0] == "    +---------+---------+"
     assert table_lines[1] == "    | Header1 | Header2 |"
     assert table_lines[2] == "    +=========+=========+"
 
-    # Create a table row.
-    row = ["Value1", "Value2"]
-    table = rst_converter.rst_append_table_row(row, max_widths)
-    table_lines = table.split('\n')
-    assert table_lines[0] == "    | Value1  | Value2  |"
-    assert table_lines[1] == "    +---------+---------+"
+    # First table row.
+    assert table_lines[3] == "    | Value1  | Value2  |"
+    assert table_lines[4] == "    +---------+---------+"
 
-    row = ["Value3", "Value4"]
-    table = rst_converter.rst_append_table_row(row, max_widths)
-    table_lines = table.split('\n')
-    assert table_lines[0] == "    | Value3  | Value4  |"
-    assert table_lines[1] == "    +---------+---------+"
+    # Second table row.
+    assert table_lines[5] == "    | Value3  | Value4  |"
+    assert table_lines[6] == "    +---------+---------+"
 
-def test_tc_rst_list(record_property, tmp_path):
+def test_tc_rst_list(record_property):
     # lobster-trace: SwTests.tc_rst_list
     """
     The reStructuredText converter shall provide the functionality to create reStructuredText lists.
 
     Args:
         record_property (Any): Used to inject the test case reference into the test results.
-        tmp_path (Path): Used to create a temporary output directory.
     """
     record_property("lobster-trace", "SwTests.tc_rst_list")
 
-    rst_converter = RstConverter(Namespace(out=str(tmp_path), exclude=None))
-
     # Create a list with items.
     items = ["Item1", "Item2!", "Item3"]
-    list_output = rst_converter.rst_create_list(items, escape=True)
+    list_output = RstBulletList(items, escape=True).render()
     assert list_output == "* Item1\n* Item2\\!\n* Item3"
 
-def test_tc_rst_link(record_property, tmp_path):
+    # Without escaping the values are taken as is.
+    assert RstBulletList([":ref:`a <x>`", ":ref:`b <y>`"], escape=False).render() == \
+        "* :ref:`a <x>`\n* :ref:`b <y>`"
+
+def test_tc_rst_link(record_property):
     # lobster-trace: SwTests.tc_rst_link
     """
     The reStructuredText converter shall provide the functionality to create reStructuredText links.
 
     Args:
         record_property (Any): Used to inject the test case reference into the test results.
-        tmp_path (Path): Used to create a temporary output directory.
     """
     record_property("lobster-trace", "SwTests.tc_rst_link")
 
-    rst_converter = RstConverter(Namespace(out=str(tmp_path), exclude=None))
-
-    # Create a reStructuredText link. Escaoubg should only apply to the text, not the url.
-    assert rst_converter.rst_create_link("Link Text", "http://example.com") == \
+    # Create a reStructuredText link. Escaping should only apply to the text, not the url.
+    assert RstText.link("Link Text", "http://example.com") == \
         ":ref:`Link Text <http://example.com>`"
-    assert rst_converter.rst_create_link("Another Link", "https://example.org") == \
+    assert RstText.link("Another Link", "https://example.org") == \
         ":ref:`Another Link <https://example.org>`"
-    assert rst_converter.rst_create_link("Special Characters", "http://example.com/path?query=1&other=2") == \
+    assert RstText.link("Special Characters", "http://example.com/path?query=1&other=2") == \
         ":ref:`Special Characters <http://example.com/path?query=1&other=2>`"
-    assert rst_converter.rst_create_link("Special Characters", "http://example.com/path%20with%20spaces", \
+    assert RstText.link("Special Characters", "http://example.com/path%20with%20spaces", \
         escape=True) == \
         ":ref:`Special Characters <http://example.com/path%20with%20spaces>`"
-    assert rst_converter.rst_create_link("Link with special characters!", "http://example.com") == \
+    assert RstText.link("Link with special characters!", "http://example.com") == \
         r":ref:`Link with special characters\! <http://example.com>`"
-    assert rst_converter.rst_create_link("Link with special characters!", "http://example.com", escape=False) == \
+    assert RstText.link("Link with special characters!", "http://example.com", escape=False) == \
         ":ref:`Link with special characters! <http://example.com>`"
 
-def test_tc_rst_image(record_property, tmp_path):
+def test_tc_rst_image(record_property):
     # lobster-trace: SwTests.tc_rst_image
     """
     The reStructuredText converter shall provide the functionality to embed images in reStructuredText.
 
     Args:
         record_property (Any): Used to inject the test case reference into the test results.
-        tmp_path (Path): Used to create a temporary output directory.
     """
     record_property("lobster-trace", "SwTests.tc_rst_image")
 
-    rst_converter = RstConverter(Namespace(out=str(tmp_path), exclude=None))
-
     # Create a reStructuredText diagram link. Absolute and relative paths shall be supported.
     diagram_path = "/diagram.png"
-    assert rst_converter.rst_create_diagram_link(
-        f"{diagram_path}",
-        "Caption") == \
+    assert RstImage(f"{diagram_path}", "Caption").render() == \
         f".. figure:: {os.path.normpath(diagram_path)}\n    :alt: Caption\n\n    Caption\n"
 
     diagram_path = "diagram.png"
-    assert rst_converter.rst_create_diagram_link(
-        f"{diagram_path}",
-        "Caption") == \
+    assert RstImage(f"{diagram_path}", "Caption").render() == \
         f".. figure:: {os.path.normpath(diagram_path)}\n    :alt: Caption\n\n    Caption\n"
 
     diagram_path = "./graph.jpg"
-    assert rst_converter.rst_create_diagram_link(
-        "./graph.jpg",
-        "Caption with special characters!") == \
+    assert RstImage("./graph.jpg", "Caption with special characters!").render() == \
         f".. figure:: {os.path.normpath(diagram_path)}\n    :alt: Caption with special characters\\!\n\n    Caption with special characters\\!\n" # pylint: disable=line-too-long
 
     diagram_path = "./I/am/nested.png"
-    assert rst_converter.rst_create_diagram_link(
+    assert RstImage(
         "./I/am/nested.png",
         "Caption with special characters!",
-        escape=False) == \
+        escape=False).render() == \
         f".. figure:: {os.path.normpath(diagram_path)}\n    :alt: Caption with special characters!\n\n    Caption with special characters!\n" # pylint: disable=line-too-long
 
-def test_tc_rst_role(record_property, tmp_path):
+def test_tc_rst_role(record_property):
     # lobster-trace: SwTests.tc_rst_role
     """
     The reStructuredText converter shall provide the functionality to create reStructuredText role text output.
 
     Args:
         record_property (Any): Used to inject the test case reference into the test results.
-        tmp_path (Path): Used to create a temporary output directory.
     """
     record_property("lobster-trace", "SwTests.tc_rst_role")
 
-    rst_converter = RstConverter(Namespace(out=str(tmp_path), exclude=None))
-
-    # Test colored text output. HTML span element with style attribute should be used.
-    assert rst_converter.rst_role("Text", "red") == ":red:`Text`"
-    assert rst_converter.rst_role("Text", "green") == ":green:`Text`"
-    assert rst_converter.rst_role("Text", "blue") == ":blue:`Text`"
-    assert rst_converter.rst_role("!Text!", "yellow") == ":yellow:`\\!Text\\!`"
-    assert rst_converter.rst_role("!Text!", "bad", escape=False) == ":bad:`!Text!`"
+    # Test role text output.
+    assert RstText.role("Text", "red") == ":red:`Text`"
+    assert RstText.role("Text", "green") == ":green:`Text`"
+    assert RstText.role("Text", "blue") == ":blue:`Text`"
+    assert RstText.role("!Text!", "yellow") == ":yellow:`\\!Text\\!`"
+    assert RstText.role("!Text!", "bad", escape=False) == ":bad:`!Text!`"
 
 def test_tc_rst_out_folder(record_property, capsys, monkeypatch, tmp_path):
     # lobster-trace: SwTests.tc_rst_out_folder

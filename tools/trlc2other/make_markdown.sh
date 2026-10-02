@@ -36,10 +36,10 @@ else
     rm -rf "$OUTPUT_DIR"/*
 fi
 
-$TRLC_CONVERTER  --source=../../trlc/swe-req --include=../../trlc/model --verbose --out="$OUTPUT_DIR" --project="$CONVERTER" --translation="$TRANSLATION" --renderCfg="$RENDERER_CFG" "$OUT_FORMAT"
-$TRLC_CONVERTER --source=../../trlc/swe-arch --include=../../trlc/model --include=../../trlc/swe-req --exclude=../../trlc/swe-req --verbose --out="$OUTPUT_DIR" --project="$CONVERTER" --translation="$TRANSLATION" "$OUT_FORMAT"
+$TRLC_CONVERTER --source=../../trlc/swe-req --include=../../trlc/model --verbose --out="$OUTPUT_DIR" --project="$CONVERTER" --translation="$TRANSLATION" --renderCfg="$RENDERER_CFG" "$OUT_FORMAT"
+$TRLC_CONVERTER --source=../../trlc/swe-arch --include=../../trlc/model --include=../../trlc/swe-req --exclude=../../trlc/swe-req --verbose --out="$OUTPUT_DIR" --project="$CONVERTER" --translation="$TRANSLATION" --renderCfg="$RENDERER_CFG" "$OUT_FORMAT"
 
 
 CONVERTER=converter/tc2markdown.py
 
-$TRLC_CONVERTER --source=../../trlc/swe-test --include=../../trlc/model --include=../../trlc/swe-req --exclude=../../trlc/swe-req --verbose --out="$OUTPUT_DIR" --project="$CONVERTER" --translation="$TRANSLATION" "$OUT_FORMAT"
+$TRLC_CONVERTER --source=../../trlc/swe-test --include=../../trlc/model --include=../../trlc/swe-req --exclude=../../trlc/swe-req --verbose --out="$OUTPUT_DIR" --project="$CONVERTER" --translation="$TRANSLATION" --renderCfg="$RENDERER_CFG" "$OUT_FORMAT"

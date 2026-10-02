@@ -117,13 +117,16 @@ jobs:
       - name: Deploy version selector data (only for releases) to GitHub Pages
         if: ${{ github.event_name == 'release' }}
         id: deploy_version_selector_data
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          publish_branch: gh-pages
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./tools/deployDoc/build/html/_static
-          exclude_assets: '!version_selector_data.js' # Exclude all files and directories except version_selector_data.js.
-          destination_dir: ./versions
+        run: |
+          git config --global user.name 'GitHub Action'
+          git config --global user.email 'action@github.com'
+          git checkout gh-pages  # untracked files from documentation generation unaffected by checkout.
+          rm -rf ./versions/*
+          cp ./tools/deployDoc/build/html/_static/version_selector_data.js ./versions/version_selector_data.js
+          git add versions
+          git diff-index --quiet HEAD || git commit -m "Update version selector data for release ${{ github.event.release.tag_name }}"
+          git push origin gh-pages
+          git checkout main
 
   # Build the package distribution and upload it as a workflow artifact.
   build-dist:

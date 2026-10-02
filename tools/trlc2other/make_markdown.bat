@@ -39,11 +39,11 @@ if not exist "%OUTPUT_DIR%" (
 
 %TRLC_CONVERTER% --source=..\..\trlc\swe-req --include=..\..\trlc\model --verbose --out=%OUTPUT_DIR% --project=%CONVERTER% --translation=%TRANSLATION% --renderCfg=%RENDERER_CFG% %OUT_FORMAT% || goto :error
 
-%TRLC_CONVERTER% --source=..\..\trlc\swe-arch --include=..\..\trlc\model --include=..\..\trlc\swe-req --exclude=..\..\trlc\swe-req --verbose --out=%OUTPUT_DIR% --project=%CONVERTER% --translation=%TRANSLATION% %OUT_FORMAT% || goto :error
+%TRLC_CONVERTER% --source=..\..\trlc\swe-arch --include=..\..\trlc\model --include=..\..\trlc\swe-req --exclude=..\..\trlc\swe-req --verbose --out=%OUTPUT_DIR% --project=%CONVERTER% --translation=%TRANSLATION% --renderCfg=%RENDERER_CFG% %OUT_FORMAT% || goto :error
 
 set CONVERTER=converter/tc2markdown.py
 
-%TRLC_CONVERTER%  --source=..\..\trlc\swe-test --include=..\..\trlc\model --include=..\..\trlc\swe-req --exclude=..\..\trlc\swe-req --verbose --out=%OUTPUT_DIR% --project=%CONVERTER% --translation=%TRANSLATION% %OUT_FORMAT% || goto :error
+%TRLC_CONVERTER%  --source=..\..\trlc\swe-test --include=..\..\trlc\model --include=..\..\trlc\swe-req --exclude=..\..\trlc\swe-req --verbose --out=%OUTPUT_DIR% --project=%CONVERTER% --translation=%TRANSLATION% --renderCfg=%RENDERER_CFG% %OUT_FORMAT% || goto :error
 
 goto finished
 

@@ -28,6 +28,8 @@ from pyTRLCConverter.ret import Ret
 from pyTRLCConverter.plantuml import PlantUML
 
 from pyTRLCConverter.markdown_converter import MarkdownConverter
+from pyTRLCConverter.markdown.element import Heading, Image, Table
+from pyTRLCConverter.markdown.text import MarkdownText
 from pyTRLCConverter.trlc_helper import Record_Object
 
 # Variables ********************************************************************
@@ -52,7 +54,6 @@ class ExamplePlantumlMarkdownConverter(MarkdownConverter):
         self._set_project_record_handlers(
             {
                 "PlantUML": self._print_diagram,
-                "Requirement": self._print_req
             }
         )
         self._record_policy = RecordsPolicy.RECORD_CONVERT_ALL
@@ -67,7 +68,7 @@ class ExamplePlantumlMarkdownConverter(MarkdownConverter):
         return "Convert into project extended markdown format."
 
     # pylint: disable-next=unused-argument
-    def _print_diagram(self, diagram: Record_Object, level: int) -> Ret:
+    def _print_diagram(self, diagram: Record_Object, level: int, translation: Optional[dict]) -> Ret:
         """Prints the diagram.
 
         Args:
@@ -77,7 +78,7 @@ class ExamplePlantumlMarkdownConverter(MarkdownConverter):
         Returns:
             Ret: Status
         """
-        assert self._fd is not None
+        assert self._document is not None
 
         plantuml_generator = PlantUML()
         image_format = "png"
@@ -120,31 +121,7 @@ class ExamplePlantumlMarkdownConverter(MarkdownConverter):
             shutil.copy(full_file_path, self._args.out)
             file_dst_path = os.path.basename(full_file_path)
 
-        markdown_image = self.markdown_create_diagram_link(
-            file_dst_path, caption)
-        self._fd.write(markdown_image)
-
-        return Ret.OK
-
-    def _print_req(self, req: Record_Object, level: int) -> Ret:
-        """Prints the requirement.
-
-        Args:
-            req (Record_Object): Requirement to print
-            level (int): Current level of the record object
-
-        Returns:
-            Ret: Status
-        """
-        assert self._fd is not None
-
-        description = self._get_attribute(req, "description")
-
-        markdown_heading = self.markdown_create_heading(req.name, level + 1)
-        markdown_description = self.markdown_escape(description)
-        markdown_table = self.markdown_create_table(["Attribute", "Value"], [["Description", markdown_description]])
-
-        self._fd.write(f"{markdown_heading}\n{markdown_table}\n")
+        self._document.add(Image(file_dst_path, caption))
 
         return Ret.OK
 
