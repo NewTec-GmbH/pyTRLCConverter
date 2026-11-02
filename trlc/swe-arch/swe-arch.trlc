@@ -368,6 +368,7 @@ section "SW Architecture" {
                     SwRequirements.sw_req_rst_sd_top_level_custom,
                     SwRequirements.sw_req_rst_render_md,
                     SwRequirements.sw_req_rst_render_gfm,
+                    SwRequirements.sw_req_rst_render_list,
                     SwRequirements.sw_req_rst_render_plantuml,
                     SwRequirements.sw_req_destination_format
                 ]

@@ -310,6 +310,12 @@ section "SW Test Cases" {
             verifies = [SwRequirements.sw_req_rst_render_gfm]
         }
 
+        SwTestCase tc_rst_render_list {
+            description = '''This test case checks whether wrapped, nested, ordered and multi paragraph Markdown list items
+             are converted into reStructuredText list items, which keep their whole content, for CommonMark and GFM.'''
+            verifies = [SwRequirements.sw_req_rst_render_list]
+        }
+
         SwTestCase tc_rst_render_plantuml {
             description = '''This test case checks whether a fenced ```plantuml``` code block inside a Markdown requirement attribute is
              rendered as a reStructuredText ``.. image::`` directive referencing an SVG file written to the output folder.'''
