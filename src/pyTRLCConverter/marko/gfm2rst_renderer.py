@@ -36,6 +36,7 @@ if TYPE_CHECKING:
 # pylint: disable-next=too-many-public-methods
 class Gfm2RstRenderer(Md2RstRenderer):
     # lobster-trace: SwRequirements.sw_req_rst_render_gfm
+    # lobster-trace: SwRequirements.sw_req_rst_render_list
     # lobster-trace: SwRequirements.sw_req_rst_render_plantuml
     # lobster-trace: SwRequirements.sw_req_plantuml
     """Renderer for reStructuredText output.
@@ -57,7 +58,6 @@ class Gfm2RstRenderer(Md2RstRenderer):
         Returns:
             str: The rendered list item as a string.
         """
-        indent = 2
         content = self.render_children(element)
 
         # GitHub Flavored Markdown task-list items expose a "checked" flag in the paragraph node.
@@ -70,7 +70,7 @@ class Gfm2RstRenderer(Md2RstRenderer):
             elif checked is False:
                 content = "[ ] " + content.lstrip()
 
-        return f"{' ' * indent * (self._list_indent_level - 1)}{marker} {content}"
+        return self._indent_list_item(marker, content)
 
     def render_table(self, element: Any) -> str:
         """Renders a GitHub Flavored Markdown table as a reStructuredText grid table.

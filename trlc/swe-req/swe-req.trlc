@@ -490,6 +490,12 @@ section "SW Requirements" {
                     valid_status = AbstractRequirements.VALID_STATUS.valid
                 }
 
+                SwReq sw_req_rst_render_list {
+                    description = "The software shall keep the whole content of a Markdown list item inside the list item when converting it to reStructuredText, including continuation lines, nested lists and further paragraphs."
+                    verification_criteria = "Verify by converting Markdown lists with wrapped, nested, ordered and multi paragraph items and checking the indentation of the reStructuredText output."
+                    valid_status = AbstractRequirements.VALID_STATUS.valid
+                }
+
                 SwReq sw_req_rst_render_plantuml {
                     description = "The software shall render fenced code blocks tagged `plantuml` inside Markdown (CommonMark or GFM) requirement attributes as SVG images in the reStructuredText output. The generated SVG file shall be copied to the output folder and referenced via a `.. image::` directive. If PlantUML is not available, the block shall be replaced by a `[PlantUML error: ...]` paragraph instead of failing the conversion."
                     verification_criteria = "Verify that a Markdown requirement attribute containing a fenced ```plantuml``` code block produces a reStructuredText `.. image::` directive referencing an SVG file present in the output folder, and that omitting the PlantUML configuration yields a `[PlantUML error: ...]` paragraph."
