@@ -23,7 +23,7 @@ Author: Andreas Merkle (andreas.merkle@newtec.de)
 # Imports **********************************************************************
 import json
 from typing import Dict, Optional
-from pyTRLCConverter.logger import log_verbose
+from pyTRLCConverter.logger import log_error, log_verbose
 
 # Variables ********************************************************************
 
@@ -63,7 +63,7 @@ class Translator():
             status = True
 
         except FileNotFoundError as e:
-            log_verbose(f"Failed to load file {file_name}: {e}")
+            log_error(f"Failed to load file {file_name}: {e}")
 
         return status
 
