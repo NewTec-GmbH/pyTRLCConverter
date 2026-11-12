@@ -39,6 +39,7 @@ if TYPE_CHECKING:
 # pylint: disable-next=too-many-public-methods
 class Md2RstRenderer(Renderer):
     # lobster-trace: SwRequirements.sw_req_rst_render_md
+    # lobster-trace: SwRequirements.sw_req_rst_render_list
     # lobster-trace: SwRequirements.sw_req_rst_render_plantuml
     # lobster-trace: SwRequirements.sw_req_plantuml
     """Renderer for reStructuredText output.
@@ -53,13 +54,6 @@ class Md2RstRenderer(Renderer):
 
     # List of ``(source_path, local_name)`` tuples collected during rendering.
     external_files: Optional[list] = None
-
-    def __init__(self) -> None:
-        """
-        Initializes the renderer.
-        """
-        super().__init__()
-        self._list_indent_level = 0
 
     def render_paragraph(self, element: block.Paragraph) -> str:
         """
@@ -85,14 +79,10 @@ class Md2RstRenderer(Renderer):
         """
         items = []
 
-        self._list_indent_level += 1
-
         for index, child in enumerate(element.children):
             marker = f"{index + 1}." if element.ordered else "-"
             item = self.render_list_item(child, marker)
             items.append(item)
-
-        self._list_indent_level -= 1
 
         return "\n".join(items) + "\n"
 
@@ -107,10 +97,27 @@ class Md2RstRenderer(Renderer):
         Returns:
             str: The rendered list item as a string.
         """
-        indent = 2
-        content = self.render_children(element)
+        return self._indent_list_item(marker, self.render_children(element))
 
-        return f"{' ' * indent * (self._list_indent_level - 1)}{marker} {content}"
+    @staticmethod
+    def _indent_list_item(marker: str, content: str) -> str:
+        """
+        Prefixes the list item content with its marker and indents all following lines by the marker
+        width. This keeps continuation lines, nested lists and further paragraphs inside the list item.
+        Nested lists get their indentation from the list item that contains them.
+
+        Args:
+            marker (str): The marker of the list item, e.g. "-" or "1.".
+            content (str): The rendered content of the list item.
+
+        Returns:
+            str: The rendered list item as a string.
+        """
+        lines = content.rstrip("\n").split("\n")
+        indent = " " * (len(marker) + 1)
+        indented = [indent + line if line.strip() else "" for line in lines[1:]]
+
+        return f"{marker} " + "\n".join(lines[:1] + indented) + "\n"
 
     def render_quote(self, element: block.Quote) -> str:
         """

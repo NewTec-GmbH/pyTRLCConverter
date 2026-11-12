@@ -19,12 +19,19 @@
 # If not, see <https://www.gnu.org/licenses/>.
 
 # Imports **********************************************************************
+import io
 import os
 from unittest.mock import patch
 
 from collections import namedtuple
 
+from docutils import nodes
+from docutils.core import publish_doctree
+from marko import Markdown
+
 from pyTRLCConverter.__main__ import main
+from pyTRLCConverter.marko.gfm2rst_renderer import Gfm2RstRenderer
+from pyTRLCConverter.marko.md2rst_renderer import Md2RstRenderer
 from pyTRLCConverter.rst_converter import RstConverter
 from pyTRLCConverter.rst.element import RstHeading, RstAdmonition, RstTable, RstBulletList, RstImage
 from pyTRLCConverter.rst.text import RstText
@@ -673,61 +680,53 @@ def test_tc_rst_render_md(record_property, capsys, monkeypatch, tmp_path):
         assert lines[15] == "    |                |                                                                             |\n"
         assert lines[16] == "    |                | - Bullet point 1                                                            |\n"
         assert lines[17] == "    |                |                                                                             |\n"
-        assert lines[18] == "    |                |                                                                             |\n"
-        assert lines[19] == "    |                | - Bullet point 2                                                            |\n"
-        assert lines[20] == "    |                |                                                                             |\n"
-        assert lines[21] == "    |                |   - Sub bullet point 1                                                      |\n"
-        assert lines[22] == "    |                |                                                                             |\n"
+        assert lines[18] == "    |                | - Bullet point 2                                                            |\n"
+        assert lines[19] == "    |                |                                                                             |\n"
+        assert lines[20] == "    |                |   - Sub bullet point 1                                                      |\n"
+        assert lines[21] == "    |                |                                                                             |\n"
+        assert lines[22] == "    |                |   - Sub bullet point 2                                                      |\n"
         assert lines[23] == "    |                |                                                                             |\n"
-        assert lines[24] == "    |                |   - Sub bullet point 2                                                      |\n"
-        assert lines[25] == "    |                |                                                                             |\n"
+        assert lines[24] == "    |                |                                                                             |\n"
+        assert lines[25] == "    |                | 1. Numbered point 1                                                         |\n"
         assert lines[26] == "    |                |                                                                             |\n"
-        assert lines[27] == "    |                |                                                                             |\n"
+        assert lines[27] == "    |                | 2. Numbered point 2                                                         |\n"
         assert lines[28] == "    |                |                                                                             |\n"
-        assert lines[29] == "    |                | 1. Numbered point 1                                                         |\n"
+        assert lines[29] == "    |                |    1. Sub numbered point 1                                                  |\n"
         assert lines[30] == "    |                |                                                                             |\n"
-        assert lines[31] == "    |                |                                                                             |\n"
-        assert lines[32] == "    |                | 2. Numbered point 2                                                         |\n"
+        assert lines[31] == "    |                |    2. Sub numbered point 2                                                  |\n"
+        assert lines[32] == "    |                |                                                                             |\n"
         assert lines[33] == "    |                |                                                                             |\n"
-        assert lines[34] == "    |                |   1. Sub numbered point 1                                                   |\n"
+        assert lines[34] == "    |                | **Bold text** and *italic text*.                                            |\n"
         assert lines[35] == "    |                |                                                                             |\n"
         assert lines[36] == "    |                |                                                                             |\n"
-        assert lines[37] == "    |                |   2. Sub numbered point 2                                                   |\n"
+        assert lines[37] == "    |                | .. code-block::                                                             |\n"
         assert lines[38] == "    |                |                                                                             |\n"
-        assert lines[39] == "    |                |                                                                             |\n"
+        assert lines[39] == "    |                |     Code block example                                                      |\n"
         assert lines[40] == "    |                |                                                                             |\n"
         assert lines[41] == "    |                |                                                                             |\n"
-        assert lines[42] == "    |                | **Bold text** and *italic text*.                                            |\n"
+        assert ".. image:: plantuml_" in lines[42]
+        assert lines[42].endswith(".svg                                        |\n")
         assert lines[43] == "    |                |                                                                             |\n"
         assert lines[44] == "    |                |                                                                             |\n"
-        assert lines[45] == "    |                | .. code-block::                                                             |\n"
-        assert lines[46] == "    |                |                                                                             |\n"
-        assert lines[47] == "    |                |     Code block example                                                      |\n"
-        assert lines[48] == "    |                |                                                                             |\n"
+        assert lines[45] == "    |                |                                                                             |\n"
+        assert lines[46] == "    |                | |                                                                           |\n"
+        assert lines[47] == "    |                |                                                                             |\n"
+        assert lines[48] == "    |                |   Blockquote example                                                        |\n"
         assert lines[49] == "    |                |                                                                             |\n"
-        assert ".. image:: plantuml_" in lines[50]
-        assert lines[50].endswith(".svg                                        |\n")
+        assert lines[50] == "    |                |                                                                             |\n"
         assert lines[51] == "    |                |                                                                             |\n"
-        assert lines[52] == "    |                |                                                                             |\n"
+        assert lines[52] == "    |                | `Link to pyTRLCConverter <https://github.com/NewTec-GmbH/pyTRLCConverter>`_ |\n"
         assert lines[53] == "    |                |                                                                             |\n"
-        assert lines[54] == "    |                | |                                                                           |\n"
-        assert lines[55] == "    |                |                                                                             |\n"
-        assert lines[56] == "    |                |   Blockquote example                                                        |\n"
-        assert lines[57] == "    |                |                                                                             |\n"
-        assert lines[58] == "    |                |                                                                             |\n"
-        assert lines[59] == "    |                |                                                                             |\n"
-        assert lines[60] == "    |                | `Link to pyTRLCConverter <https://github.com/NewTec-GmbH/pyTRLCConverter>`_ |\n"
-        assert lines[61] == "    |                |                                                                             |\n"
-        assert lines[62] == "    |                |                                                                             |\n"
+        assert lines[54] == "    |                |                                                                             |\n"
+        assert lines[55] == "    +----------------+-----------------------------------------------------------------------------+\n"
+        assert lines[56] == "    | link           | N/A                                                                         |\n"
+        assert lines[57] == "    +----------------+-----------------------------------------------------------------------------+\n"
+        assert lines[58] == "    | index          | N/A                                                                         |\n"
+        assert lines[59] == "    +----------------+-----------------------------------------------------------------------------+\n"
+        assert lines[60] == "    | precision      | N/A                                                                         |\n"
+        assert lines[61] == "    +----------------+-----------------------------------------------------------------------------+\n"
+        assert lines[62] == "    | valid          | N/A                                                                         |\n"
         assert lines[63] == "    +----------------+-----------------------------------------------------------------------------+\n"
-        assert lines[64] == "    | link           | N/A                                                                         |\n"
-        assert lines[65] == "    +----------------+-----------------------------------------------------------------------------+\n"
-        assert lines[66] == "    | index          | N/A                                                                         |\n"
-        assert lines[67] == "    +----------------+-----------------------------------------------------------------------------+\n"
-        assert lines[68] == "    | precision      | N/A                                                                         |\n"
-        assert lines[69] == "    +----------------+-----------------------------------------------------------------------------+\n"
-        assert lines[70] == "    | valid          | N/A                                                                         |\n"
-        assert lines[71] == "    +----------------+-----------------------------------------------------------------------------+\n"
 
 # pylint: disable-next=too-many-statements
 def test_tc_rst_render_gfm(record_property, capsys, monkeypatch, tmp_path):
@@ -792,81 +791,71 @@ def test_tc_rst_render_gfm(record_property, capsys, monkeypatch, tmp_path):
         assert lines[15] == "    |                |                                                                                                    |\n"
         assert lines[16] == "    |                | - Bullet point 1                                                                                   |\n"
         assert lines[17] == "    |                |                                                                                                    |\n"
-        assert lines[18] == "    |                |                                                                                                    |\n"
-        assert lines[19] == "    |                | - Bullet point 2                                                                                   |\n"
-        assert lines[20] == "    |                |                                                                                                    |\n"
-        assert lines[21] == "    |                |   - Sub bullet point 1                                                                             |\n"
-        assert lines[22] == "    |                |                                                                                                    |\n"
+        assert lines[18] == "    |                | - Bullet point 2                                                                                   |\n"
+        assert lines[19] == "    |                |                                                                                                    |\n"
+        assert lines[20] == "    |                |   - Sub bullet point 1                                                                             |\n"
+        assert lines[21] == "    |                |                                                                                                    |\n"
+        assert lines[22] == "    |                |   - Sub bullet point 2                                                                             |\n"
         assert lines[23] == "    |                |                                                                                                    |\n"
-        assert lines[24] == "    |                |   - Sub bullet point 2                                                                             |\n"
-        assert lines[25] == "    |                |                                                                                                    |\n"
+        assert lines[24] == "    |                |                                                                                                    |\n"
+        assert lines[25] == "    |                | 1. Numbered point 1                                                                                |\n"
         assert lines[26] == "    |                |                                                                                                    |\n"
-        assert lines[27] == "    |                |                                                                                                    |\n"
+        assert lines[27] == "    |                | 2. Numbered point 2                                                                                |\n"
         assert lines[28] == "    |                |                                                                                                    |\n"
-        assert lines[29] == "    |                | 1. Numbered point 1                                                                                |\n"
+        assert lines[29] == "    |                |    1. Sub numbered point 1                                                                         |\n"
         assert lines[30] == "    |                |                                                                                                    |\n"
-        assert lines[31] == "    |                |                                                                                                    |\n"
-        assert lines[32] == "    |                | 2. Numbered point 2                                                                                |\n"
+        assert lines[31] == "    |                |    2. Sub numbered point 2                                                                         |\n"
+        assert lines[32] == "    |                |                                                                                                    |\n"
         assert lines[33] == "    |                |                                                                                                    |\n"
-        assert lines[34] == "    |                |   1. Sub numbered point 1                                                                          |\n"
+        assert lines[34] == "    |                | **Bold text** and *italic text*.                                                                   |\n"
         assert lines[35] == "    |                |                                                                                                    |\n"
         assert lines[36] == "    |                |                                                                                                    |\n"
-        assert lines[37] == "    |                |   2. Sub numbered point 2                                                                          |\n"
+        assert lines[37] == "    |                | - [x] Checked task                                                                                 |\n"
         assert lines[38] == "    |                |                                                                                                    |\n"
-        assert lines[39] == "    |                |                                                                                                    |\n"
+        assert lines[39] == "    |                | - [ ] Unchecked task                                                                               |\n"
         assert lines[40] == "    |                |                                                                                                    |\n"
         assert lines[41] == "    |                |                                                                                                    |\n"
-        assert lines[42] == "    |                | **Bold text** and *italic text*.                                                                   |\n"
+        assert lines[42] == "    |                | .. code-block::                                                                                    |\n"
         assert lines[43] == "    |                |                                                                                                    |\n"
-        assert lines[44] == "    |                |                                                                                                    |\n"
-        assert lines[45] == "    |                | - [x] Checked task                                                                                 |\n"
+        assert lines[44] == "    |                |     Code block example                                                                             |\n"
+        assert lines[45] == "    |                |                                                                                                    |\n"
         assert lines[46] == "    |                |                                                                                                    |\n"
-        assert lines[47] == "    |                |                                                                                                    |\n"
-        assert lines[48] == "    |                | - [ ] Unchecked task                                                                               |\n"
+        assert ".. image:: plantuml_" in lines[47]
+        assert lines[47].endswith(".svg                                                               |\n")
+        assert lines[48] == "    |                |                                                                                                    |\n"
         assert lines[49] == "    |                |                                                                                                    |\n"
         assert lines[50] == "    |                |                                                                                                    |\n"
-        assert lines[51] == "    |                |                                                                                                    |\n"
-        assert lines[52] == "    |                | .. code-block::                                                                                    |\n"
-        assert lines[53] == "    |                |                                                                                                    |\n"
-        assert lines[54] == "    |                |     Code block example                                                                             |\n"
+        assert lines[51] == "    |                | |                                                                                                  |\n"
+        assert lines[52] == "    |                |                                                                                                    |\n"
+        assert lines[53] == "    |                | `https://github.com/NewTec-GmbH/pyTRLCConverter <https://github.com/NewTec-GmbH/pyTRLCConverter>`_ |\n"
+        assert lines[54] == "    |                |                                                                                                    |\n"
         assert lines[55] == "    |                |                                                                                                    |\n"
-        assert lines[56] == "    |                |                                                                                                    |\n"
-        assert ".. image:: plantuml_" in lines[57]
-        assert lines[57].endswith(".svg                                                               |\n")
+        assert lines[56] == "    |                |   Blockquote example                                                                               |\n"
+        assert lines[57] == "    |                |                                                                                                    |\n"
         assert lines[58] == "    |                |                                                                                                    |\n"
         assert lines[59] == "    |                |                                                                                                    |\n"
-        assert lines[60] == "    |                |                                                                                                    |\n"
-        assert lines[61] == "    |                | |                                                                                                  |\n"
+        assert lines[60] == "    |                | `Link to pyTRLCConverter <https://github.com/NewTec-GmbH/pyTRLCConverter>`_                        |\n"
+        assert lines[61] == "    |                |                                                                                                    |\n"
         assert lines[62] == "    |                |                                                                                                    |\n"
-        assert lines[63] == "    |                | `https://github.com/NewTec-GmbH/pyTRLCConverter <https://github.com/NewTec-GmbH/pyTRLCConverter>`_ |\n"
-        assert lines[64] == "    |                |                                                                                                    |\n"
-        assert lines[65] == "    |                |                                                                                                    |\n"
-        assert lines[66] == "    |                |   Blockquote example                                                                               |\n"
-        assert lines[67] == "    |                |                                                                                                    |\n"
+        assert lines[63] == "    |                | +-------+-------+                                                                                  |\n"
+        assert lines[64] == "    |                | | Col 0 | Col 1 |                                                                                  |\n"
+        assert lines[65] == "    |                | +=======+=======+                                                                                  |\n"
+        assert lines[66] == "    |                | | A     | B     |                                                                                  |\n"
+        assert lines[67] == "    |                | +-------+-------+                                                                                  |\n"
         assert lines[68] == "    |                |                                                                                                    |\n"
         assert lines[69] == "    |                |                                                                                                    |\n"
-        assert lines[70] == "    |                | `Link to pyTRLCConverter <https://github.com/NewTec-GmbH/pyTRLCConverter>`_                        |\n"
+        assert lines[70] == "    |                | ~~I am strikethrough.~~                                                                            |\n"
         assert lines[71] == "    |                |                                                                                                    |\n"
         assert lines[72] == "    |                |                                                                                                    |\n"
-        assert lines[73] == "    |                | +-------+-------+                                                                                  |\n"
-        assert lines[74] == "    |                | | Col 0 | Col 1 |                                                                                  |\n"
-        assert lines[75] == "    |                | +=======+=======+                                                                                  |\n"
-        assert lines[76] == "    |                | | A     | B     |                                                                                  |\n"
-        assert lines[77] == "    |                | +-------+-------+                                                                                  |\n"
-        assert lines[78] == "    |                |                                                                                                    |\n"
-        assert lines[79] == "    |                |                                                                                                    |\n"
-        assert lines[80] == "    |                | ~~I am strikethrough.~~                                                                            |\n"
-        assert lines[81] == "    |                |                                                                                                    |\n"
-        assert lines[82] == "    |                |                                                                                                    |\n"
-        assert lines[83] == "    +----------------+----------------------------------------------------------------------------------------------------+\n"
-        assert lines[84] == "    | link           | N/A                                                                                                |\n"
-        assert lines[85] == "    +----------------+----------------------------------------------------------------------------------------------------+\n"
-        assert lines[86] == "    | index          | N/A                                                                                                |\n"
-        assert lines[87] == "    +----------------+----------------------------------------------------------------------------------------------------+\n"
-        assert lines[88] == "    | precision      | N/A                                                                                                |\n"
-        assert lines[89] == "    +----------------+----------------------------------------------------------------------------------------------------+\n"
-        assert lines[90] == "    | valid          | N/A                                                                                                |\n"
-        assert lines[91] == "    +----------------+----------------------------------------------------------------------------------------------------+\n"
+        assert lines[73] == "    +----------------+----------------------------------------------------------------------------------------------------+\n"
+        assert lines[74] == "    | link           | N/A                                                                                                |\n"
+        assert lines[75] == "    +----------------+----------------------------------------------------------------------------------------------------+\n"
+        assert lines[76] == "    | index          | N/A                                                                                                |\n"
+        assert lines[77] == "    +----------------+----------------------------------------------------------------------------------------------------+\n"
+        assert lines[78] == "    | precision      | N/A                                                                                                |\n"
+        assert lines[79] == "    +----------------+----------------------------------------------------------------------------------------------------+\n"
+        assert lines[80] == "    | valid          | N/A                                                                                                |\n"
+        assert lines[81] == "    +----------------+----------------------------------------------------------------------------------------------------+\n"
 
 
 def test_tc_rst_render_plantuml(record_property, capsys, monkeypatch, tmp_path):
@@ -954,5 +943,68 @@ def test_tc_rst_render_plantuml_error(record_property, capsys, monkeypatch, tmp_
     svg_files = [f for f in os.listdir(tmp_path)
                  if f.startswith("plantuml_") and f.endswith(".svg")]
     assert len(svg_files) == 0
+
+def test_tc_rst_render_list(record_property):
+    # lobster-trace: SwTests.tc_rst_render_list
+    """Markdown list items shall keep their whole content in reStructuredText: continuation lines,
+    nested lists and further paragraphs are indented by the width of the list item marker.
+
+    Args:
+        record_property (Any): Used to inject the test case reference into the test results.
+    """
+    record_property("lobster-trace", "SwTests.tc_rst_render_list")
+
+    markdown_text = "- first item\n" \
+                    "  wraps\n" \
+                    "- second\n" \
+                    "  1. nested\n" \
+                    "     wraps\n" \
+                    "  2. nested two\n" \
+                    "\n" \
+                    "1. ordered\n" \
+                    "\n" \
+                    "   second paragraph\n" \
+                    "2. last\n"
+
+    expected = "- first item\n" \
+               "  wraps\n" \
+               "\n" \
+               "- second\n" \
+               "\n" \
+               "  1. nested\n" \
+               "     wraps\n" \
+               "\n" \
+               "  2. nested two\n" \
+               "\n" \
+               "\n" \
+               "1. ordered\n" \
+               "\n" \
+               "\n" \
+               "   second paragraph\n" \
+               "\n" \
+               "2. last\n" \
+               "\n"
+
+    for renderer, extensions in ((Md2RstRenderer, []), (Gfm2RstRenderer, ["gfm"])):
+        rst_text = Markdown(renderer=renderer, extensions=extensions).convert(markdown_text)
+        assert rst_text == expected
+
+        # The reStructuredText parser shall find the same list structure without warnings.
+        warnings = io.StringIO()
+        doctree = publish_doctree(rst_text, settings_overrides={"warning_stream": warnings})
+        assert warnings.getvalue() == ""
+
+        bullet_lists = list(doctree.findall(nodes.bullet_list))
+        enumerated_lists = list(doctree.findall(nodes.enumerated_list))
+        assert [len(bullet_list.children) for bullet_list in bullet_lists] == [2]
+        assert [len(enum_list.children) for enum_list in enumerated_lists] == [2, 2]
+
+        first_item = bullet_lists[0].children[0]
+        assert first_item.astext() == "first item\nwraps"
+        nested_list = bullet_lists[0].children[1].children[1]
+        assert isinstance(nested_list, nodes.enumerated_list)
+        assert nested_list.children[0].astext() == "nested\nwraps"
+        multi_paragraph_item = enumerated_lists[1].children[0]
+        assert len(multi_paragraph_item.children) == 2
 
 # Main *************************************************************************
