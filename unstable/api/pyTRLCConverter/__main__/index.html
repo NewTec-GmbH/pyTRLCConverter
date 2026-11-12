@@ -131,25 +131,25 @@ by TRLC into markdown format.</p>
 <h2>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h2>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pyTRLCConverter.__main__._create_args_parser" title="pyTRLCConverter.__main__._create_args_parser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_create_args_parser</span></code></a>(→ argparse.ArgumentParser)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyTRLCConverter.__main__._create_args_parser" title="pyTRLCConverter.__main__._create_args_parser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_create_args_parser</span></code></a>() → argparse.ArgumentParser</p></td>
 <td><p>Creates parser for command line arguments.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pyTRLCConverter.__main__._create_out_folder" title="pyTRLCConverter.__main__._create_out_folder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_create_out_folder</span></code></a>(→ None)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyTRLCConverter.__main__._create_out_folder" title="pyTRLCConverter.__main__._create_out_folder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_create_out_folder</span></code></a>(path) → None</p></td>
 <td><p>Create output folder if it doesn't exist.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pyTRLCConverter.__main__._get_project_converter" title="pyTRLCConverter.__main__._get_project_converter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_get_project_converter</span></code></a>(...)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyTRLCConverter.__main__._get_project_converter" title="pyTRLCConverter.__main__._get_project_converter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_get_project_converter</span></code></a>() → Optional[pyTRLCConverter.abstract_converter.AbstractConverter]</p></td>
 <td><p>Get the project specific converter class from a --project or -p argument.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pyTRLCConverter.__main__._setup_converters" title="pyTRLCConverter.__main__._setup_converters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_setup_converters</span></code></a>(→ pyTRLCConverter.ret.Ret)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyTRLCConverter.__main__._setup_converters" title="pyTRLCConverter.__main__._setup_converters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_setup_converters</span></code></a>(args_sub_parser) → pyTRLCConverter.ret.Ret</p></td>
 <td><p>Setup the converters.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pyTRLCConverter.__main__._setup_render_configuration" title="pyTRLCConverter.__main__._setup_render_configuration"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_setup_render_configuration</span></code></a>(...)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyTRLCConverter.__main__._setup_render_configuration" title="pyTRLCConverter.__main__._setup_render_configuration"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_setup_render_configuration</span></code></a>(file_name) → Optional[pyTRLCConverter.render_config.RenderConfig]</p></td>
 <td><p>Setup render configuration.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#pyTRLCConverter.__main__._show_program_arguments" title="pyTRLCConverter.__main__._show_program_arguments"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_show_program_arguments</span></code></a>(→ None)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#pyTRLCConverter.__main__._show_program_arguments" title="pyTRLCConverter.__main__._show_program_arguments"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_show_program_arguments</span></code></a>(args) → None</p></td>
 <td><p>Show program arguments in verbose mode to the user.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#pyTRLCConverter.__main__.main" title="pyTRLCConverter.__main__.main"><code class="xref py py-obj docutils literal notranslate"><span class="pre">main</span></code></a>(→ int)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pyTRLCConverter.__main__.main" title="pyTRLCConverter.__main__.main"><code class="xref py py-obj docutils literal notranslate"><span class="pre">main</span></code></a>() → int</p></td>
 <td><p>Main program entry point.</p></td>
 </tr>
 </tbody>
