@@ -54,8 +54,8 @@
             </div>
         </aside>
         <h2>
-            <span class="text">57 statements &nbsp;</span>
-            <button type="button" class="run button_toggle_run" value="run" data-shortcut="r" title="Toggle lines run">53<span class="text"> run</span></button>
+            <span class="text">56 statements &nbsp;</span>
+            <button type="button" class="run button_toggle_run" value="run" data-shortcut="r" title="Toggle lines run">52<span class="text"> run</span></button>
             <button type="button" class="mis show_mis button_toggle_mis" value="mis" data-shortcut="m" title="Toggle lines missing">4<span class="text"> missing</span></button>
             <button type="button" class="exc show_exc button_toggle_exc" value="exc" data-shortcut="x" title="Toggle lines excluded">3<span class="text"> excluded</span></button>
         </h2>
@@ -64,8 +64,8 @@
             <a id="indexLink" class="nav" href="index.html">&Hat; index</a> &nbsp; &nbsp;
             <a id="nextFileLink" class="nav" href="z_dbb7ea6ddbfb548a_md2docx_renderer_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
-            <a class="nav" href="https://coverage.readthedocs.io/en/7.17.2">coverage.py v7.17.2</a>,
-            created at 2026-11-12 09:05 +0000
+            <a class="nav" href="https://coverage.readthedocs.io/en/7.17.3">coverage.py v7.17.3</a>,
+            created at 2026-11-12 15:25 +0000
         </p>
         <aside class="hidden">
             <button type="button" class="button_next_chunk" data-shortcut="j"></button>
@@ -118,28 +118,28 @@
     <p class="pln"><span class="n"><a id="t36" href="#t36">36</a></span><span class="t"><span class="com"># pylint: disable-next=too-many-public-methods</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t37" href="#t37">37</a></span><span class="t"><span class="key">class</span> <span class="nam">Gfm2RstRenderer</span><span class="op">(</span><span class="nam">Md2RstRenderer</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t38" href="#t38">38</a></span><span class="t">    <span class="com"># lobster-trace: SwRequirements.sw_req_rst_render_gfm</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t39" href="#t39">39</a></span><span class="t">    <span class="com"># lobster-trace: SwRequirements.sw_req_rst_render_plantuml</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t40" href="#t40">40</a></span><span class="t">    <span class="com"># lobster-trace: SwRequirements.sw_req_plantuml</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t41" href="#t41">41</a></span><span class="t">    <span class="str">&quot;&quot;&quot;Renderer for reStructuredText output.</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t42" href="#t42">42</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t43" href="#t43">43</a></span><span class="t"><span class="str">    Converts GitHub Flavored Markdown to reStructuredText format.</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t44" href="#t44">44</a></span><span class="t"><span class="str">    Inherits inline PlantUML handling from :class:`Md2RstRenderer`.</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t45" href="#t45">45</a></span><span class="t"><span class="str">    &quot;&quot;&quot;</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t46" href="#t46">46</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t47" href="#t47">47</a></span><span class="t">    <span class="com"># Inherit all CommonMark rendering behavior from Md2RstRenderer and override only GFM additions.</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t48" href="#t48">48</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t49" href="#t49">49</a></span><span class="t">    <span class="key">def</span> <span class="nam">render_list_item</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span> <span class="nam">element</span><span class="op">:</span> <span class="nam">block</span><span class="op">.</span><span class="nam">ListItem</span><span class="op">,</span> <span class="nam">marker</span><span class="op">=</span><span class="str">&quot;-&quot;</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="nam">str</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t50" href="#t50">50</a></span><span class="t">        <span class="str">&quot;&quot;&quot;</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t51" href="#t51">51</a></span><span class="t"><span class="str">        Renders a list item element.</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t52" href="#t52">52</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t53" href="#t53">53</a></span><span class="t"><span class="str">        Args:</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t54" href="#t54">54</a></span><span class="t"><span class="str">            element (block.ListItem): The list item element to render.</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t55" href="#t55">55</a></span><span class="t"><span class="str">            marker (str, optional): The marker to use for the list item. Defaults to &quot;*&quot;.</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t56" href="#t56">56</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t57" href="#t57">57</a></span><span class="t"><span class="str">        Returns:</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t58" href="#t58">58</a></span><span class="t"><span class="str">            str: The rendered list item as a string.</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t59" href="#t59">59</a></span><span class="t"><span class="str">        &quot;&quot;&quot;</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t60" href="#t60">60</a></span><span class="t">        <span class="nam">indent</span> <span class="op">=</span> <span class="num">2</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t39" href="#t39">39</a></span><span class="t">    <span class="com"># lobster-trace: SwRequirements.sw_req_rst_render_list</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t40" href="#t40">40</a></span><span class="t">    <span class="com"># lobster-trace: SwRequirements.sw_req_rst_render_plantuml</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t41" href="#t41">41</a></span><span class="t">    <span class="com"># lobster-trace: SwRequirements.sw_req_plantuml</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t42" href="#t42">42</a></span><span class="t">    <span class="str">&quot;&quot;&quot;Renderer for reStructuredText output.</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t43" href="#t43">43</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t44" href="#t44">44</a></span><span class="t"><span class="str">    Converts GitHub Flavored Markdown to reStructuredText format.</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t45" href="#t45">45</a></span><span class="t"><span class="str">    Inherits inline PlantUML handling from :class:`Md2RstRenderer`.</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t46" href="#t46">46</a></span><span class="t"><span class="str">    &quot;&quot;&quot;</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t47" href="#t47">47</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t48" href="#t48">48</a></span><span class="t">    <span class="com"># Inherit all CommonMark rendering behavior from Md2RstRenderer and override only GFM additions.</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t49" href="#t49">49</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t50" href="#t50">50</a></span><span class="t">    <span class="key">def</span> <span class="nam">render_list_item</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span> <span class="nam">element</span><span class="op">:</span> <span class="nam">block</span><span class="op">.</span><span class="nam">ListItem</span><span class="op">,</span> <span class="nam">marker</span><span class="op">=</span><span class="str">&quot;-&quot;</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="nam">str</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t51" href="#t51">51</a></span><span class="t">        <span class="str">&quot;&quot;&quot;</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t52" href="#t52">52</a></span><span class="t"><span class="str">        Renders a list item element.</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t53" href="#t53">53</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t54" href="#t54">54</a></span><span class="t"><span class="str">        Args:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t55" href="#t55">55</a></span><span class="t"><span class="str">            element (block.ListItem): The list item element to render.</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t56" href="#t56">56</a></span><span class="t"><span class="str">            marker (str, optional): The marker to use for the list item. Defaults to &quot;*&quot;.</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t57" href="#t57">57</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t58" href="#t58">58</a></span><span class="t"><span class="str">        Returns:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t59" href="#t59">59</a></span><span class="t"><span class="str">            str: The rendered list item as a string.</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t60" href="#t60">60</a></span><span class="t"><span class="str">        &quot;&quot;&quot;</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t61" href="#t61">61</a></span><span class="t">        <span class="nam">content</span> <span class="op">=</span> <span class="nam">self</span><span class="op">.</span><span class="nam">render_children</span><span class="op">(</span><span class="nam">element</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t62" href="#t62">62</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t63" href="#t63">63</a></span><span class="t">        <span class="com"># GitHub Flavored Markdown task-list items expose a &quot;checked&quot; flag in the paragraph node.</span>&nbsp;</span><span class="r"></span></p>
@@ -152,7 +152,7 @@
     <p class="run"><span class="n"><a id="t70" href="#t70">70</a></span><span class="t">            <span class="key">elif</span> <span class="nam">checked</span> <span class="key">is</span> <span class="key">False</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t71" href="#t71">71</a></span><span class="t">                <span class="nam">content</span> <span class="op">=</span> <span class="str">&quot;[ ] &quot;</span> <span class="op">+</span> <span class="nam">content</span><span class="op">.</span><span class="nam">lstrip</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t72" href="#t72">72</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t73" href="#t73">73</a></span><span class="t">        <span class="key">return</span> <span class="fst">f&quot;</span><span class="op">{</span><span class="str">&#x27; &#x27;</span> <span class="op">*</span> <span class="nam">indent</span> <span class="op">*</span> <span class="op">(</span><span class="nam">self</span><span class="op">.</span><span class="nam">_list_indent_level</span> <span class="op">-</span> <span class="num">1</span><span class="op">)</span><span class="op">}</span><span class="op">{</span><span class="nam">marker</span><span class="op">}</span><span class="fst"> </span><span class="op">{</span><span class="nam">content</span><span class="op">}</span><span class="fst">&quot;</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t73" href="#t73">73</a></span><span class="t">        <span class="key">return</span> <span class="nam">self</span><span class="op">.</span><span class="nam">_indent_list_item</span><span class="op">(</span><span class="nam">marker</span><span class="op">,</span> <span class="nam">content</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t74" href="#t74">74</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t75" href="#t75">75</a></span><span class="t">    <span class="key">def</span> <span class="nam">render_table</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span> <span class="nam">element</span><span class="op">:</span> <span class="nam">Any</span><span class="op">)</span> <span class="op">-&gt;</span> <span class="nam">str</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t76" href="#t76">76</a></span><span class="t">        <span class="str">&quot;&quot;&quot;Renders a GitHub Flavored Markdown table as a reStructuredText grid table.</span>&nbsp;</span><span class="r"></span></p>
@@ -295,8 +295,8 @@
             <a class="nav" href="index.html">&Hat; index</a> &nbsp; &nbsp;
             <a class="nav" href="z_dbb7ea6ddbfb548a_md2docx_renderer_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
-            <a class="nav" href="https://coverage.readthedocs.io/en/7.17.2">coverage.py v7.17.2</a>,
-            created at 2026-11-12 09:05 +0000
+            <a class="nav" href="https://coverage.readthedocs.io/en/7.17.3">coverage.py v7.17.3</a>,
+            created at 2026-11-12 15:25 +0000
         </p>
     </div>
 </footer>
