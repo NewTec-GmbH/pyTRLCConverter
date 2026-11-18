@@ -17,19 +17,22 @@ rem You should have received a copy of the GNU General Public License along with
 rem If not, see <https://www.gnu.org/licenses/>.
 pushd %~dp0
 
-pushd ..\plantUML
-call get_plantuml.bat
-popd
-
 rem Keep all environment variables local to this script.
 setlocal
 
+rem PlantUML renders the diagrams. Use the PLANTUML variable (jar or server URL) if set,
+rem otherwise the jar that trlcdoc downloads into build\trlcdoc\plantuml.
+if not defined PLANTUML (
+    call trlcdoc plantuml || goto :error
+    for %%f in (..\..\build\trlcdoc\plantuml\plantuml-*.jar) do set "PLANTUML=%%~ff"
+)
+
 set TRLC_CONVERTER=pyTRLCConverter
 set OUTPUT_DIR=out
-set CONVERTER=converter/req2reqif.py
-set TRANSLATION=converter/translation.json
+set CONVERTER=../converter/req2reqif.py
+set TRANSLATION=../converter/translation.json
 set OUT_FORMAT=reqif
-set RENDERER_CFG=converter/renderCfg.json
+set RENDERER_CFG=../converter/renderCfg.json
 
 if not exist "%OUTPUT_DIR%" (
     md %OUTPUT_DIR%
@@ -41,7 +44,7 @@ if not exist "%OUTPUT_DIR%" (
 
 %TRLC_CONVERTER% --source=..\..\trlc\swe-arch --include=..\..\trlc\model --include=..\..\trlc\swe-req --verbose --out=%OUTPUT_DIR% --project=%CONVERTER% --translation=%TRANSLATION% --renderCfg=%RENDERER_CFG% %OUT_FORMAT% --single-document --name=swe-arch.reqif || goto :error
 
-set CONVERTER=converter/tc2reqif.py
+set CONVERTER=../converter/tc2reqif.py
 
 %TRLC_CONVERTER% --source=..\..\trlc\swe-test --include=..\..\trlc\model --include=..\..\trlc\swe-req --verbose --out=%OUTPUT_DIR% --project=%CONVERTER% --translation=%TRANSLATION% %OUT_FORMAT% --single-document --name=swe-test.reqif || goto :error
 

@@ -86,21 +86,26 @@ jobs:
           pip install -r requirements-dev.txt
           pip install .
 
-      # Run the project docs generation script.
-      - name: Run tools workflow
+      # Build the documentation with trlcdoc (see trlcdoc.yaml), the tracing report linked to GitHub.
+      # Exit codes: 0 success, 1 content findings (failed tests, missing trace links), 2 build error.
+      # Findings are reported as warning and the documentation is deployed, only build errors fail.
+      - name: Build documentation
         run: |
-          pushd ./tools
-          chmod +x make_html.sh
-          ./make_html.sh online
-          rm -f ./deployDoc/build/html/coverage/.gitignore
-          popd
+          set +e
+          trlcdoc --online
+          rc=$?
+          if [ "$rc" -eq 1 ]; then
+            echo "::warning title=trlcdoc::Documentation built with findings (failed tests or missing trace links)."
+            rc=0
+          fi
+          # The coverage report contains a .gitignore, which would hide it on the gh-pages branch.
+          find ./build/trlcdoc/html -name .gitignore -delete
+          exit "$rc"
 
       # Debug step to show the generated documentation files in the workflow logs.
       - name: Show generated documentation files for debugging
         run: |
-          pushd ./tools
-          find
-          popd
+          find ./build/trlcdoc/html -maxdepth 2
 
       # Publish generated HTML documentation to the target version folder on gh-pages.
       - name: Deploy static files to GitHub Pages
@@ -109,7 +114,7 @@ jobs:
         with:
           publish_branch: gh-pages
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./tools/deployDoc/build/html
+          publish_dir: ./build/trlcdoc/html
           # main -> latest, develop -> unstable, release tag -> tag name, otherwise branch name
           destination_dir: ${{ github.event_name == 'release' && github.event.release.tag_name || github.ref_name == 'main' && 'latest' || github.ref_name == 'develop' && 'unstable' || github.ref_name }}
 
@@ -123,7 +128,7 @@ jobs:
           git checkout gh-pages  # untracked files from documentation generation unaffected by checkout.
           git pull
           rm -rf ./versions/*
-          cp ./tools/deployDoc/build/html/_static/version_selector_data.js ./versions/version_selector_data.js
+          cp ./build/trlcdoc/html/_static/version_selector_data.js ./versions/version_selector_data.js
           git add versions
           git diff-index --quiet HEAD || git commit -m "Update version selector data for release ${{ github.event.release.tag_name }}"
           git push origin gh-pages

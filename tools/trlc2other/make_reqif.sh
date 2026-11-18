@@ -18,17 +18,20 @@
 
 set -e
 
-pushd ../plantUML
-chmod +x get_plantuml.sh
-. ./get_plantuml.sh
-popd
+# PlantUML renders the diagrams. Use the PLANTUML variable (jar or server URL) if set,
+# otherwise the jar that trlcdoc downloads into build/trlcdoc/plantuml.
+if [ -z "$PLANTUML" ]; then
+    trlcdoc plantuml
+    PLANTUML=$(ls ../../build/trlcdoc/plantuml/plantuml-*.jar | head -n 1)
+    export PLANTUML
+fi
 
 TRLC_CONVERTER=pyTRLCConverter
 OUTPUT_DIR=out
-CONVERTER=converter/req2reqif.py
-TRANSLATION=converter/translation.json
+CONVERTER=../converter/req2reqif.py
+TRANSLATION=../converter/translation.json
 OUT_FORMAT=reqif
-RENDERER_CFG=converter/renderCfg.json
+RENDERER_CFG=../converter/renderCfg.json
 
 if [ ! -d "$OUTPUT_DIR" ]; then
     mkdir $OUTPUT_DIR
@@ -40,6 +43,6 @@ $TRLC_CONVERTER --source=../../trlc/swe-req --include=../../trlc/model --verbose
 $TRLC_CONVERTER --source=../../trlc/swe-arch --include=../../trlc/model --include=../../trlc/swe-req --verbose --out="$OUTPUT_DIR" --project="$CONVERTER" --translation="$TRANSLATION" --renderCfg="$RENDERER_CFG" "$OUT_FORMAT" --single-document --name=swe-arch.reqif
 
 
-CONVERTER=converter/tc2reqif.py
+CONVERTER=../converter/tc2reqif.py
 
 $TRLC_CONVERTER --source=../../trlc/swe-test --include=../../trlc/model --include=../../trlc/swe-req --verbose --out="$OUTPUT_DIR" --project="$CONVERTER" --translation="$TRANSLATION" "$OUT_FORMAT" --single-document --name=swe-test.reqif

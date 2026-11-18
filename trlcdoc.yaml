@@ -1,0 +1,159 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nhjschulz/trlc-doc/develop/trlcdoc/schema/trlcdoc.schema.json
+#
+# trlcdoc configuration of the pyTRLCConverter documentation: requirements,
+# architecture, detailed design, tests, test results, tracing report, coverage
+# report and the HTML site.
+#
+#   pip install -r requirements-dev.txt    # installs trlcdoc
+#   pip install -e .                       # document this pyTRLCConverter, not the PyPI one
+#   trlcdoc                                # all steps, site in build/trlcdoc/html
+#   trlcdoc --online                       # tracing report linked to GitHub
+#
+# Exit codes: 0 success, 1 content findings (failed tests, missing trace links), 2 build error.
+# See https://github.com/nhjschulz/trlc-doc/blob/develop/configuration.md for the reference.
+
+project:
+  name: pyTRLCConverter
+  author: NewTec GmbH
+  copyright: 2024 - 2026, NewTec GmbH
+  repository: https://github.com/NewTec-GmbH/pyTRLCConverter
+  logo: doc/images/NewTec_Logo.png
+  favicon: doc/images/favicon.ico
+
+paths:
+  trlc_model: trlc/model
+  output: build/trlcdoc
+
+plantuml:
+  version: "1.2026.1"
+
+# Pages of the HTML site. The table of contents is in the start page html.index.
+documents:
+  - id: sw_requirements
+    type: trlc
+    source: trlc/swe-req
+    pytrlcconverter:
+      converter:
+        rst: tools/converter/req2rst.py
+        markdown: tools/converter/req2markdown.py
+      translation: tools/converter/translation.json
+      render_cfg: tools/converter/renderCfg.json
+
+  - id: sw_architecture
+    type: trlc
+    source: trlc/swe-arch
+    include: [sw_requirements]
+    pytrlcconverter:
+      converter:
+        rst: tools/converter/req2rst.py
+        markdown: tools/converter/req2markdown.py
+      translation: tools/converter/translation.json
+      render_cfg: tools/converter/renderCfg.json
+
+  - id: sw_detail_design
+    type: rst
+    source: doc/sphinx/sw_detail_design.rst
+
+  - id: sw_tests
+    type: trlc
+    source: trlc/swe-test
+    include: [sw_requirements]
+    pytrlcconverter:
+      converter:
+        rst: tools/converter/tc2rst.py
+        markdown: tools/converter/tc2markdown.py
+      translation: tools/converter/translation.json
+
+  - id: sw_tracing_report
+    title: SW Tracing Report
+    type: trace_report
+
+  - id: sw_test_result_report
+    type: test_results
+    include: [sw_tests]
+    pytrlcconverter:
+      converter:
+        rst: tools/converter/create_test_report_in_rst.py
+        markdown: tools/converter/create_test_report_in_markdown.py
+
+  - id: coverage_report
+    title: Coverage Report
+    type: html
+    source: tests:coverage
+
+  - id: license_include
+    title: License information
+    type: text
+    source: LICENSE
+
+tests:
+  runner: pytest
+  args: [tests, -v, --cov=./src]
+  link:
+    # Every test records its test cases with record_property("lobster-trace", ...),
+    # some tests more than one.
+    property: lobster-trace
+    array: true
+    from: "test_{name}"
+    to: "SwTests.{name}"
+
+trace:
+  report: html
+  levels:
+    - name: SW Requirement
+      document: sw_requirements
+      record_type: SwRequirements.SwReq
+      description_fields: [description, valid_status]
+      requires: [SW Code, SW Test Case, SW Architecture]
+
+    - name: SW Constraint
+      document: sw_requirements
+      record_type: SwRequirements.SwConstraint
+      description_fields: [description, valid_status]
+      requires: [SW Architecture]
+
+    - name: SW Architecture
+      document: sw_architecture
+      record_type: SwArch.SwArchSpec
+      tags: [satisfies]
+      trace_to: [SW Requirement, SW Constraint]
+
+    - name: SW Code
+      kind: implementation
+      extractor: lobster-python
+      sources: [src/pyTRLCConverter]
+      trace_to: [SW Requirement]
+
+    - name: SW Test Case
+      document: sw_tests
+      record_type: SwTests.SwTestCase
+      tags: [verifies]
+      trace_to: [SW Requirement]
+
+    - name: SW Test Result
+      document: sw_test_result_report
+      record_type: SwTests.SwTestCaseResult
+      tags: [relates]
+      description_fields: [name]
+      trace_to: [SW Test Case]
+
+    - name: SW Test Code
+      kind: implementation
+      extractor: lobster-python
+      sources: [tests]
+      trace_to: [SW Test Case]
+
+html:
+  theme: sphinx_rtd_theme
+  extensions:
+    - sphinx_rtd_theme
+    - autoapi.extension
+    - sphinx.ext.napoleon
+    - sphinx.ext.viewcode
+    - sphinx.ext.inheritance_diagram
+    - sphinx.ext.autodoc
+    - sphinx_favicon
+    - sphinx.ext.autosummary
+  conf: doc/sphinx/sphinx_conf.py
+  index: doc/sphinx/index.rst
+  page_header: doc/sphinx/page_header.rst

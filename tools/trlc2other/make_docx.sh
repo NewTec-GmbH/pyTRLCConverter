@@ -18,17 +18,20 @@
 
 set -e
 
-pushd ../plantUML
-chmod +x get_plantuml.sh
-. ./get_plantuml.sh
-popd
+# PlantUML renders the diagrams. Use the PLANTUML variable (jar or server URL) if set,
+# otherwise the jar that trlcdoc downloads into build/trlcdoc/plantuml.
+if [ -z "$PLANTUML" ]; then
+    trlcdoc plantuml
+    PLANTUML=$(ls ../../build/trlcdoc/plantuml/plantuml-*.jar | head -n 1)
+    export PLANTUML
+fi
 
 TRLC_CONVERTER=pyTRLCConverter
 OUTPUT_DIR=out
-CONVERTER=converter/req2docx.py
-TRANSLATION=converter/translation.json
-RENDER_CFG=converter/renderCfg.json
-TEMPLATE=converter/template.docx
+CONVERTER=../converter/req2docx.py
+TRANSLATION=../converter/translation.json
+RENDER_CFG=../converter/renderCfg.json
+TEMPLATE=../converter/template.docx
 OUT_FORMAT=docx
 
 if [ ! -d "$OUTPUT_DIR" ]; then
@@ -39,4 +42,4 @@ fi
 
 echo "Generate software requirements ..."
 $TRLC_CONVERTER --source=../../trlc/swe-req --include=../../trlc/model --verbose --out="$OUTPUT_DIR" --project="$CONVERTER" --translation="$TRANSLATION" --renderCfg="$RENDER_CFG" "$OUT_FORMAT" --template="$TEMPLATE"
-$TRLC_CONVERTER --source=../../trlc/swe-arch --include=../../trlc/model --include=../../trlc/swe-req --exclude=../../trlc/swe-req --verbose --out="$OUTPUT_DIR" --project="$CONVERTER" --translation="$TRANSLATION" "$OUT_FORMAT" --renderCfg="$RENDER_CFG" --template="$TEMPLATE"
+$TRLC_CONVERTER --source=../../trlc/swe-arch --include=../../trlc/model --include=../../trlc/swe-req --exclude=../../trlc/swe-req --verbose --out="$OUTPUT_DIR" --project="$CONVERTER" --translation="$TRANSLATION" --renderCfg="$RENDER_CFG" "$OUT_FORMAT" --template="$TEMPLATE"
