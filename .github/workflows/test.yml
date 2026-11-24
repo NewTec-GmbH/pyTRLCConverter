@@ -50,21 +50,6 @@ jobs:
         run: |
           trlc ./trlc
 
-      - name: Prepare test report (Linux)
-        if: matrix.os == 'ubuntu-latest'
-        run: |
-          pushd ./tools/testReport
-          ./make_rst.sh
-          popd
-
-      - name: Prepare test report (Windows)
-        if: matrix.os == 'windows-latest'
-        shell: cmd
-        run: |
-          pushd tools\testReport
-          call make_rst.bat
-          popd
-
       - name: Install Graphviz (Linux)
         if: matrix.os == 'ubuntu-latest'
         run: |
@@ -75,28 +60,26 @@ jobs:
         if: matrix.os == 'windows-latest'
         run: choco install graphviz --no-progress -y
 
-      - name: Build tracing report (Linux)
-        if: matrix.os == 'ubuntu-latest'
+      # trlcdoc runs the tests for the test results and creates the tracing report.
+      # Exit codes: 0 success, 1 content findings (failed tests, missing trace links),
+      # 2 build error. Findings are reported as warning, only build errors fail.
+      - name: Build tracing report
+        shell: bash
         run: |
-          pushd ./tools/traceReport
-          ./make.sh online
-          rm -f ./out/*-lobster.json
-          popd
-
-      - name: Build tracing report (Windows)
-        if: matrix.os == 'windows-latest'
-        shell: cmd
-        run: |
-          pushd tools\traceReport
-          call make.bat online
-          del /q out\*-lobster.json
-          popd
+          set +e
+          trlcdoc tests trace --online
+          rc=$?
+          if [ "$rc" -eq 1 ]; then
+            echo "::warning title=trlcdoc::Tracing report built with findings (failed tests or missing trace links)."
+            rc=0
+          fi
+          exit "$rc"
 
       - name: Upload tracing report
         uses: actions/upload-artifact@v7
         with:
           name: tracing-report-${{ matrix.os }}
-          path: ./tools/traceReport/out/*.html
+          path: ./build/trlcdoc/trace/tracing_report.html
 
   lint:
     # The type of runner that the job will run on.
@@ -189,17 +172,17 @@ jobs:
         if: matrix.os == 'windows-latest'
         run: choco install graphviz --no-progress -y
 
-      - name: Run full toolchain (Linux)
-        if: matrix.os == 'ubuntu-latest'
+      # Full documentation build with trlcdoc, see trlcdoc.yaml.
+      # Exit codes: 0 success, 1 content findings (failed tests, missing trace links),
+      # 2 build error. Findings are reported as warning, only build errors fail.
+      - name: Run full toolchain
+        shell: bash
         run: |
-          pushd ./tools
-          ./make_html.sh
-          popd
-
-      - name: Run full toolchain (Windows)
-        if: matrix.os == 'windows-latest'
-        shell: cmd
-        run: |
-          pushd tools
-          call make_html.bat
-          popd
+          set +e
+          trlcdoc
+          rc=$?
+          if [ "$rc" -eq 1 ]; then
+            echo "::warning title=trlcdoc::Documentation built with findings (failed tests or missing trace links)."
+            rc=0
+          fi
+          exit "$rc"

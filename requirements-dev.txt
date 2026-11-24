@@ -13,3 +13,4 @@ sphinx-autoapi>=0.5.0
 m2r>=0.3.1
 bmw-lobster==1.0.*
 reqif>=0.0.48
+trlcdoc>=0.6.0

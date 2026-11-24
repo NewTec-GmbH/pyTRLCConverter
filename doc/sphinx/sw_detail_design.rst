@@ -1,4 +1,4 @@
-.. figure:: ../../../doc/images/NewTec_Logo_Slogan.png
+.. figure:: {project_root}/doc/images/NewTec_Logo_Slogan.png
    :align: right
    :figwidth: 350px
 

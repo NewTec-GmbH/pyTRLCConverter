@@ -17,20 +17,23 @@ rem You should have received a copy of the GNU General Public License along with
 rem If not, see <https://www.gnu.org/licenses/>.
 pushd %~dp0
 
-pushd ..\plantUML
-call get_plantuml.bat
-popd
-
 rem Keep all environment variables local to this script.
 setlocal
 
+rem PlantUML renders the diagrams. Use the PLANTUML variable (jar or server URL) if set,
+rem otherwise the jar that trlcdoc downloads into build\trlcdoc\plantuml.
+if not defined PLANTUML (
+    call trlcdoc plantuml || goto :error
+    for %%f in (..\..\build\trlcdoc\plantuml\plantuml-*.jar) do set "PLANTUML=%%~ff"
+)
+
 set TRLC_CONVERTER=pyTRLCConverter
 set OUTPUT_DIR=out
-set CONVERTER=converter/req2docx.py
-set TRANSLATION=converter/translation.json
+set CONVERTER=../converter/req2docx.py
+set TRANSLATION=../converter/translation.json
 set OUT_FORMAT=docx
-set RENDER_CFG=converter/renderCfg.json
-set TEMPLATE=converter/template.docx
+set RENDER_CFG=../converter/renderCfg.json
+set TEMPLATE=../converter/template.docx
 
 if not exist "%OUTPUT_DIR%" (
     md %OUTPUT_DIR%
@@ -40,7 +43,7 @@ if not exist "%OUTPUT_DIR%" (
 
 %TRLC_CONVERTER% --source=..\..\trlc\swe-req --include=..\..\trlc\model --verbose --out=%OUTPUT_DIR% --project=%CONVERTER% --translation=%TRANSLATION% --renderCfg=%RENDER_CFG% %OUT_FORMAT% --template=%TEMPLATE% || goto :error
 
-%TRLC_CONVERTER% --source=..\..\trlc\swe-arch --include=..\..\trlc\model --include=..\..\trlc\swe-req --exclude=..\..\trlc\swe-req --verbose --out=%OUTPUT_DIR% --project=%CONVERTER% --translation=%TRANSLATION% %OUT_FORMAT% --renderCfg=%RENDER_CFG% --template=%TEMPLATE% || goto :error
+%TRLC_CONVERTER% --source=..\..\trlc\swe-arch --include=..\..\trlc\model --include=..\..\trlc\swe-req --exclude=..\..\trlc\swe-req --verbose --out=%OUTPUT_DIR% --project=%CONVERTER% --translation=%TRANSLATION% --renderCfg=%RENDER_CFG% %OUT_FORMAT% --template=%TEMPLATE% || goto :error
 
 goto finished
 

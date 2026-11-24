@@ -12,15 +12,15 @@
             "cwd": "${workspaceFolder}/tools/trlc2other",
             "console": "integratedTerminal",
             "env": {
-                "PLANTUML": "../plantUML/plantuml.jar",
+                "PLANTUML": "../../build/trlcdoc/plantuml/plantuml-1.2026.1.jar",  // trlcdoc plantuml
             },
             "args": [
                 "--source=../../trlc/swe-req",
                 "--source=../../trlc/model",
                 "-o=./out/",
                 "--verbose",
-                "--project=converter/req2markdown",
-                "--renderCfg=converter/renderCfg.json",
+                "--project=../converter/req2markdown",
+                "--renderCfg=../converter/renderCfg.json",
                 "markdown",
             ]
         },
@@ -32,17 +32,17 @@
             "cwd": "${workspaceFolder}/tools/trlc2other",
             "console": "integratedTerminal",
             "env": {
-                "PLANTUML": "../plantUML/plantuml.jar",
+                "PLANTUML": "../../build/trlcdoc/plantuml/plantuml-1.2026.1.jar",  // trlcdoc plantuml
             },
             "args": [
                 "--source=../../trlc/swe-req",
                 "--source=../../trlc/model",
                 "-o=./out/",
                 "--verbose",
-                "--project=converter/req2docx",
-                "--renderCfg=converter/renderCfg.json",
+                "--project=../converter/req2docx",
+                "--renderCfg=../converter/renderCfg.json",
                 "docx",
-                "--template=converter/template.docx"
+                "--template=../converter/template.docx"
             ]
         },
         {
@@ -53,15 +53,15 @@
             "cwd": "${workspaceFolder}/tools/trlc2other",
             "console": "integratedTerminal",
             "env": {
-                "PLANTUML": "../plantUML/plantuml.jar",
+                "PLANTUML": "../../build/trlcdoc/plantuml/plantuml-1.2026.1.jar",  // trlcdoc plantuml
             },
             "args": [
                 "--source=../../trlc/swe-req",
                 "--source=../../trlc/model",
                 "-o=./out/",
                 "--verbose",
-                "--project=converter/req2rst",
-                "--renderCfg=converter/renderCfg.json",
+                "--project=../converter/req2rst",
+                "--renderCfg=../converter/renderCfg.json",
                 "rst",
             ]
         },

@@ -1,42 +1,46 @@
 # Tools <!-- omit in toc -->
 
-The following tools are available for this project:
+The documentation of pyTRLCConverter (requirements, architecture, detailed design,
+tests, test results, tracing report and coverage report) is built by
+[trlcdoc](https://github.com/nhjschulz/trlc-doc), configured in
+[trlcdoc.yaml](../trlcdoc.yaml) in the project root. The following tools support it:
 
-- [testReport](#testreport)
-- [traceReport](#tracereport)
-- [plantUML](#plantuml)
+- [Documentation build](#documentation-build)
+- [converter](#converter)
 - [trlc2other](#trlc2other)
-- [deployDoc](#deploydoc)
 
-Converter support for the pyTRLCConverter project model files is described in the
-[ProjectConverter Readme](./trlc2other/converter/README.md) file.
+## Documentation build
 
-## testReport
+```bash
+pip install -r requirements-dev.txt    # installs trlcdoc
+pip install -e .                       # document this pyTRLCConverter, not the PyPI release
+trlcdoc                                # all steps, site in build/trlcdoc/html
+trlcdoc --online                       # tracing report linked to GitHub (used for deployment)
+trlcdoc trace                          # selected steps only, e.g. the tracing report
+trlcdoc clean                          # remove all build artifacts
+```
 
-Used to execute the tests and creating a test report including the coverage and test results.
+trlcdoc runs the tests with coverage, converts the TRLC files with the project converters,
+creates the LOBSTER tracing report and builds the Sphinx site. PlantUML is taken from the
+`PLANTUML` environment variable (jar or server URL) or downloaded on demand. Java and Graphviz
+must be installed.
 
-[Details](./testReport/README.md)
+The project owned Sphinx sources are in [doc/sphinx](../doc/sphinx): the start page, the
+detailed design, the page header and the Sphinx configuration with the version selector
+of the deployed documentation.
 
-## traceReport
+Exit codes: `0` success, `1` content findings (failed tests, missing trace links), `2` build
+error.
 
-Used to create the traceability report on code and requirements base.
+## converter
 
-[Details](./traceReport/README.md)
+The project converters for the pyTRLCConverter model files, used by trlcdoc and by
+trlc2other.
 
-## plantUML
-
-Used to download on demand the PlantUML java jar file, which is required by other tooling.
-
-[Details](./plantUML/README.md)
+[Details](./converter/README.md)
 
 ## trlc2other
 
-Used to convert the requirements and test cases written with TRLC to other formats.
+Exports the requirements, architecture and test cases as docx and ReqIF files.
 
 [Details](./trlc2other/README.md)
-
-## deployDoc
-
-Used to generate static HTML files, which will be deployed on Github pages.
-
-[Details](./deployDoc/README.md)

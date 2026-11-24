@@ -15,7 +15,7 @@ The following examples show different functionality as well as possibilities. Be
 | [simple_req_proj_spec](./simple_req/)                         | Single                    | Yes                                        | No              | No                     | No          | No                   |
 | [simple_req_translation](./simple_req_translation/)           | Single                    | No                                         | No              | No                     | Yes         | No                   |
 
-Also look into the [tools/ProjectConverter](../tools/ProjectConverter) folder, which contains more sophisticated converter implementations. These are the converters for the pyTRLCConverter model files in [trlc/model](../trlc/model/).
+Also look into the [tools/converter](../tools/converter) folder, which contains more sophisticated converter implementations. These are the converters for the pyTRLCConverter model files in [trlc/model](../trlc/model/).
 
 ## Issues, Ideas And Bugs
 
